@@ -1530,7 +1530,24 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px.main-edition .legend-swatch:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .px.main-edition .legend-reading:empty{display:none}
 .px.main-edition .legend-reading{font-size:.8em;font-weight:650;line-height:1.4}
-.px.main-edition .legend-description{font-size:.76em;line-height:1.5;min-height:3em}
+.px.main-edition .legend-description{margin:0;color:var(--fg);font-size:.83em;line-height:1.4}
+.px .legend-explanation{
+  grid-column:1/-1;align-self:stretch;display:grid;align-content:center;gap:5px;
+  min-width:0;padding:8px 10px;border:1px solid var(--line);border-inline-start:3px solid var(--legend-accent);
+  border-radius:5px;background:var(--surface)
+}
+.px .legend-explanation .legend-reading{margin:0;font-size:.95em;color:var(--fg)}
+.px .legend-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:0;padding:0;list-style:none}
+.px .legend-guide li{display:flex;align-items:center;gap:4px;font:700 .75em/1.2 var(--head)}
+.px .legend-guide li span{
+  display:grid;place-items:center;flex:none;width:19px;height:19px;border-radius:3px;
+  background:var(--guide-color);color:#0b1621;font-size:1.15em
+}
+.px .map-reading{grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:start}
+.px .map-reading h2{margin:0;color:var(--accent);font:700 1em/1.35 var(--head)}
+.px .map-reading-copy p{margin:0;line-height:1.35;font-size:.9em}
+.px .map-reading-copy p+p{margin-top:3px;color:var(--muted);font-size:.81em}
+@media(max-width:640px){.px .map-reading{grid-template-columns:minmax(0,1fr);gap:5px}}
 .px.main-edition .stage-musician[data-on="false"]{opacity:.38}
 .px.main-edition .viewport,.px.main-edition .scr,.px.main-edition .in{min-width:0}
 .px.main-edition button,.px.main-edition a,.px.main-edition summary{touch-action:manipulation}
@@ -1880,17 +1897,18 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .speed-options input:focus-visible + .speed-option{outline:2px solid var(--accent);outline-offset:2px}
 .px .speed-option svg{display:block}
 .px .speed-option .speed-guides{opacity:.28}
-.px .map-toolbar .player-modes{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+.px .map-toolbar .player-modes{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr)}
 .px .map-toolbar .engines{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
 .px .map-toolbar .engines button{min-width:0;min-height:44px;padding:6px;font-size:.95em}
 .px .map-toolbar .engines button + button{border-inline-start:0}
 @media(max-width:355px){.px .uni .map-toolbar{grid-template-columns:minmax(0,1fr)}}
-.px .mode-help summary{display:grid;place-items:center;min-width:36px;min-height:44px;cursor:pointer;font:700 .92em var(--head);list-style:none}
+.px .uni > .pagehead:has(.mode-help){position:relative;z-index:7}
+.px .mode-help summary{display:grid;place-items:center;min-width:44px;border:1px solid var(--line);border-radius:4px;min-height:44px;cursor:pointer;font:700 .92em var(--head);list-style:none}
 .px .mode-help summary:focus-visible{outline:2px solid var(--fg);outline-offset:-2px;border-radius:4px}
 .px .mode-help summary span{display:grid;place-items:center;width:19px;height:19px;border:1px solid currentColor;border-radius:50%;color:var(--muted)}
 .px .mode-help summary::-webkit-details-marker{display:none}
 .px .mode-help[open] summary span,.px .mode-help summary:hover span{color:var(--bg);background:var(--fg)}
-.px .mode-help dl{position:absolute;z-index:5;inset:100% 6px auto auto;width:min(230px,calc(100% - 12px));padding:10px;margin:4px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:5px;box-shadow:0 5px 12px #0006}
+.px .mode-help dl{position:absolute;z-index:5;inset:100% 0 auto auto;width:min(245px,100%);padding:10px;margin:4px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:5px;box-shadow:0 5px 12px #0006}
 .px .mode-help dt{font-weight:700}
 .px .mode-help dd{margin:0;color:var(--fg);line-height:1.4}
 .px .mode-help dd+dt{margin-top:6px}
@@ -1943,7 +1961,8 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   display:grid;grid-column:auto;align-content:center;justify-items:center;gap:2px;width:100%;
   font:400 .72em/1.15 var(--body);text-align:center;overflow-wrap:anywhere;color:#f2f4f6;text-shadow:0 1px 4px #000;
 }
-.px .stage-musician.listen-member .stage-label strong{grid-column:auto;font:700 1em/1.15 var(--body);letter-spacing:0;text-transform:none;white-space:normal;color:inherit}
+.px .stage-musician.listen-member .stage-label{container-type:inline-size}
+.px .stage-musician.listen-member .stage-label strong{grid-column:auto;font:700 min(1em,16cqw)/1.15 var(--body);letter-spacing:0;text-transform:none;white-space:nowrap;overflow-wrap:normal;color:inherit}
 .px .stage-musician.listen-member .stage-label span{grid-column:auto;font-size:inherit;color:inherit}
 .px.app[data-contrast="true"] .stage-musician.listen-member .stage-label{color:var(--fg);text-shadow:none}
 .px .listen-band .chips{display:flex;flex-wrap:wrap;gap:5px}
@@ -1960,6 +1979,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .player-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.04fr) minmax(0,1.08fr)}
   .px .player-layout #tour-machine{grid-template-rows:auto auto auto}
   .px .player-layout #tour-machine .mbox{max-height:none}
+  .px .listen-player #tour-machine{grid-template-rows:auto auto minmax(0,1fr)}
+  .px .listen-player #tour-machine .map-legend{align-self:stretch;grid-template-rows:auto auto minmax(4.5em,1fr);align-items:start}
+  .px .listen-player #tour-machine .mbox{max-height:clamp(120px,calc(100dvh - 552px),300px)}
+  .px .listen-player .band-stage .stage-musician.listen-member .stage-label{padding-inline:2px}
   .px .player-layout .listen-band{display:flex;flex-direction:column}
   .px .player-layout .band-stage{
     position:relative;isolation:isolate;flex:1 0 auto;min-height:238px;
@@ -2099,6 +2122,31 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .rhythm-flight{position:absolute;z-index:1;inset:0;pointer-events:none}
   .px .rhythm-note{color:#081018;background:var(--rhythm-ink)}
   .px.app[data-contrast="true"] :is(.rhythm-lane,.rhythm-map-key li){--rhythm-ink:#fff}
+}
+@media(min-width:1100px) and (max-height:900px) and (hover:hover) and (pointer:fine){
+  .px .workspace > .in:has(.listen-player){padding-block:8px}
+  .px .listen-player{gap:8px}
+  .px .listen-player .pagehead.slim{padding-bottom:6px}
+  .px .listen-player .pagehead .display{font-size:clamp(1.7rem,2.7vw,2.4rem)}
+  .px .listen-player .player-layout{gap:8px}
+  .px .listen-player #tour-frame .mapbox{max-height:clamp(112px,calc(100dvh - 600px),260px)}
+  .px .listen-player .map-transport{gap:3px;padding:4px 1px}
+  .px .listen-player .timeline img{height:clamp(15px,calc((100dvh - 590px) / 8),26px)}
+  .px .listen-player .listen-band .chip{min-height:44px}
+  .px .listen-player .map-reading{padding-block:7px}
+}
+@media(min-width:1100px) and (max-height:830px) and (hover:hover) and (pointer:fine){
+  .px .listen-player .pagehead .kicker{display:none}
+  .px .listen-player .map-toolbar{row-gap:6px}
+  .px .listen-player #tour-frame .mapbox{max-height:clamp(112px,calc(100dvh - 620px),210px)}
+  .px .listen-player #tour-machine .mbox{max-height:clamp(120px,calc(100dvh - 620px),210px)}
+  .px .listen-player .transport-position input{min-height:28px}
+}
+@media(min-width:1100px) and (max-height:760px) and (hover:hover) and (pointer:fine){
+  .px .workspace > .in:has(.listen-player){padding-block:5px}
+  .px .listen-player{gap:5px}
+  .px .listen-player .player-layout{row-gap:5px}
+  .px .listen-player .map-reading{padding-block:6px}
 }
 .px.main-edition .legend-swatch{min-height:44px}
 .px .bar .side .btn,.px .bar .steps button{min-height:28px}
@@ -2325,13 +2373,17 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <!-- ESCUCHAR · 2 · Reproductor (también para tu imagen) -->
 <sc-if value="{{scr.play}}" hint-placeholder-val="{{ true }}">
 <sc-if value="{{showPlayer}}" hint-placeholder-val="{{ true }}">
-<div class="uni {{rhythmPlayerClass}}">
+<div class="uni {{rhythmPlayerClass}} {{listenPlayerClass}}">
 <div class="pagehead slim">
 <div><p class="kicker">{{playKicker}}</p><h1 id="player-title" class="display md" tabindex="-1">{{playTitle}}</h1></div>
 <div class="row headtools">
 <sc-if value="{{canPlayRhythm}}"><button type="button" class="btn sm rhythm-toggle" onClick="{{playThisDisc}}">{{rhythmToggleLabel}}</button></sc-if>
 <sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{tx.changeDisc}}</button></sc-if>
 <sc-if value="{{rhythmMode}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{rhythmExitLabel}}</button></sc-if>
+<sc-if value="{{standardPlayer}}">
+<details class="mode-help"><summary aria-label="{{tx.modesHelp}}" title="{{tx.modesHelp}}"><span aria-hidden="true">?</span></summary>
+<dl><sc-for list="{{engines}}" as="e"><dt>{{e.short}}</dt><dd>{{e.summary}}</dd></sc-for></dl></details>
+</sc-if>
 </div>
 </div>
 
@@ -2369,16 +2421,16 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <legend>{{tx.speedLabel}}</legend>
 <div class="speed-options">
 <sc-for list="{{speedOptions}}" as="option" hint-placeholder-count="3">
-<label title="{{option.name}}">
-<input class="sr" type="radio" name="playback-speed" value="{{option.key}}" checked="{{option.selected}}" onChange="{{option.pick}}">
+<label title="{{option.hint}}">
+<input class="sr" type="radio" name="playback-speed" value="{{option.key}}" checked="{{option.selected}}" aria-describedby="{{option.hintId}}" onChange="{{option.pick}}">
 <span class="speed-option"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor" aria-hidden="true" shape-rendering="crispEdges"><path class="speed-guides" d="M1 8h4v4H1zM7 5h4v7H7zM13 2h4v10h-4z"/><path d="{{option.bars}}"/></svg><span class="sr">{{option.name}} </span>{{option.rate}}</span>
+<span id="{{option.hintId}}" hidden>{{option.hint}}</span>
 </label>
 </sc-for>
 </div>
 </fieldset>
 <div class="player-modes" id="tour-modes">
 <div class="engines" role="group" aria-label="{{tx.engineAria}}"><sc-for list="{{engines}}" as="e"><button type="button" onClick="{{e.pick}}" aria-pressed="{{e.on}}" aria-describedby="{{e.descriptionId}}" title="{{e.description}}">{{e.short}}</button></sc-for></div>
-<details class="mode-help"><summary aria-label="{{tx.modesHelp}}" title="{{tx.modesHelp}}"><span aria-hidden="true">?</span></summary><dl><sc-for list="{{engines}}" as="e"><dt>{{e.short}}</dt><dd>{{e.description}}</dd></sc-for></dl></details>
 <sc-for list="{{engines}}" as="e"><span class="sr" id="{{e.descriptionId}}">{{e.description}}</span></sc-for>
 </div>
 </figcaption>
@@ -2436,8 +2488,13 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="legend-swatch-grid" role="group" aria-labelledby="map-legend-title">
 <sc-for list="{{player.legend}}" as="level"><button type="button" class="legend-choice legend-swatch" style="--swatch:{{level.color}};--swatch-ink:{{level.ink}}" aria-pressed="{{level.on}}" aria-label="{{level.label}}. {{level.description}}" title="{{level.description}}" onClick="{{level.choose}}">{{level.number}}</button></sc-for>
 </div>
-<div role="status" aria-atomic="true"><p class="legend-reading">{{player.legendReading}}</p>
-<p class="small muted legend-description">{{player.legendDescription}}</p></div>
+<div class="legend-explanation" role="status" aria-atomic="true" style="--legend-accent:{{player.legendColor}}">
+<sc-if value="{{player.legendOverview}}">
+<ul class="legend-guide"><sc-for list="{{player.legendGuide}}" as="item"><li style="--guide-color:{{item.color}}"><span aria-hidden="true">{{item.sign}}</span>{{item.label}}</li></sc-for></ul>
+</sc-if>
+<p class="legend-reading">{{player.legendReading}}</p>
+<p class="legend-description">{{player.legendDescription}}</p>
+</div>
 </aside>
 </figure>
 </sc-if>
@@ -2491,10 +2548,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </section>
 </div>
 <sc-if value="{{standardPlayer}}">
-<div class="player-detail">
-<div class="readout">
-<p><strong>{{tx.see}}</strong> <span>{{seeText}}</span></p>
-</div></div>
+<section class="player-detail map-reading" aria-labelledby="map-reading-title">
+<h2 id="map-reading-title">{{tx.see}}</h2>
+<div class="map-reading-copy"><p>{{seeText}}</p><p>{{mapMusicHint}}</p></div>
+</section>
 </sc-if>
 <p role="status" aria-live="polite" class="sr">{{player.announcement}}</p>
 </div>
@@ -3322,20 +3379,20 @@ var LEGEND_INTENSITY = {
   3: ['marcada', 'pronounced'], 4: ['muy marcada', 'very pronounced'], 4.5: ['casi extrema', 'near-extreme'], 5: ['extrema', 'extreme']
 };
 var LEGEND_LEVELS = {
-  [-5]: [uiMessage('Frío extremo', 'Extreme cooling'), uiMessage('El mar está en el extremo frío de la escala de EarthRhythm.', 'The sea is at the coldest end of the EarthRhythm scale.')],
+  [-5]: [uiMessage('Frío extremo', 'Extreme cooling'), uiMessage('Este color marca la parte más fría de la escala. Allí, el mar está mucho más frío que de costumbre.', 'This color marks the coldest end of the scale. Here the sea is much colder than usual.')],
   [-4]: [uiMessage('Frío muy intenso', 'Very strong cooling'), uiMessage('El agua está mucho más fría que lo habitual en esa zona.', 'The water is much cooler than usual for that area.')],
-  [-3]: [uiMessage('Frío marcado', 'Pronounced cooling'), uiMessage('El descenso respecto a la temperatura habitual es marcado.', 'The drop below the usual temperature is pronounced.')],
-  [-2]: [uiMessage('Frío moderado', 'Moderate cooling'), uiMessage('El agua está claramente más fría de lo habitual, con una diferencia moderada.', 'The water is clearly cooler than usual, with a moderate difference.')],
+  [-3]: [uiMessage('Frío marcado', 'Pronounced cooling'), uiMessage('El agua está bastante más fría que de costumbre en esa zona.', 'The water is quite a bit colder than usual in this area.')],
+  [-2]: [uiMessage('Frío moderado', 'Moderate cooling'), uiMessage('El agua está más fría que de costumbre. El cambio se nota.', 'The water is colder than usual. The difference is noticeable.')],
   [-1]: [uiMessage('Frío leve', 'Slight cooling'), uiMessage('El agua está un poco más fría de lo habitual.', 'The water is a little cooler than usual.')],
   [-0.5]: [uiMessage('Apenas más frío', 'Barely cooler'), uiMessage('El agua está justo por debajo de su temperatura habitual.', 'The water is just below its usual temperature.')],
-  0: [uiMessage('Cerca de lo habitual', 'Close to usual'), uiMessage('La temperatura está cerca de la referencia para esa zona.', 'The temperature is close to the reference for that area.')],
+  0: [uiMessage('Cerca de lo habitual', 'Close to usual'), uiMessage('El agua está casi a la misma temperatura de siempre en esa zona.', 'The water is close to its usual temperature in this area.')],
   0.5: [uiMessage('Apenas más cálido', 'Barely warmer'), uiMessage('El agua está justo por encima de su temperatura habitual.', 'The water is just above its usual temperature.')],
   1: [uiMessage('Calor leve', 'Slight warming'), uiMessage('El agua está un poco más cálida de lo habitual.', 'The water is a little warmer than usual.')],
   2: [uiMessage('Calor moderado', 'Moderate warming'), uiMessage('El agua está claramente más cálida de lo habitual.', 'The water is clearly warmer than usual.')],
-  3: [uiMessage('Calor marcado', 'Pronounced warming'), uiMessage('El aumento sobre la temperatura habitual es marcado.', 'The rise above the usual temperature is pronounced.')],
+  3: [uiMessage('Calor marcado', 'Pronounced warming'), uiMessage('El agua está bastante más cálida que de costumbre en esa zona.', 'The water is quite a bit warmer than usual in this area.')],
   4: [uiMessage('Calor muy intenso', 'Very strong warming'), uiMessage('El agua está mucho más cálida que lo habitual en esa zona.', 'The water is much warmer than usual for that area.')],
-  4.5: [uiMessage('Cerca del extremo cálido', 'Near the warm extreme'), uiMessage('El agua se acerca a los niveles de mayor calor de la escala.', 'The water is near the highest warmth levels on the scale.')],
-  5: [uiMessage('Calor extremo', 'Extreme warming'), uiMessage('El mar está en el extremo cálido de la escala de EarthRhythm.', 'The sea is at the warmest end of the EarthRhythm scale.')]
+  4.5: [uiMessage('Cerca del extremo cálido', 'Near the warm extreme'), uiMessage('El agua está mucho más cálida que de costumbre, cerca del extremo de la escala.', 'The water is much warmer than usual, near the warm end of the scale.')],
+  5: [uiMessage('Calor extremo', 'Extreme warming'), uiMessage('Este color marca la parte más cálida de la escala. Allí, el mar está mucho más cálido que de costumbre.', 'This color marks the warmest end of the scale. Here the sea is much warmer than usual.')]
 };
 var CHORDS = { Am: [[220,261.63,329.63],110], C: [[261.63,329.63,392],130.81], F: [[174.61,220,261.63],87.31], G: [[196,246.94,293.66],98], E: [[164.81,207.65,246.94],82.41] };
 var PENTA = [0,3,5,7,10];
@@ -5210,12 +5267,19 @@ class Component extends DCLogic {
       volumeLabel: T('Volumen', 'Volume'), volume: s.volume,
       changeVolume: function (e) { self.setVolume(Number(e.target.value)); },
       legendTitle: rain ? T('Lluvia mensual', 'Monthly rainfall') : s.disc === 5 ? T('Escala de color', 'Color scale')
-        : T('Anomalía estimada (°C)', 'Estimated anomaly (°C)'),
-      legend: legend, legendReading: selected?.label || '', legendDescription: selected?.description || (rain
+        : T('Diferencia estimada (°C)', 'Estimated difference (°C)'),
+      legend: legend, legendReading: selected?.label || '', legendColor: selected?.color || 'var(--accent)',
+      legendOverview: !selected,
+      legendGuide: [
+        { sign: '−', color: '#7be0f3', label: rain ? T('Menos lluvia', 'Less rain') : s.disc === 5 ? T('Frío', 'Cool') : T('Más frío', 'Cooler') },
+        { sign: '0', color: '#d0d6e3', label: rain ? T('Promedio', 'Average') : s.disc === 5 ? T('Neutro', 'Neutral') : T('Casi igual', 'Near usual') },
+        { sign: '+', color: '#ffcc7a', label: rain ? T('Más lluvia', 'More rain') : s.disc === 5 ? T('Cálido', 'Warm') : T('Más cálido', 'Warmer') }
+      ],
+      legendDescription: selected?.description || (rain
         ? T('Los colores muestran más o menos lluvia que el promedio de la serie.', 'Colors show more or less rainfall than the series average.')
         : s.disc === 5 ? T('Elige un recuadro para explorar la escala de la imagen.', 'Choose a swatch to explore the image scale.')
-        : T('Diferencia aproximada respecto a lo habitual. Elige un color para ver su significado.',
-          'Approximate difference from usual conditions. Choose a color to see what it means.')),
+        : T('Diferencia aproximada con la temperatura habitual de cada lugar. Elige un color para ver cuánto cambia.',
+          'Approximate difference from the usual temperature in each area. Choose a color to see how much it changes.')),
       announcement: s.playerAnnouncement
     };
   }
@@ -5956,13 +6020,13 @@ class Component extends DCLogic {
       if (a.warm > a.cold) return T('En tu imagen destacan los colores cálidos. La banda convierte esos colores en notas.', 'Warm colors stand out in your image. The band turns those colors into notes.');
       return T('La banda convierte los colores de tu imagen en notas.', 'The band turns the colors in your image into notes.');
     }
-    var main = a.cold > a.warm ? T('Destacan las zonas donde el mar estuvo más frío de lo habitual.', 'Areas where the sea was cooler than usual stand out.')
-      : a.warm > a.cold ? T('Destacan las zonas donde el mar estuvo más cálido de lo habitual.', 'Areas where the sea was warmer than usual stand out.')
-      : T('Las zonas más frías y las más cálidas de lo habitual tienen un peso parecido.', 'Areas cooler and warmer than usual are similarly prominent.');
+    var main = a.cold > a.warm ? T('Resaltan las zonas donde el mar estuvo más frío de lo habitual.', 'In this map, cooler-than-usual water stands out.')
+      : a.warm > a.cold ? T('Resaltan las zonas donde el mar estuvo más cálido de lo habitual.', 'In this map, warmer-than-usual water stands out.')
+      : T('El mapa muestra zonas más frías y más cálidas de lo habitual por igual.', 'Cooler and warmer areas stand out equally on this map.');
     var coast = !a.coastPixels ? T('En la zona de la costa marcada faltan datos útiles.', 'There is not enough usable data in the marked coastal area.')
-      : Math.abs(a.coast) < .5 ? T('El agua cerca de la costa marcada estuvo cerca de su temperatura habitual.', 'Water near the marked coast was close to its usual temperature.')
-      : a.coast < 0 ? T('El agua cerca de la costa marcada estuvo más fría de lo habitual.', 'Water near the marked coast was cooler than usual.')
-      : T('El agua cerca de la costa marcada estuvo más cálida de lo habitual.', 'Water near the marked coast was warmer than usual.');
+      : Math.abs(a.coast) < .5 ? T('En el recuadro costero, el mar estuvo casi a su temperatura habitual.', 'Water near the marked coast was close to its usual temperature.')
+      : a.coast < 0 ? T('En el recuadro costero, el mar estuvo más frío de lo habitual.', 'Water near the marked coast was cooler than usual.')
+      : T('En el recuadro costero, el mar estuvo más cálido de lo habitual.', 'Water near the marked coast was warmer than usual.');
     return main + ' ' + coast;
   }
   stopSpeech() {
@@ -6244,6 +6308,7 @@ class Component extends DCLogic {
     var stageChord = melody && s.playing ? s.chord : '';
     var progItems = melody ? chordLabels.map(function (l) { var on = l === stageChord; return { label: l, on: on, bg: on ? th.accent : 'transparent', fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line }; }) : [];
     var seeText = this.describeText();
+    var mapMusicHint = T('La línea recorre el mapa y cada columna añade un paso a la música.', 'The line sweeps across the map, and each column adds a step to the music.');
     var whyTiles = melody ? [
       { tag: T('TONALIDAD', 'KEY'), title: prof.key + ' ' + prof.mode, body: T('Escala y acordes elegidos para el carácter musical de ', 'Scale and chords chosen for the musical personality of ') + prof.name + ': ' + prof.story + '.' },
       { tag: 'TEMPO', title: bpmEff + T(' ppm', ' bpm'), body: T('Cada columna del fotograma es una corchea. Un fotograma dura unos ', 'Each column of the frame is an eighth note. A frame lasts about ') + Math.round(840 / bpmEff) + T(' segundos.', ' seconds.') },
@@ -6256,16 +6321,16 @@ class Component extends DCLogic {
       { tag: T('USO', 'USE'), title: T('Explorar patrones', 'Explore patterns'), body: T('Permite contrastar patrones dentro de una misma fuente. Los niveles no son magnitudes físicas comparables entre productos.', 'Explore patterns within the same source. Levels are not physical quantities comparable across products.') }
     ];
     var engines = [
-      { key: 'melody', short: T('Melodía', 'Melody'), description: T('Combina las notas del mapa con acordes y un ritmo. Illapa marca el pulso con timbal.', 'Combines notes from the map with chords and a rhythm. Illapa keeps the beat on timpani.') },
-      { key: 'raw', short: T('Datos', 'Data'), description: T('Convierte los niveles de color en tonos directos, sin acordes. Illapa solo entra con un trueno por calor extremo.', 'Turns color levels directly into tones, without chords. Illapa only plays a thunder hit triggered by extreme warmth.') }
+      { key: 'melody', short: T('Melodía', 'Melody'), summary: T('Mapa con acordes y ritmo.', 'Map sounds with chords and rhythm.'), description: T('Combina las notas del mapa con acordes y un ritmo. Illapa marca el pulso con timbal.', 'Combines notes from the map with chords and a rhythm. Illapa keeps the beat on timpani.') },
+      { key: 'raw', short: T('Datos', 'Data'), summary: T('Cada color genera un tono.', 'Each color makes a tone.'), description: T('Convierte los niveles de color en tonos directos, sin acordes. Illapa solo entra con un trueno por calor extremo.', 'Turns color levels directly into tones, without chords. Illapa only plays a thunder hit triggered by extreme warmth.') }
     ].map(function (e) {
-      return { short: e.short, description: e.description, descriptionId: 'mode-description-' + e.key, on: e.key === s.engine,
+      return { short: e.short, summary: e.summary, description: e.description, descriptionId: 'mode-description-' + e.key, on: e.key === s.engine,
         pick: function () { self.setEngine(e.key); } };
     });
     return {
       th: th, highContrast: hc, ic: this.icons, showBg: !hc, showDecorativePlanets: s.tab !== 'home', planetContrast: hc ? 'true' : 'false', universe: this.universeVm(), stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
       engineDesc: (melody ? T('Melodía compuesta: escalas, acordes y ritmo por disco; la melodía sale de los datos.', 'Composed melody: scales, chords and rhythm per disc; the melody comes from the data.') : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes.', 'Data: derived levels converted into tones, without a chord progression.')),
-      engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody && !rhythmMode,
+      engines: engines, whyTiles: whyTiles, seeText: seeText, mapMusicHint: mapMusicHint, progItems: progItems, showHarmony: melody && !rhythmMode,
       player: showCells ? this.playerVm() : null,
       motionClass: reducedMotion ? 'reduce-motion' : '',
       motionMode: reducedMotion ? 'reduced' : 'full',
@@ -6407,7 +6472,7 @@ class Component extends DCLogic {
       discKicker: isGame ? T('Jugar', 'Play') : tx.discKicker,
       discTitle: isGame ? T('Elige qué temporada jugar', 'Choose a season to play') : tx.discTitle,
       discLede: isGame ? T('Elige un disco para recorrer sus mapas con las flechas del teclado.', 'Pick a disc to explore its maps with the arrow keys.') : tx.discLede,
-      rhythmLibraryClass: isGame ? 'rhythm-library' : '', rhythmPlayerClass: rhythmMode ? 'rhythm-player' : '',
+      rhythmLibraryClass: isGame ? 'rhythm-library' : '', rhythmPlayerClass: rhythmMode ? 'rhythm-player' : '', listenPlayerClass: isJuke ? 'listen-player' : '',
       canPlayRhythm: gameAvailable && isJuke && sub === 1 && s.disc < 5, rhythmMode: rhythmMode, standardPlayer: !rhythmMode,
       gameAvailable: gameAvailable, gameNavCurrent: isGame ? 'page' : 'false', gameNavLabel: ROUTE_LOOK.game.title,
       goGame: function () { self.goTab('game'); },
@@ -6437,13 +6502,13 @@ class Component extends DCLogic {
       },
       prevFrame: function () { self.gotoFrame(s.frame - 1); }, nextFrame: function () { self.gotoFrame(s.frame + 1); },
       speedOptions: [
-        { key: 180, name: T('Lenta', 'Slow'), bars: 'M1 8h4v4H1z' },
-        { key: 110, name: T('Normal', 'Normal'), bars: 'M1 8h4v4H1zM7 5h4v7H7z' },
-        { key: 70, name: T('Rápida', 'Fast'), bars: 'M1 8h4v4H1zM7 5h4v7H7zM13 2h4v10h-4z' }
+        { key: 180, name: T('Lenta', 'Slow'), hint: T('El mapa avanza más despacio. Tienes más tiempo para ver cada zona.', 'The map moves more slowly so you have more time to see each area.'), bars: 'M1 8h4v4H1z' },
+        { key: 110, name: T('Normal', 'Normal'), hint: T('Reproduce el disco a su ritmo original.', 'Play the disc at its original pace.'), bars: 'M1 8h4v4H1zM7 5h4v7H7z' },
+        { key: 70, name: T('Rápida', 'Fast'), hint: T('La música y el mapa avanzan más rápido.', 'The music and map move faster.'), bars: 'M1 8h4v4H1zM7 5h4v7H7zM13 2h4v10h-4z' }
       ].map(function (option) {
         var rate = String(PLAYBACK_SPEEDS[option.key]);
         return Object.assign({}, option, {
-          rate: T(rate.replace('.', ','), rate) + '×', selected: s.speed === option.key,
+          rate: T(rate.replace('.', ','), rate) + '×', hintId: 'speed-hint-' + option.key, selected: s.speed === option.key,
           pick: function () { self.setPlaybackSpeed(option.key); }
         });
       }),
