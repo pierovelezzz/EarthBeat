@@ -269,6 +269,7 @@ class RhythmGame extends HTMLElement {
     this.lanes = [...this.querySelectorAll('.rhythm-runway')];
     this.score = this.querySelector('[data-score]');
     this.feedback = this.querySelector('[data-feedback]');
+    this.feedbackDisplay = this.querySelector('[data-feedback-display]');
     this.addEventListener('keydown', this.press);
     window.addEventListener('earthrhythm-game-queue', this.queue);
     document.addEventListener('visibilitychange', this.onVisibility);
@@ -279,10 +280,20 @@ class RhythmGame extends HTMLElement {
     window.removeEventListener('earthrhythm-game-queue', this.queue);
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.clear();
+    clearTimeout(this.feedbackTimer);
   }
 
-  say(es, en) {
-    if (this.feedback) this.feedback.textContent = document.documentElement.lang === 'es' ? es : en;
+  say(es, en, kind) {
+    clearTimeout(this.feedbackTimer);
+    const message = document.documentElement.lang === 'es' ? es : en;
+    if (this.feedback) this.feedback.textContent = message;
+    if (this.feedbackDisplay) this.feedbackDisplay.textContent = kind === 'miss' ? '' : message;
+    if (kind === 'miss') {
+      this.dataset.feedbackKind = kind;
+      this.feedbackTimer = setTimeout(() => this.removeAttribute('data-feedback-kind'), 850);
+    } else {
+      this.removeAttribute('data-feedback-kind');
+    }
   }
 
   attributeChangedCallback(name, previous, value) {
@@ -325,7 +336,7 @@ class RhythmGame extends HTMLElement {
       flight.setAttribute('aria-hidden', 'true');
       const arrow = document.createElement('span');
       arrow.className = 'rhythm-note';
-      arrow.textContent = lane.firstElementChild.textContent;
+      arrow.append(lane.querySelector('.rhythm-receptor svg').cloneNode(true));
       flight.append(arrow);
       lane.append(flight);
       this.notes.push({ at: event.at, index, flight });
@@ -346,7 +357,7 @@ class RhythmGame extends HTMLElement {
       if (left < -margin) {
         note.flight.remove();
         this.missed++;
-        this.say('Se escapó una nota', 'Missed a note');
+        this.say('Se escapó una nota', 'Missed a note', 'miss');
         return false;
       }
       note.flight.hidden = still;

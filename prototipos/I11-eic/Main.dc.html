@@ -869,7 +869,6 @@ a{color:inherit}
 .px .credit-heading .credit-index{margin-left:auto;color:#8593a3;font:500 12px 'IBM Plex Mono',monospace}
 .px .credit-section p{max-width:68ch;font-size:max(15px,.95em);line-height:1.7;color:#c7cdd8;overflow-wrap:anywhere}
 .px .credit-section p+p{margin-top:16px}
-.px .credit-section .credit-review{font-size:max(13px,.82em);padding-left:12px;border-left:2px solid #8798aa;color:#bac5d2}
 .px .credit-tools{display:flex;gap:8px 16px;flex-wrap:wrap;margin:0 0 16px;list-style:none;padding:0;font:500 max(12px,.8em) 'IBM Plex Mono',monospace;color:#eef2f7}
 .px .credit-notice{padding-inline:18px;background:rgba(164,187,218,.035)}
 @media(max-width:700px){.px .credits-layout{grid-template-columns:minmax(0,1fr);gap:22px}.px .credit-heading{gap:10px}.px .credit-heading h2{font-size:21px}}
@@ -1390,7 +1389,7 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .top .nav button[aria-current="page"],.px .top .nav button:hover,.px .top .nav button:focus-visible{color:var(--fg)}
 .px .player-tools .btn.quiet{color:var(--muted)}
 .px .bottomnav .btn.quiet:not(:disabled){color:var(--muted)}
-.px .hero .lede,.px .tour p,.px .credit-section .credit-review{color:var(--muted)}
+.px .hero .lede,.px .tour p{color:var(--muted)}
 .px .credit-tools{color:var(--fg)}
 .px .credit-heading .credit-index{color:var(--muted)}
 .px details.menu .pop,.px select,.px .modal,.px .tour,.px .tour::before{background:var(--surface);border-color:var(--line)}
@@ -1986,6 +1985,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .listen-band .chip[aria-current="true"]{outline:1px solid var(--fg);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 68%,transparent)}
   .px.reduce-motion .listen-band .chip{transition:none}
   .px .rhythm-toggle{display:inline-flex}
+  .px .top .game-nav{display:grid;place-items:center;flex:none;width:44px;min-height:44px;padding:0;color:var(--fg);--game-icon-cutout:var(--panel)}
+  .px .top .game-nav:is(:hover,[aria-current="page"]){background:var(--accent);color:#091422;--game-icon-cutout:var(--accent)}
+  .px .top .game-nav:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
   .px .rhythm-library .discgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
   .px .rhythm-library .discgrid .dcard{min-height:110px;padding:14px;background:var(--panel)}
   .px .rhythm-library .discgrid .dcard:is(:hover,:focus-visible){background:var(--surface)}
@@ -2010,27 +2012,31 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
     padding:8px 10px 0;border-radius:5px;
   }
   .px earthrhythm-game:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
-  .px .rhythm-score{display:flex;justify-content:space-between;gap:8px;color:var(--fg);font-size:.9em;min-height:1.5em}
-  .px .rhythm-score strong{color:var(--accent);font-size:1.2em}
+  .px .rhythm-score{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px;font-size:.86em}
+  .px .rhythm-tally,.px .rhythm-miss{display:inline-flex;align-items:center;gap:8px;min-height:33px;padding:3px 9px;border:1px solid currentColor;border-radius:4px}
+  .px .rhythm-tally{color:#ffe198;background:#1b1b23;font-variant-numeric:tabular-nums}
+  .px .rhythm-tally strong{font-size:1.24em}
+  .px .rhythm-miss{display:none;color:#ffd0e8;background:#281427}
+  .px .rhythm-feedback-text:not(:empty){color:#d6f4ff;background:#111c28;padding:4px 7px;border-radius:4px}
+  .px earthrhythm-game[data-feedback-kind="miss"] .rhythm-miss{display:inline-flex}
+  .px earthrhythm-game[data-feedback-kind="miss"] .rhythm-feedback-text{display:none}
   .px .rhythm-lanes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;min-height:0}
-  .px .rhythm-lane{display:grid;grid-template-rows:auto minmax(0,1fr);gap:4px;text-align:center;min-width:0;--rhythm-ink:#c1eaff}
+  .px .rhythm-lane{display:grid;grid-template-rows:minmax(0,1fr);text-align:center;min-width:0;--rhythm-ink:#c1eaff}
   .px .rhythm-lane:nth-child(2){--rhythm-ink:#efede7}
   .px .rhythm-lane:nth-child(3){--rhythm-ink:#ffcf8d}
   .px .rhythm-lane:nth-child(4){--rhythm-ink:#ffc3df}
-  .px .rhythm-kind{
-    display:grid;place-items:center;min-height:calc(2.3em + 8px);padding:3px 2px;color:var(--rhythm-ink);
-    background:#0b1420;border:1px solid #526d80;border-radius:3px;font-size:.69em;line-height:1.15;overflow-wrap:anywhere;
-  }
-  @supports(grid-template-rows:subgrid){
-    .px .rhythm-lanes{grid-template-rows:auto minmax(0,1fr)}
-    .px .rhythm-lane{grid-row:1 / span 2;grid-template-rows:subgrid}
-  }
-  .px .rhythm-runway{position:relative;margin-top:15px;background:linear-gradient(#63889a,transparent) center/1px 100% no-repeat}
+  .px .rhythm-lane[data-direction="left"] svg{transform:rotate(-90deg)}
+  .px .rhythm-lane[data-direction="down"] svg{transform:rotate(180deg)}
+  .px .rhythm-lane[data-direction="right"] svg{transform:rotate(90deg)}
+  .px .rhythm-runway{position:relative;margin:21px 0 14px;background:linear-gradient(var(--rhythm-ink),transparent) center/1px 100% no-repeat}
   .px .rhythm-receptor,.px .rhythm-note{
     position:absolute;top:0;left:50%;display:grid;place-items:center;transform:translate(-50%,-50%);
     width:clamp(44px,4vw,58px);height:38px;font:700 1.55em/1 system-ui,sans-serif;border:1px solid currentColor;border-radius:5px;
   }
   .px .rhythm-receptor{color:var(--rhythm-ink);background:#101c29;z-index:2}
+  .px .rhythm-runway:has(.rhythm-flight:not([hidden])) .rhythm-receptor{
+    outline:2px solid var(--rhythm-ink);outline-offset:2px;box-shadow:0 0 13px var(--rhythm-ink)
+  }
   .px .rhythm-runway[data-cue] .rhythm-receptor{color:#070f18;background:var(--rhythm-ink);box-shadow:0 0 8px var(--rhythm-ink)}
   .px .rhythm-flight{position:absolute;inset:0;pointer-events:none}
   .px .rhythm-note{color:#081018;background:var(--rhythm-ink)}
@@ -2048,6 +2054,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .credits-layout{grid-template-columns:repeat(3,minmax(0,1fr))}
 .px .nasa-source-layout{grid-template-columns:minmax(0,3fr) minmax(0,2fr);margin-top:8px}
 .px .nasa-source-layout .method-sources{display:grid;gap:8px;padding-inline-start:1.2em}
+@media(min-width:1000px){
+  .px .tech-screen .pagehead{margin-bottom:8px}
+  .px .tech-screen .tech-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line)}
+  .px .tech-screen .tech-list[data-nasa="true"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .px .tech-screen .tech-item,.px .tech-screen .tech-item + .tech-item{padding:10px 14px;border:0;background:var(--panel);align-content:start}
+  .px .tech-screen .nasa-source-layout{grid-template-columns:minmax(0,3fr) minmax(0,1.2fr)}
+  .px .tech-screen .nasa-source-layout .credit-section{padding:10px 14px}
+  .px .tech-screen .nasa-source-layout p{max-width:78ch;line-height:1.55}
+}
 .px .section-voice{display:inline-grid;place-items:center;width:44px;min-height:44px;padding:0;flex:none}
 .px .section-voice svg{width:20px;height:20px}
 .px .section-voice[data-speaking="true"] .speaker-waves{display:none}
@@ -2123,6 +2138,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="preferences-shortcut" onClick="{{preferences.open}}">{{preferences.reopenLabel}}</button>
 </div>
 </details>
+<sc-if value="{{gameAvailable}}">
+<button type="button" class="btn game-nav" onClick="{{goGame}}" aria-current="{{gameNavCurrent}}" aria-label="{{gameNavLabel}}" title="{{gameNavLabel}}">
+<svg width="28" height="20" viewBox="0 0 28 20" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M7 2h14v2h3v2h2v4h2v6h-2v2h-5v-2h-2v-2H9v2H7v2H2v-2H0v-6h2V6h2V4h3z"/><path fill="var(--game-icon-cutout)" d="M8 5h2v3h3v2h-3v3H8v-3H5V8h3zM19 6h3v3h-3zM16 10h3v3h-3z"/></svg>
+</button>
+</sc-if>
 </div>
 </div>
 </header>
@@ -2367,9 +2387,14 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 <sc-if value="{{rhythmMode}}">
 <earthrhythm-game role="group" tabindex="0" aria-label="{{rhythmLabel}}" aria-describedby="rhythm-help" data-playing="{{rhythmPlaying}}" data-ended="{{rhythmEnded}}">
-<div class="rhythm-score"><span>{{rhythmScoreLabel}} <strong data-score>0</strong></span><span data-feedback role="status" aria-live="polite"></span></div>
+<div class="rhythm-score">
+<div class="rhythm-tally"><svg width="20" height="20" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h8v2h2v2h2v8h-2v2h-2v2H4v-2H2v-2H0V4h2V2h2z"/><path fill="#251809" d="M7 3h2v3h4v2h-2v2h-1v3H8v-2H7v2H5v-3H4V8H3V6h4z"/></svg><span class="sr">{{rhythmScoreLabel}}</span><strong data-score>0</strong></div>
+<span class="rhythm-feedback-text" data-feedback-display aria-hidden="true"></span>
+<span class="rhythm-miss" aria-hidden="true"><svg width="22" height="18" viewBox="0 0 22 18" shape-rendering="crispEdges"><path fill="currentColor" d="M8 0h6v2h3v2h2v6h-2v2H5v-2H3V4h2V2h3zM0 14h5v2h4v-2h4v2h4v-2h5v2h-4v2h-6v-2h-2v2H4v-2H0z"/><path fill="#281427" d="M6 5h2v2H6zm8 0h2v2h-2zm-5 3h4v2H9z"/></svg><strong>MISS</strong></span>
+<span class="sr" data-feedback role="status" aria-live="polite"></span>
+</div>
 <div class="rhythm-lanes">
-<sc-for list="{{rhythmLanes}}" as="lane"><div class="rhythm-lane"><span class="rhythm-kind">{{lane.label}}</span><div class="rhythm-runway"><span class="rhythm-receptor" aria-hidden="true">{{lane.arrow}}</span></div></div></sc-for>
+<sc-for list="{{rhythmLanes}}" as="lane"><div class="rhythm-lane" data-direction="{{lane.direction}}"><div class="rhythm-runway"><span class="rhythm-receptor" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v2h2v2h2v2h2v3h-4v5H5v-5H1V7h2V5h2V3h2z"/></svg></span></div></div></sc-for>
 </div>
 </earthrhythm-game>
 </sc-if>
@@ -2491,7 +2516,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div><p class="kicker">{{tx.techKicker}} · {{techCur.num}}</p><h1 class="display">{{techCur.title}}</h1></div>
 <button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 </div>
-<div id="tour-techcards" class="tech-list">
+<div id="tour-techcards" class="tech-list" data-nasa="{{techCur.nasa}}">
 <sc-for list="{{techCur.items}}" as="t" hint-placeholder-count="6">
 <article class="tech-item">
 <h2>{{t.name}}</h2>
@@ -2530,7 +2555,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </section>
 <section class="credit-section" aria-labelledby="credit-ai-title">
 <div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4M18 9h4m-4 6h4M10 10h4v4h-4z"/></svg><h2 id="credit-ai-title">{{tx.credAi}}</h2></div>
-<p>{{tx.credAiP}}</p><p class="credit-review">{{tx.credAiReview}}</p>
+<p>{{tx.credAiP}}</p>
 </section>
 <section class="credit-section credit-notice" aria-labelledby="credit-notice-title">
 <div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v1"/></svg><h2 id="credit-notice-title">{{tx.credInstitution}}</h2></div>
@@ -3504,8 +3529,7 @@ var TX = {
     "skipGuide": "Saltar guía",
     "guideBy": "Brisa · tu guía",
     "heroHelp": "Sin instalar nada. Tú eliges cuándo suena.",
-    "homeMapCaption": "Un mapa real del Pacífico",
-    "credAiReview": "El registro docs/USO_DE_IA.md aún contiene entradas pendientes de revisión y detalle. La declaración debe contrastarse con ese registro antes de presentar el proyecto."
+    "homeMapCaption": "Un mapa real del Pacífico"
   },
   "en": {
     "brandAria": "EarthRhythm, go home",
@@ -3626,8 +3650,7 @@ var TX = {
     "skipGuide": "Skip guide",
     "guideBy": "Brisa · your guide",
     "heroHelp": "Nothing to install. You choose when sound starts.",
-    "homeMapCaption": "A real map of the Pacific",
-    "credAiReview": "The docs/USO_DE_IA.md log still contains entries awaiting review and detail. This declaration should be checked against that log before submitting the project."
+    "homeMapCaption": "A real map of the Pacific"
   }
 };
 
@@ -5034,9 +5057,10 @@ class Component extends DCLogic {
   }
   playerSteps() { return DISCS[this.state.disc].files.length * 28; }
   frameStepMs(frame) {
-    if (this.state.engine === 'raw') return Math.round(110 / this.speedFactor());
+    var factor = this.state.tab === 'game' ? 1.2 : this.speedFactor();
+    if (this.state.engine === 'raw') return Math.round(110 / factor);
     var analysis = frame === this.state.frame ? this.cur() : this.state.an[this.state.disc + '_' + frame];
-    return Math.round(30000 / (this.profile(analysis, frame).bpm * this.speedFactor()));
+    return Math.round(30000 / (this.profile(analysis, frame).bpm * factor));
   }
   playerSeconds(position) {
     var remaining = Math.max(0, Math.min(this.playerSteps(), position)), ms = 0;
@@ -6026,7 +6050,7 @@ class Component extends DCLogic {
     var toggleMotion = function () { self.setPreference('reducedMotion', !self.bandReduced()); };
     var tog = function (k) { return function () { self.setPreference(k, !self.state[k]); }; };
     var gameAvailable = !!this.rhythmQuery?.matches, isGame = s.tab === 'game', rhythmMode = isGame && s.sub === 1;
-    var tabDef = (gameAvailable ? PAGE_ORDER.concat('game') : PAGE_ORDER).map(function (k) { return { k: k, l: ROUTE_LOOK[k].title }; });
+    var tabDef = PAGE_ORDER.map(function (k) { return { k: k, l: ROUTE_LOOK[k].title }; });
     var a11yDef = [{ k: 'contrast', l: T('Alto contraste', 'High contrast') }, { k: 'big', l: T('Texto grande', 'Large text') }, { k: 'legible', l: T('Fuente legible', 'Readable font') }, { k: 'voice', l: T('Modo voz', 'Voice mode') }, { k: 'vibe', l: T('Vibración', 'Vibration') }, { k: 'sfx', l: T('Efectos de sonido', 'Sound effects') }, { k: 'reducedMotion', l: T('Movimiento reducido', 'Reduced motion') }];
     var activeN = BAND.filter(function (b) { return !s.mute[b.k]; }).length;
     var isJuke = s.tab === 'juke', isData = s.tab === 'how' && s.sub === 0, hasCustom = !!s.custom;
@@ -6199,7 +6223,7 @@ class Component extends DCLogic {
         listenImage: T('Escuchar esta imagen', 'Hear this image')
       },
       langs: [{ code: 'en', short: 'EN', name: 'English' }, { code: 'es', short: 'ES', name: 'Español' }].map(function (l) { return { code: l.code, short: l.short, name: l.name, on: LANG === l.code, pick: function () { self.setLang(l.code); } }; }),
-      scrKind: s.tab === 'home' ? 'home' : scrVm.jDisc ? '' : 'workspace',
+      scrKind: s.tab === 'home' ? 'home' : scrVm.jDisc ? '' : s.tab === 'tech' ? 'workspace tech-screen' : 'workspace',
       homeMap: this.homeMap(),
       heroGo: function () { self.goTab('juke'); },
       heroBand: function () { self.goTab('band'); },
@@ -6293,6 +6317,8 @@ class Component extends DCLogic {
       discLede: isGame ? T('Elige un disco para recorrer sus mapas con las flechas del teclado.', 'Pick a disc to explore its maps with the arrow keys.') : tx.discLede,
       rhythmLibraryClass: isGame ? 'rhythm-library' : '', rhythmPlayerClass: rhythmMode ? 'rhythm-player' : '',
       canPlayRhythm: gameAvailable && isJuke && sub === 1 && s.disc < 5, rhythmMode: rhythmMode, standardPlayer: !rhythmMode,
+      gameAvailable: gameAvailable, gameNavCurrent: isGame ? 'page' : 'false', gameNavLabel: ROUTE_LOOK.game.title,
+      goGame: function () { self.goTab('game'); },
       rhythmPlaying: rhythmMode && s.playing, rhythmEnded: rhythmMode && s.ended,
       rhythmLabel: T('Juego del mapa con flechas', 'Arrow-key map game'),
       rhythmToggleLabel: T('Jugar este disco', 'Play this disc'),
@@ -6301,11 +6327,11 @@ class Component extends DCLogic {
       rhythmKeyLabel: T('Qué indica cada flecha', 'What each arrow means'),
       rhythmScoreLabel: T('Aciertos', 'Hits'),
       rhythmLanes: rhythmMode ? [
-        { arrow: '←', label: T('Más frío', 'Cooler') }, { arrow: '↓', label: T('Cerca de lo habitual', 'Near usual') },
-        { arrow: '↑', label: T('Más cálido', 'Warmer') }, { arrow: '→', label: T('Cambio fuerte', 'Large change') }
+        { arrow: '←', direction: 'left', label: T('Más frío', 'Cooler') }, { arrow: '↓', direction: 'down', label: T('Como de costumbre', 'Near usual') },
+        { arrow: '↑', direction: 'up', label: T('Más cálido', 'Warmer') }, { arrow: '→', direction: 'right', label: T('Mucho más frío o cálido', 'Much colder or warmer') }
       ] : [],
-      rhythmHelp: T('Cada flecha resume qué tan fría o cálida está una franja del mapa respecto a lo habitual. Un cambio fuerte puede ir en cualquiera de las dos direcciones. Tras cada recorrido, el mapa pasa al siguiente mes.',
-        'Each arrow shows how cool or warm a strip of the map is compared with usual. A large change can go in either direction. After each sweep, the map moves to the next month.'),
+      rhythmHelp: T('Sigue el barrido del mapa mientras tocas. Cada flecha indica si esa parte del mar está más fría o más cálida de lo habitual. Al final del recorrido aparece el siguiente mes.',
+        'Follow the map scan as you play. Each arrow shows whether that part of the ocean is colder or warmer than usual. When the scan ends, the next month appears.'),
       playThisDisc: function () { self.openRhythmDisc(s.disc); },
       describeLabel: this.utterance ? T('Detener descripción', 'Stop description') : T('Describir en voz alta', 'Describe aloud'),
       describe: function () {
@@ -6321,7 +6347,7 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageCueHelp: rhythmMode ? T('Pulsa la flecha del teclado cuando llegue al recuadro.', 'Press the matching arrow key when it reaches the target.')
+      stageCueHelp: rhythmMode ? T('Pulsa la flecha del teclado cuando su recuadro se llene de color.', 'Press the matching arrow key when its target fills with color.')
         : T('El icono sube antes de la nota. Al sonar, se ilumina el piso.', 'The icon rises before the note. The floor lights up when it plays.'),
       stageMotionNotice: reducedMotion ? rhythmMode
         ? T('Pulsa la flecha del recuadro iluminado.', 'Press the arrow key in the highlighted target.')
