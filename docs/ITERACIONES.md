@@ -1,0 +1,56 @@
+# Registro de iteraciones del prototipo
+
+
+> Edición documental de esta copia: **14/11/2026 19:03:13 (UTC-05:00)** · EarthBeat `V3`.
+> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+
+Aquí queda documentado **cómo evolucionó el prototipo**, qué cambió en cada iteración y **quién la hizo**. Se actualiza con cada iteración nueva.
+
+- **Prototipo interactivo (Claude Design):** https://claude.ai/artifact/L5G8i3kpm4XSqQgzxBs7FU *(compartido con cualquiera que tenga el enlace)*
+- **Autoría:** hasta ahora, **solo Nishix03** (dirige, decide y aprueba cada iteración). El código del prototipo lo **genera una IA** (Claude Design y Claude Code, de Anthropic) a partir de sus pedidos y él lo revisa. Esto también está en [`USO_DE_IA.md`](USO_DE_IA.md).
+- **Cuando se sumen más personas**, cada iteración anota en la columna *Autor* quién la hizo.
+
+## Línea de tiempo
+
+Las versiones del artefacto de Claude Design se numeran en orden (v2, v3…). Algunos números no aparecen porque eran cambios intermedios sin publicar como hito.
+
+| Iteración | Versión del artefacto | Qué cambió | Pedido y decisiones | Autor | Herramientas de IA |
+|---|---|---|---|---|---|
+| **I01** · Concepto inicial «Silbador» | v2 (`VERSION_DEL_PROTOTIPO`) | Primera app web: historia en capítulos de la lluvia de Chiclayo, «Orquesta del Pacífico» y «Laboratorio», con sonido real (Web Audio). Datos de NASA POWER 1981–2024 | Idea creativa para el experiencia interactiva basada en el audio de orientación, con historia, módulos y plan para 6 miembros | Nishix03 | Claude Design, Claude Code, Whisper |
+| **I02** · Giro al reto oficial | v3 (`VERSION_DEL_PROTOTIPO`) | Pasa a **Pacific Ocean Sonification** con estilo retro pixelado: 5 discos con 30 fotogramas reales de GHRSST (anomalía de temperatura del mar), analizador de color, cinco músicos con personalidad y modo accesible | Estilo pixel profesional; la jukebox debe acompañar a los fotogramas del EIC; personajes con identidad | Nishix03 | Claude Design, Claude Code |
+| **I03** · Marca Terrasonic | v4 (`VERSION_DEL_PROTOTIPO`) | Nombre **Terrasonic**, logo (planeta, anillo y satélite con ondas), fondo espacial animado, espacio para el logo oficial y panel grande del protagonista | Nombre profesional en inglés; fondo animado temático; símbolo de la NASA | Nishix03 | Claude Design, Claude Code |
+| **I04** · Transiciones y «Tus datos» | v6 (`VERSION_DEL_PROTOTIPO`) | Entradas escalonadas, efectos al pasar el cursor, fundido entre fotogramas y zona para **subir una imagen o un CSV** | Interfaz más profesional con transiciones; poder subir datos propios | Nishix03 | Claude Design, Claude Code |
+| **I05** · Página Tecnología | v7 (`VERSION_DEL_PROTOTIPO`) | Pestaña con las tecnologías, los datos y las herramientas de IA, con su estado (hecho o planeado); paneles de la misma altura | Una página donde ver las tecnologías; se usará ChatGPT Codex e imágenes | Nishix03 | Claude Design, Claude Code |
+| **I06** · Reorganización | v8 (`VERSION_DEL_PROTOTIPO`) | Reescritura: banda apagada al inicio y un protagonista por disco, «Tus datos» en su propia página, transición con **satélite** estilo videojuego y personaje grande más grande | Banda desactivada al inicio, sin espacios en blanco, transición personalizada | Nishix03 | Claude Design, Claude Code |
+| **I07** · Melodía y objetivos | v9 (`VERSION_DEL_PROTOTIPO`) | Motor **Melodía compuesta** (tonalidad, acordes y melodía por disco), selector de motor, flechas animadas, «Por qué suena así» y Project features | Que suene como melodía y no al azar; flechas con animación; tener presentes Project features | Nishix03 | Claude Design, Claude Code |
+| **I08** · Escenario | v10 (`VERSION_DEL_PROTOTIPO`) | **Escenario** con un sprite por personaje encendido, que toca su instrumento según su participación y desaparece al apagarse; el protagonista usa el mismo estado | Escenario al pie con sprites animados; versión móvil planeada | Nishix03 | Claude Design, Claude Code |
+| **I09** · Maqueta móvil | v11–v17 | Siete pantallas móviles (390×844 y 360×800): Jukebox, Jukebox al desplazar, Ver grande, La banda, Tus datos, Accesibilidad y Jukebox compacto | Maqueta móvil muy bien adaptada | Nishix03 | Claude Design, Claude Code |
+| **I10** · Iconos y menos cajas | v18 (`VERSION_DEL_PROTOTIPO`) | Iconos pixel en cada opción y menos botones y cuadros: opciones de accesibilidad solo con icono, mezclador de una fila por músico, selector de motor con 4 iconos, estadísticas en línea y «Por qué suena así» desplegable. Las maquetas móviles no cambiaron en esta iteración | «Agrega iconos a cada opción, no te llenes de botones o cuadros innecesarios» | Nishix03 | Claude Design, Claude Code |
+| **I11** · Fotogramas oficiales del EIC | *(solo en el repo; falta subirlo a Claude Design)* | Las imágenes pasan de capturas de GIBS a **fotogramas del video oficial del EIC** (SVS 5176, Pacífico, 16 may 2024 – 2 nov 2026). Cinco discos por estación (invierno 2024, verano 2024–25, invierno 2025, verano 2025–26, invierno 2026), con el mismo personaje protagonista de antes. El analizador usa la escala de color del EIC y reconoce la tierra gris. Un selector permite elegir entre los discos del EIC y los de NASA GIBS / Worldview (2010–2023, los de antes) | Usar los fotogramas del EIC y adaptarlos a los personajes ya definidos | Nishix03 | Claude Code |
+| **I12** · Diseño limpio, guía interactiva y armonía | v27–v28 | Interfaz nueva, sobria y espacial (negro, líneas finas, tipografía Barlow e Inter, sin estilo retro). Se entra directo a la jukebox, con la guía al abrir. **Escuchar es una sola pantalla**: discos, mapa, línea de tiempo, protagonista, banda y escenario a la vez; lo avanzado está en la ventana «Más opciones». La página de La banda también es una pantalla: retrato grande, selector de músico y datos. El mapa se divide en **lo que ves tú** (imagen de la NASA, más pequeña) y **lo que ve la máquina** (los 28×16 píxeles de color); el escenario va arriba del protagonista; toques retro sobrios (tipografía de píxeles en etiquetas, sombras duras, líneas de escaneo, suelo de baldosas, iconos de píxel en la navegación); y la guía de 11 pasos resalta cada parte de la pantalla. Después: reposo más suave de Mamacocha y Silbo (igual al del resto), cambio de protagonista instantáneo (tiras pequeñas precargadas y decodificadas), fondo espacial animado (nebulosas, tres capas de estrellas, estrellas fugaces y un satélite) y un logo de píxeles nuevo (planeta con olas y satélite). **Auditoría visual** (prototipo probado en un navegador a 1920×1080, 1366×768, 1280×720, 1024×640 y 390×844): etiquetas de píxeles legibles (≥10,5 px), títulos de discos sin recortar, el escenario centra a los músicos, pantallas de datos, método y tecnología llenan el alto, escala de tipografía y ancho en pantallas grandes, ajustes para portátiles bajos y un diseño móvil con cabecera compacta; la banda empieza con el protagonista encendido y los textos de Inti reflejan su armonía menor. **Guía interactiva** de 7 pasos al entrar, que se puede reabrir con «Guía». Accesibilidad en un menú. **Sin scroll:** la interfaz ocupa la ventana y se navega por pantallas con Atrás / Siguiente y puntos (Escuchar y La banda caben en una sola pantalla; Tus datos tiene 2, Método 3 y Tecnología varias), con una transición de barrido entre secciones y un deslizamiento entre pantallas. **Armonía:** Inti pasa a modo menor y más lento (nostálgico), Illapa más sombrío, y Yaku cambia a menor cuando el mapa está muy cálido | Observaciones del jurado: el Niño sonaba demasiado alegre; el estilo era muy retro para un jurado internacional (referencia: SpaceX); demasiados botones y falta de tutorial | Nishix03 | Claude Code |
+
+## Historial de cambios en GitHub (commits)
+
+Todos los commits son de la cuenta **nishix_03 / Nishix03**, con la IA como coautora.
+
+| Referencia del origen | Registro | Mensaje |
+|---|---|---|
+| `6800731` | Registro del origen | Plan, prototipo y esqueleto modular de Silbador (experiencia interactiva) |
+| `REVISION_PREVIA` | Registro del origen | Giro al reto oficial: Pacific Ocean Sonification con fotogramas EIC |
+| `REVISION_PREVIA` | Registro del origen | Terrasonic: marca, avatares anime, Tus datos, página Tecnología |
+| `REVISION_PREVIA` | Registro del origen | Plan: motor de melodía, escenario de la banda y versión móvil |
+| `REVISION_PREVIA` | Registro del origen | Plan: maqueta móvil hecha (7 pantallas en Claude Design) |
+| `REVISION_PREVIA` | Registro del origen | Plan: biblia visual y fichas de sprites por personaje (§9.6) |
+
+*(El repo se llamaba `silbador`, se renombró a `terrasonic` y después a `TerraSonic`, todo el registro del origen. GitHub redirige los nombres anteriores.)*
+
+## Qué fuentes se guardan y cuáles no
+
+- **Se guarda:** el código de la iteración en [`prototipos/`](../prototipos/README.md), una carpeta por iteración a partir de la **I09** (`I09-maqueta-movil/` y `I10-iconos/`).
+- **No se guardó antes de la I09:** el código de las iteraciones I01 a I08 se fue sobrescribiendo en el mismo artefacto y **no se conservó una copia local**. Quedan **documentadas** arriba (qué cambió, quién y por qué) y siguen en el **historial de versiones del artefacto de Claude Design**, con los números de versión de la tabla.
+- **Desde ahora:** cada iteración nueva se guarda en su propia carpeta de `prototipos/` y se agrega una fila aquí, antes de pasar a la siguiente.
+
+## Cómo registrar una iteración nueva
+1. Copiar los archivos del prototipo a `prototipos/IXX-nombre/`.
+2. Agregar una fila a la tabla de iteraciones: versión del artefacto, qué cambió, qué se pidió, **quién la hizo** y qué IA se usó.
+3. Hacer commit con un mensaje claro y, si usa IA, anotarlo en [`USO_DE_IA.md`](USO_DE_IA.md).

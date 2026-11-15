@@ -1,0 +1,9 @@
+{
+  "source": "https://gitc.earthdata.nasa.gov/colormaps/v1.0/GHRSST_Sea_Surface_Temperature_Anomalies.xml",
+  "sha256": "23028b4341fabed2ef735f1691fcc41e5c98f7fdae049973b08ca658c92d543c",
+  "entries": 62,
+  "normalization": "Finite interval midpoint, clamp to [-3,+3], multiply by 5/3. Open extreme bins use the finite edge.",
+  "meaning": "Approximate artistic levels inferred from rendered colors, not measured degrees.",
+  "verifiedAt": "2026-11-14T19:03:13-05:00",
+  "verification": "Included XML checked against the recorded SHA-256 digest; no new retrieval is asserted."
+}
