@@ -80,10 +80,26 @@ async function main() {
         assert.equal(await page.evaluate(() => __app.state.playing), false);
         assert.equal(await page.evaluate(() => document.activeElement.id), 'playback-position');
         await page.locator('#tour-play button').click();
+        if (set === 'eic' && mode === 'melody') {
+          const pending = await page.waitForFunction(() => [...document.querySelectorAll('.stage-note')]
+            .find(note => parseFloat(note.style.top) > 50));
+          const rose = await pending.evaluate(async note => {
+            const start = parseFloat(note.style.top);
+            for (let frame = 0; frame < 8; frame++) {
+              await new Promise(requestAnimationFrame);
+              if (note.isConnected && parseFloat(note.style.top) < start) return true;
+            }
+            return false;
+          });
+          assert(rose, 'A scheduled arrow climbs toward the receptor before the note plays');
+          await page.locator('.stage-note-track[data-strike]').first().waitFor();
+          await page.screenshot({ path: path.join(output, 'stage-arrows.png') });
+        }
         await page.waitForFunction(() => __app.state.playing && __app.state.col >= 4);
         await page.waitForFunction(() => __audioPeak() > .00001);
         const peak = await page.evaluate(() => __audioPeak());
         await page.locator('#tour-play button').click();
+        assert.equal(await page.locator('.stage-note, .stage-note-track[data-strike]').count(), 0);
         const paused = await slider.inputValue();
         await page.waitForTimeout(150);
         const silent = await page.evaluate(() => __audioPeak());
@@ -121,6 +137,7 @@ async function main() {
       const mama = page.locator('.listen-member').nth(2);
       await mama.click();
       assert.equal(await page.locator('.stage-musician[aria-pressed="true"]').count(),0);
+      assert.equal(await mama.locator('.stage-note, .stage-note-track[data-strike]').count(), 0);
       await page.waitForTimeout(150);
       assert.equal(await page.evaluate(() => __app.state.playing), true);
       assert((await page.evaluate(() => __audioPeak())) < .00001, 'Individual mute also cuts reverb');
@@ -159,6 +176,16 @@ async function main() {
         assert((await page.evaluate(()=>__audioPeak()))<.00001);await page.locator('#tour-play button').click();
       }
       report.allMutedPreserved=true;console.log('PASS explicit all-instruments mute survives play and resume');
+      await page.evaluate(() => {
+        __app.setPreference('reducedMotion', true);
+        __app.setBandMute(__app.allMute(false));
+        __app.seekPosition(0);
+      });
+      await page.locator('#tour-play button').click();
+      await page.locator('.stage-note-track[data-strike]').first().waitFor();
+      assert.equal(await page.locator('.stage-note').count(), 0, 'Reduced motion uses stationary receptors');
+      await page.locator('#tour-play button').click();
+      await page.evaluate(() => __app.setPreference('reducedMotion', false));
     }
     if(process.argv.includes('--all-muted'))await page.evaluate(()=>__app.setBandMute(__app.allMute(true)));
     else await page.evaluate(()=>__app.setBandMute(__app.only('mama')));
@@ -181,6 +208,11 @@ async function main() {
       report.layouts.push({ viewport, geometry });
       assert.deepEqual(geometry.clipped, [], 'Controls and legend must stay within the viewport');
       assert(geometry.screenWidth <= geometry.screenClientWidth + 1, 'No horizontal player overflow');
+      assert(await page.locator('.stage-musician').evaluateAll(musicians => musicians.every(musician => {
+        const lane = musician.querySelector('.stage-note-track').getBoundingClientRect();
+        const portrait = musician.querySelector('earthbeat-dance').getBoundingClientRect();
+        return portrait.width >= 32 && portrait.height >= 90 && lane.bottom <= portrait.top;
+      })), 'Each lane must stay above a visible portrait');
       if (viewport.width >= 1280 && !process.argv.includes('--all-muted')) assert(geometry.bandBottom <= Math.min(geometry.footerTop,viewport.height),
         'Desktop must show the map, controls, legend and five complete musicians together: ' + JSON.stringify(geometry));
     }

@@ -1821,20 +1821,38 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .player-layout .map-legend{align-self:end}
 .px .readout p>strong{flex:none}
 .px .player-layout .listen-band{grid-template-rows:auto 1fr auto auto;align-content:start}
-.px .stage-motion-status{margin:3px 0 0;color:var(--muted);font-size:.72em;line-height:1.25}
+.px .stage-cue-help,.px .stage-motion-status{margin:3px 0 0;color:var(--muted);font-size:.72em;line-height:1.25}
 .px .stage-motion-status:empty{display:none}
-.px .player-layout .band-stage{height:auto;min-height:200px}
-.px .player-layout .band-stage-musicians{height:auto;align-items:stretch}
+.px .player-layout .band-stage{height:auto;min-height:236px}
+.px .player-layout .band-stage-musicians{align-items:stretch}
 .px .player-layout .stage-musician.listen-member{padding:4px 2px;border:1px solid transparent;text-align:center;align-items:end}
 .px .player-layout .stage-musician:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
-.px .stage-note-track{position:absolute;grid-column:auto;inset:5% 2px auto;height:35%;display:block;pointer-events:none;container-type:size}
-.px .stage-note-track::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:#8798aa55}
-.px .stage-note-track::after{content:"";position:absolute;bottom:0;left:50%;width:25px;border-top:2px solid #a9b8ca99;transform:translateX(-50%)}
-.px .stage-note{position:absolute;grid-column:auto;top:0;left:50%;display:grid;justify-items:center;gap:1px;z-index:1;white-space:nowrap;transform:translateX(-50%);--stage-drop:100cqh;font:700 clamp(.62rem,.9vw,.75rem)/1.15 var(--head)}
-.px .stage-note small{padding:2px 3px;border-radius:3px;color:#fff;background:#0a0f1a;font-size:inherit}
-.px .stage-note::before{content:"";width:12px;height:12px;border:1px solid #fff;border-radius:2px;background:var(--member-color);box-shadow:0 0 6px #0009}
-.px .stage-note[data-note="thunder"]::before{outline:1px solid var(--member-color);outline-offset:2px}
-.px .stage-note.is-static{top:auto;bottom:0}
+/* Each instrument has its own lane, with the receptor above the portrait. */
+.px .stage-note-track{
+  --arrow-shape:polygon(50% 0,100% 46%,74% 46%,74% 100%,26% 100%,26% 46%,0 46%);
+  --track-arrow:clamp(12px,1.5vw,19px);
+  position:relative;display:block;width:100%;margin:12px 0 8px;
+  pointer-events:none;
+  background:linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat;
+}
+.px .stage-note-track::before,.px .stage-note-track::after,.px .stage-note{
+  position:absolute;top:0;left:50%;display:block;width:var(--track-arrow);height:var(--track-arrow);
+  transform:translate(-50%,-50%);clip-path:var(--arrow-shape);
+}
+.px .stage-note-track::before,.px .stage-note-track::after{content:"";z-index:2}
+.px .stage-note-track::before{background:var(--muted)}
+.px .stage-note-track::after{background:var(--surface);transform:translate(-50%,-50%) scale(.66)}
+.px .stage-note-track[data-strike]::before{background:var(--member-color);transform:translate(-50%,-50%) scale(1.15)}
+.px .stage-note-track[data-strike]::after{display:none}
+.px .stage-note{top:100%;z-index:1;background:var(--member-color)}
+.px .stage-note[data-note="thunder"]{clip-path:polygon(54% 0,100% 46%,75% 46%,75% 75%,60% 68%,60% 100%,27% 70%,27% 46%,0 46%)}
+.px.app[data-contrast="true"] .stage-note,.px.app[data-contrast="true"] .stage-note-track[data-strike]::before{background:var(--fg)}
+@media(forced-colors:active){
+ .px .stage-note-track::before,.px .stage-note-track::after,.px .stage-note{forced-color-adjust:none}
+ .px .stage-note-track::before,.px .stage-note{background:ButtonText}
+ .px .stage-note-track::after{background:ButtonFace}
+ .px .stage-note-track[data-strike]::before{background:Highlight}
+}
 @media(max-width:1000px){
  .px .player-layout{grid-template-columns:repeat(2,minmax(0,1fr))}
  .px .player-layout #tour-frame{grid-column:1/-1}
@@ -1842,7 +1860,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 }
 @media(max-width:640px){
  .px .player-layout{grid-template-columns:minmax(0,1fr)}
- .px .player-layout .band-stage{min-height:185px}
+ .px .player-layout .band-stage{min-height:220px}
  .px .readout p{flex-wrap:wrap}
 }
 .px .uni .map-toolbar{position:relative;display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:6px 10px;padding:6px}
@@ -1864,13 +1882,28 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .map-source{margin-inline-start:auto;text-align:end}
 .px .map-transport{display:grid;gap:6px;width:100%;padding:6px}
 .px .map-transport .timeline img{display:block}
-.px .band-stage{background:#171b23 url('./stage.webp') center/cover no-repeat;background-blend-mode:luminosity;grid-template-rows:minmax(0,1fr);height:clamp(156px,23vw,240px)}
-.px .band-stage-musicians{height:100%;align-items:end;padding:12px 5px 5px}
-.px .stage-musician.listen-member{padding:3px 1px;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:2px;justify-items:center;min-height:44px;border-color:transparent;background:transparent}
-.px .stage-musician.listen-member img{width:100%;height:100%;object-position:center 75%}
+.px .band-stage{
+  background-color:#101926;
+  background-image:linear-gradient(#182334 0 32%,#10192650 53%,#10192605 100%),url('./stage.webp');
+  background-position:center,center bottom;
+  background-size:100% 100%,100% 100%;
+  grid-template-rows:minmax(0,1fr);
+}
+.px .band-stage-musicians{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:5px}
+.px .player-layout .stage-musician.listen-member{
+  max-width:none;padding:2px;grid-template-columns:minmax(0,1fr);
+  grid-template-rows:minmax(55px,.85fr) minmax(92px,1.15fr) minmax(2em,auto);
+  gap:2px;justify-items:center;align-items:stretch;min-height:44px;background:transparent;
+}
+.px .stage-musician earthbeat-dance{
+  isolation:isolate;
+  background:radial-gradient(ellipse at 50% 65%,color-mix(in srgb,var(--member-color) 19%,transparent),transparent 70%);
+}
+.px.app[data-contrast="true"] .stage-musician earthbeat-dance{background:none}
+.px .stage-musician.listen-member img{width:100%;height:100%;object-position:center bottom}
 .px .stage-musician.listen-member[aria-pressed="false"]{filter:saturate(.3);opacity:.65}
 .px .stage-musician.listen-member:hover,.px .stage-musician.listen-member:focus-visible{border-color:var(--line)}
-.px .stage-musician.listen-member strong{grid-column:1;padding:2px 0;font-size:clamp(.5rem,.81vw,.68rem);text-align:center;letter-spacing:0;white-space:normal;overflow-wrap:anywhere;color:#fff;text-shadow:0 1px 4px #000}
+.px .stage-musician.listen-member strong{grid-column:1;align-self:center;padding:2px 0;font-size:clamp(.625rem,.8vw,.75rem);text-align:center;letter-spacing:0;text-transform:none;white-space:normal;overflow-wrap:anywhere;color:#fff;text-shadow:0 1px 4px #000}
 .px.app[data-contrast="true"] .stage-musician.listen-member strong{color:var(--fg)}
 .px .listen-band .chips{display:flex;flex-wrap:wrap;gap:5px}
 @media(min-width:1001px) and (max-height:850px){
@@ -2174,14 +2207,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <section class="listen-band" aria-labelledby="listen-band-title">
 <div>
 <h2 id="listen-band-title">{{tx.theBand}}</h2>
+<p class="stage-cue-help">{{stageCueHelp}}</p>
 <p id="stage-motion-status" class="stage-motion-status" role="status">{{stageMotionNotice}}</p>
 </div>
 <div class="band-stage" role="group" aria-label="{{tx.bandAria}}">
 <div class="band-stage-musicians">
 <sc-for list="{{stageMusicians}}" as="musician">
 <button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-pressed="{{musician.on}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
-<earthbeat-note-track class="stage-note-track" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"></earthbeat-note-track><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}" aria-hidden="true"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance>
-<strong>{{musician.name}}</strong>
+<earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"></earthbeat-note-track><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}" aria-hidden="true"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance>
+<strong>{{musician.displayName}}</strong>
 </button>
 </sc-for>
 </div>
@@ -5451,9 +5485,10 @@ class Component extends DCLogic {
   }
   scheduleAudio() {
     if (!this.ac || !this.state.playing || !this.audioCursor) return;
-    var now = this.ac.currentTime, cursor = this.audioCursor;
+    var now = this.ac.currentTime, cursor = this.audioCursor, lookahead = .65;
     if (cursor.endAt != null && cursor.endAt <= now) { this.flushPlayback(now); this.tick(); return; }
-    for (var count = 0; count < 16 && cursor.at < now + .65; count++) {
+    var firstNewNote = this.playbackQueue.length;
+    for (var count = 0; count < 16 && cursor.at < now + lookahead; count++) {
       now = this.ac.currentTime;
       if (cursor.column >= 28) {
         if (cursor.frame >= DISCS[this.state.disc].files.length - 1) { cursor.endAt = cursor.at; break; }
@@ -5472,8 +5507,16 @@ class Component extends DCLogic {
       if (scheduled.patch) { cursor.levels = scheduled.patch.levels; cursor.hits = scheduled.patch.hits; cursor.flash = scheduled.patch.flash; }
       cursor.at += this.sequencerMs / 1000; cursor.column++;
     }
-    // Scheduling happens before DOM work: rendering a due UI update must not
-    // consume the safety margin of the next audio event.
+    // Send only new, scheduled entries so the lanes can use the same clock as Web Audio.
+    if (this.playbackQueue.length > firstNewNote && !document.hidden && !this.bandReduced() &&
+        !this.state.masterMuted && this.state.volume > 0 &&
+        typeof window.dispatchEvent === 'function' && typeof window.CustomEvent === 'function') {
+      var notes = this.playbackQueue.slice(firstNewNote);
+      window.dispatchEvent(new window.CustomEvent('earthbeat-stage-queue', {
+        detail: { clock: this.ac, notes: notes, lookahead: lookahead }
+      }));
+    }
+    // Schedule audio before rendering the due player state.
     this.flushPlayback(this.ac.currentTime);
   }
   setEngine(k) {
@@ -6075,11 +6118,14 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageMotionNotice: reducedMotion ? T('Movimiento reducido activado en Accesibilidad.', 'Reduced motion is on in Accessibility.') : '',
+      stageCueHelp: T('Cada flecha marca la entrada de un instrumento.', 'Each arrow marks when an instrument plays.'),
+      stageMotionNotice: reducedMotion ? T('Con movimiento reducido, la marca se ilumina sin desplazar flechas.', 'With reduced motion, the receptor lights up without scrolling arrows.') : '',
       stageMusicians: band.map(function (member) {
         var level = member.on ? s.levels[member.key] || 0 : 0;
-        var note = member.on && s.playing && !s.masterMuted && s.volume > 0 ? s.stageNotes[member.key] : null;
-        return { noteId: note?.id || '', noteKind: note?.kind || '',
+        var audible = member.on && s.playing && !s.masterMuted && s.volume > 0;
+        var note = audible ? s.stageNotes[member.key] : null;
+        return { audible: audible, noteId: note?.id || '', noteKind: note?.kind || '',
+          displayName: member.name.charAt(0) + member.name.slice(1).toLowerCase(),
           name: member.name, on: member.on, toggle: member.toggle, key: member.key, playing: String(member.on && s.playing && level > .04), poseUrl: 'sprites/' + member.key + '/escenario.webp', color: member.color, intensity: level };
       }),
       overCls: s.over ? 'over' : '',

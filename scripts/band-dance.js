@@ -181,69 +181,73 @@ customElements.define('earthbeat-dance', BandDance);
 customElements.define('earthbeat-dance-button', DanceButton);
 
 class StageNoteTrack extends HTMLElement {
-  static observedAttributes = ['data-hit'];
+  static observedAttributes = ['data-hit', 'data-audible'];
   cues = new Map();
 
   clear = () => {
-    for (const note of this.cues.keys()) this.removeCue(note);
+    cancelAnimationFrame(this.frame);
+    this.frame = null;
+    this.cues.forEach(note => note.remove());
+    this.cues.clear();
+    clearTimeout(this.strikeTimer);
+    this.removeAttribute('data-strike');
   };
 
   connectedCallback() {
+    window.addEventListener('earthbeat-stage-queue', this.queue);
     window.addEventListener('terrasonic:motion', this.clear);
     document.addEventListener('visibilitychange', this.clear);
-    this.showCue(this.dataset.hit);
   }
 
   disconnectedCallback() {
+    window.removeEventListener('earthbeat-stage-queue', this.queue);
     window.removeEventListener('terrasonic:motion', this.clear);
     document.removeEventListener('visibilitychange', this.clear);
     this.clear();
   }
 
-  attributeChangedCallback(_, previous, hit) {
-    if (previous === hit) return;
-    if (hit && this.isConnected) this.showCue(hit);
-    else if (!hit) this.clear();
-  }
-
-  showCue(hit) {
-    if (!hit) return;
-    // Read the labels after the template has applied this attack's attributes.
+  attributeChangedCallback(name, previous, value) {
+    if (previous === value || !this.isConnected) return;
+    if (name === 'data-audible' && value !== 'true') this.clear();
+    if (name !== 'data-hit' || !value || document.hidden) return;
+    // The template writes the hit ID and its kind in the same render.
     queueMicrotask(() => {
-      if (this.isConnected && this.dataset.hit === hit && !document.hidden) this.addCue();
+      if (!this.isConnected || this.dataset.hit !== value || this.dataset.audible !== 'true') return;
+      this.dataset.strike = this.dataset.kind || 'note';
+      clearTimeout(this.strikeTimer);
+      this.strikeTimer = setTimeout(() => this.removeAttribute('data-strike'), reduced() ? 680 : 170);
     });
   }
 
-  addCue() {
-    const still = reduced() || typeof this.animate !== 'function';
-    // Keep the most recent attack readable with reduced motion.
-    if (still) this.clear();
-    const note = document.createElement('span');
-    note.className = still ? 'stage-note is-static' : 'stage-note';
-    note.dataset.note = this.dataset.kind;
-    if (this.dataset.label) {
-      const text = document.createElement('small');
-      text.textContent = this.dataset.label;
-      note.append(text);
+  queue = ({ detail: { clock, notes, lookahead } }) => {
+    if (this.dataset.audible !== 'true' || reduced() || document.hidden) return;
+    const key = this.dataset.character;
+    this.clock = clock;
+    this.lookahead = lookahead;
+    for (const event of notes) {
+      const kind = event.fired[key];
+      if (!kind || event.at <= clock.currentTime) continue;
+      const note = document.createElement('span');
+      note.className = 'stage-note';
+      note.dataset.note = kind === true ? 'note' : kind;
+      this.cues.set(event.at, note);
+      this.append(note);
     }
-    this.append(note);
-    const arrive = 'translate(-50%, calc(var(--stage-drop) - 7px))';
-    const animation = still ? null : note.animate([
-      { transform: 'translate(-50%, -12px)' },
-      { transform: arrive, offset: .80 },
-      { transform: arrive, opacity: .85 },
-    ], { duration: 780, fill: 'both' });
-    const timeout = setTimeout(() => this.removeCue(note), still ? 680 : 780);
-    this.cues.set(note, { animation, timeout });
-  }
+    if (this.cues.size && this.frame == null) this.advance();
+  };
 
-  removeCue(note) {
-    const cue = this.cues.get(note);
-    clearTimeout(cue.timeout);
-    cue.animation?.cancel();
-    this.cues.delete(note);
-    note.remove();
-  }
+  advance = () => {
+    const now = this.clock.currentTime;
+    this.cues.forEach((note, at) => {
+      if (at <= now) {
+        note.remove();
+        this.cues.delete(at);
+      } else {
+        note.style.top = Math.min(100, 100 * (at - now) / this.lookahead) + '%';
+      }
+    });
+    this.frame = this.cues.size ? requestAnimationFrame(this.advance) : null;
+  };
 }
 
 customElements.define('earthbeat-note-track', StageNoteTrack);
