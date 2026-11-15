@@ -16,8 +16,19 @@ def build(destination: Path) -> None:
     root = Path(__file__).resolve().parents[1]
     prototype = root / "prototipos" / "I11-eic"
     support_runtime = root / "scripts" / "pages-support.js"
+    avatar_runtime = root / "scripts" / "avatar2d.js"
     musicians = {"silbo", "inti", "mama", "yaku", "illapa"}
     support_version = sha256(lf_bytes(support_runtime)).hexdigest()[:12]
+    avatar_version = sha256(lf_bytes(avatar_runtime))
+    avatar_assets = {}
+    for musician in sorted(musicians):
+        pose = Path("sprites") / musician / "pose-banda.webp"
+        avatar_assets[pose] = prototype / pose
+        for frame in range(4):
+            name = f"{frame:02}.png"
+            avatar_assets[pose.parent / "keyframes" / name] = root / "assets" / "avatares" / musician / "banda" / "keyframes" / name
+    for asset in avatar_assets.values():
+        avatar_version.update(asset.read_bytes())
     html = (prototype / "Main.dc.html").read_text(encoding="utf-8")
     impact_catalog = json.loads((root / "data" / "impacts.v1.json").read_text(encoding="utf-8"))
     if impact_catalog.get("version") != 1 or not isinstance(impact_catalog.get("records"), list):
@@ -46,19 +57,27 @@ def build(destination: Path) -> None:
         raise ValueError("Falta el script de enlaces de estado del prototipo.")
     html = html.replace(support_marker, f'src="./support.js?v={support_version}"', 1)
     html = html.replace(
+        "</head>", f'<script type="module" src="./runtime/avatar2d.js?v={avatar_version.hexdigest()[:12]}"></script>\n</head>', 1
+    )
+    html = html.replace(
         "/_blob/73710d959697d6b73c436a389b19a0de", "./data/nasa_power_monthly.json"
     )
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_bytes(html.encode("utf-8"))
     copy2(support_runtime, destination / "support.js")
+    (destination / "runtime").mkdir(exist_ok=True)
+    copy2(avatar_runtime, destination / "runtime")
     copytree(root / "assets" / "fonts", destination / "fonts", dirs_exist_ok=True)
     for folder in ("fotogramas", "fotogramas-anteriores", "brisa", "miniaturas"):
         copytree(prototype / folder, destination / folder, dirs_exist_ok=True)
     for musician in sorted(musicians):
-        for filename in ("miniatura-banda.webp", "escenario.webp", "pose-banda.webp", "pose-banda-animada.webp"):
+        for filename in ("miniatura-banda.webp", "escenario.webp"):
             sprite = Path("sprites") / musician / filename
             (destination / sprite).parent.mkdir(parents=True, exist_ok=True)
             copy2(prototype / sprite, destination / sprite)
+    for relative, asset in avatar_assets.items():
+        (destination / relative).parent.mkdir(parents=True, exist_ok=True)
+        copy2(asset, destination / relative)
     (destination / "data").mkdir(exist_ok=True)
     copy2(root / "data" / "nasa_power_monthly.json", destination / "data")
     copy2(root / "data" / "impacts.v1.json", destination / "data")

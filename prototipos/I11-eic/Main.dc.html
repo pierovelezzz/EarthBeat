@@ -1183,11 +1183,8 @@ a{color:inherit}
 .px .listen-members{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
 .px .listen-member{min-width:0;min-height:44px;display:grid;grid-template-columns:24px minmax(0,1fr);align-items:center;gap:8px;padding:3px 8px;text-align:left;border:1px solid var(--line);border-radius:5px;background:var(--panel)}
 .px .listen-member[aria-pressed="true"]{border-inline-start:3px solid var(--member-color)}
-.px .listen-member[aria-pressed="false"] img{filter:grayscale(.85);opacity:.65}
-.px .listen-member img{width:24px;height:30px;object-fit:contain}
 .px .listen-member strong{overflow-wrap:anywhere;font:700 .8em/1.3 var(--head)}
 .px .listen-member span{grid-column:2;font-size:.7em;color:var(--muted)}
-.px .listen-member img{grid-row:1/3}
 .px .listen-member{gap:1px 7px}
 .px .file-settings{width:100%;min-width:0}
 .px .file-settings .field{max-width:100%;display:grid}
@@ -1448,7 +1445,20 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .practice-example #tour-sample{display:grid;justify-items:start;gap:14px}
 .px .practice-example h2{font-size:clamp(1.3em,3vw,2em);overflow-wrap:anywhere}
 .px .practice-example .sample-preview{height:auto;max-height:280px;aspect-ratio:560/320}
-.px .bscene:has(.bportrait-motion[data-ready]) .bportrait-live{visibility:hidden}
+.px ts-avatar{position:relative;display:block;contain:layout paint;touch-action:pan-y pinch-zoom}
+.px ts-avatar::before{content:"";position:absolute;inset:0;background:var(--avatar-image) center/contain no-repeat;pointer-events:none}
+.px ts-avatar[data-rendered]::before{display:none}
+.px ts-avatar>.sprite-frame{display:block;width:100%;height:100%;object-fit:contain;position:absolute;inset:0;transform-origin:50% 85%;pointer-events:none}
+.px ts-avatar[data-character="silbo"]{--avatar-image:url("./sprites/silbo/pose-banda.webp")}
+.px ts-avatar[data-character="inti"]{--avatar-image:url("./sprites/inti/pose-banda.webp")}
+.px ts-avatar[data-character="mama"]{--avatar-image:url("./sprites/mama/pose-banda.webp")}
+.px ts-avatar[data-character="yaku"]{--avatar-image:url("./sprites/yaku/pose-banda.webp")}
+.px ts-avatar[data-character="illapa"]{--avatar-image:url("./sprites/illapa/pose-banda.webp")}
+.px .bscene>.bportrait-live{position:absolute}
+.px .listen-member>ts-avatar{grid-row:1/3;width:24px;height:30px}
+.px .listen-member[aria-pressed="false"] ts-avatar{filter:grayscale(.85);opacity:.65}
+.px ts-sprite-controls{display:grid;gap:4px}
+.px .sprite-readout{font-size:.8em;line-height:1.5;color:var(--muted)}
 .px .bentering .bportrait-live{animation:bcut-reveal var(--band-entry) var(--cut-ease) both}
 .px .bresetting .bportrait-live{opacity:0}
 .px .bsel img{object-fit:contain;flex-shrink:0}
@@ -1696,7 +1706,7 @@ html[data-ts-page-hidden] .px .space-sky *{animation-play-state:paused!important
 .px .space-sky .space-moon { animation: moon-drift 18s ease-in-out infinite alternate; }
 @keyframes moon-drift { to { transform: translate3d(-9px, 13px, 0); } }
 .px.reduce-motion .space-sky .space-shower { display: none; }
-body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-state: paused !important; }
+body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .space-sky * { animation-play-state: paused !important; }
 @media (max-width:700px) {
   .px .space-sky .space-sun { left: -17px; top: 20%; }
   .px .space-sky .space-moon { top: 34%; }
@@ -1705,95 +1715,77 @@ body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-stat
 }
 
 .ts-cinema{position:fixed;inset:0;z-index:2000;overflow:hidden;background:#101d30;color:#eef3fa;font:400 16px/1.45 "Inter",sans-serif;isolation:isolate}
-
 .ts-cinema *{box-sizing:border-box}
-
 .ts-cinema .cinema-space{position:absolute;inset:-10%;background:radial-gradient(ellipse at 12% 18%,#e8b96925,transparent 45%),radial-gradient(ellipse at 80% 80%,#258da32b,transparent 60%),#101d30}
-
 .ts-cinema .cinema-stars{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 18%,#d1e8ff 90%,transparent),radial-gradient(1px 1px at 52% 66%,#8be7e9 90%,transparent),radial-gradient(1.5px 1.5px at 82% 34%,#fff 90%,transparent);background-size:173px 191px,277px 311px,419px 367px;opacity:.7}
-
 .ts-cinema .cinema-stars.near{inset:-8%;background-size:353px 271px,461px 349px,607px 433px;opacity:.45}
-
 .ts-cinema .cinema-sun{position:absolute;width:clamp(110px,18vw,250px);aspect-ratio:1;top:9%;left:-3%;border-radius:50%;background:radial-gradient(circle at 64% 40%,#fff1b7,#e8b969 45%,#ae602e 70%);box-shadow:0 0 60px 20px #e8b96944,0 0 170px 60px #e8b96918}
-
 .ts-cinema .cinema-world{position:absolute;width:min(68vh,48vw,650px);aspect-ratio:1;right:12%;top:8%;filter:drop-shadow(0 0 24px #63bbdb35);transform-origin:50% 55%}
-
 .ts-cinema .cinema-world svg{display:block;width:100%;height:100%}
-
 .ts-cinema .cinema-orbit{transform-origin:50% 50%}
-
 .ts-cinema .cinema-wave{position:absolute;width:40%;height:110px;left:54%;top:62%;color:#8be7e9}
-
 .ts-cinema .cinema-meteor{position:absolute;width:clamp(70px,16vw,220px);height:2px;left:8%;top:12%;background:linear-gradient(90deg,transparent,#8be7e9);opacity:0;transform-origin:right center}
-
 .ts-cinema .cinema-meteor::after{content:"";position:absolute;right:0;top:-1px;width:4px;height:4px;border-radius:50%;background:#e6faff;box-shadow:0 0 12px #8be7e9}
-
 .ts-cinema .cinema-meteor:nth-of-type(2){left:52%;top:8%;width:100px}
-
 .ts-cinema .cinema-meteor:nth-of-type(3){left:2%;top:40%;width:140px}
-
 .ts-cinema .cinema-copy{position:absolute;left:8%;bottom:17%;width:min(620px,84%);text-shadow:0 2px 24px #101d30}
-
 .ts-cinema .cinema-brand{font-size:clamp(1rem,1.5vw,1.4rem);font-weight:700;letter-spacing:.22em;margin:0 0 12px}
-
 .ts-cinema .cinema-copy h2{font-size:clamp(2rem,4.5vw,4rem);line-height:1.06;letter-spacing:-.025em;margin:0;max-width:15ch}
-
 .ts-cinema .cinema-copy p:last-child{max-width:42ch;color:#c4d9e8;margin:14px 0 0}
-
 .ts-cinema .cinema-toolbar{position:absolute;inset:auto max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.8rem;color:#c4d9e8}
-
 .ts-cinema .cinema-toolbar p{margin:0;max-width:35ch}
-
-.ts-cinema .cinema-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
-
-.ts-cinema button{box-sizing:border-box;pointer-events:auto;min-height:44px;max-width:100%;padding:10px 16px;border:1px solid #b6c5d5;border-radius:8px;color:#eef3fa;background:#182332;font:600 .875rem/1.3 sans-serif;cursor:pointer}
-
-
+.ts-cinema .cinema-actions{display:flex;gap:8px;flex-shrink:0;align-items:center}
+.ts-cinema button{pointer-events:auto;min-height:44px;max-width:60%;padding:10px 16px;border:1px solid #b6c5d5;border-radius:8px;color:#eef3fa;background:#182332;font:600 .875rem/1.3 sans-serif;cursor:pointer}
 .ts-cinema button:focus-visible{outline:3px solid #e8b969;outline-offset:4px}
-
 .ts-cinema button:hover{background:#294059}
-
-.ts-cinema button[hidden]{display:none}
-
-.ts-cinema[data-contrast="true"]{background:#000;color:#fff}
-
-.ts-cinema[data-contrast="true"] .cinema-space,.ts-cinema[data-contrast="true"] .cinema-wave{display:none}
-
-.ts-cinema[data-contrast="true"] .cinema-description,.ts-cinema[data-contrast="true"] .cinema-toolbar{color:#fff}
-
-.ts-cinema[data-static="true"] .cinema-meteor{display:none}
+.ts-cinema .cinema-meteor:nth-of-type(4){left:28%;top:23%;width:90px}
+.ts-cinema .cinema-meteor:nth-of-type(5){left:72%;top:32%;width:80px}
+@media(max-width:640px){.ts-cinema .cinema-world{width:min(72vw,38svh,320px);top:8%;left:0;right:0;margin-inline:auto}.ts-cinema .cinema-copy{left:6%;width:88%;bottom:24%;text-align:center}.ts-cinema .cinema-copy h2{font-size:clamp(1.8rem,7vw,2.5rem);margin-inline:auto}.ts-cinema .cinema-copy p:last-child{font-size:.875rem;margin-inline:auto}.ts-cinema .cinema-wave{left:10%;width:80%;top:49%;height:55px}.ts-cinema .cinema-stars.near{display:none}.ts-cinema .cinema-sun{top:4%;left:-12%}.ts-cinema .cinema-toolbar{flex-direction:column;align-items:center;text-align:center;gap:8px}.ts-cinema .cinema-toolbar p{max-width:100%;font-size:.7rem}.ts-cinema .cinema-actions{width:100%;justify-content:center}.ts-cinema button{max-width:100%;min-width:104px}}
+@media(max-height:450px){.ts-cinema .cinema-world{width:65vh;right:12%;top:0}.ts-cinema .cinema-copy{bottom:24%;width:55%;left:6%}.ts-cinema .cinema-copy h2{font-size:clamp(1.5rem,5vh,2.5rem)}.ts-cinema .cinema-brand{font-size:.8rem;margin-bottom:6px}.ts-cinema .cinema-copy p:last-child{display:none}.ts-cinema .cinema-toolbar{font-size:.7rem}.ts-cinema .cinema-toolbar p{max-width:23ch}}
+@media(forced-colors:active){.ts-cinema .cinema-world,.ts-cinema .cinema-stars,.ts-cinema .cinema-sun,.ts-cinema .cinema-wave{display:none}.ts-cinema{background:Canvas;color:CanvasText}.ts-cinema button{background:ButtonFace;color:ButtonText;border-color:ButtonText}}
+@media(max-height:450px){.ts-cinema .cinema-wave{display:none}}
 .ts-cinema[data-motion="gentle"]{animation:cinema-gentle 2180ms linear both}
 @keyframes cinema-gentle{0%,100%{opacity:0}8%,92%{opacity:1}}
 
-.ts-cinema .cinema-meteor:nth-of-type(4){left:28%;top:23%;width:90px}
-
-.ts-cinema .cinema-meteor:nth-of-type(5){left:72%;top:32%;width:80px}
-
-@media(max-width:640px){.ts-cinema .cinema-world{width:min(72vw,38svh,320px);top:8%;left:0;right:0;margin-inline:auto}
-.ts-cinema .cinema-copy{left:6%;width:88%;bottom:24%;text-align:center}
-.ts-cinema .cinema-copy h2{font-size:clamp(1.8rem,7vw,2.5rem);margin-inline:auto}
-.ts-cinema .cinema-copy p:last-child{font-size:.875rem;margin-inline:auto}
-.ts-cinema .cinema-wave{left:10%;width:80%;top:49%;height:55px}
-.ts-cinema .cinema-stars.near{display:none}
-.ts-cinema .cinema-sun{top:4%;left:-12%}
-.ts-cinema .cinema-toolbar{flex-direction:column;align-items:center;text-align:center;gap:8px}
-.ts-cinema .cinema-toolbar p{max-width:100%;font-size:.7rem}
-.ts-cinema .cinema-actions{width:100%;justify-content:center}
-.ts-cinema button{max-width:100%;min-width:104px}}
-
-@media(max-height:450px){.ts-cinema .cinema-world{width:65vh;right:12%;top:0}
-.ts-cinema .cinema-copy{bottom:24%;width:55%;left:6%}
-.ts-cinema .cinema-copy h2{font-size:clamp(1.5rem,5vh,2.5rem)}
-.ts-cinema .cinema-brand{font-size:.8rem;margin-bottom:6px}
-.ts-cinema .cinema-copy p:last-child{display:none}
-.ts-cinema .cinema-toolbar{font-size:.7rem}
-.ts-cinema .cinema-toolbar p{max-width:23ch}}
-
-@media(forced-colors:active){.ts-cinema .cinema-world,.ts-cinema .cinema-stars,.ts-cinema .cinema-sun,.ts-cinema .cinema-wave{display:none}
-.ts-cinema{background:Canvas;color:CanvasText}
-.ts-cinema button{background:ButtonFace;color:ButtonText;border-color:ButtonText}}
-
-@media(max-height:450px){.ts-cinema .cinema-wave{display:none}}
+.ts-voyage{position:fixed;inset:0;z-index:2001;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:8px;padding:clamp(16px,5vw,60px);background:#101d30;color:#eef3fa;font:400 16px/1.5 Inter,sans-serif}
+.ts-voyage{overflow:hidden;isolation:isolate}
+.ts-voyage *{box-sizing:border-box}
+.ts-voyage .voyage-copy{text-align:center;position:relative;z-index:1}
+.ts-voyage h2{font-size:clamp(1.5rem,5vw,2.8rem);margin:0}
+.ts-voyage p{color:#c4d9e8;margin:8px 0}
+.ts-voyage>svg{width:100%;height:100%;min-height:0;align-self:center;pointer-events:none}
+.ts-voyage .voyage-target{transform-origin:740px 210px}
+.ts-voyage .voyage-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.ts-voyage .voyage-glow{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.ts-voyage .voyage-phase{min-height:1.5em;color:#8be7e9}
+.ts-voyage .voyage-starfield{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 10% 85%,#397f9129,transparent 65%),radial-gradient(1px 1px at 20px 40px,#c4f2ff 80%,transparent),radial-gradient(1px 1px at 110px 150px,#8be7e9 80%,transparent);background-size:100% 100%,197px 223px,313px 291px;opacity:.6}
+.px .hero{position:relative}
+.px .space-destinations{position:fixed;inset:0;z-index:2;pointer-events:none}
+.px .planet-portal{appearance:none;position:fixed;display:grid;place-items:center;min-width:44px;min-height:44px;border:0;border-radius:50%;padding:0;background:transparent;cursor:pointer;pointer-events:auto;opacity:1;isolation:isolate}
+.px .planet-portal *{pointer-events:none}
+.px .planet-portal.space-sun{width:104px;left:8px;top:30vh}
+.px .planet-portal.space-moon{width:96px;right:8px;top:18vh}
+.px .planet-portal.planet-ringed{width:124px;right:3%;bottom:2%;top:auto}
+.px .planet-portal.planet-distant{width:52px;left:2.5%;bottom:20%;top:auto}
+.px .planet-portal .solar-halo{inset:-12%}
+.px .planet-portal:hover{filter:drop-shadow(0 0 12px #c4f2ff66)}
+.px .planet-portal:focus-visible{outline:3px solid var(--accent);outline-offset:4px;filter:drop-shadow(0 0 12px #c4f2ff66)}
+.px .planet-name{position:absolute;bottom:0;left:50%;transform:translateX(-50%);padding:2px 5px;max-width:100%;border-radius:4px;background:var(--panel);color:var(--fg);font:600 12px/1.3 var(--body);opacity:0;white-space:nowrap}
+.px .planet-portal:is(:hover,:focus-visible) .planet-name,.px .space-destinations[data-contrast="true"] .planet-name{opacity:1}
+.px.reduce-motion .planet-portal *{animation:none!important}
+.px.reduce-motion .space-shower{display:none}
+html[data-ts-page-hidden] .px .planet-portal *{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.px:not([data-motion-mode="full"]) .planet-portal *{animation:none!important}.px:not([data-motion-mode="full"]) .space-shower{display:none}}
+@media(max-width:1200px){.px .hero{padding-block:56px}.px .space-destinations{position:absolute;inset:0}.px .planet-portal.space-sun,.px .planet-portal.space-moon,.px .planet-portal.planet-ringed,.px .planet-portal.planet-distant{position:absolute;display:grid;width:52px;height:52px;min-width:44px;min-height:44px;opacity:1;transform:none}.px .planet-portal.space-sun{left:0;top:0;right:auto;bottom:auto}.px .planet-portal.space-moon{right:0;top:0;left:auto;bottom:auto}.px .planet-portal.planet-distant{left:0;bottom:0;top:auto;right:auto}.px .planet-portal.planet-ringed{right:0;bottom:0;left:auto;top:auto}.px .planet-name{opacity:1;padding:1px 3px;font-size:max(12px,.7em)}.px .planet-portal .solar-satellite{display:none}}
+.px.app[data-theme="light"] .planet-portal{opacity:1}
+@media(forced-colors:active){.px .planet-portal{filter:none}.px .planet-name{background:Canvas;color:CanvasText;opacity:1}.px .planet-portal:focus-visible{outline-color:Highlight}.ts-voyage .voyage-glow{display:none}}
+.ts-voyage button{min-height:44px;padding:10px 16px;border:1px solid #9cb7ce;border-radius:8px;background:#1d3045;color:#eef3fa;font:600 1rem/1.4 Inter,sans-serif;cursor:pointer}
+.ts-voyage button:focus-visible{outline:3px solid #e8b969;outline-offset:3px}
+@media(max-width:1200px){.px.main-edition .hero{padding-block:56px}}
+@media(min-width:1201px) and (max-width:1439px){.px.main-edition .scr.home .in{padding-inline:100px}}
+@media(max-height:450px){.ts-voyage{padding:10px;gap:0}.ts-voyage .voyage-copy p{display:none}}
+@media(forced-colors:active){.ts-voyage{background:Canvas;color:CanvasText}.ts-voyage button{background:ButtonFace;color:ButtonText}}
+body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{animation-play-state:paused!important}
 </style>
 </helmet>
 <div class="px app main-edition {{bandViewClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
@@ -1805,6 +1797,7 @@ body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-stat
 <div class="stl s1"></div><div class="stl s2"></div><div class="stl s3"></div>
 <div class="space-flight space-probe"><svg viewBox="0 0 60 40" focusable="false"><path d="M4 20H0" stroke="#8be7e9" stroke-width="3"/><path d="M52 20L14 9l6 11-6 11z" fill="#d1e8ff"/><path d="M30 13L16 0l4 15m10 12L16 40l4-15" fill="#74a8c9"/></svg></div>
 <svg class="space-bright-stars" viewBox="0 0 1000 600" preserveAspectRatio="none" focusable="false"><g fill="none" stroke="currentColor" stroke-width=".8"><path d="M142 84v8m-4-4h8M914 340v10m-5-5h10M82 413v8m-4-4h8M832 93v6m-3-3h6"/></g><g fill="currentColor"><circle cx="205" cy="42" r="1.2"/><circle cx="957" cy="242" r="1.4"/><circle cx="35" cy="319" r="1.1"/><circle cx="758" cy="568" r="1.3"/></g></svg>
+<sc-if value="{{showDecorativePlanets}}">
 <div class="space-sun"><span class="solar-halo"></span>
 <svg aria-hidden="true" viewBox="0 0 160 160" focusable="false"><defs><radialGradient id="ts-solar-disc" cx="35%" cy="30%" r="75%"><stop stop-color="#fff2b9"/><stop offset=".48" stop-color="#ffc76b"/><stop offset="1" stop-color="#e68839"/></radialGradient><clipPath id="ts-solar-edge"><circle cx="80" cy="80" r="48"/></clipPath></defs>
 <g class="solar-corona" fill="none" stroke="#ffd18c"><circle cx="80" cy="80" r="64" opacity=".2"/><circle cx="80" cy="80" r="71" stroke-dasharray="1 13" stroke-width="2" opacity=".48"/><path d="M80 3v10m0 134v10M3 80h10m134 0h10M26 26l7 7m94 94 7 7M26 134l7-7m94-94 7-7" opacity=".4"/></g>
@@ -1816,6 +1809,7 @@ body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-stat
 </svg></div>
 <div class="space-planet planet-ringed"><svg aria-hidden="true" viewBox="0 0 150 94" focusable="false"><defs><radialGradient id="ts-ringed-disc" cx="28%" cy="25%" r="78%"><stop stop-color="#8ce4dc"/><stop offset=".45" stop-color="#458fac"/><stop offset="1" stop-color="#263b68"/></radialGradient></defs><ellipse cx="75" cy="47" rx="66" ry="14" fill="none" stroke="#a4c9df" stroke-width="6" opacity=".3" transform="rotate(-22 75 47)"/><circle cx="75" cy="47" r="28" fill="url(#ts-ringed-disc)"/><path d="M52 37q21 7 46 3M49 48q24 8 52 3M53 60q21 7 43 2" fill="none" stroke="#b5ede4" opacity=".2" stroke-width="3"/><path d="M13 59c-7 17 121-11 125-35" fill="none" stroke="#9cdad8" stroke-width="4" opacity=".55"/></svg></div>
 <div class="space-planet planet-distant"><svg aria-hidden="true" viewBox="0 0 50 50" focusable="false"><circle cx="25" cy="25" r="20" fill="#426eac"/><path d="M10 14q11-7 25 1M6 24q19-6 37 1M10 35q14-5 29 0" fill="none" stroke="#82c8e3" opacity=".5" stroke-width="3"/><path d="M29 5a20 20 0 0 1 0 40c12-12 11-29 0-40" fill="#1d345b" opacity=".7"/></svg></div>
+</sc-if>
 <div class="space-reading-shade"></div><div class="space-horizon"></div>
 <i class="space-meteor meteor-one"></i><i class="space-meteor meteor-two"></i><i class="space-meteor meteor-three"></i><i class="space-meteor meteor-four"></i><i class="space-meteor meteor-five"></i>
 <div class="space-flight flight-one"><svg class="space-rocket" viewBox="0 0 40 96" focusable="false"><path d="M16 68 20 93 24 68" fill="#ffc76b"/><path d="M18 69 20 84 22 69" fill="#effaff"/><path d="M12 43 3 64l10-3m15-18 9 21-10-3" fill="#6e9bb8"/><path d="M20 3C9 15 9 39 13 66h14c4-27 4-51-7-63Z" fill="#dae6ee"/><path d="M20 3v63h7c4-27 4-51-7-63Z" fill="#8fa6bc"/><circle cx="20" cy="31" r="6" fill="#294d70" stroke="#f3f9fc" stroke-width="2"/><path d="M13 61h14v8H13Z" fill="#476682"/></svg></div>
@@ -1895,6 +1889,23 @@ body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-stat
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{tx.guideOpen}}" title="{{tx.guideOpen}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button>
 </div>
 </div>
+<nav class="space-destinations" data-contrast="{{planetContrast}}" aria-label="{{universe.navLabel}}">
+<button type="button" class="planet-portal space-sun" data-destination="sun" onClick="{{universe.sunOpen}}" aria-label="{{universe.sunLabel}}" title="{{universe.sunLabel}}">
+<span class="solar-halo"></span>
+<svg aria-hidden="true" viewBox="0 0 160 160" focusable="false"><defs><radialGradient id="ts-solar-disc" cx="35%" cy="30%" r="75%"><stop stop-color="#fff2b9"/><stop offset=".48" stop-color="#ffc76b"/><stop offset="1" stop-color="#e68839"/></radialGradient><clipPath id="ts-solar-edge"><circle cx="80" cy="80" r="48"/></clipPath></defs>
+<g class="solar-corona" fill="none" stroke="#ffd18c"><circle cx="80" cy="80" r="64" opacity=".2"/><circle cx="80" cy="80" r="71" stroke-dasharray="1 13" stroke-width="2" opacity=".48"/><path d="M80 3v10m0 134v10M3 80h10m134 0h10M26 26l7 7m94 94 7 7M26 134l7-7m94-94 7-7" opacity=".4"/></g>
+<circle cx="80" cy="80" r="48" fill="url(#ts-solar-disc)"/><path d="M48 65c15-21 44-25 64-5M53 93c10 11 21 15 34 13" fill="none" stroke="#fff0bc" stroke-width="2" opacity=".22"/><g clip-path="url(#ts-solar-edge)"><circle class="solar-eclipse" cx="80" cy="80" r="47" fill="#13233d" stroke="#ffdea5" stroke-width=".6"/></g></svg>
+<span class="solar-satellite"><svg aria-hidden="true" viewBox="0 0 36 24" focusable="false"><path d="M1 6h10v12H1zm24 0h10v12H25Z" fill="#578eaa" stroke="#acdce8" stroke-width=".6"/><path d="M6 6v12m-5-6h10M30 6v12m-5-6h10" stroke="#acdce8" stroke-width=".5"/><path d="M11 12h14M18 2v5" stroke="#d5eaf2"/><path d="m14 7 8 1-1 10-8-1Z" fill="#d5eaf2"/><circle cx="18" cy="12" r="2" fill="#d8b16f"/></svg></span>
+<span class="planet-name" aria-hidden="true">{{universe.sunName}}</span></button>
+<button type="button" class="planet-portal space-moon" data-destination="moon" onClick="{{universe.moonOpen}}" aria-label="{{universe.moonLabel}}" title="{{universe.moonLabel}}">
+<svg aria-hidden="true" viewBox="0 0 140 140" focusable="false"><defs><radialGradient id="ts-lunar-disc" cx="30%" cy="25%" r="82%"><stop stop-color="#e4eef6"/><stop offset=".6" stop-color="#aebfd4"/><stop offset="1" stop-color="#586c89"/></radialGradient><clipPath id="ts-lunar-edge"><circle cx="70" cy="70" r="52"/></clipPath></defs>
+<circle cx="70" cy="70" r="63" fill="none" stroke="#b8d5ef" stroke-width=".5" opacity=".2"/><circle cx="70" cy="70" r="52" fill="url(#ts-lunar-disc)"/>
+<g clip-path="url(#ts-lunar-edge)"><g fill="#6d829e" opacity=".38"><circle cx="49" cy="48" r="12"/><circle cx="83" cy="88" r="17"/><circle cx="39" cy="88" r="7"/><circle cx="93" cy="44" r="6"/><circle cx="67" cy="66" r="4"/></g><g fill="none" stroke="#eef5fa" opacity=".28"><path d="M39 49a12 12 0 0 1 20-8M69 88a17 17 0 0 1 26-14"/></g><circle cx="100" cy="57" r="61" fill="#13233d" opacity=".67"/></g>
+</svg>
+<span class="planet-name" aria-hidden="true">{{universe.moonName}}</span></button>
+<button type="button" class="planet-portal space-planet planet-ringed" data-destination="saturn" onClick="{{universe.saturnOpen}}" aria-label="{{universe.saturnLabel}}" title="{{universe.saturnLabel}}"><svg aria-hidden="true" viewBox="0 0 150 94" focusable="false"><defs><radialGradient id="ts-ringed-disc" cx="28%" cy="25%" r="78%"><stop stop-color="#8ce4dc"/><stop offset=".45" stop-color="#458fac"/><stop offset="1" stop-color="#263b68"/></radialGradient></defs><ellipse cx="75" cy="47" rx="66" ry="14" fill="none" stroke="#a4c9df" stroke-width="6" opacity=".3" transform="rotate(-22 75 47)"/><circle cx="75" cy="47" r="28" fill="url(#ts-ringed-disc)"/><path d="M52 37q21 7 46 3M49 48q24 8 52 3M53 60q21 7 43 2" fill="none" stroke="#b5ede4" opacity=".2" stroke-width="3"/><path d="M13 59c-7 17 121-11 125-35" fill="none" stroke="#9cdad8" stroke-width="4" opacity=".55"/></svg><span class="planet-name" aria-hidden="true">{{universe.saturnName}}</span></button>
+<button type="button" class="planet-portal space-planet planet-distant" data-destination="aqua" onClick="{{universe.aquaOpen}}" aria-label="{{universe.aquaLabel}}" title="{{universe.aquaLabel}}"><svg aria-hidden="true" viewBox="0 0 50 50" focusable="false"><circle cx="25" cy="25" r="20" fill="#426eac"/><path d="M10 14q11-7 25 1M6 24q19-6 37 1M10 35q14-5 29 0" fill="none" stroke="#82c8e3" opacity=".5" stroke-width="3"/><path d="M29 5a20 20 0 0 1 0 40c12-12 11-29 0-40" fill="#1d345b" opacity=".7"/></svg><span class="planet-name" aria-hidden="true">{{universe.aquaName}}</span></button>
+</nav>
 </section>
 </sc-if>
 
@@ -2056,7 +2067,7 @@ body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-stat
 <div class="listen-members" role="group" aria-label="{{tx.bandAria}}">
 <sc-for list="{{band}}" as="b">
 <button type="button" class="listen-member" aria-pressed="{{b.on}}" onClick="{{b.toggle}}" style="--member-color: {{b.color}}">
-<img src="{{b.thumbUrl}}" alt="" width="24" height="37">
+<ts-avatar data-view="member" data-character="{{b.key}}" data-active="{{b.spriteActive}}" data-muted="{{b.spriteMuted}}" aria-hidden="true"></ts-avatar>
 <strong>{{b.name}}</strong><span>{{b.mixLabel}}</span>
 </button>
 </sc-for>
@@ -2132,10 +2143,7 @@ body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-stat
   <path fill="currentColor" d="M76 120l2 6 6 2-6 2-2 6-2-6-6-2 6-2z M402 163l2 5 5 2-5 2-2 5-2-5-5-2 5-2z M107 387l1 4 4 1-4 1-1 4-1-4-4-1 4-1z M396 405l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"></path>
 </svg>
 <sc-if value="{{bandCur.hasOutgoing}}"><img class="bportrait bportrait-outgoing" src="{{bandCur.previousPoseUrl}}" alt=""></sc-if>
-<img class="bportrait bportrait-live" data-character="{{bandCur.key}}" src="{{bandCur.poseUrl}}" alt="">
-<sc-if value="{{bandCur.moving}}">
-<img class="bportrait bportrait-motion" onLoad="{{bandCur.motionReady}}" src="{{bandCur.motionUrl}}" alt="">
-</sc-if>
+<ts-avatar class="bportrait bportrait-live" data-view="portrait" data-character="{{bandCur.key}}" aria-hidden="true"></ts-avatar>
 <sc-if value="{{bandCur.silboNotes}}">
 <svg class="bsilbo-note" viewBox="0 0 360 540" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.15">
   <path d="M24 31q3-11 15-13"></path>
@@ -2167,6 +2175,7 @@ body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-stat
   <span>{{tx.constellation}} · {{bandCur.instrumentName}}</span>
   <strong>{{bandCur.number}} / 05</strong>
   <div class="avatar-actions">
+    <ts-sprite-controls></ts-sprite-controls>
     <button type="button" class="btn sm" aria-pressed="{{bandCur.previewOn}}" onClick="{{bandCur.preview}}">{{bandCur.previewLabel}}</button>
   </div>
 </figcaption>
@@ -2371,14 +2380,7 @@ function discFrameDate(disc, frame) {
   return { m: month % 12, y: disc.start[0] + Math.floor(month / 12) };
 }
 var DISCS = DISC_SETS.eic.slice();
-// Alternate episodes before showing another month from the same episode.
-var HOME_DISCS = [DISC_SETS.eic[1]].concat(DISC_SETS.prev, DISC_SETS.eic.filter(function (disc) { return disc !== DISC_SETS.eic[1]; }));
-var HOME_MAPS = [2, 0, 4, 1, 5, 3].flatMap(function (frame) {
-  return HOME_DISCS.map(function (disc) {
-    var date = discFrameDate(disc, frame);
-    return { url: disc.files[frame], month: date.m, year: date.y, source: disc.legacy ? 'NASA GIBS' : 'NASA EIC' };
-  });
-});
+var HOME_PREVIEW = [{disc:2,frame:0},{disc:3,frame:2},{disc:4,frame:2},{disc:0,frame:2},{disc:1,frame:2}];
 // The build embeds data/impacts.v1.json here. No runtime request is needed.
 var IMPACT_CATALOG = { version: 1, records: [] };
 var CHARACTER_CATALOG = { version: 1, characters: [], ethics: {} };
@@ -3630,13 +3632,13 @@ class CinematicIntro {
       animate('.cinema-stars.near',[{transform:'scale(.98)',opacity:0},{transform:'scale(1.15)',opacity:.45}]);
       root.querySelectorAll('.cinema-meteor').forEach(function(el,i){var animation=el.animate([{opacity:0,transform:'translate(-10vw,-6vh) rotate(30deg)'},{opacity:.95,offset:.14},{opacity:.75,offset:.7},{opacity:0,transform:'translate(42vw,26vh) rotate(30deg)'}],{duration:900+i*140,delay:duration*(.04+i*.13),fill:'both',easing:'linear'});self.animations.push(animation);});
       animate('.cinema-sun',[{opacity:0,transform:'scale(.8)',offset:0},{opacity:1,transform:'scale(1)',offset:.25},{opacity:.7,transform:'scale(1.03)',offset:1}]);
-      animate('.cinema-world',mobile?[{opacity:0,transform:'translate(8%,-10%) scale(.64)',offset:0},{opacity:1,transform:'translate(0,0) scale(1)',offset:.3},{opacity:1,transform:'translate(-4%,5%) scale(1.16)',offset:.76},{opacity:0,transform:'translate(-4%,5%) scale(1.24)',offset:1}]:[{opacity:0,transform:'translate(18%,12%) scale(.55)',offset:0},{opacity:1,transform:'translate(0,0) scale(1)',offset:.32},{opacity:1,transform:'translate(-6%,9%) scale(1.35)',offset:.62},{opacity:0,transform:'translate(-6%,9%) scale(1.55)',offset:1}]);
+      animate('.cinema-world',mobile?[{opacity:0,transform:'scale(.92)',offset:0},{opacity:1,transform:'scale(1)',offset:.2},{opacity:1,transform:'scale(1.04)',offset:.8},{opacity:0,transform:'scale(1.06)',offset:1}]:[{opacity:0,transform:'translate(18%,12%) scale(.55)',offset:0},{opacity:1,transform:'translate(0,0) scale(1)',offset:.32},{opacity:1,transform:'translate(-6%,9%) scale(1.35)',offset:.62},{opacity:0,transform:'translate(-6%,9%) scale(1.55)',offset:1}]);
       animate('.cinema-orbit',[{opacity:0,transform:'rotate(-12deg)',offset:0},{opacity:1,transform:'rotate(0deg)',offset:.5},{opacity:0,transform:'rotate(8deg)',offset:1}]);
       animate('.cinema-wave',[{opacity:0,transform:'scaleX(.3)',offset:0},{opacity:0,transform:'scaleX(.3)',offset:.46},{opacity:.85,transform:'scaleX(1)',offset:.7},{opacity:0,transform:'scaleX(1.1)',offset:1}]);
       animate('.cinema-copy',[{opacity:1,transform:'translateY(0)',offset:0},{opacity:1,transform:'translateY(0)',offset:.88},{opacity:0,transform:'translateY(-4px)',offset:1}]);
       var end=animate('root',[{opacity:1,offset:0},{opacity:1,offset:.88},{opacity:0,offset:1}]);this.endAnimation=end;
       // Reveal the home page as the introduction fades out.
-      var targets=['.brand','.top','#main-content .hero h1','.hero .lede','.hero .cta','.home-demo'];
+      var targets=['.brand','.top','#main-content .hero h1','.hero .lede','.hero .cta','.home-demo','.hero-reassurance'];
       targets.forEach(function(selector,i){var el=document.querySelector(selector);if(!el?.animate)return;var delay=duration*.7+i*55;self.animations.push(el.animate([{opacity:0,transform:selector==='.home-demo'?'translateX(14px) rotate(1deg)':'translateY(8px)'},{opacity:1,transform:'translate(0,0) rotate(0)'}],{duration:Math.min(380,duration-delay-20),delay:delay,fill:'backwards',easing:'cubic-bezier(.2,.7,.2,1)'}));});
       end.onfinish=function(){self.finish(true);};this.timers.push(setTimeout(function(){self.finish(true);},duration+250));
     }catch(ignored){this.playGentle();}
@@ -3650,8 +3652,8 @@ class CinematicIntro {
   togglePause(){if(!this.root||this.root.dataset.static==='true')return;this.paused=!this.paused;this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(a=>this.paused?a.pause():a.play());if(!this.paused){var self=this;this.timers.push(setTimeout(function(){self.finish(true);},Math.max(0,this.duration-Number(this.endAnimation?.currentTime||0))+500));}this.update();}
   update() {
     if (!this.root) return;
-    this.root.querySelector('h2').textContent = T('Te damos la bienvenida a EarthBeat','Welcome to EarthBeat');
-    this.root.querySelector('.cinema-description').textContent = T('Escucha cómo los colores del Pacífico se convierten en música.','Hear the colors of the Pacific turn into music.');
+    this.root.querySelector('h2').textContent = T('Mapas NASA hechos música.','NASA maps, made musical.');
+    this.root.querySelector('.cinema-description').textContent = T('Explora cambios de temperatura del Pacífico con la vista y el oído.','Explore Pacific temperature patterns through sight and sound.');
     this.root.querySelector('.cinema-toolbar p').textContent = T('Ilustración asistida por IA · Pacífico','AI-assisted illustration · Pacific');
     this.root.querySelector('.cinema-skip').textContent = T('Saltar introducción','Skip intro');
     this.root.querySelector('.cinema-pause').textContent = this.paused ? T('Reanudar','Resume') : T('Pausar','Pause');
@@ -3666,6 +3668,63 @@ class CinematicIntro {
     this.returnFocus=null;
     this.owner.completeWelcome();
     if (restoreFocus) this.owner.showEntryPreferences();
+  }
+}
+
+var SPACE_DESTINATIONS = {
+  sun: { name: ['Sol', 'Sun'], color: '#e8b969', disc: 1 },
+  moon: { name: ['Luna', 'Moon'], color: '#c4d9ee', disc: 0 },
+  saturn: { name: ['Saturno', 'Saturn'], color: '#b9b7e9', disc: 3 },
+  aqua: { name: ['Aqua', 'Aqua'], color: '#9ad8bf', disc: 2 }
+};
+function spaceText(pair) { return pair[LANG === 'en' ? 1 : 0]; }
+class SpaceJourney {
+  constructor(owner){this.owner=owner;this.animations=[];this.timer=null;this.phaseTimers=[];}
+  start(key,trigger,arrive){
+    this.finish(false);var self=this,app=this.owner,dest=SPACE_DESTINATIONS[key];if(!dest||app.disposed)return;
+    this.trigger=trigger;this.arrive=arrive;
+    if(app.bandReduced()||typeof document.createElement!=='function'){this.arrive=null;arrive();return;}
+    var root=document.createElement('section');this.root=root;root.className='ts-voyage';root.dataset.destination=key;root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-labelledby','voyage-title');
+    root.innerHTML='<div class="voyage-starfield" aria-hidden="true"></div><div class="voyage-copy"><h2 id="voyage-title"></h2><p></p><p class="voyage-phase" role="status" aria-live="polite"></p></div><div class="voyage-glow" aria-hidden="true"></div><svg viewBox="0 0 900 500" aria-hidden="true"><defs><radialGradient id="voyage-light"><stop stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><circle cx="740" cy="210" r="105" fill="url(#voyage-light)"/><circle class="voyage-target" cx="740" cy="210" r="54"/><ellipse cx="740" cy="210" rx="94" ry="22" fill="none" stroke="#bcd8ed" opacity=".5" transform="rotate(-20 740 210)"/><path class="voyage-path" d="M90 380C250 60 520 460 676 230" fill="none" stroke="#8be7e9" stroke-width="1.5" stroke-dasharray="3 8" opacity=".4"/><g class="voyage-ship"><g class="voyage-flame"><path d="M-5 18Q0 37 5 18Z" fill="#e8b969"/><path d="M-2 18Q0 29 2 18Z" fill="#8be7e9"/></g><path d="M0-22C-8-16-9 4-6 17H6C9 4 8-16 0-22Z" fill="#eef3fa"/><circle cy="-7" r="3.5" fill="#386b8e"/><path d="M-6 6L-13 19l8-3M6 6l7 13-8-3" fill="#8be7e9"/><path d="M-5 17h10" stroke="#608baa" stroke-width="2"/></g><g fill="#d7edff" opacity=".5"><circle cx="120" cy="100" r="1.5"/><circle cx="320" cy="220" r="2"/><circle cx="460" cy="70" r="1"/><circle cx="580" cy="330" r="1.5"/><circle cx="780" cy="420" r="1"/></g></svg><div class="voyage-actions"><button type="button" class="voyage-skip"></button><button type="button" class="voyage-cancel"></button></div>';
+    root.querySelector('h2').textContent=T('Viajando a ','Travelling to ')+spaceText(dest.name);root.querySelector('.voyage-copy p').textContent=T('Destino musical: ','Music destination: ')+DISC_SETS.eic[dest.disc].title+T('. Puedes saltar el viaje o volver.','. You can skip the journey or go back.');root.querySelector('.voyage-target').setAttribute('fill',dest.color);root.querySelector('.voyage-skip').textContent=T('Abrir disco','Open disc');root.querySelector('.voyage-cancel').textContent=T('Cancelar','Cancel');
+    this.appRoot=document.querySelector('.px.app');this.wasInert=this.appRoot.inert;this.appRoot.inert=true;document.body.append(root);root.querySelector('.voyage-skip').focus({preventScroll:true});
+    root.querySelector('.voyage-skip').onclick=function(){self.finish(true);};root.querySelector('.voyage-cancel').onclick=function(){self.finish(false);};
+    this.onKey=function(e){if(e.key==='Escape'){e.preventDefault();e.stopPropagation();self.finish(false);}else if(e.key==='Tab'){e.preventDefault();var buttons=Array.from(root.querySelectorAll('button')),i=buttons.indexOf(document.activeElement);buttons[(i+(e.shiftKey?-1:1)+buttons.length)%buttons.length].focus();}};
+    this.onHidden=function(){if(document.hidden)self.finish(false);};document.addEventListener('keydown',this.onKey,true);document.addEventListener('visibilitychange',this.onHidden);
+    app.vibrateSafely('confirm','launch:'+ (++app.hapticRequestSerial));
+    var duration=5200,landing=key==='moon'||key==='aqua';root.dataset.duration=String(duration);root.dataset.arrival=landing?'landing':'orbit';
+    var phase=root.querySelector('.voyage-phase');phase.textContent=T('Despegue','Liftoff');
+    try{
+      var path=root.querySelector('.voyage-path');path.setAttribute('d',landing?(key==='aqua'?'M150 430C150 280 190 145 360 100S700 35 740 98':'M150 430C150 280 190 145 360 100S700 35 740 112'):'M150 430C150 280 190 145 360 100S600 65 644 202');
+      var source = trigger?.querySelector('svg');
+      if (source) {
+        var body = source.cloneNode(true);
+        Object.entries({ x: 650, y: 120, width: 180, height: 180, class: 'voyage-body' }).forEach(function ([attr, value]) { body.setAttribute(attr, value); });
+        body.querySelectorAll('.solar-eclipse, .solar-satellite').forEach(function (el) { el.remove(); });
+        body.querySelectorAll('[id]').forEach(function (el) { el.id = 'voyage-' + el.id; });
+        body.querySelectorAll('[fill^="url(#"], [clip-path^="url(#"]').forEach(function (el) {
+          ['fill', 'clip-path'].forEach(function (attr) {
+            var value = el.getAttribute(attr);
+            if (value?.startsWith('url(#')) el.setAttribute(attr, value.replace('url(#', 'url(#voyage-'));
+          });
+        });
+        root.querySelector('svg').insertBefore(body, path);
+        root.querySelector('.voyage-target').setAttribute('opacity', '0');
+      }
+      var length=path.getTotalLength(),frames=[];
+      for(var i=0;i<=64;i++){var progress=i/64,point=path.getPointAtLength(length*progress),next=path.getPointAtLength(Math.min(length,length*progress+2)),angle=Math.atan2(next.y-point.y,next.x-point.x)*180/Math.PI+90;if(landing&&progress>.8)angle*=Math.max(0,(1-progress)/.2);frames.push({transform:'translate('+point.x+'px,'+point.y+'px) rotate('+angle+'deg) scale('+(2.2*(1-.15*Math.max(0,(progress-.8)/.2)))+')'});}
+      var ship=root.querySelector('.voyage-ship').animate(frames,{duration:duration,fill:'both',easing:'cubic-bezier(.3,.05,.25,1)'});this.animations.push(ship);
+      this.animations.push(root.querySelector('.voyage-flame').animate([{transform:'scaleY(.8)',opacity:.65},{transform:'scaleY(1)',opacity:.9}],{duration:650,iterations:8,direction:'alternate',fill:'both'}));
+      root.querySelector('svg').style.transformOrigin='50% 50%';this.animations.push(root.querySelector('svg').animate([{transform:'scale(1)'},{transform:'scale(1.035)'}],{duration:duration,fill:'both'}));
+      this.animations.push(root.querySelector('.voyage-glow').animate([{opacity:0,offset:0},{opacity:.14,offset:.04},{opacity:0,offset:.12},{opacity:0,offset:.84},{opacity:.12,offset:.92},{opacity:0,offset:1}],{duration:duration,fill:'both'}));
+      this.phaseTimers=[setTimeout(function(){if(self.root)phase.textContent=T('En vuelo','In flight');},1400),setTimeout(function(){if(self.root)phase.textContent=landing?T('Aproximación al destino','Approaching the destination'):T('Órbita de observación','Observation orbit');},3800)];
+      ship.onfinish=function(){self.finish(true);};this.timer=setTimeout(function(){self.finish(true);},duration+300);
+    }catch(ignored){this.finish(true);}
+  }
+  finish(arrived){
+    clearTimeout(this.timer);this.timer=null;this.phaseTimers.forEach(clearTimeout);this.phaseTimers=[];this.animations.forEach(function(a){a.onfinish=null;a.cancel();});this.animations=[];
+    if(this.root){this.root.remove();this.root=null;this.appRoot.inert=this.wasInert;document.removeEventListener('keydown',this.onKey,true);document.removeEventListener('visibilitychange',this.onHidden);}
+    var done=this.arrive;this.arrive=null;if(arrived&&done){this.owner.vibrateSafely('notice','arrival:'+ (++this.owner.hapticRequestSerial));done();}else if(this.trigger?.isConnected)this.trigger.focus({preventScroll:true});this.trigger=null;
   }
 }
 
@@ -3709,7 +3768,10 @@ class Component extends DCLogic {
     this.state.tutorialFeedback = null;
     this.state.legendSelection = null;
     this.state.stageNotes = {};
-    this.advanceHomeMap();
+    this.state.homePreview = 0;
+    this.homePreviewDue = 0;
+    this.homePreviewImages = new Map();
+    this.journey = new SpaceJourney(this);
     this.state.speaking = false;
     this.bandTimer = null; this.bandTurn = 0; this.bandRaf = null; this.bandRaf2 = null; this.bandPrevious = null;
     this.guideProgress = Object.create(null);
@@ -3795,6 +3857,7 @@ class Component extends DCLogic {
       self.syncPreferenceMotion();
       if (!self.bandReduced()) return;
       if (self.cinema?.root) self.cinema.playGentle();
+      if (self.journey.root) self.journey.finish(true);
       self.haptics.stop();
       if (self.routeFinish) self.routeFinish();
       if (self.state.tab === 'band') self.cancelBandClip();
@@ -3808,6 +3871,7 @@ class Component extends DCLogic {
     if (this.state.showPreferences) { this.setPreferencesInert(true); this.focusPreferences(); }
     this.cinema = new CinematicIntro(this);
     this.cinema.start();
+    this.homePreviewTimer = setInterval(function () { self.syncHomePreview(); }, 200);
   }
   closeMenus(restoreFocus) {
     document.querySelectorAll('details.menu[open]').forEach(function (menu) {
@@ -4240,6 +4304,10 @@ class Component extends DCLogic {
     this.cancelSample();
     if (this.disposed) return;
     this.pendingWelcome = null;
+    this.journey.finish(false);
+    clearInterval(this.homePreviewTimer);
+    this.homePreviewImages.forEach(function (entry) { entry.image.onload = null; entry.image.onerror = null; });
+    this.homePreviewImages.clear();
     this.cinema?.finish(false);
     this.setPreferencesInert(false);
     this.disposed = true;
@@ -4483,10 +4551,8 @@ class Component extends DCLogic {
   }
   startSample() {
     if (this.disposed || this.state.tab !== 'home' || this.state.sampleStarting) return;
-    var map = HOME_MAPS[this.homeMapIndex] || HOME_MAPS[0];
-    var set = DISC_SETS.eic.some(function(d) { return d.files.includes(map.url); }) ? 'eic' : 'prev';
-    var disc = DISC_SETS[set].findIndex(function(d) { return d.files.includes(map.url); });
-    var frame = DISC_SETS[set][disc].files.indexOf(map.url);
+    var map = HOME_PREVIEW[this.state.homePreview];
+    var set = 'eic', disc = map.disc, frame = map.frame;
     var mix = this.state.mixCustomized ? this.state.mute : this.allMute(false);
     this.stop(); this.stopSpeech(); this.cinema?.finish(false);
     if (this.state.tour) this.tourClose();
@@ -4514,22 +4580,64 @@ class Component extends DCLogic {
     event.preventDefault(); buttons[index]?.focus(); buttons[index]?.click();
   }
 
-  advanceHomeMap() {
-    var index = this.homeMapIndex;
-    if (index == null) {
-      index = -1;
-      try {
-        var saved = sessionStorage.getItem('ts_home_map');
-        if (saved !== null && Number.isSafeInteger(Number(saved)) && Number(saved) >= 0) index = Number(saved);
-      } catch (ignored) {}
+  syncHomePreview(){
+    var s=this.state,card=document.querySelector('.home-demo');
+    if(this.disposed||s.tab!=='home'||s.trans||s.showPreferences||s.more||s.tour||document.hidden||this.bandReduced()||this.cinema?.root||this.journey?.root||!card||card.matches(':hover')||card.contains(document.activeElement)){this.homePreviewDue=0;return;}
+    var now=Date.now();if(!this.homePreviewDue)this.homePreviewDue=now+3000;
+    for(var offset=1;offset<HOME_PREVIEW.length;offset++){
+      var next=(s.homePreview+offset)%HOME_PREVIEW.length,slide=HOME_PREVIEW[next],url=DISC_SETS.eic[slide.disc].files[slide.frame],entry=this.homePreviewImages.get(url);
+      if(!entry){
+        if(typeof Image!=='function')return;
+        var image=new Image(),self=this;entry={image:image,ready:false,failed:false};this.homePreviewImages.set(url,entry);
+        (function(record){record.image.onload=function(){Promise.resolve().then(function(){return typeof record.image.decode==='function'?record.image.decode():null;}).then(function(){if(!self.disposed)record.ready=true;},function(){record.failed=true;});};record.image.onerror=function(){record.failed=true;};})(entry);
+        image.src=url;
+      }
+      if(entry.failed)continue;
+      if(entry.ready&&now>=this.homePreviewDue){this.homePreviewDue=now+3000;this.setState({homePreview:next});}
+      return;
     }
-    this.homeMapIndex = (index + 1) % HOME_MAPS.length;
-    try { sessionStorage.setItem('ts_home_map', String(this.homeMapIndex)); } catch (ignored) {}
   }
   homeMap() {
-    var map = HOME_MAPS[this.homeMapIndex], date = T('Pacífico, ', 'Pacific, ') + MES[map.month] + T(' de ', ' ') + map.year;
-    return { url: map.url, thumbnail: 'miniaturas/' + map.url.replace(/\.[^.]+$/, '.webp'),
-      alt: TX[LANG].homeMapAlt, caption: date + ' · ' + map.source };
+    var slide = HOME_PREVIEW[this.state.homePreview], disc = DISC_SETS.eic[slide.disc];
+    var url = disc.files[slide.frame], date = discFrameDate(disc, slide.frame);
+    var label = MES[date.m] + T(' de ', ' ') + date.y;
+    return { url: url, thumbnail: 'miniaturas/' + url.replace(/\.[^.]+$/, '.webp'),
+      alt: TX[LANG].homeMapAlt + ' ' + label + '. ' + disc.title + '. NASA EIC.',
+      caption: T('Pacífico, ', 'Pacific, ') + label + ' · NASA EIC' };
+  }
+  openDestination(key, event) {
+    if (this.disposed || this.state.tab !== 'home' || !this.settleArrivedRoute()) return;
+    this.cinema?.finish(false);
+    this.stopSpeech();
+    this.closeMenus(false);
+    if (this.state.tour) this.tourClose();
+    var self = this;
+    this.journey.start(key, event.currentTarget, function () {
+      if (self.disposed || self.state.tab !== 'home') return;
+      if (self.state.set !== 'eic') self.applySet('eic');
+      self.openDisc(SPACE_DESTINATIONS[key].disc);
+    });
+  }
+  universeVm() {
+    var self = this, portals = { navLabel: T('Explorar destinos del universo', 'Explore universe destinations') };
+    Object.keys(SPACE_DESTINATIONS).forEach(function (key) {
+      var body = SPACE_DESTINATIONS[key];
+      portals[key + 'Name'] = spaceText(body.name);
+      portals[key + 'Label'] = T('Abrir disco: ', 'Open disc: ') + DISC_SETS.eic[body.disc].title + ' · ' + spaceText(body.name);
+      portals[key + 'Open'] = function (event) { self.openDestination(key, event); };
+    });
+    return portals;
+  }
+  openDisc(index) {
+    this.stop();
+    this.lastThunder = -9;
+    if (this.state.tour && !this.state.tutorial) this.tourClose();
+    var disc = DISCS[index], who = this.state.leadOverride || this.discLead(index, this.state.an[index + '_0']);
+    var name = BAND.find(function (b) { return b.k === who; }).name;
+    this.routeChange({ tab: 'juke', disc: index, frame: 0, col: -1, sub: 1, easyOpen: false,
+      mute: this.state.mixCustomized ? this.state.mute : this.allMute(false),
+      caption: T('Disco ', 'Disc ') + disc.n + ': ' + disc.title + T('. Protagonista: ', '. Lead: ') + name + T('. Pulsa Reproducir.', '. Press Play.') }, 'juke', disc.title);
+    this.tutorialAction('disc');
   }
   resetScreenScroll() {
     var screen = document.querySelector('.px .viewport > .scr');
@@ -4553,7 +4661,6 @@ class Component extends DCLogic {
       if (run !== self.routeRun || swapped) return;
       swapped = true;
       self.navCount = 0;
-      if (tab === 'home' && self.state.tab !== 'home') self.advanceHomeMap();
       self.setState(Object.assign({ routeArrived: !finished && self.state.trans }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
         self.resetScreenScroll();
         self.ensureNavVisible();
@@ -5628,6 +5735,7 @@ class Component extends DCLogic {
     var band = BAND.map(function (b, bi) {
         var lvl = s.levels[b.k] || 0, off = s.mute[b.k];
         return { key: b.k, thumbUrl: 'sprites/' + b.k + '/miniatura-banda.webp',
+          spriteActive: s.playing && !off && !s.masterMuted && s.volume > 0, spriteMuted: off,
           ic: self.icons[INS_ICON[b.k]], lvlW: Math.round((off ? 0 : lvl) * 100) + '%', rowBg: off ? 'transparent' : th.bg, rowOp: off ? '0.55' : '1', pwColor: off ? th.muted : b.color, clips: b.clips, ins: b.ins, delay: (bi * 0.08).toFixed(2) + 's', name: b.name, color: b.color, disc: DISCS[DISC_CHAR.indexOf(b.k)].title, origin: b.origin, listens: b.listens, plays: b.plays, persona: b.persona, quote: b.quote, brief: b.brief,
           on: !off, mixLabel: off ? T('Silenciado', 'Muted') : T('Activado', 'Enabled'),
           muteLabel: off ? 'OFF' : 'ON', muteAria: (off ? T('Activar a ', 'Switch on ') : T('Desactivar a ', 'Switch off ')) + b.name,
@@ -5742,7 +5850,7 @@ class Component extends DCLogic {
         pick: function () { self.setEngine(e.key); } };
     });
     return {
-      th: th, highContrast: hc, ic: this.icons, showBg: !hc, stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
+      th: th, highContrast: hc, ic: this.icons, showBg: !hc, showDecorativePlanets: s.tab !== 'home', planetContrast: hc ? 'true' : 'false', universe: this.universeVm(), stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
       engineDesc: (melody ? T('Melodía compuesta: escalas, acordes y ritmo por disco; la melodía sale de los datos.', 'Composed melody: scales, chords and rhythm per disc; the melody comes from the data.') : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes.', 'Data: derived levels converted into tones, without a chord progression.')),
       engines: engines, whyTiles: whyTiles, seeText: seeText, hearText: hearText, progItems: progItems, showHarmony: melody,
       player: showCells ? this.playerVm() : null,
@@ -5836,15 +5944,7 @@ class Component extends DCLogic {
             self.settleArrivedRoute();
             if (self.state.tab !== 'juke' || self.state.sub !== 0 || self.state.trans) return;
             self.discPointerOpening = !!(event && event.detail);
-            self.stop();
-            self.lastThunder = -9;
-            if (self.state.tour && !self.state.tutorial) self.tourClose();
-            var manual = self.state.leadOverride;
-            var who = manual || self.discLead(k, self.state.an[k + '_0']);
-            var name = BAND.find(function (b) { return b.k === who; }).name;
-            self.routeChange({ disc: k, frame: 0, col: -1, sub: 1, easyOpen: false, mute: self.state.mixCustomized ? self.state.mute : self.allMute(false),
-              caption: T('Disco ', 'Disc ') + x.n + ': ' + x.title + T('. Protagonista: ', '. Lead: ') + name + T('. Pulsa Reproducir.', '. Press Play.') }, 'juke', x.title);
-            self.tutorialAction('disc');
+            self.openDisc(k);
           } };
       }),
       disc: d, frameLabel: this.frameTag(s.disc, s.frame), frameUrl: this.url(s.disc, s.frame),
@@ -5868,9 +5968,6 @@ class Component extends DCLogic {
         previewUnmute: function () { self.setState({ masterMuted: false }); self.setVolume(s.volume || 50); },
         previewStatus: s.previewKey === bandKey ? s.audioPending ? T('Preparando muestra…', 'Preparing sample…') : T('Suena solo ', 'Solo sample: ') + BAND[bandIndex].name + T('. Se detiene en tres segundos.', '. Stops after three seconds.') : '',
         poseUrl: 'sprites/' + bandKey + '/pose-banda.webp',
-        motionUrl: 'sprites/' + bandKey + '/pose-banda-animada.webp',
-        motionReady: function(event) { event.currentTarget.setAttribute('data-ready', ''); },
-        moving: !this.bandReduced() && (bandPhase === 'play' || s.previewKey === bandKey && !s.audioPending),
         previousPoseUrl: this.bandPrevious == null ? '' : 'sprites/' + BAND[this.bandPrevious].k + '/pose-banda.webp',
         hasOutgoing: this.bandPrevious != null && (bandPhase === 'entry' || bandPhase === 'reset'),
         accent: hc ? th.fg : light ? ({ silbo:'#7A5200', inti:'#9F310F', mama:'#006479', yaku:'#286420', illapa:'#8D1C65' })[bandKey] : band[bandIndex].color,

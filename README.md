@@ -4,9 +4,9 @@ Esta es la rama **main** de EarthBeat. La aplicación convierte patrones de imá
 
 ## Qué incluye esta versión
 
-La portada muestra un mapa de la NASA y permite escuchar ese mismo mapa con un toque. Escuchar, La banda, ¿Cómo funciona? y Tecnología conservan la estructura de V2. El selector EN/ES admite teclado, guarda el idioma e indica la selección.
+La bienvenida se inicia automáticamente al abrir o recargar la portada. La secuencia de entrada, las estrellas fugaces, las naves y los vuelos a los discos se basan en el commit `991cc70` de `piero-mejoras`. El Sol, la Luna, Saturno y Aqua abren discos de mapas del Pacífico. La portada cambia de mapa cada tres segundos y permite escuchar el que está a la vista. El selector EN/ES admite teclado, guarda el idioma e indica la selección.
 
-La banda conserva las poses, las transiciones y los WebP animados de V2. El reproductor incorpora la leyenda interactiva y la mezcla de V3, además del historial paginado de V1.
+La banda usa los cuatro fotogramas originales de cada personaje y permite pausar el baile o escuchar el instrumento por separado. El reproductor incorpora la leyenda interactiva y la mezcla de V3, además del historial paginado de V1. Con movimiento reducido, la bienvenida usa un fundido breve y los accesos desde los astros abren el disco directamente.
 
 Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz se activa desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
 
