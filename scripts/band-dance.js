@@ -276,7 +276,9 @@ class RhythmGame extends HTMLElement {
     this.lanes = [...this.querySelectorAll('.rhythm-runway')];
     this.score = this.querySelector('[data-score]');
     this.feedback = this.querySelector('[data-feedback]');
-    this.summary = this.querySelector('[data-summary]');
+    this.finishHeading = this.querySelector('#rhythm-finish-title');
+    this.finalHits = this.querySelector('[data-final-hits]');
+    this.finalTotal = this.querySelector('[data-final-total]');
     this.resultSlots = this.lanes.map(lane => lane.querySelector('.rhythm-result'));
     this.resultArt = {
       hit: this.querySelector('[data-result-art="hit"]'),
@@ -297,7 +299,6 @@ class RhythmGame extends HTMLElement {
   announce(es, en) {
     const message = document.documentElement.lang === 'es' ? es : en;
     if (this.feedback) this.feedback.textContent = message;
-    return message;
   }
 
   showResult(index, kind, es, en) {
@@ -316,14 +317,16 @@ class RhythmGame extends HTMLElement {
     if (name === 'data-playing' && value === 'false') this.clear();
     if (name === 'data-ended' && value === 'true') {
       const total = this.hits + this.missed;
-      this.summary.textContent = this.announce(`Fin · ${this.hits} de ${total}`, `Done · ${this.hits} of ${total}`);
+      this.finalHits.textContent = String(this.hits);
+      this.finalTotal.textContent = String(total);
+      if (this.contains(document.activeElement)) this.finishHeading.focus({ preventScroll: true });
+      this.announce(`${this.hits} de ${total} aciertos.`, `${this.hits} of ${total} hits.`);
     }
   }
 
   resetScore() {
     this.hits = this.missed = 0;
     this.score.textContent = '0';
-    this.summary.textContent = '';
     this.announce('', '');
   }
 
