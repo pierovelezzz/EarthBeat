@@ -177,7 +177,7 @@ async function main() {
     const automatic = await create({configured:true,automatic:true,noSpeech:true,muteNarration:true});
     const speaking = automatic.page;
     const nav = speaking.locator('#tour-nav button');
-    for(const [index,section] of [[0,'juke'],[1,'band'],[2,'how'],[3,'tech']]){
+    for(const [index,section] of [[0,'juke'],[1,'band'],[2,'practice'],[3,'tech']]){
       await nav.nth(index).click();
       await speaking.waitForFunction(section=>__app.brisaAudio?.src.endsWith('/es-'+section+'-1.mp3')&&__app.brisaAudio.currentTime>0,section);
       const stop = speaking.getByRole('button',{name:'Detener voz',exact:true});

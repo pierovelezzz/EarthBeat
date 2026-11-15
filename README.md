@@ -1,12 +1,12 @@
 # EarthRhythm · Pacific Ocean Sonification
 
-Esta es la rama **main** de EarthRhythm. La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
+Esta es la rama **v4-NASA-Space-AC** de EarthRhythm. La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
 
 ## Qué incluye esta versión
 
 La bienvenida se inicia automáticamente al abrir o recargar la portada. La secuencia de entrada, las estrellas fugaces, las naves y los vuelos a los discos se basan en el commit `991cc70` de `piero-mejoras`. El Sol, la Luna, Saturno y Aqua abren discos de mapas del Pacífico. La portada cambia de mapa cada tres segundos y permite escuchar el que está a la vista. El selector EN/ES admite teclado, guarda el idioma e indica la selección.
 
-La banda usa los cuatro fotogramas originales de cada personaje y permite pausar el baile o escuchar el instrumento por separado. El reproductor incorpora la leyenda interactiva y la mezcla de V3, además del historial paginado de V1. Con movimiento reducido, la bienvenida usa un fundido breve y los accesos desde los astros abren el disco directamente.
+La banda usa los cuatro fotogramas originales de cada personaje y permite pausar el baile o escuchar el instrumento por separado. El reproductor recupera el mapa, la banda y los controles de V3. La leyenda interactiva muestra diferencias aproximadas de temperatura según la fuente del mapa. Con movimiento reducido, la bienvenida usa un fundido breve y los accesos desde los astros abren el disco directamente.
 
 Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz se activa desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
 
@@ -37,7 +37,7 @@ node scripts/test_guides.cjs _site/index.html
 python scripts/run_browser_checks.py --list
 ```
 
-La suite de lógica contiene 135 pruebas en esta rama. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+La suite de lógica contiene 135 pruebas en esta rama. El recorrido del RETO 05 se puede ejecutar con el runner usando la opción --only reto05. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
 
 ## Documentación
 
