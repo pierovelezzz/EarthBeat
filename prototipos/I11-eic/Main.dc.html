@@ -1928,7 +1928,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
  .px .player-layout .mapbox,.px .player-layout .mbox{max-height:clamp(136px,22vh,220px)}
 }
 .px .player-layout{grid-template-rows:auto}
-.px .rhythm-toggle,.px earthrhythm-game,.px .rhythm-help{display:none}
+.px .rhythm-toggle,.px earthrhythm-game{display:none}
 @keyframes pacific-swell{
   from{transform:translate3d(-3%,1%,0) scale(1.03)}
   to{transform:translate3d(3%,-2%,0) scale(1.1)}
@@ -1986,16 +1986,32 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .listen-band .chip[aria-current="true"]{outline:1px solid var(--fg);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 68%,transparent)}
   .px.reduce-motion .listen-band .chip{transition:none}
   .px .rhythm-toggle{display:inline-flex}
+  .px .rhythm-library .discgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .px .rhythm-library .discgrid .dcard{min-height:110px;padding:14px;background:var(--panel)}
+  .px .rhythm-library .discgrid .dcard:is(:hover,:focus-visible){background:var(--surface)}
+  .px .rhythm-library .discgrid .dimg img{display:block;object-fit:cover}
+  .px .rhythm-player .player-layout{grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:14px}
+  .px .rhythm-player #tour-frame{grid-template-rows:auto auto 1fr}
+  .px .rhythm-player #tour-frame .vcap{justify-content:flex-start}
+  .px .rhythm-player #tour-frame .mapbox{max-height:none}
+  .px .rhythm-player #tour-frame .vcap h2{font:700 1.2em/1.25 var(--head)}
+  .px .rhythm-player .listen-band{padding:12px;gap:8px}
+  .px .rhythm-player .stage-musician:disabled{opacity:1;cursor:default}
   .px .listen-band[data-rhythm="true"] .stage-note-track{visibility:hidden}
-  .px .listen-band[data-rhythm="true"] .band-stage{min-height:280px}
-  .px .rhythm-help{display:block;color:var(--muted);margin:0;font-size:.72em;line-height:1.35}
+  .px .listen-band[data-rhythm="true"] .band-stage{min-height:clamp(390px,56vh,550px)}
+  .px .rhythm-map-key{display:grid;gap:8px;align-content:start;padding:8px 3px 2px}
+  .px .rhythm-map-key p{margin:0;color:var(--muted);font-size:.83em;line-height:1.5}
+  .px .rhythm-map-key ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0;padding:0;list-style:none}
+  .px .rhythm-map-key li{display:flex;align-items:center;gap:6px;padding:5px 7px;border:1px solid var(--line);border-radius:4px;font-size:.82em}
+  .px .rhythm-map-key kbd{font:700 1.18em/1 system-ui,sans-serif;color:var(--fg)}
   .px earthrhythm-game{
     position:absolute;z-index:2;inset:8px 8px auto;display:grid;gap:5px;
-    grid-template-rows:auto minmax(0,1fr);height:clamp(120px,21vh,165px);
-    padding:5px 6px 0;border-radius:5px;
+    grid-template-rows:auto minmax(0,1fr);height:49%;
+    padding:8px 10px 0;border-radius:5px;
   }
   .px earthrhythm-game:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
-  .px .rhythm-score{display:flex;justify-content:space-between;gap:6px;color:var(--fg);font-size:.75em}
+  .px .rhythm-score{display:flex;justify-content:space-between;gap:8px;color:var(--fg);font-size:.9em;min-height:1.5em}
+  .px .rhythm-score strong{color:var(--accent);font-size:1.2em}
   .px .rhythm-lanes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;min-height:0}
   .px .rhythm-lane{display:grid;grid-template-rows:auto minmax(0,1fr);gap:4px;text-align:center;min-width:0;--rhythm-ink:#c1eaff}
   .px .rhythm-lane:nth-child(2){--rhythm-ink:#efede7}
@@ -2012,7 +2028,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .rhythm-runway{position:relative;margin-top:15px;background:linear-gradient(#63889a,transparent) center/1px 100% no-repeat}
   .px .rhythm-receptor,.px .rhythm-note{
     position:absolute;top:0;left:50%;display:grid;place-items:center;transform:translate(-50%,-50%);
-    width:34px;height:28px;font:700 1.2em/1 system-ui,sans-serif;border:1px solid currentColor;border-radius:4px;
+    width:clamp(44px,4vw,58px);height:38px;font:700 1.55em/1 system-ui,sans-serif;border:1px solid currentColor;border-radius:5px;
   }
   .px .rhythm-receptor{color:var(--rhythm-ink);background:#101c29;z-index:2}
   .px .rhythm-runway[data-cue] .rhythm-receptor{color:#070f18;background:var(--rhythm-ink);box-shadow:0 0 8px var(--rhythm-ink)}
@@ -2168,10 +2184,12 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 
 <!-- ESCUCHAR · 1 · Elegir disco -->
 <sc-if value="{{scr.jDisc}}" hint-placeholder-val="{{ false }}">
-<section class="disc-library" aria-labelledby="disc-library-title">
+<section class="disc-library {{rhythmLibraryClass}}" aria-labelledby="disc-library-title">
 <div class="pagehead">
-<div><p class="kicker">{{tx.discKicker}}</p><h1 id="disc-library-title" class="display md" tabindex="-1">{{tx.discTitle}}</h1><p class="lede">{{tx.discLede}}</p></div>
+<div><p class="kicker">{{discKicker}}</p><h1 id="disc-library-title" class="display md" tabindex="-1">{{discTitle}}</h1><p class="lede">{{discLede}}</p></div>
+<sc-if value="{{isJuke}}">
 <button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
+</sc-if>
 </div>
 <div id="tour-sets" class="disc-sources">
 <span id="source-label" class="tag">{{tx.setsAria}}</span>
@@ -2229,12 +2247,13 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <!-- ESCUCHAR · 2 · Reproductor (también para tu imagen) -->
 <sc-if value="{{scr.play}}" hint-placeholder-val="{{ true }}">
 <sc-if value="{{showPlayer}}" hint-placeholder-val="{{ true }}">
-<div class="uni">
+<div class="uni {{rhythmPlayerClass}}">
 <div class="pagehead slim">
 <div><p class="kicker">{{playKicker}}</p><h1 id="player-title" class="display md" tabindex="-1">{{playTitle}}</h1></div>
 <div class="row headtools">
-<sc-if value="{{canPlayRhythm}}"><button type="button" class="btn sm rhythm-toggle" aria-pressed="{{rhythmMode}}" onClick="{{toggleRhythm}}">{{rhythmToggleLabel}}</button></sc-if>
+<sc-if value="{{canPlayRhythm}}"><button type="button" class="btn sm rhythm-toggle" onClick="{{playThisDisc}}">{{rhythmToggleLabel}}</button></sc-if>
 <sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{tx.changeDisc}}</button></sc-if>
+<sc-if value="{{rhythmMode}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{rhythmExitLabel}}</button></sc-if>
 </div>
 </div>
 
@@ -2252,13 +2271,17 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="btn primary {{playPulse}}" onClick="{{togglePlay}}" disabled="{{playPending}}" aria-busy="{{playPending}}"><svg width="14" height="14" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><path d="{{playIcon}}"></path></svg>{{playLabel}}</button>
 </div>
 <div class="when"><b>{{frameLabel}}</b><span class="signal-state {{signalClass}}">{{signalLabel}}</span></div>
+<sc-if value="{{standardPlayer}}">
 <div class="player-tools">
 <button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 <button type="button" class="btn sm quiet" onClick="{{describe}}" disabled="{{speechUnavailable}}">{{describeLabel}}</button>
 </div>
+</sc-if>
 </div>
 
 <figure id="tour-frame" class="vpanel">
+<sc-if value="{{rhythmMode}}"><figcaption class="vcap"><h2>{{rhythmMapTitle}}</h2></figcaption></sc-if>
+<sc-if value="{{standardPlayer}}">
 <figcaption class="vcap map-toolbar">
 <div class="volume-control"><label for="playback-volume">{{player.volumeLabel}} {{player.volume}}%</label><input id="playback-volume" type="range" min="0" max="100" step="1" value="{{player.volume}}" onInput="{{player.changeVolume}}"></div>
 <label class="transport-speed"><span>{{tx.speedLabel}}</span><select onChange="{{onSpeed}}" value="{{speed}}"><option value="180">0.75×</option><option value="110">1×</option><option value="70">1.4×</option></select></label>
@@ -2269,6 +2292,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 <span class="muted map-source">{{mapSource}}</span>
 </figcaption>
+</sc-if>
 <div class="mapbox">
 <img decoding="async" fetchpriority="high" class="map {{frameAnim}}" src="{{frameUrl}}" alt="{{frameAlt}}">
 <div aria-hidden="true" class="scanline" style="--scan-x: {{scanLeft}}"></div>
@@ -2281,23 +2305,32 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="arrow" onClick="{{nextFrame}}" disabled="{{nextOff}}" aria-label="{{tx.nextFrame}}" style="right: 8px"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6.5 3.5L12 9l-5.5 5.5"></path></svg></button>
 </sc-if>
 </div>
+<sc-if value="{{rhythmMode}}">
+<div class="rhythm-map-key" id="rhythm-help">
+<ul aria-label="{{rhythmKeyLabel}}"><sc-for list="{{rhythmLanes}}" as="lane"><li><kbd>{{lane.arrow}}</kbd><span>{{lane.label}}</span></li></sc-for></ul>
+<p>{{rhythmHelp}}</p>
+</div>
+</sc-if>
+<sc-if value="{{standardPlayer}}">
 <div class="map-transport"><div class="transport-position">
 <label for="playback-position">{{player.positionLabel}}</label>
 <output for="playback-position" class="mono">{{player.elapsed}} <span aria-hidden="true">/</span><span class="sr">{{player.of}}</span> {{player.duration}}</output>
-<input id="playback-position" type="range" min="0" max="{{player.steps}}" step="1" value="{{player.position}}" aria-valuetext="{{player.positionText}}" disabled="{{rhythmMode}}" onInput="{{player.seek}}">
+<input id="playback-position" type="range" min="0" max="{{player.steps}}" step="1" value="{{player.position}}" aria-valuetext="{{player.positionText}}" onInput="{{player.seek}}">
 </div>
 <sc-if value="{{showStrip}}" hint-placeholder-val="{{ true }}">
 <div id="tour-strip">
 <div class="timeline" role="group" aria-label="{{tx.timelineAria}}">
 <sc-for list="{{strip}}" as="f" hint-placeholder-count="6">
-<button type="button" onClick="{{f.pick}}" aria-label="{{f.aria}}" aria-pressed="{{f.on}}" disabled="{{rhythmMode}}"><img decoding="async" loading="lazy" src="{{f.url}}" alt=""><span>{{f.label}}</span></button>
+<button type="button" onClick="{{f.pick}}" aria-label="{{f.aria}}" aria-pressed="{{f.on}}"><img decoding="async" loading="lazy" src="{{f.url}}" alt=""><span>{{f.label}}</span></button>
 </sc-for>
 </div>
 </div>
 </sc-if>
 </div>
+</sc-if>
 </figure>
 
+<sc-if value="{{standardPlayer}}">
 <figure id="tour-machine" class="vpanel">
 <figcaption class="vcap"><h2>{{tx.machineSub}}</h2></figcaption>
 <div class="mbox" aria-hidden="true">
@@ -2315,6 +2348,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <p class="small muted legend-description">{{player.legendDescription}}</p></div>
 </aside>
 </figure>
+</sc-if>
 <section class="listen-band" aria-labelledby="listen-band-title" data-rhythm="{{rhythmMode}}">
 <div>
 <h2 id="listen-band-title">{{tx.theBand}}</h2>
@@ -2324,7 +2358,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="band-stage" role="group" aria-label="{{tx.bandAria}}">
 <div class="band-stage-musicians">
 <sc-for list="{{stageMusicians}}" as="musician">
-<button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-describedby="stage-instrument-{{musician.key}}" aria-pressed="{{musician.on}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
+<button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-describedby="stage-instrument-{{musician.key}}" aria-pressed="{{musician.on}}" disabled="{{rhythmMode}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
 <earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"><svg class="stage-receptor" viewBox="120 141 240 240" focusable="false"><path d="{{musician.instrumentLine}}" fill="none" stroke="currentColor" stroke-width="1.4" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"></path></svg></earthbeat-note-track>
 <span class="stage-performer" aria-hidden="true"><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance></span>
 <span class="stage-label"><strong>{{musician.displayName}}</strong><span id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span></span>
@@ -2340,7 +2374,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </earthrhythm-game>
 </sc-if>
 </div>
-<sc-if value="{{rhythmMode}}"><p class="rhythm-help" id="rhythm-help">{{rhythmHelp}}</p></sc-if>
 <sc-if value="{{bandAllMuted}}"><p class="stage-muted-status small muted" role="status">{{bandStatus}}</p></sc-if>
 <sc-if value="{{showHarmony}}">
 <div class="chips" role="group" aria-label="{{tx.chordsAria}}">
@@ -2352,10 +2385,12 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 
 </section>
 </div>
+<sc-if value="{{standardPlayer}}">
 <div class="player-detail">
 <div class="readout">
 <p><strong>{{tx.see}}</strong> <span>{{seeText}}</span></p>
 </div></div>
+</sc-if>
 <p role="status" aria-live="polite" class="sr">{{player.announcement}}</p>
 </div>
 </sc-if>
@@ -2899,11 +2934,12 @@ var MES_EN = ['January','February','March','April','May','June','July','August',
 var MESC_ES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 var MESC_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var MES = MES_ES, MESC = MESC_ES;
-var PAGES = { home: ['00'], juke: ['01'], band: ['02'], how: ['03'], tech: ['04'] };
+var PAGES = { home: ['00'], juke: ['01'], band: ['02'], how: ['03'], tech: ['04'], game: ['05'] };
 var PAGE_ORDER = ['juke', 'band', 'how', 'tech'];
 var ROUTE_LOOK = {
   home: { title: 'Inicio', color: '#FFFFFF', mark: 'M48 18a30 30 0 1 0 0 60a30 30 0 1 0 0-60z M22 52q13-10 26 0t26 0' },
   juke: { title: 'Escuchar', color: '#FFD447', mark: 'M20 48h9l7-13 8 26 8-35 9 44 8-22h7' },
+  game: { title: 'Jugar', color: '#64D9E3', mark: 'M25 48h18m-9-9v18m19-9h18m-9-9v18M20 30h56v36H20z' },
   band: { title: 'La banda', color: '#F06BB0', mark: 'M25 60l12-25 18 11 15-17m-33 6 7 33 26-39M22 60h6m-3-3v6M34 35h6m-3-3v6M52 46h6m-3-3v6M67 29h6m-3-3v6M41 68h6m-3-3v6' },
   how: { title: '¿Cómo funciona?', color: '#7BE38A', mark: 'M25 69h46M30 64V52m9 12V41m9 23V27m9 37V36m9 28V48' },
   tech: { title: 'Tecnología', color: '#AB9CFF', mark: 'M34 34h28v28H34zM42 42h12v12H42zM41 34V24m14 10V24m-14 38v10m14-10v10M34 41H24m10 14H24m38-14h10M62 55h10' }
@@ -3345,7 +3381,7 @@ var STEPS_EN = [
  {title:'Try your image',body:'Start with Chiclayo rainfall or choose an image. It stays in your browser.'},
  {title:'Your way',body:'Use text, a keyboard or the guide. Adjust size, contrast and motion.'}
 ];
-var ROUTE_EN = { home: 'Home', juke: 'Listen', band: 'The band', how: 'How does it work?', tech: 'Technology' };
+var ROUTE_EN = { home: 'Home', juke: 'Listen', band: 'The band', how: 'How does it work?', tech: 'Technology', game: 'Play' };
 
 /* Textos fijos de la interfaz */
 var TX = {
@@ -4045,6 +4081,7 @@ class Component extends DCLogic {
     });
     this.hapticRequestSerial = 0;
     this.frameColumns = new WeakMap();
+    this.rhythmQuery = window.matchMedia?.(RHYTHM_DESKTOP);
     this.stars = makeStars(); this.logo = makeLogo(); this.icons = makeIcons(); this.leadCount = 0; this.lastLead = ''; this.frameCount = 0; this.lastFrameKey = '';
   }
   componentDidMount() {
@@ -4083,8 +4120,12 @@ class Component extends DCLogic {
         if (self.state.tour) self.focusTourTarget();
       }
     };
+    this.onRhythmViewport = function () {
+      if (!self.rhythmQuery.matches && self.state.tab === 'game') self.goTab('juke', self.state.sub);
+      else self.setState({});
+    };
+    this.rhythmQuery?.addEventListener?.('change', this.onRhythmViewport);
     this.onTourResize = function () {
-      if (self.state.rhythmMode && !window.matchMedia(RHYTHM_DESKTOP).matches) self.toggleRhythm();
       self.positionAccessibilityMenu();
       self.onTourLayout();
       clearTimeout(self.navResizeTimer);
@@ -4601,6 +4642,7 @@ class Component extends DCLogic {
     clearTimeout(this.tourResizeTimer);
     clearTimeout(this.navResizeTimer);
     window.removeEventListener('resize', this.onTourResize);
+    this.rhythmQuery?.removeEventListener?.('change', this.onRhythmViewport);
     window.removeEventListener('scroll', this.onTourLayout, true);
     document.removeEventListener('visibilitychange', this.onTourVisible);
     document.removeEventListener('keydown', this.onTourKey);
@@ -4779,6 +4821,7 @@ class Component extends DCLogic {
     var t = this.state.tab;
     if (t === 'home') return [ROUTE_LOOK.home.title];
     if (t === 'juke') return [T('Elige un disco', 'Pick a disc'), T('Escucha', 'Listen')];
+    if (t === 'game') return [T('Elige un disco', 'Pick a disc'), T('Partida', 'Game')];
     if (t === 'band') return [ROUTE_LOOK.band.title];
     if (t === 'how') return [T('Prueba práctica', 'Try it'), T('Del mapa al sonido', 'From map to sound')];
     return this.techPages().map(function (p) { return p.title; });
@@ -4800,7 +4843,9 @@ class Component extends DCLogic {
   goTab(k, sub) {
     this.settleArrivedRoute();
     var s = this.state;
+    if (k === 'game' && !this.rhythmQuery?.matches) return;
     if (k === 'juke' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0); return; }
+    if (k === 'game' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0); return; }
     if ((k === s.tab && (sub == null || sub === s.sub)) || s.trans) return;
     if (s.more) this.closeMore();
     if (k === s.tab) { this.goSub(sub); return; }
@@ -4915,6 +4960,13 @@ class Component extends DCLogic {
       caption: T('Disco ', 'Disc ') + disc.n + ': ' + disc.title + T('. Protagonista: ', '. Lead: ') + name + T('. Pulsa Reproducir.', '. Press Play.') }, 'juke', disc.title);
     this.tutorialAction('disc');
   }
+  openRhythmDisc(index) {
+    if (!this.settleArrivedRoute() || !this.rhythmQuery?.matches || index < 0 || index >= 5) return;
+    if (this.state.tour) this.tourEnd();
+    this.stop();
+    this.lastThunder = -9;
+    this.routeChange({ tab: 'game', sub: 1, disc: index, frame: 0, col: -1, ended: false }, 'game', DISCS[index].title);
+  }
   resetScreenScroll() {
     var screen = document.querySelector('.px .viewport > .scr');
     if (screen) screen.scrollTop = 0;
@@ -4937,11 +4989,11 @@ class Component extends DCLogic {
       if (run !== self.routeRun || swapped) return;
       swapped = true;
       self.navCount = 0;
-      self.setState(Object.assign({ routeArrived: !finished && self.state.trans, rhythmMode: false }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
+      self.setState(Object.assign({ routeArrived: !finished && self.state.trans }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
         self.resetScreenScroll();
         self.ensureNavVisible();
         if (self.state.voice && !self.state.tutorial && !self.state.showPreferences) self.narrateBrisa(self.sectionNarration());
-        if (self.state.tab === 'juke') {
+        if (self.state.tab === 'juke' || self.state.tab === 'game') {
           var sub = self.state.sub;
           if (sub === 1) self.loadDisc(self.state.disc);
           var headingId = ['disc-library-title', 'player-title', null][sub];
@@ -5080,7 +5132,7 @@ class Component extends DCLogic {
       if (file) self.vibrateSafely('alert', 'file-error:' + self.fileRun);
       if (file && file.previousCustom) { patch.custom = file.previousCustom; patch.customMode = file.previousCustom.mode; }
       self.setState(patch);
-      if (d < 5 && self.state.tab === 'juke' && self.state.sub === 1) self.loadOtherFrames(d, f);
+      if (d < 5 && (self.state.tab === 'juke' || self.state.tab === 'game') && self.state.sub === 1) self.loadOtherFrames(d, f);
     };
     var free = d === 5 && custom && custom.mode === 'free', legacy = d < 5 && !!DISCS[d].legacy;
     var img = new Image();
@@ -5110,7 +5162,7 @@ class Component extends DCLogic {
         var an = Object.assign({}, self.state.an); an[key] = res;
         var nm = self.state.custom ? uiLabel(self.state.custom) : T('tu imagen', 'your image');
         self.setState(d === 5 ? { an: an, mute: self.state.mixCustomized ? self.state.mute : self.state.leadOverride ? self.only(self.state.leadOverride) : self.allMute(false), upMsg: uiMessage('Listo: {name}. Pulsa Reproducir.', 'Ready: {name}. Press Play.', { name: nm }), caption: T('Cargado: ', 'Loaded: ') + nm + T('. Pulsa Reproducir para escucharlo.', '. Press Play to hear it.') } : { an: an });
-        if (d < 5 && self.state.tab === 'juke' && self.state.sub === 1) self.loadOtherFrames(d, f);
+        if (d < 5 && (self.state.tab === 'juke' || self.state.tab === 'game') && self.state.sub === 1) self.loadOtherFrames(d, f);
       } catch (e) { fail(uiMessage('No se pudo analizar el fotograma en este navegador.', 'This browser could not analyze the frame.')); }
     };
     img.onload = function () {
@@ -5631,7 +5683,7 @@ class Component extends DCLogic {
       cursor.at += this.sequencerMs / 1000; cursor.column++;
     }
     // Send only new, scheduled entries so the lanes can use the same clock as Web Audio.
-    var game = this.state.rhythmMode;
+    var game = this.state.tab === 'game';
     var moveInstruments = !this.bandReduced() && !this.state.masterMuted && this.state.volume > 0;
     if (this.playbackQueue.length > firstNewNote && !document.hidden && (game || moveInstruments) &&
         typeof window.dispatchEvent === 'function' && typeof window.CustomEvent === 'function') {
@@ -5844,19 +5896,6 @@ class Component extends DCLogic {
     this.syncVolume();
     try { window.speechSynthesis.speak(utterance); } catch (ignored) { utterance.onerror(); }
   }
-  toggleRhythm() {
-    if (this.state.rhythmMode) {
-      this.stop();
-      this.setState({ rhythmMode: false });
-      return;
-    }
-    if (this.state.tab !== 'juke' || this.state.sub !== 1 || this.state.disc >= 5 ||
-        !window.matchMedia(RHYTHM_DESKTOP).matches) return;
-    this.setState({ rhythmMode: true });
-    this.seekPosition(0);
-    document.querySelector('earthrhythm-game')?.focus();
-    this.play();
-  }
   async play() {
     this.settleArrivedRoute();
     if (this.disposed || this.state.trans || this.state.playing || this.state.audioPending) return;
@@ -5870,7 +5909,7 @@ class Component extends DCLogic {
         BAND.forEach(function (member) { if (!self.state.mute[member.k]) self.voiceInput(member.k); });
         self.melDeg = null;
         var restart = self.playerPosition() >= self.playerSteps();
-        if (restart && self.state.rhythmMode) document.querySelector('earthrhythm-game')?.resetScore();
+        if (restart && self.state.tab === 'game') document.querySelector('earthrhythm-game')?.resetScore();
         self.setState(Object.assign({ playing: true, audioPending: false, ended: false,
           playerAnnouncement: T('Reproduciendo.', 'Playing.') }, restart ? { frame: 0, col: -1 } : {}));
         self.startSequencer();
@@ -5893,7 +5932,7 @@ class Component extends DCLogic {
     if (this.disposed || !s.playing) return;
     if (col >= 28) {
       if (s.frame >= DISCS[s.disc].files.length - 1) {
-        var repeat = s.repeat && !s.rhythmMode;
+        var repeat = s.repeat && s.tab !== 'game';
         this.stop();
         var message = repeat ? T('Repetir disco.', 'Repeating disc.') : T('Fin del disco.', 'End of the disc.');
         this.setState({ ended: !repeat, caption: message, playerAnnouncement: message });
@@ -5986,7 +6025,8 @@ class Component extends DCLogic {
     var reducedMotion = this.bandReduced();
     var toggleMotion = function () { self.setPreference('reducedMotion', !self.bandReduced()); };
     var tog = function (k) { return function () { self.setPreference(k, !self.state[k]); }; };
-    var tabDef = PAGE_ORDER.map(function (k) { return { k: k, l: ROUTE_LOOK[k].title }; });
+    var gameAvailable = !!this.rhythmQuery?.matches, isGame = s.tab === 'game', rhythmMode = isGame && s.sub === 1;
+    var tabDef = (gameAvailable ? PAGE_ORDER.concat('game') : PAGE_ORDER).map(function (k) { return { k: k, l: ROUTE_LOOK[k].title }; });
     var a11yDef = [{ k: 'contrast', l: T('Alto contraste', 'High contrast') }, { k: 'big', l: T('Texto grande', 'Large text') }, { k: 'legible', l: T('Fuente legible', 'Readable font') }, { k: 'voice', l: T('Modo voz', 'Voice mode') }, { k: 'vibe', l: T('Vibración', 'Vibration') }, { k: 'sfx', l: T('Efectos de sonido', 'Sound effects') }, { k: 'reducedMotion', l: T('Movimiento reducido', 'Reduced motion') }];
     var activeN = BAND.filter(function (b) { return !s.mute[b.k]; }).length;
     var isJuke = s.tab === 'juke', isData = s.tab === 'how' && s.sub === 0, hasCustom = !!s.custom;
@@ -6079,8 +6119,8 @@ class Component extends DCLogic {
       showNext: s.tab !== 'juke' || !lastSub };
     var scrDir = this.navDir || 0, scrCls = this.navCount ? 's' + (scrDir > 0 ? 'r' : scrDir < 0 ? 'l' : 'f') + (this.navCount % 2 ? '-a' : '-b') : '';
     if (s.routeArrived) scrCls = 'route-arrive';
-    var scrVm = { home: s.tab === 'home', jDisc: s.tab === 'juke' && sub === 0,
-      play: (isJuke && sub === 1) || (isData && hasCustom), dUp: isData, bPage: isBand,
+    var scrVm = { home: s.tab === 'home', jDisc: (isJuke || isGame) && sub === 0,
+      play: ((isJuke || isGame) && sub === 1) || (isData && hasCustom), dUp: isData, bPage: isBand,
       hA: s.tab === 'how' && sub === 1,
       tPage: s.tab === 'tech' && !techCur.credits, tCred: s.tab === 'tech' && !!techCur.credits };
     var prof = this.profile(), factor = this.speedFactor(), melody = s.engine === 'melody', bpmEff = Math.round(prof.bpm * factor);
@@ -6109,7 +6149,7 @@ class Component extends DCLogic {
     return {
       th: th, highContrast: hc, ic: this.icons, showBg: !hc, showDecorativePlanets: s.tab !== 'home', planetContrast: hc ? 'true' : 'false', universe: this.universeVm(), stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
       engineDesc: (melody ? T('Melodía compuesta: escalas, acordes y ritmo por disco; la melodía sale de los datos.', 'Composed melody: scales, chords and rhythm per disc; the melody comes from the data.') : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes.', 'Data: derived levels converted into tones, without a chord progression.')),
-      engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody,
+      engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody && !rhythmMode,
       player: showCells ? this.playerVm() : null,
       motionClass: reducedMotion ? 'reduce-motion' : '',
       motionMode: reducedMotion ? 'reduced' : 'full',
@@ -6132,7 +6172,7 @@ class Component extends DCLogic {
         continueLabel: T('Continuar', 'Continue'), tutorialLabel: T('Ver guía · 3 pasos', 'Open guide · 3 steps'),
         continue: function () { self.finishPreferences(false); }, tutorial: function () { self.finishPreferences(true); }
       },
-      frameCount: s.disc === 5 ? T('tu archivo', 'your file') : T('fotograma ', 'frame ') + (s.frame + 1) + T(' de ', ' of ') + d.files.length, prevOff: !!s.rhythmMode || s.frame <= 0, nextOff: !!s.rhythmMode || s.frame >= d.files.length - 1,
+      frameCount: s.disc === 5 ? T('tu archivo', 'your file') : T('fotograma ', 'frame ') + (s.frame + 1) + T(' de ', ' of ') + d.files.length, prevOff: s.frame <= 0, nextOff: s.frame >= d.files.length - 1,
       trans: s.trans, route: s.route, pageName: ROUTE_LOOK[s.tab].title,
       sectionNumber: PAGES[s.tab][0],
       sectionName: ROUTE_LOOK[s.tab].title,
@@ -6141,8 +6181,8 @@ class Component extends DCLogic {
       signalClass: s.playing ? 'on' : '',
       signalLabel: s.audioPending ? T('Preparando audio', 'Preparing audio') : s.playing ? (a ? T('Reproduciendo', 'Playing') : T('Preparando mapa', 'Preparing map')) : s.ended ? T('Fin del disco', 'End of disc') : T('En pausa', 'Paused'),
       isJuke: isJuke, isData: isData, isBand: s.tab === 'band', isHow: s.tab === 'how', isTech: s.tab === 'tech',
-      showPlayer: isJuke || (isData && hasCustom),
-      showStrip: s.disc !== 5, showSilbo: s.disc !== 5,
+      showPlayer: isJuke || isGame || (isData && hasCustom),
+      showStrip: s.disc !== 5 && !rhythmMode, showSilbo: s.disc !== 5 && !rhythmMode,
       heroStats: [{ k: '10', l: T('discos', 'discs') }, { k: '60', l: T('fotogramas NASA', 'NASA frames') }, { k: '5', l: T('músicos', 'musicians') }],
       tx: tx,
       convert: {
@@ -6170,26 +6210,28 @@ class Component extends DCLogic {
       sectionVoice: function () { self.toggleSectionVoice(); },
       sectionVoiceNotice: uiText(s.speechNotice),
       goDiscs: function () { self.goSub(0); },
-      playKicker: isData ? tx.dataListenKicker : tx.listenKicker,
+      playKicker: rhythmMode ? T('Jugar', 'Play') : isData ? tx.dataListenKicker : tx.listenKicker,
       playTitle: isData ? uiLabel(s.custom) : d.title,
       mapSource: isJuke ? tx.youSeeSub : s.custom?.kind === 'rain' ? 'NASA POWER' : T('Tu imagen', 'Your image'),
-      showFooter: s.tab !== 'home',
+      showFooter: s.tab !== 'home' && !isGame,
       bottomNavClass: (navVm.show ? 'with-pages' : '') + (topics ? ' with-topics' : ''),
       onNavKey: function (event) { self.navKey(event); },
       headerClass: s.big || s.legible ? 'readable-nav' : '',
-      tabs: tabDef.map(function (t) { var on = s.tab === t.k; return { ic: self.icons[t.k], label: t.l, short: { juke: T('Escuchar','Listen'), band: T('Banda','Band'), how: T('Cómo funciona','How does it work?'), tech: T('Tecnología','Technology') }[t.k], cur: on ? 'page' : 'false', bg: on ? th.accent : th.panel, fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line, go: function () { self.goTab(t.k); } }; }),
+      tabs: tabDef.map(function (t) { var on = s.tab === t.k; return { ic: self.icons[t.k], label: t.l, short: { juke: T('Escuchar','Listen'), band: T('Banda','Band'), how: T('Cómo funciona','How does it work?'), tech: T('Tecnología','Technology') }[t.k] || t.l, cur: on ? 'page' : 'false', bg: on ? th.accent : th.panel, fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line, go: function () { self.goTab(t.k); } }; }),
       a11y: a11yDef.map(function (o) { var on = o.k === 'reducedMotion' ? reducedMotion : !!s[o.k]; return { ic: self.icons[{ contrast: 'contrast', big: 'bigtext', legible: 'legible', voice: 'voice', vibe: 'vibe', sfx: 'voice', reducedMotion: 'clock' }[o.k]], label: o.l, on: on, disabled: o.k === 'vibe' && !self.haptics.supported(), bg: on ? th.fg : 'transparent', fg: on ? th.bg : th.fg, toggle: o.k === 'reducedMotion' ? toggleMotion : tog(o.k) }; }),
       sets: [{ key: 'eic', label: 'EIC', years: '2024–26' }, { key: 'prev', label: 'NASA GIBS', years: '2010–23' }].map(function (o) {
         var on = s.set === o.key;
         return { label: o.label, years: o.years, on: on, pick: function () { if (!on && self.settleArrivedRoute()) self.applySet(o.key); } };
       }),
       discs: DISCS.slice(0, 5).map(function (x, k) {
-        return { thumb: self.thumbnail(k, 0), title: x.title, period: x.period,
+        var first = isGame ? self.frameTag(k, 0) : '', last = isGame ? self.frameTag(k, x.files.length - 1) : '';
+        return { thumb: self.thumbnail(k, 0), title: x.title, period: isGame ? first === last ? first : first + ' – ' + last : x.period,
           pick: function (event) {
             self.settleArrivedRoute();
-            if (self.state.tab !== 'juke' || self.state.sub !== 0 || self.state.trans) return;
+            if ((self.state.tab !== 'juke' && self.state.tab !== 'game') || self.state.sub !== 0 || self.state.trans) return;
             self.discPointerOpening = !!(event && event.detail);
-            self.openDisc(k);
+            if (self.state.tab === 'game') self.openRhythmDisc(k);
+            else self.openDisc(k);
           } };
       }),
       disc: d, frameLabel: this.frameTag(s.disc, s.frame), frameUrl: this.url(s.disc, s.frame),
@@ -6241,20 +6283,30 @@ class Component extends DCLogic {
       heroListen: function () { self.goSub(1); if (!s.playing) self.play(); },
       strip: d.files.map(function (id, f) { var fd = self.frameDate(s.disc, f), on = f === s.frame; return { url: s.disc < 5 ? self.thumbnail(s.disc, f) : '', label: MESC[fd.m] + ' ' + String(fd.y).slice(2), aria: MESC[fd.m] + ' ' + String(fd.y).slice(2) + ' · ' + T('Ver ', 'View ') + MES[fd.m] + T(' de ', ' ') + fd.y, on: on, border: on ? th.accent : th.line, pick: function () { self.gotoFrame(f); } }; }),
       playPending: s.audioPending || s.sampleStarting, audioError: uiText(s.audioError),
-      playLabel: s.audioPending ? T('Preparando audio…', 'Preparing audio…') : s.playing ? T('Pausar', 'Pause') : s.ended ? T('Volver a reproducir', 'Play again') : s.col >= 0 ? T('Reanudar', 'Resume') : T('Reproducir', 'Play'), playIcon: s.playing ? 'M1 1h2v6H1zM5 1h2v6H5z' : 'M2 1v6l5-3z', playPulse: s.playing ? '' : 'pulse',
-      togglePlay: function () { if (s.playing) self.stop(); else { if (s.rhythmMode) document.querySelector('earthrhythm-game')?.focus(); self.play(); } },
-      canPlayRhythm: isJuke && sub === 1 && s.disc < 5, rhythmMode: !!s.rhythmMode,
-      rhythmPlaying: !!s.rhythmMode && s.playing, rhythmEnded: !!s.rhythmMode && s.ended,
+      playLabel: s.audioPending ? T('Preparando audio…', 'Preparing audio…') : s.playing ? T('Pausar', 'Pause')
+        : s.ended ? rhythmMode ? T('Jugar de nuevo', 'Play again') : T('Volver a reproducir', 'Play again')
+        : s.col >= 0 ? T('Reanudar', 'Resume') : rhythmMode ? T('Empezar partida', 'Start game') : T('Reproducir', 'Play'),
+      playIcon: s.playing ? 'M1 1h2v6H1zM5 1h2v6H5z' : 'M2 1v6l5-3z', playPulse: s.playing ? '' : 'pulse',
+      togglePlay: function () { if (s.playing) self.stop(); else { if (rhythmMode) document.querySelector('earthrhythm-game')?.focus({ preventScroll: true }); self.play(); } },
+      discKicker: isGame ? T('Jugar', 'Play') : tx.discKicker,
+      discTitle: isGame ? T('Elige qué temporada jugar', 'Choose a season to play') : tx.discTitle,
+      discLede: isGame ? T('Elige un disco para recorrer sus mapas con las flechas del teclado.', 'Pick a disc to explore its maps with the arrow keys.') : tx.discLede,
+      rhythmLibraryClass: isGame ? 'rhythm-library' : '', rhythmPlayerClass: rhythmMode ? 'rhythm-player' : '',
+      canPlayRhythm: gameAvailable && isJuke && sub === 1 && s.disc < 5, rhythmMode: rhythmMode, standardPlayer: !rhythmMode,
+      rhythmPlaying: rhythmMode && s.playing, rhythmEnded: rhythmMode && s.ended,
       rhythmLabel: T('Juego del mapa con flechas', 'Arrow-key map game'),
-      rhythmToggleLabel: s.rhythmMode ? T('Salir del juego', 'Leave game') : T('Jugar con flechas', 'Play with arrows'),
+      rhythmToggleLabel: T('Jugar este disco', 'Play this disc'),
+      rhythmExitLabel: T('Salir de la partida', 'Leave game'),
+      rhythmMapTitle: T('Mapa de la NASA', 'NASA map'),
+      rhythmKeyLabel: T('Qué indica cada flecha', 'What each arrow means'),
       rhythmScoreLabel: T('Aciertos', 'Hits'),
-      rhythmLanes: s.rhythmMode ? [
+      rhythmLanes: rhythmMode ? [
         { arrow: '←', label: T('Más frío', 'Cooler') }, { arrow: '↓', label: T('Cerca de lo habitual', 'Near usual') },
         { arrow: '↑', label: T('Más cálido', 'Warmer') }, { arrow: '→', label: T('Cambio fuerte', 'Large change') }
       ] : [],
-      rhythmHelp: T('Cada flecha resume una franja del mapa. Cambio fuerte puede ser frío o cálido. El mapa pasa al mes siguiente al terminar el recorrido.',
-        'Each arrow sums up one strip of the map. A large change can be cool or warm. The map moves to the next month after each sweep.'),
-      toggleRhythm: function () { self.toggleRhythm(); },
+      rhythmHelp: T('Cada flecha resume qué tan fría o cálida está una franja del mapa respecto a lo habitual. Un cambio fuerte puede ir en cualquiera de las dos direcciones. Tras cada recorrido, el mapa pasa al siguiente mes.',
+        'Each arrow shows how cool or warm a strip of the map is compared with usual. A large change can go in either direction. After each sweep, the map moves to the next month.'),
+      playThisDisc: function () { self.openRhythmDisc(s.disc); },
       describeLabel: this.utterance ? T('Detener descripción', 'Stop description') : T('Describir en voz alta', 'Describe aloud'),
       describe: function () {
         if (self.utterance) { self.stopSpeech(); return; }
@@ -6269,9 +6321,9 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageCueHelp: s.rhythmMode ? T('Pulsa la flecha del teclado cuando llegue al recuadro.', 'Press the matching arrow key when it reaches the target.')
+      stageCueHelp: rhythmMode ? T('Pulsa la flecha del teclado cuando llegue al recuadro.', 'Press the matching arrow key when it reaches the target.')
         : T('El icono sube antes de la nota. Al sonar, se ilumina el piso.', 'The icon rises before the note. The floor lights up when it plays.'),
-      stageMotionNotice: reducedMotion ? s.rhythmMode
+      stageMotionNotice: reducedMotion ? rhythmMode
         ? T('Pulsa la flecha del recuadro iluminado.', 'Press the arrow key in the highlighted target.')
         : T('Con movimiento reducido, los iconos quedan fijos y el piso marca qué músicos están activos.', 'With reduced motion, the icons stay still and the floor shows which musicians are active.') : '',
       stageMusicians: band.map(function (member) {

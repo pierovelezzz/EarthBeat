@@ -157,6 +157,8 @@
       component.goTab("band");
     } else if (location.hash === "#escuchar" || location.hash === "#listen") {
       component.goTab("juke");
+    } else if (location.hash === "#jugar" || location.hash === "#play") {
+      component.goTab("game");
     }
     matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", render);
     window.addEventListener("pagehide", event => {
