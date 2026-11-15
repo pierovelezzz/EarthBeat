@@ -1,6 +1,6 @@
 # Lectura de la interfaz de V2
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 Cuatro apartados principales: Escuchar, La banda, ¿Cómo funciona? y Tecnología. ¿Cómo funciona? contiene Del mapa al sonido y Prueba práctica, en ese orden. Brisa tiene retrato y narraciones MP3 locales. Esta rama no incorpora la clase de introducción cinematográfica de V1/V3 ni el runtime de baile de V3.

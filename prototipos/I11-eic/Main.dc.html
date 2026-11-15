@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>EarthBeat · Earth Jukebox</title>
+<title>EarthRhythm · Earth Jukebox</title>
 <style>html,body{margin:0;background:#171e2b;color:#eff3f8}</style>
 <script src="./support.js"></script>
 </head>
@@ -1014,7 +1014,7 @@ a{color:inherit}
 .px .nav-short{display:none}
 .px .nav button:focus-visible{outline:2px solid #fff;outline-offset:-4px}
 .px .top .wrap{max-width:1560px;padding-inline:max(var(--gutter),env(safe-area-inset-left,0px)) max(var(--gutter),env(safe-area-inset-right,0px))}
-.px .top{container:EarthBeat-header / inline-size}
+.px .top{container:EarthRhythm-header / inline-size}
 .px .top .brand{min-height:44px;min-width:0}
 .px .top .brandmark{flex-shrink:0}
 .px .top .nav button{flex:0 1 auto;min-width:0;white-space:normal;text-wrap:balance}
@@ -1068,7 +1068,7 @@ a{color:inherit}
   .px .top .nav button{padding-inline:3px;font-size:max(.6em,.6875rem);letter-spacing:0}
 }
 /* Font-relative space also responds to enlarged text without splitting the name. */
-@container EarthBeat-header (max-width:18em){
+@container EarthRhythm-header (max-width:18em){
   .px .top .wrap,.px .top:has(details.menu[open]) .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto}
   .px .top .brand,.px .top:has(details.menu[open]) .brand{grid-row:1;grid-column:1/-1}
   .px .top .wordmark{white-space:nowrap;overflow-wrap:normal}
@@ -1536,7 +1536,7 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 <div class="wrap">
 <button type="button" class="brand" onClick="{{goHome}}" aria-label="{{tx.brandAria}}">
 <svg class="brandmark" width="38" height="24" viewBox="0 0 25 16" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><path d="M4 0h8v1h-8zM20 0h1v1h-1zM2 1h3v1h-3zM11 1h3v1h-3zM18 1h6v1h-6zM1 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM1 3h1v1h-1zM14 3h1v1h-1zM0 4h2v1h-2zM14 4h2v1h-2zM0 5h1v1h-1zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h1v1h-1zM15 9h1v1h-1zM0 10h1v1h-1zM15 10h1v1h-1zM0 11h2v1h-2zM14 11h2v1h-2zM1 12h1v1h-1zM14 12h1v1h-1zM1 13h2v1h-2zM13 13h2v1h-2zM2 14h3v1h-3zM11 14h3v1h-3zM4 15h8v1h-8z"></path><path d="M19 4h1v1h-1zM3 5h2v1h-2zM9 5h2v1h-2zM18 5h1v1h-1zM21 5h1v1h-1zM2 6h1v1h-1zM5 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM17 6h1v1h-1zM20 6h1v1h-1zM6 7h2v1h-2zM12 7h2v1h-2zM19 7h1v1h-1zM3 9h2v1h-2zM9 9h2v1h-2zM2 10h1v1h-1zM5 10h1v1h-1zM8 10h1v1h-1zM11 10h1v1h-1zM6 11h2v1h-2zM12 11h2v1h-2z" fill="#FFD447"></path></svg>
-<span class="wordmark">EarthBeat</span>
+<span class="wordmark">EarthRhythm</span>
 </button>
 <nav id="tour-nav" class="nav" aria-label="{{tx.sections}}" onKeyDown="{{onNavKey}}">
 <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
@@ -1981,7 +1981,7 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 <sc-if value="{{preferences.on}}">
 <div class="preferences-dim" aria-hidden="true"></div>
 <section id="preferences-dialog" class="preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="preferences-title" aria-describedby="preferences-body" tabindex="-1">
-<p class="kicker">EarthBeat · Brisa</p>
+<p class="kicker">EarthRhythm · Brisa</p>
 <h2 id="preferences-title">{{preferences.title}}</h2><p id="preferences-body">{{preferences.body}}</p>
 <div class="preferences-choices"><sc-for list="{{preferences.choices}}" as="p"><label for="{{p.id}}"><input id="{{p.id}}" type="checkbox" checked="{{p.on}}" onChange="{{p.change}}"><span><strong>{{p.label}}</strong><span class="small muted">{{p.hint}}</span></span></label></sc-for></div>
 <div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-pressed="{{l.on}}" onClick="{{l.pick}}" lang="{{l.code}}">{{l.short}}</button></sc-for></div>
@@ -2081,10 +2081,10 @@ var GUIDES = {
     {
       "id": "tour-cta",
       "t": "Hola, soy Brisa",
-      "b": "Te ayudo a explorar EarthBeat. Puedes leer esta ayuda, escucharla si quieres o cerrarla en cualquier momento.",
+      "b": "Te ayudo a explorar EarthRhythm. Puedes leer esta ayuda, escucharla si quieres o cerrarla en cualquier momento.",
       "en": {
         "t": "Hi, I’m Brisa",
-        "b": "I help you explore EarthBeat. Read this help, listen if you want, or close it at any time."
+        "b": "I help you explore EarthRhythm. Read this help, listen if you want, or close it at any time."
       }
     },
     {
@@ -2215,10 +2215,10 @@ var GUIDES = {
     {
       "id": "tour-drop",
       "t": "Elige tu imagen",
-      "b": "Elige o arrastra una imagen. EarthBeat muestra cómo se convierte en música.",
+      "b": "Elige o arrastra una imagen. EarthRhythm muestra cómo se convierte en música.",
       "en": {
         "t": "Choose your image",
-        "b": "Choose or drop an image. EarthBeat shows how it becomes music."
+        "b": "Choose or drop an image. EarthRhythm shows how it becomes music."
       }
     }
   ],
@@ -2266,10 +2266,10 @@ var GUIDES = {
     {
       "id": "credit-science-title",
       "t": "Fuentes NASA",
-      "b": "Estos enlaces identifican los productos y datos utilizados. EarthBeat es un proyecto independiente.",
+      "b": "Estos enlaces identifican los productos y datos utilizados. EarthRhythm es un proyecto independiente.",
       "en": {
         "t": "NASA sources",
-        "b": "These links identify the products and data used. EarthBeat is an independent project."
+        "b": "These links identify the products and data used. EarthRhythm is an independent project."
       }
     },
     {
@@ -2647,7 +2647,7 @@ var ROUTE_EN = { home: 'Home', juke: 'Listen', band: 'The band', how: 'How does 
 /* Textos fijos de la interfaz */
 var TX = {
   es: {
-    brandAria: 'EarthBeat, ir al inicio', sections: 'Secciones', langAria: 'Idioma', a11y: 'Accesibilidad', a11yAria: 'Opciones de accesibilidad', skipContent: 'Saltar al contenido',
+    brandAria: 'EarthRhythm, ir al inicio', sections: 'Secciones', langAria: 'Idioma', a11y: 'Accesibilidad', a11yAria: 'Opciones de accesibilidad', skipContent: 'Saltar al contenido',
     heroKicker: 'Sonificación del Pacífico', heroTitle: 'Escucha el Pacífico',
     heroLede: 'El agua cantaba en el antiguo Perú. Hoy la banda convierte mapas de la NASA en música.',
     heroCta: 'Escuchar el Pacífico', heroBand: 'Conocer a la banda',
@@ -2663,10 +2663,10 @@ var TX = {
     theBand: 'La banda', all: 'Todos', none: 'Ninguno', bandAria: 'Banda', bandMixHelp: 'Activa o silencia a cada músico.', staticPose: 'Pose estática', bandDesign: 'Propuesta artística del proyecto. Las referencias culturales y las historias se documentan por separado.',
     bandEyebrow: 'La banda del Pacífico', pickMusician: 'Elegir músico', inScene: 'En escena', fullBody: 'en pose de cuerpo completo con su instrumento', constellation: 'Constelación',
     starring: 'Protagoniza', listens: 'Escucha', plays: 'Toca', persona: 'Carácter', instrument: 'Instrumento', bandGo: 'Armar la banda y escuchar',
-    teamCharacter: 'Personaje de ficción del equipo', storyTitle: 'Historia', howItPlays: 'Cómo suena en EarthBeat', factsAndReferences: 'Hechos, cultura y fuentes', documentedEpisode: 'Episodio documentado', culturalReference: 'Referencia cultural', visualProposal: 'Propuesta visual', ethicalPrinciples: 'Principios éticos', teamInspiration: 'Inspiración original del equipo',
+    teamCharacter: 'Personaje de ficción del equipo', storyTitle: 'Historia', howItPlays: 'Cómo suena en EarthRhythm', factsAndReferences: 'Hechos, cultura y fuentes', documentedEpisode: 'Episodio documentado', culturalReference: 'Referencia cultural', visualProposal: 'Propuesta visual', ethicalPrinciples: 'Principios éticos', teamInspiration: 'Inspiración original del equipo',
     sample: 'Probar con la lluvia de Chiclayo', dataListenKicker: 'Prueba práctica',
     colorsHow: 'Cómo leer los colores', modePalette: 'Mapa de anomalía (escala NASA)', modeFree: 'Color libre (cualquier imagen)', column: 'Columna a escuchar',
-    howKicker: 'Método', howTitle1: 'Cómo suena un mapa', howLede1: 'EarthBeat convierte los colores del Pacífico en música dentro de tu navegador.',
+    howKicker: 'Método', howTitle1: 'Cómo suena un mapa', howLede1: 'EarthRhythm convierte los colores del Pacífico en música dentro de tu navegador.',
     methodSourcesTitle: 'Consultar las fuentes', originalPalette: 'Paleta original', monthlyData: 'Datos mensuales', impactCatalog: 'Catálogo de impactos v1',
     techKicker: 'Tecnología', techFilterAria: 'Filtrar tecnologías', techNote: 'Detalle técnico', techEmpty: 'No hay herramientas con este filtro en la categoría. Elige «Todo» para verlas.', module: 'Módulo', credTitle: 'Datos, créditos y uso de IA', credData: 'Datos',
     credDataP1: 'Fotogramas de la visualización del Earth Information Center «Sea Surface Temperature (SST) Anomaly – Near Real Time» (NASA SVS 5176, variante Pacífico, 16 may 2024 – 2 nov 2026), recortados al Pacífico sudeste; datos JPL MUR SST. Crédito: NASA’s Scientific Visualization Studio.',
@@ -2682,7 +2682,7 @@ var TX = {
     guide: 'Guía', guideOpen: 'Abrir ayuda de Brisa', guideClose: 'Cerrar guía y continuar después', guideListen: 'Escuchar a Brisa', skipGuide: 'Saltar guía', guideBy: 'Brisa · tu guía'
   },
   en: {
-    brandAria: 'EarthBeat, go home', sections: 'Sections', langAria: 'Language', a11y: 'Accessibility', a11yAria: 'Accessibility options', skipContent: 'Skip to content',
+    brandAria: 'EarthRhythm, go home', sections: 'Sections', langAria: 'Language', a11y: 'Accessibility', a11yAria: 'Accessibility options', skipContent: 'Skip to content',
     heroKicker: 'Pacific Ocean Sonification', heroTitle: 'Listen to the Pacific',
     heroLede: 'Water sang in ancient Peru. Today the band turns NASA maps into music.',
     heroCta: 'Listen to the Pacific', heroBand: 'Meet the band',
@@ -2698,10 +2698,10 @@ var TX = {
     theBand: 'The band', all: 'All', none: 'None', bandAria: 'Band', bandMixHelp: 'Switch each musician on or off.', staticPose: 'Static pose', bandDesign: 'Artistic proposal for the project. Cultural references and stories are documented separately.',
     bandEyebrow: 'The Pacific band', pickMusician: 'Pick a musician', inScene: 'On stage', fullBody: 'in a full-body pose with their instrument', constellation: 'Constellation',
     starring: 'Leads', listens: 'Listens to', plays: 'Plays', persona: 'Personality', instrument: 'Instrument', bandGo: 'Assemble the band and listen',
-    teamCharacter: 'Fictional character by the team', storyTitle: 'Story', howItPlays: 'How it sounds in EarthBeat', factsAndReferences: 'Facts, culture and sources', documentedEpisode: 'Documented episode', culturalReference: 'Cultural reference', visualProposal: 'Visual proposal', ethicalPrinciples: 'Ethical principles', teamInspiration: 'The team’s original inspiration',
+    teamCharacter: 'Fictional character by the team', storyTitle: 'Story', howItPlays: 'How it sounds in EarthRhythm', factsAndReferences: 'Facts, culture and sources', documentedEpisode: 'Documented episode', culturalReference: 'Cultural reference', visualProposal: 'Visual proposal', ethicalPrinciples: 'Ethical principles', teamInspiration: 'The team’s original inspiration',
     sample: 'Try Chiclayo rainfall', dataListenKicker: 'Try it',
     colorsHow: 'How to read the colors', modePalette: 'Anomaly map (NASA scale)', modeFree: 'Free color (any image)', column: 'Column to listen to',
-    howKicker: 'Method', howTitle1: 'How a map sounds', howLede1: 'EarthBeat turns the colors of the Pacific into music in your browser.',
+    howKicker: 'Method', howTitle1: 'How a map sounds', howLede1: 'EarthRhythm turns the colors of the Pacific into music in your browser.',
     methodSourcesTitle: 'Consult the sources', originalPalette: 'Original palette', monthlyData: 'Monthly data', impactCatalog: 'Impact catalog v1',
     techKicker: 'Technology', techFilterAria: 'Filter technologies', techNote: 'Technical detail', techEmpty: 'No tools in this category match the filter. Choose “All” to see them.', module: 'Module', credTitle: 'Data, credits and AI use', credData: 'Data',
     credDataP1: 'Frames from the Earth Information Center visualization “Sea Surface Temperature (SST) Anomaly – Near Real Time” (NASA SVS 5176, Pacific variant, 16 May 2024 – 2 Nov 2026), cropped to the southeast Pacific; JPL MUR SST data. Credit: NASA’s Scientific Visualization Studio.',
@@ -4676,7 +4676,7 @@ class Component extends DCLogic {
       player: showCells ? this.playerVm() : null,
       motionClass: s.reducedMotion ? 'reduce-motion' : '',
       preferences: {
-        on: s.showPreferences, title: T('¿Cómo prefieres usar EarthBeat?', 'How would you like to use EarthBeat?'),
+        on: s.showPreferences, title: T('¿Cómo prefieres usar EarthRhythm?', 'How would you like to use EarthRhythm?'),
         body: T('Combina las opciones que te resulten cómodas. Puedes cambiarlas después en Accesibilidad.', 'Combine the options that suit you. You can change them later in Accessibility.'),
         choices: [
           ['voice', T('Modo voz de Brisa', 'Brisa voice mode'), T('Brisa habla al entrar en cada apartado. Puedes desactivar su voz aquí.', 'Brisa speaks as you open each section. You can turn her voice off here.')],
@@ -4686,7 +4686,7 @@ class Component extends DCLogic {
         ].map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: !!s[option[0]], change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
         continueLabel: T('Continuar', 'Continue'), tutorialLabel: T('Aprender con tres acciones', 'Learn with three actions'),
         continue: function () { self.finishPreferences(false); }, tutorial: function () { self.finishPreferences(true); },
-        reopenLabel: T('Cómo prefiero usar EarthBeat', 'How I prefer to use EarthBeat'), open: function () { self.openPreferences(); }
+        reopenLabel: T('Cómo prefiero usar EarthRhythm', 'How I prefer to use EarthRhythm'), open: function () { self.openPreferences(); }
       },
       frameCount: s.disc === 5 ? T('tu archivo', 'your file') : T('fotograma ', 'frame ') + (s.frame + 1) + T(' de ', ' of ') + d.files.length, prevOff: s.frame <= 0, nextOff: s.frame >= d.files.length - 1,
       trans: s.trans, route: s.route, pageName: ROUTE_LOOK[s.tab].title,

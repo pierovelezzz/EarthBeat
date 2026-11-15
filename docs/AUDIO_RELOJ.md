@@ -1,6 +1,6 @@
 # Programación del audio en V2
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 El secuenciador de la aplicación está en `prototipos/I11-eic/Main.dc.html`. Programa los ataques sobre `AudioContext.currentTime` y mantiene una cola para actualizar el estado visible cuando corresponde a la reproducción. Un callback anterior no debe restaurar una reproducción cancelada.

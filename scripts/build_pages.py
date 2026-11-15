@@ -1,4 +1,4 @@
-"""Package the interactive EarthBeat prototype for GitHub Pages."""
+"""Package the interactive EarthRhythm prototype for GitHub Pages."""
 
 from hashlib import sha256
 import json
