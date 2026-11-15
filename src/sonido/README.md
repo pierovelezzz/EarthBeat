@@ -1,11 +1,18 @@
-# Módulo M3 · sonido
+# Módulo heredado: sonido
 
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V3`.
+> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-> Edición documental de esta copia: **14/11/2026 19:03:13 (UTC-05:00)** · EarthBeat `V3`.
-> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+Este directorio pertenece al prototipo modular que arranca desde el `index.html` de la raíz; no es una dependencia importada por el build de I11.
 
-La banda: Silbo, Inti, Mamacocha, Yaku e Illapa tocan cada columna escaneada con Web Audio. Emite 'voces'.
+iniciarAudio() crea o reanuda un AudioContext. El listener de paso calcula niveles y emite voces; el archivo sigue siendo un stub sin la síntesis musical completa. El sonido funcional del producto está en I11.
 
-- Contrato público: `docs/CONTRATOS.md`, sección M3. Plan detallado: `docs/PLAN.md` §8.
-- Solo el dueño edita esta carpeta. Para pedir cambios, abre un issue con la etiqueta `sonido`.
-- Mientras otro módulo no esté listo, usa datos simulados en lugar de esperar.
+| Archivo | Exports presentes |
+|---|---|
+| `index.js` | `iniciarAudio` |
+
+Para modificar el producto que se construye y sirve en V3, revisar `prototipos/I11-eic/Main.dc.html` y `scripts/build_pages.py`. Los contratos de este material se conservan como explicación de archivos existentes, no como una promesa de módulos implementados para el sitio actual.
+
+---
+
+[Estado de esta rama](../../docs/ESTADO_ACTUAL.md) · [Verificación](../../docs/VERIFICACION.md) · [Inventario completo](../../archivos.md)

@@ -1,25 +1,20 @@
-# Registro de uso de IA
+# Uso de IA y atribución en V3
 
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V3`.
+> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-> Edición documental de esta copia: **14/11/2026 19:03:13 (UTC-05:00)** · EarthBeat `V3`.
-> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+El registro recibido atribuye a Claude Design y Claude Code la asistencia en planificación, prototipos y código, y a Whisper una transcripción de orientación. El equipo dirige y revisa el material; esa atribución no debe reemplazarse por el nombre del propietario del nuevo repositorio.
 
-Como recomendaron en la orientación: declarar la IA da credibilidad. Se agrega una línea por cada uso relevante.
+Codex ha asistido en código y verificaciones del material recibido, en la copia de ramas, la revisión de metadatos y esta actualización documental. Esta revisión no genera imágenes nuevas ni vuelve a sintetizar la música o las voces del proyecto. Los píxeles de las cinco ilustraciones fuente se conservaron al actualizar sus metadatos.
 
-| Registro | Quién | Herramienta | Para qué | Revisión humana |
-|---|---|---|---|---|
-| Registro del origen | Coordinación | Whisper medium (faster-whisper, local) | Transcribir el audio de la charla "experiencia interactiva y 6" | Se revisaron a mano los fragmentos citados en el plan |
-| Registro del origen | Coordinación | Claude Code (Anthropic) | Redactar `docs/PLAN.md` y `docs/CONTRATOS.md`, calcular las cifras de NASA POWER y crear la estructura del repo | Pendiente: revisión del equipo en el kickoff |
-| Registro del origen | Coordinación | Claude Design (Anthropic) | Prototipo interactivo retro pixel (jukebox, analizador de fotogramas, sonido). Los avatares son marcadores de posición | Se usa como referencia visual, no como código final |
-| *(desarrollo)* | M4 | ChatGPT (generación de imágenes) | Conceptos de los avatares anime de Silbo, Inti, Mamacocha, Yaku e Illapa. **Pegar aquí cada prompt** y confirmar la herramienta exacta | Repintado y capas en Krita, búsqueda inversa de originalidad y etiqueta "generado con IA" |
-| *(desarrollo)* | M2–M4, M6 | ChatGPT Codex | Funciones concretas de la versión final (exportar .wav, parser de CSV, pruebas, animación por capas). **Anotar aquí cada función** | Revisión cruzada, prueba manual y comentario de autoría |
-| Registro del origen | M6 | ChatGPT Codex | Auditoría de diseño y ajustes de navegación, espaciado, desplazamiento y controles táctiles en TerraSonic | Pruebas automatizadas y revisión visual. Pendiente la revisión del equipo |
-| Registro del origen | M6 | ChatGPT Codex | Rediseño de portada, reproductor, conversión, método y tecnología a partir de capturas y evaluación heurística | Pruebas automatizadas y revisión visual. Pendiente la revisión del equipo |
-| Registro del origen | M4–M6 | ChatGPT Codex y Blender 5.2.2 | Propuesta de cinco modelos articulados con geometría propia, atlas PBR, clips y poses WebP. Respaldo sin WebGL, carga diferida y cuerpos completos en Escuchar | Inventario, renders multivista, muestreo de clips y regresiones automatizadas. Revisión humana y cultural pendientes |
-| Registro del origen | M2–M6 | ChatGPT Codex | Transporte accesible, corrección de acordes, paleta GIBS oficial, mezcla por músico, lectura local de archivos, Brisa y preferencias, catálogos de impactos/personajes, revisión de Método y Tecnología | Pruebas unitarias y recorridos Chromium. Voz simulada para verificar su ciclo; sin afirmar escucha humana, pruebas con usuarios ni validación cultural |
-| Registro del origen | M4–M6 | ChatGPT Codex, Computer Use y Blender 5.2.2 | Edición manual preliminar de cabeza/capucha/capa de Yaku en una copia de estudio; temas claro/pizarra; auditoría de fidelidad de las cinco ilustraciones y preparación del paquete anatómico CC0 de Blender Studio | El usuario rechazó los modelos volumétricos. El estudio GUI es parcial, sin nuevos GLB o clips. Los temas publicados pasan 142 pruebas y 256 estados por motor; la base anatómica todavía no se incorporó. No acredita aceptación artística |
-| | | | | |
+Los MP3 de Brisa fueron sintetizados con Piper según los créditos que acompañan a los archivos. Se conservan las atribuciones a las voces y datos de entrenamiento declarados allí.
 
-Las filas marcadas «desarrollo» son propuestas históricas de registro, no evidencia de que esas funciones, retoques o revisiones hayan ocurrido. No se acredita aquí una exportación WAV, un uso de ElevenLabs o un repintado en Krita.
+La introducción y los recursos espaciales procedurales asistidos por IA no se presentan como imágenes satelitales.
 
-**Declaración verificable para revisión del equipo:** el historial documenta asistencia de Claude Design/Code y Whisper, y esta rama documenta asistencia de Codex en código, pruebas y modelos procedurales mediante Blender. Se conservan ilustraciones anteriores. Las propuestas nuevas y sus límites están identificados. Las imágenes NASA se recortan y reducen; el análisis deriva niveles para música. La revisión humana y cultural y las pruebas con usuarios siguen pendientes. No debe sustituirse por una afirmación de que «todo fue validado».
+La banda sonora utiliza el sintetizador Web Audio del código, no una respuesta musical generada por un servicio de IA. Las historias de los personajes son propuestas ficticias con referencias; no son testimonios ni validaciones culturales.
+
+Las comprobaciones automatizadas no acreditan certificación WCAG, evaluación con lector de pantalla, escucha humana, vibración de un teléfono físico ni aprobación cultural. Esas validaciones requieren trabajo humano específico. Los navegadores pueden restringir audio, voz y vibración; la explicación escrita permite continuar.
+
+---
+
+[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)

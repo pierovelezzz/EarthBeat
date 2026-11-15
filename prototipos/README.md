@@ -1,22 +1,20 @@
-# Prototipos (Claude Design)
+# Prototipos de V3
 
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V3`.
+> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-> Edición documental de esta copia: **14/11/2026 19:03:13 (UTC-05:00)** · EarthBeat `V3`.
-> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+| Carpeta | Función actual |
+|---|---|
+| [I09-maqueta-movil](I09-maqueta-movil/) | Maqueta de escritorio y siete estados móviles conservados como referencia |
+| [I10-iconos](I10-iconos/) | Maqueta de escritorio con iconos y su índice canvas |
+| [I11-eic](I11-eic/) | Fuente efectiva, mapas y recursos que selecciona el build de esta rama |
 
-Copias del código de cada iteración del prototipo, para no perder la historia. El registro completo de iteraciones, con **qué cambió y quién lo hizo**, está en [`docs/ITERACIONES.md`](../docs/ITERACIONES.md).
+La aplicación revisada se obtiene de `I11-eic/Main.dc.html` mediante `python scripts/build_pages.py _site`, desde la raíz del repositorio. Los archivos `.dc.html` contienen plantillas y no se consideran una entrega estática ya construida por abrirlos directamente con `file://`.
 
-| Carpeta | Iteración | Contenido |
-|---|---|---|
-| [`I11-eic/`](I11-eic/) (I12) | I12 · Diseño limpio y guía interactiva | Mismo `Main.dc.html` rediseñado: interfaz sobria, guía de 7 pasos, opciones avanzadas plegadas y armonía menor para lo cálido. Sin scroll: se navega por pantallas con botones y transiciones. Las 7 maquetas móviles del artefacto no se rediseñaron |
-| [`I11-eic/`](I11-eic/) | I11 · Fotogramas oficiales del EIC | `Main.dc.html` con los 30 fotogramas del video del EIC (SVS 5176, Pacífico) en `fotogramas/`, escala de color y detección de tierra del EIC, y discos por estación 2024–2026 |
-| [`I10-iconos/`](I10-iconos/) | I10 · Iconos y menos cajas (v18 del artefacto) | `Main.dc.html` (prototipo de escritorio con iconos) y `canvas.json`. Las maquetas móviles no cambiaron: están en I09 |
-| [`I09-maqueta-movil/`](I09-maqueta-movil/) | I09 · Maqueta móvil (estado de la v17 del artefacto) | `Main.dc.html` (prototipo jugable de escritorio) y 7 maquetas móviles `Movil-*.dc.html`, más `canvas.json` |
+Los `canvas.json` conservan información de organización del prototipo. I09/I10 no son rutas adicionales del sitio I11. El material de origen atribuye los prototipos a Nishix03 con asistencia de Claude Design/Code; la revisión documental no sustituye esa atribución.
 
-## Cómo verlos
-- **Lo más fácil:** el prototipo publicado: https://claude.ai/artifact/L5G8i3kpm4XSqQgzxBs7FU *(compartido con cualquiera que tenga el enlace)*.
-- Los archivos `.dc.html` son el formato de **Claude Design**: no se abren directo en el navegador. Para trabajar con ellos se publican en un lienzo de Claude Design (`canvas.json` es el índice con la posición de cada pantalla).
-- Los fotogramas del prototipo se cargan desde el almacén de ese artefacto (`/_blob/...`); los mismos 30 fotogramas están en [`data/fotogramas/`](../data/fotogramas/).
+El build copia `scripts/band-dance.js` a `runtime/`. Cada músico tiene cuatro dibujos en `prototipos/I11-eic/sprites/<músico>/baile/`. El componente carga esos dibujos al necesitarlos y coordina reproducción, visibilidad y movimiento reducido. Los WebP animados heredados siguen en la fuente, pero este build distribuye los fotogramas del módulo de baile.
 
-## Autoría
-Por ahora, **Nishix03**. El código lo genera una IA (Claude Design y Claude Code) a partir de sus pedidos y él lo revisa; ver [`docs/USO_DE_IA.md`](../docs/USO_DE_IA.md).
+---
+
+[Estado de esta rama](../docs/ESTADO_ACTUAL.md) · [Verificación](../docs/VERIFICACION.md) · [Inventario completo](../archivos.md)
