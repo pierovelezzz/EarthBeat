@@ -180,6 +180,14 @@ class DanceButton extends HTMLElement {
 customElements.define('earthbeat-dance', BandDance);
 customElements.define('earthbeat-dance-button', DanceButton);
 
+function positionCue(element, remaining, lookahead) {
+  const start = Math.max(0, remaining / lookahead * 100);
+  element.style.transform = `translateY(${start}%)`;
+  if (remaining <= 0 || !element.animate) return null;
+  return element.animate([{ transform: element.style.transform }, { transform: 'translateY(0%)' }],
+    { duration: remaining * 1000, fill: 'forwards' });
+}
+
 class StageNoteTrack extends HTMLElement {
   static observedAttributes = ['data-hit', 'data-audible'];
   cues = new Map();
@@ -187,7 +195,10 @@ class StageNoteTrack extends HTMLElement {
   clear = () => {
     cancelAnimationFrame(this.frame);
     this.frame = null;
-    this.cues.forEach(note => note.remove());
+    this.cues.forEach(({ motion, animation }) => {
+      animation?.cancel();
+      motion.remove();
+    });
     this.cues.clear();
     clearTimeout(this.strikeTimer);
     this.removeAttribute('data-strike');
@@ -226,32 +237,44 @@ class StageNoteTrack extends HTMLElement {
     const key = this.dataset.character;
     this.clock = clock;
     this.lookahead = lookahead;
+    const now = clock.currentTime;
+    let needsPolling = false;
     for (const event of notes) {
       const kind = event.fired[key];
-      if (!kind || event.at <= clock.currentTime) continue;
+      if (!kind || event.at <= now || this.cues.has(event.at)) continue;
       const motion = document.createElement('span');
       motion.className = 'stage-note-motion';
       const note = receptor.cloneNode(true);
       note.setAttribute('class', 'stage-note');
       note.dataset.note = kind === true ? 'note' : kind;
       motion.append(note);
-      this.cues.set(event.at, motion);
       this.append(motion);
+      const animation = positionCue(motion, event.at - now, lookahead);
+      this.cues.set(event.at, { motion, animation });
+      if (animation) {
+        animation.onfinish = () => {
+          motion.remove();
+          if (this.cues.get(event.at)?.motion === motion) this.cues.delete(event.at);
+        };
+      } else needsPolling = true;
     }
-    if (this.cues.size && this.frame == null) this.advance();
+    if (needsPolling && this.frame == null) this.advance();
   };
 
   advance = () => {
     const now = this.clock.currentTime;
-    this.cues.forEach((motion, at) => {
+    let needsPolling = false;
+    this.cues.forEach(({ motion, animation }, at) => {
+      if (animation) return;
       if (at <= now) {
         motion.remove();
         this.cues.delete(at);
       } else {
         motion.style.transform = 'translateY(' + Math.min(100, 100 * (at - now) / this.lookahead) + '%)';
+        needsPolling = true;
       }
     });
-    this.frame = this.cues.size ? requestAnimationFrame(this.advance) : null;
+    this.frame = needsPolling ? requestAnimationFrame(this.advance) : null;
   };
 }
 
@@ -406,8 +429,10 @@ class RhythmGame extends HTMLElement {
       if (still) {
         note.flight?.remove();
         note.flight = null;
-      } else {
-        note.flight ??= this.mountFlight(note.index);
+      } else if (!note.flight) {
+        note.flight = this.mountFlight(note.index);
+        note.animated = Boolean(positionCue(note.flight, left, this.lookahead));
+      } else if (!note.animated) {
         note.flight.style.transform = `translateY(${Math.max(0, left / this.lookahead * 100)}%)`;
       }
       if (Math.abs(left) <= margin) active |= 1 << note.index;

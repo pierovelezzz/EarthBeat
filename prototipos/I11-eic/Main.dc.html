@@ -1647,7 +1647,8 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
  isolation:isolate;contain:strict;opacity:1;
 }
 .px .space-sky .space-atmosphere{position:absolute;inset:0;background:radial-gradient(ellipse at 0 36%,#764f2b20,transparent 42%),radial-gradient(ellipse at 100% 15%,#5c7bc52b,transparent 42%),radial-gradient(ellipse at 55% 110%,#24446c55,transparent 60%)}
-.px .space-sky .stl{opacity:.32;animation:none;will-change:auto}
+/* The star tiles repeat at the old offsets, so the extra offscreen area is unnecessary. */
+.px .space-sky .stl{inset:0;opacity:.32;animation:none;will-change:auto}
 .px .space-sky .s2{opacity:.26}
 .px .space-sky .s3{opacity:.4}
 .px .space-sun,.px .space-moon{position:absolute;pointer-events:none}
@@ -1691,7 +1692,9 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px.app[data-theme="light"] .space-reading-shade{opacity:.75}
 .px.reduce-motion .space-meteor,.px.reduce-motion .space-flight{display:none}
 .px.reduce-motion .space-sky *{animation:none!important}
-html[data-ts-page-hidden] .px .space-sky *{animation-play-state:paused!important}
+html[data-ts-page-hidden] .px *,
+html[data-ts-page-hidden] .px *::before,
+html[data-ts-page-hidden] .px *::after{animation-play-state:paused!important}
 .px[data-playing="true"] .space-sky *,
 .px[data-playing="true"] .band-stage::before{animation-play-state:paused!important}
 .px[data-playing="true"] :is(.top,.bar){-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -2633,8 +2636,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <section class="player-detail map-reading" aria-labelledby="map-reading-title">
 <h2 id="map-reading-title">{{tx.see}}</h2>
 <div class="map-reading-copy"><p>{{seeText}}</p><p>{{mapMusicHint}}</p></div>
-<details id="accessible-data" class="accessible-data">
-<summary>{{accessibleData.title}}</summary>
+<details id="accessible-data" class="accessible-data" onToggle="{{toggleDataReading}}">
+<summary>{{readDataLabel}}</summary>
+<sc-if value="{{accessibleData}}">
 <p>{{accessibleData.description}}</p>
 <p>{{accessibleData.source}} · {{accessibleData.date}}</p>
 <p id="accessible-data-unit">{{accessibleData.unit}}</p>
@@ -2649,6 +2653,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </table>
 </sc-if>
 <sc-if value="{{accessibleData.unavailable}}"><p role="status">{{accessibleData.unavailable}}</p></sc-if>
+</sc-if>
 </details>
 </section>
 </sc-if>
@@ -4441,6 +4446,10 @@ class Component extends DCLogic {
         self.haptics.stop();
         self.cinema?.finish(false);
       } else {
+        if (self.playbackNeedsRender) {
+          self.playbackNeedsRender = false;
+          self.setState({});
+        }
         self.cinema?.start();
         self.completeWelcome();
         self.showEntryPreferences();
@@ -4589,7 +4598,16 @@ class Component extends DCLogic {
     var raw = event?.target?.value;
     if (typeof raw !== 'string' || !raw.trim()) return;
     var column = Number(raw);
-    if (Number.isInteger(column) && column >= 0 && column < 28) this.setState({ dataColumn: column });
+    if (Number.isInteger(column) && column >= 0 && column < 28 && column !== this.state.dataColumn) this.setState({ dataColumn: column });
+  }
+  toggleDataReading(event) {
+    var detail = event.currentTarget;
+    if (!detail.isConnected) return;
+    var openDetail = detail.open ? detail : null;
+    if (this.openDataReading !== openDetail) {
+      this.openDataReading = openDetail;
+      this.setState({});
+    }
   }
   accessibleDataVm() {
     var self = this, s = this.state, analysis = this.cur(), local = s.disc === 5, rain = local && s.custom?.kind === 'rain';
@@ -5410,8 +5428,10 @@ class Component extends DCLogic {
   }
 
   syncHomePreview(){
-    var s=this.state,card=document.querySelector('.home-demo');
-    if(this.disposed||s.tab!=='home'||s.trans||s.showPreferences||s.more||s.tour||document.hidden||this.bandReduced()||this.cinema?.root||this.journey?.root||!card||card.matches(':hover')||card.contains(document.activeElement)){this.homePreviewDue=0;return;}
+    var s=this.state;
+    if(this.disposed||s.tab!=='home'||s.trans||s.showPreferences||s.more||s.tour||document.hidden||this.bandReduced()||this.cinema?.root||this.journey?.root){this.homePreviewDue=0;return;}
+    var card=document.querySelector('.home-demo');
+    if(!card||card.matches(':hover')||card.contains(document.activeElement)){this.homePreviewDue=0;return;}
     var now=Date.now();if(!this.homePreviewDue)this.homePreviewDue=now+3000;
     for(var offset=1;offset<HOME_PREVIEW.length;offset++){
       var next=(s.homePreview+offset)%HOME_PREVIEW.length,slide=HOME_PREVIEW[next],url=DISC_SETS.eic[slide.disc].files[slide.frame],entry=this.homePreviewImages.get(url);
@@ -6176,7 +6196,15 @@ class Component extends DCLogic {
       if (!this.state.masterMuted && this.state.volume > 0) Object.keys(stageHits).forEach(function (key) {
         self.updateStageNote(stageNotes, key, stageHits[key]);
       });
-      this.setState(Object.assign(latest, { stageNotes: stageNotes }));
+      var patch = Object.assign(latest, { stageNotes: stageNotes });
+      // Audio keeps its position while the tab is hidden. The next visible render catches up.
+      if (document.hidden) {
+        Object.assign(this.state, patch);
+        this.playbackNeedsRender = true;
+      } else {
+        this.playbackNeedsRender = false;
+        this.setState(patch);
+      }
     }
     if (hapticStep) this.vibrateSafely(hapticStep.pattern, 'music:' + this.audioRun + ':' + this.state.disc + ':' + hapticStep.frame + ':' + hapticStep.column);
   }
@@ -6674,8 +6702,12 @@ class Component extends DCLogic {
       motionMode: reducedMotion ? 'reduced' : 'full',
       musicActive: s.playing ? 'true' : 'false',
       haptic: this.hapticVm(),
-      accessibleData: scrVm.play && !rhythmMode ? this.accessibleDataVm() : null,
-      accessHelp: this.waysVm(),
+      readDataLabel: T('Consultar datos sin usar el mapa', 'Read data without using the map'),
+      toggleDataReading: function (event) { self.toggleDataReading(event); },
+      accessibleData: scrVm.play && !rhythmMode && this.openDataReading?.isConnected && this.openDataReading.open ? this.accessibleDataVm() : null,
+      accessHelp: s.showWays ? this.waysVm() : Object.assign(usageHelp(), {
+        on: false, triggerLabel: T('Formas de usar', 'Ways to use'), open: function (event) { self.openWays(event); }
+      }),
       guideOpenLabel: s.tour ? s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen') : this.tutorialProgress && !this.tutorialProgress.completed ? this.tutorialEntryLabel() : T('Ayuda de esta pantalla', 'Help for this screen'),
       positionAccessibilityMenu: function (event) { self.positionAccessibilityMenu(event); },
       languageCode: LANG,

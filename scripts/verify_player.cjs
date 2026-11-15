@@ -85,12 +85,12 @@ async function main() {
             paths.map(instrument => instrument.getAttribute('d')));
           assert.equal(new Set(instruments).size, 5, 'Every musician has a distinct instrument icon');
           const pending = await page.waitForFunction(() => [...document.querySelectorAll('.stage-note-motion')]
-            .find(motion => parseFloat(motion.style.transform.slice(11)) > 50));
+            .find(motion => new DOMMatrixReadOnly(getComputedStyle(motion).transform).m42 > motion.offsetHeight / 2));
           const rose = await pending.evaluate(async motion => {
             const note = motion.firstElementChild;
             const instrument = motion.parentElement.querySelector('.stage-receptor path');
             if (note.localName !== 'svg' || note.querySelector('path')?.getAttribute('d') !== instrument.getAttribute('d')) return false;
-            const position = () => parseFloat(motion.style.transform.slice(11));
+            const position = () => new DOMMatrixReadOnly(getComputedStyle(motion).transform).m42;
             const start = position();
             for (let frame = 0; frame < 8; frame++) {
               await new Promise(requestAnimationFrame);
