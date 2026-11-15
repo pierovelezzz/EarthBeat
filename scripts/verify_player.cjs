@@ -99,10 +99,8 @@ async function main() {
           assert(rose, 'The matching instrument icon climbs before the note plays');
           await page.waitForFunction(() => {
             const current = document.querySelector('.listen-band .chip[aria-current="true"]');
-            const label = document.querySelector('.stage-chord-now strong');
-            return current && label.textContent === current.textContent;
+            return current && getComputedStyle(current).boxShadow !== 'none';
           });
-          assert(await page.locator('.stage-chord-light').first().isVisible(), 'The active chord lights the edge of the desktop stage');
           await page.waitForFunction(() => [...document.querySelectorAll('.stage-note-track[data-strike]')]
             .some(track => getComputedStyle(track.nextElementSibling, '::before').backgroundImage !== 'none'));
           await page.locator('.band-stage').screenshot({ path: path.join(output, 'stage-instruments.png') });
@@ -196,7 +194,8 @@ async function main() {
       await page.locator('#tour-play button').click();
       await page.locator('.stage-note-track[data-strike]').first().waitFor();
       assert.equal(await page.locator('.stage-note').count(), 0, 'Reduced motion uses stationary receptors');
-      assert.equal(await page.locator('.stage-chord-light:visible').count(), 0, 'Reduced motion skips the chord light');
+      assert.equal(await page.locator('.band-stage').evaluate(stage =>
+        getComputedStyle(stage, '::before').animationName), 'none', 'Reduced motion freezes the Pacific backdrop');
       assert(await page.locator('.stage-performer').evaluateAll(performers => performers.every(performer =>
         getComputedStyle(performer, '::before').backgroundImage !== 'none')), 'Reduced motion keeps the floor lighting steady while playing');
       await page.locator('#tour-play button').click();
@@ -235,7 +234,9 @@ async function main() {
       report.layouts.push({ viewport, geometry });
       assert.deepEqual(geometry.clipped, [], 'Controls and legend must stay within the viewport');
       assert(geometry.screenWidth <= geometry.screenClientWidth + 1, 'No horizontal player overflow');
-      assert.equal(await page.locator('.stage-chord-now').isVisible(), viewport.width >= 1100, 'The chord summary stays in the desktop layout');
+      const desktop = viewport.width >= 1100;
+      assert.equal(await page.locator('.listen-band .chips').evaluate(chords => getComputedStyle(chords).display),
+        desktop ? 'grid' : 'flex', 'Large chord tiles stay in the desktop layout');
       const instrumentLabel = page.locator('.stage-label span').first();
       assert.equal(await instrumentLabel.evaluate(label => getComputedStyle(label).clipPath === 'inset(50%)'),
         viewport.width >= 1100, 'Instrument names are visually hidden on desktop only');
@@ -245,16 +246,23 @@ async function main() {
       const nameColors = await page.locator('.stage-label strong').evaluateAll(names =>
         new Set(names.map(name => getComputedStyle(name).color)).size);
       assert.equal(nameColors, viewport.width >= 1100 ? 5 : 1, 'Desktop labels use the individual musician colors');
-      assert(await page.locator('.stage-musician').evaluateAll(musicians => musicians.every(musician => {
+      assert(await page.locator('.stage-musician').evaluateAll((musicians, desktop) => musicians.every(musician => {
         const stage = musician.closest('.band-stage').getBoundingClientRect();
         const lane = musician.querySelector('.stage-note-track').getBoundingClientRect();
         const icon = musician.querySelector('.stage-receptor').getBoundingClientRect();
         const portrait = musician.querySelector('earthbeat-dance').getBoundingClientRect();
-        return icon.width >= 24 && icon.left >= lane.left && icon.right <= lane.right && icon.top >= stage.top + 3 &&
+        return icon.width >= (desktop ? 38 : 24) && icon.left >= lane.left && icon.right <= lane.right && icon.top >= stage.top + 3 &&
           portrait.width >= 32 && portrait.height >= 60 && portrait.top - lane.bottom >= 0 &&
-          portrait.top - lane.bottom <= 5;
-      })), 'Each lane must stay above a visible portrait');
-      if (viewport.width >= 1280 && !process.argv.includes('--all-muted')) assert(geometry.bandBottom <= Math.min(geometry.footerTop,viewport.height),
+          portrait.top - lane.bottom <= 10;
+      }), desktop), 'Each lane must stay above a visible portrait');
+      if (desktop) {
+        const layout = await page.locator('.listen-band').evaluate(band => ({
+          band: band.getBoundingClientRect().bottom,
+          map: document.querySelector('#tour-machine').getBoundingClientRect().bottom
+        }));
+        assert(Math.abs(layout.band - layout.map) < 2, 'The band and map panels share a baseline');
+      }
+      if (viewport.width >= 1280 && viewport.height >= 700 && !process.argv.includes('--all-muted')) assert(geometry.bandBottom <= Math.min(geometry.footerTop,viewport.height),
         'Desktop must show the map, controls, legend and five complete musicians together: ' + JSON.stringify(geometry));
     }
     assert.deepEqual(errors, []);

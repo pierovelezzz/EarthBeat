@@ -1927,37 +1927,62 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
  .px .player-layout .mapbox,.px .player-layout .mbox{max-height:clamp(136px,22vh,220px)}
 }
 .px .player-layout{grid-template-rows:auto}
-.px .stage-chord-row{display:contents}
-.px .stage-chord-now,.px .stage-chord-light{display:none}
-@keyframes stage-chord-floor{from{opacity:.82}to{opacity:.22}}
+@keyframes pacific-swell{
+  from{transform:translate3d(-3%,1%,0) scale(1.03)}
+  to{transform:translate3d(3%,-2%,0) scale(1.1)}
+}
 @media(min-width:1100px) and (hover:hover) and (pointer:fine){
   .px .player-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.04fr) minmax(0,1.08fr)}
   .px .player-layout #tour-machine{grid-template-rows:auto auto auto}
   .px .player-layout #tour-machine .mbox{max-height:none}
-  .px .player-layout .listen-band{align-self:start;grid-template-rows:auto auto auto auto}
+  .px .player-layout .listen-band{display:flex;flex-direction:column}
   .px .player-layout .band-stage{
-    position:relative;min-height:clamp(232px,34vh,344px);
+    position:relative;isolation:isolate;flex:1 0 auto;min-height:238px;
     background-size:100% 118%;background-position:center bottom;
   }
   .px.app:not([data-contrast="true"]) .player-layout .band-stage{
-    background-image:linear-gradient(to top,#101217 0 2.2em,transparent 2.2em),var(--stage-image);
+    background-image:linear-gradient(to bottom,#071b2c 0%,#081822e8 50%,#080f18a8 80%,#070c14 100%),var(--stage-image);
     background-size:100% 100%,100% 118%;
   }
-  .px .stage-musician.listen-member .stage-performer{max-height:174px}
+  .px.app:not([data-contrast="true"]) .band-stage::before{
+    content:"";position:absolute;z-index:-1;inset:-8% -12% 25%;pointer-events:none;
+    background:repeating-radial-gradient(ellipse at 52% -55%,transparent 0 8%,#4aa3c924 9%,transparent 10% 14%),
+      radial-gradient(ellipse at 53% 22%,#1d5c76a8,transparent 69%);
+    mask-image:linear-gradient(transparent 5%,#000 38%,transparent 100%);
+  }
+  .px.app:not(.reduce-motion) .band-stage::before{animation:pacific-swell 14s ease-in-out infinite alternate}
+  .px .band-stage-musicians{
+    grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,1.15fr) repeat(2,minmax(0,1fr));padding:28px 6px 8px;
+  }
+  .px .stage-note-track{
+    --track-icon:clamp(38px,3.25vw,52px);
+    height:auto;align-self:stretch;margin-bottom:6px;
+  }
+  .px .stage-receptor,.px .stage-note{background-color:#0b1520}
+  .px .stage-musician.listen-member .stage-performer{max-height:180px}
+  .px .stage-musician.listen-member .stage-label{
+    width:min(100%,9em);min-height:2em;padding:4px 3px;border:1px solid var(--line);
+    border-radius:4px;align-self:center;font-size:clamp(.72em,.88vw,.84em);
+  }
   .px.app:not([data-contrast="true"]) .stage-musician.listen-member .stage-label{
-    color:color-mix(in srgb,var(--member-color) 88%,white);
+    --plaque-ink:color-mix(in srgb,var(--member-color) 72%,white);
+    color:var(--plaque-ink);background:#101822;
+    border-color:color-mix(in srgb,var(--member-color) 60%,#202a36);
+    box-shadow:inset 0 -2px color-mix(in srgb,var(--member-color) 38%,#101822);
   }
   .px .stage-musician.listen-member .stage-label span{
     position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
   }
-  .px .stage-chord-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 8px}
-  .px .stage-chord-now{display:block;margin:0 0 0 auto;color:var(--muted);font-size:.74em;line-height:1.3;text-align:end}
-  .px .stage-chord-now strong{color:var(--fg)}
-  .px:not(.reduce-motion) .stage-chord-light{
-    position:absolute;display:block;inset:auto 0 0;height:4px;pointer-events:none;
-    background:linear-gradient(90deg,transparent,var(--accent) 25% 75%,transparent);
-    animation:stage-chord-floor .35s ease-out both;
+  .px .stage-musician.listen-member[aria-pressed="true"] earthbeat-dance{filter:brightness(1.12)}
+  .px .player-layout .stage-musician.listen-member[aria-pressed="false"] earthbeat-dance{opacity:.75;filter:saturate(.68)}
+  .px .stage-musician[aria-pressed="false"] .stage-label{border-style:dashed}
+  .px .listen-band .chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:6px;padding:2px}
+  .px .listen-band .chip{
+    display:grid;place-items:center;min-height:clamp(47px,7vh,70px);min-width:0;padding:4px;
+    border-radius:4px;text-align:center;overflow-wrap:anywhere;letter-spacing:0;font-size:clamp(.78em,1.07vw,1em);
   }
+  .px .listen-band .chip[aria-current="true"]{outline:1px solid var(--fg);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 68%,transparent)}
+  .px.reduce-motion .listen-band .chip{transition:none}
 }
 .px.main-edition .legend-swatch{min-height:44px}
 .px .bar .side .btn,.px .bar .steps button{min-height:28px}
@@ -2269,17 +2294,13 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </button>
 </sc-for>
 </div>
-<sc-for list="{{progItems}}" as="chord"><sc-if value="{{chord.on}}"><span class="stage-chord-light" aria-hidden="true"></span></sc-if></sc-for>
 </div>
 <sc-if value="{{bandAllMuted}}"><p class="stage-muted-status small muted" role="status">{{bandStatus}}</p></sc-if>
 <sc-if value="{{showHarmony}}">
-<div class="stage-chord-row">
 <div class="chips" role="group" aria-label="{{tx.chordsAria}}">
 <sc-for list="{{progItems}}" as="chord">
 <span class="chip" aria-current="{{chord.on}}" style="color:{{chord.fg}};background:{{chord.bg}};border-color:{{chord.border}}">{{chord.label}}</span>
 </sc-for>
-</div>
-<p class="stage-chord-now">{{stageChordLabel}} <strong>{{stageChord}}</strong></p>
 </div>
 </sc-if>
 
@@ -6026,7 +6047,6 @@ class Component extends DCLogic {
       th: th, highContrast: hc, ic: this.icons, showBg: !hc, showDecorativePlanets: s.tab !== 'home', planetContrast: hc ? 'true' : 'false', universe: this.universeVm(), stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
       engineDesc: (melody ? T('Melodía compuesta: escalas, acordes y ritmo por disco; la melodía sale de los datos.', 'Composed melody: scales, chords and rhythm per disc; the melody comes from the data.') : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes.', 'Data: derived levels converted into tones, without a chord progression.')),
       engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody,
-      stageChordLabel: T('Acorde actual', 'Current chord'), stageChord: stageChord || '—',
       player: showCells ? this.playerVm() : null,
       motionClass: reducedMotion ? 'reduce-motion' : '',
       motionMode: reducedMotion ? 'reduced' : 'full',
