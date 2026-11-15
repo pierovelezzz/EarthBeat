@@ -91,6 +91,11 @@ function createAppHarness(options = {}) {
     RegExp,
     Error,
     Promise,
+    btoa: globalThis.btoa,
+    Float32Array,
+    Uint8Array,
+    ArrayBuffer,
+    DataView,
     URL: {
       createObjectURL: () => 'blob:brisa-test-' + (++blobSeq),
       revokeObjectURL: u => revokedUrls.push(u)
@@ -126,7 +131,7 @@ function createAppHarness(options = {}) {
     ctx.EARTH_BRISA_CONFIG = Object.assign({}, ctx.EARTH_BRISA_CONFIG, options.brisaConfig);
   }
   vm.runInContext(
-    scriptMatch[1] + '\n;window.__exports = { Component, TX, TECH, TECH_EN, brisaAiConfig, writeBrisaAiSettings, brisaParagraphs, brisaSpeechPlainText, brisaFallbackAnswer, DISCS, BAND };',
+    scriptMatch[1] + '\n;window.__exports = { Component, TX, TECH, TECH_EN, brisaAiConfig, writeBrisaAiSettings, brisaParagraphs, brisaSpeechPlainText, brisaFallbackAnswer, encodeBrisaPcmWavBase64, DISCS, BAND };',
     ctx,
     { filename: 'Main.dc.html' }
   );
@@ -144,7 +149,8 @@ test('Static bundle includes key-free config script and optional local overrides
   const cfg = exports.brisaAiConfig();
   assert.equal(cfg.openrouterKeys.length, 0);
   assert.equal(cfg.elevenlabsKey, '');
-  assert.equal(cfg.elevenlabsVoices.length, 3);
+  assert.equal(cfg.elevenlabsVoices.length, 6);
+  assert.equal(cfg.elevenlabsModel, 'eleven_flash_v2_5');
   assert.equal(cfg.voiceId, 'EXAVITQu4vr4xnSDxMaL');
 
   const localPath = path.resolve('scripts/brisa-ai-config.local.js');
@@ -353,4 +359,45 @@ test('Zero-key public default mode uses offline verified guide and Web Speech fa
   assert.equal(comp.state.brisaAiMessages[1].source, 'offline');
   assert.match(comp.state.brisaAiMessages[1].text, /SVS 5176/);
   assert.equal(speechCalls.spoken.length, 1);
+});
+
+test('Spotlight step builder, Flash v2.5 prefetch cache, and WAV encoder work cleanly', async () => {
+  const ttsCalls = [];
+  const fetchMock = async (url, init) => {
+    if (url.includes('openrouter.ai')) {
+      return {
+        ok: true,
+        status: 200,
+        text: async () => JSON.stringify({ choices: [{ message: { content: 'Ves el mapa Pacífico y sus tonos cálidos.' } }] })
+      };
+    }
+    if (url.includes('elevenlabs.io')) {
+      ttsCalls.push({ url, body: JSON.parse(init.body) });
+      return { ok: true, status: 200, blob: async () => new Blob([new Uint8Array([73, 68, 51, 9])], { type: 'audio/mpeg' }) };
+    }
+    throw new Error('Unexpected URL: ' + url);
+  };
+  const { comp, exports, createdAudio } = createAppHarness({
+    fetch: fetchMock,
+    brisaConfig: { openrouterKeys: ['test-or-key'], elevenlabsKey: 'test-el-key' }
+  });
+  const wavB64 = exports.encodeBrisaPcmWavBase64([new Float32Array([0.1, -0.1, 0.25, -0.25])], 16000, 12000);
+  const wavBytes = Buffer.from(wavB64, 'base64');
+  assert.equal(wavBytes.slice(0, 4).toString('ascii'), 'RIFF');
+  assert.equal(wavBytes.slice(8, 12).toString('ascii'), 'WAVE');
+
+  comp.state.brisaAiOpen = true;
+  comp.state.voice = false;
+  await comp.askBrisaAI('¿Qué estoy viendo y qué significan los colores de -5 a +5?');
+  await new Promise(r => setTimeout(r, 30));
+  assert(comp.state.brisaSpotSteps.length >= 2, 'Spotlight steps should populate for colors question');
+  assert.equal(ttsCalls.length, 1, 'Background prefetch should pre-warm ElevenLabs audio even with Voice mode off');
+  assert.match(ttsCalls[0].url, /optimize_streaming_latency=3/);
+  assert.equal(ttsCalls[0].body.model_id, 'eleven_flash_v2_5');
+  assert.equal(createdAudio.length, 0, 'Prefetch must not auto-play when Voice mode is off');
+
+  await comp.speakBrisaAI(comp.state.brisaAiMessages[1].id, true);
+  assert.equal(ttsCalls.length, 1, 'Manual click on Escuchar must play immediately from prefetched cache');
+  assert.equal(createdAudio.length, 1);
+  comp.componentWillUnmount();
 });

@@ -19,13 +19,16 @@
     ],
     elevenlabsEndpoint: 'https://api.elevenlabs.io/v1/text-to-speech',
     elevenlabsKey: '',
-    elevenlabsModel: 'eleven_multilingual_v2',
-    elevenlabsFallbackModel: 'eleven_flash_v2_5',
+    elevenlabsModel: 'eleven_flash_v2_5',
+    elevenlabsFallbackModel: 'eleven_multilingual_v2',
     defaultVoiceId: 'EXAVITQu4vr4xnSDxMaL',
     elevenlabsVoices: [
-      { id: 'EXAVITQu4vr4xnSDxMaL', label: 'Sarah · cálida (EN/ES)', labelEn: 'Sarah · warm (EN/ES)' },
-      { id: '9BWtsMINqrJLrRacOk9x', label: 'Aria · expresiva (EN/ES)', labelEn: 'Aria · expressive (EN/ES)' },
-      { id: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura · clara (EN/ES)', labelEn: 'Laura · clear (EN/ES)' }
+      { id: 'EXAVITQu4vr4xnSDxMaL', label: 'Sarah · cálida y clara (ES/EN)', labelEn: 'Sarah · warm & clear (ES/EN)' },
+      { id: '9BWtsMINqrJLrRacOk9x', label: 'Aria · expresiva (ES/EN)', labelEn: 'Aria · expressive (ES/EN)' },
+      { id: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura · suave y didáctica (ES/EN)', labelEn: 'Laura · soft & clear (ES/EN)' },
+      { id: 'XrExE9yKIg1WjnnlVkGX', label: 'Matilda · narradora amigable (ES/EN)', labelEn: 'Matilda · friendly narrator (ES/EN)' },
+      { id: 'SAz9YHcvj6GT2YYXdXww', label: 'River · serena y cercana (ES/EN)', labelEn: 'River · calm & natural (ES/EN)' },
+      { id: 'CwhRBWXzGAHq8TQ4Fs17', label: 'Roger · voz grave y pausada (ES/EN)', labelEn: 'Roger · deep & steady (ES/EN)' }
     ]
   }, existing);
 

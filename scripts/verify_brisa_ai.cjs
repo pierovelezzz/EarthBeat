@@ -110,17 +110,20 @@ async function main() {
       }
     });
 
-    // 1. Open from Home trigger + check modal inert, focus trap, Escape restore, target sizes
+    // 1. Open from Home trigger + verify right-docked adaptive panel (non-inert main, 44px controls, Escape restore)
+    const homeMainBefore = await page.locator('.px > main').evaluate(el => el.getBoundingClientRect().width);
     const homeBtn = page.locator('.home-process #brisa-ai-open');
     await homeBtn.focus();
     await homeBtn.click();
     await page.waitForSelector('#brisa-ai-dialog');
-    assert.equal(await page.locator('#brisa-ai-dialog').getAttribute('aria-modal'), 'true');
+    assert.equal(await page.locator('#brisa-ai-dialog').getAttribute('aria-modal'), 'false');
     assert(await page.evaluate(() => document.querySelector('#brisa-ai-dialog').contains(document.activeElement)), 'Focus must move inside #brisa-ai-dialog');
-    assert(await page.evaluate(() => document.querySelector('.px > main')?.inert === true), 'Background main must be inert while modal open');
+    assert(await page.evaluate(() => !document.querySelector('.px > main')?.inert), 'Background main must stay interactive while Brisa panel is docked');
+    assert(await page.evaluate(() => document.querySelector('.px.app')?.classList.contains('brisa-ai-docked')), 'Root app must toggle brisa-ai-docked');
 
-    const homeGeom = await page.locator('#brisa-ai-dialog').evaluate(el => {
+    const homeGeom = await page.locator('#brisa-ai-dialog').evaluate((el, prevMainW) => {
       const box = el.getBoundingClientRect();
+      const mainBox = document.querySelector('.px > main').getBoundingClientRect();
       const smallTargets = [...el.querySelectorAll('button, input, select, textarea')]
         .filter(c => c.getClientRects().length)
         .map(c => ({ cls: c.className || c.id, h: c.getBoundingClientRect().height, w: c.getBoundingClientRect().width }))
@@ -130,24 +133,28 @@ async function main() {
         clientW: el.clientWidth,
         docOverflow: document.documentElement.scrollWidth > innerWidth + 1,
         top: box.top,
+        right: box.right,
+        left: box.left,
         bottom: box.bottom,
         innerH: innerHeight,
+        innerW: innerWidth,
+        mainShrank: mainBox.width < prevMainW - 200 && mainBox.right <= box.left + 2,
+        voiceOptions: document.querySelectorAll('#brisa-ai-voice-quick option').length,
         smallTargets
       };
-    });
+    }, homeMainBefore);
     assert(homeGeom.scrollW <= homeGeom.clientW + 1, 'Dialog horizontal overflow on desktop');
     assert.equal(homeGeom.docOverflow, false, 'Document overflow with dialog open');
+    assert(homeGeom.mainShrank, 'Main workspace must shrink cleanly to the left of right-docked Brisa panel');
+    assert.equal(homeGeom.voiceOptions, 6, 'Quick voice selector must expose 6 ElevenLabs voices');
     assert.deepEqual(homeGeom.smallTargets, [], 'Dialog interactive controls must be >= 44px: ' + JSON.stringify(homeGeom.smallTargets));
-    report.checks.push('desktop-home-dialog-geometry-and-inert');
+    report.checks.push('desktop-home-docked-geometry-and-adaptive-layout');
 
-    // Keyboard wrap check (Shift+Tab from first focusable -> wraps inside dialog; Escape restores focus)
-    await page.keyboard.press('Shift+Tab');
-    assert(await page.evaluate(() => document.querySelector('#brisa-ai-dialog').contains(document.activeElement)), 'Shift+Tab must wrap inside #brisa-ai-dialog');
+    // Escape from docked panel restores focus cleanly
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !document.querySelector('#brisa-ai-dialog'));
     assert(await page.evaluate(() => document.activeElement?.id === 'brisa-ai-open'), 'Escape must restore focus to launcher');
-    assert(await page.evaluate(() => !document.querySelector('.px > main')?.inert), 'Inert must clear on Escape');
-    report.checks.push('desktop-focus-trap-and-escape-restore');
+    report.checks.push('desktop-docked-escape-restore');
 
     // 2. Open from #tour-card
     await page.locator('.home-process #tour-guide').click();
@@ -201,10 +208,19 @@ async function main() {
     assert(sysPrompt.includes('"pacoraRuleActive":true'), 'System prompt must reflect Pacora rule on Yaku Mar 2023');
     assert(sysPrompt.includes('NASA SVS 5176') && sysPrompt.includes('GHRSST L4 MUR') && sysPrompt.includes('NASA POWER Monthly API'));
 
-    // Verify ElevenLabs called with default Sarah voice and music ducked (direct local keys OR zero-key proxy)
+    // Verify ElevenLabs called with default Sarah voice + Flash v2.5 + latency optimization and music ducked
     assert.equal(report.elevenlabsCalls.length, 1);
     assert.equal(report.elevenlabsCalls[0].voiceId, 'EXAVITQu4vr4xnSDxMaL');
     assert.equal(report.elevenlabsCalls[0].hasKey, !report.elevenlabsCalls[0].viaProxy);
+    if (!report.elevenlabsCalls[0].viaProxy) {
+      assert(report.elevenlabsCalls[0].url.includes('optimize_streaming_latency=3'), 'Direct ElevenLabs call should optimize streaming latency');
+    }
+    assert.equal(report.elevenlabsCalls[0].body.model_id, 'eleven_flash_v2_5');
+    // Verify automatic visual spotlight walkthrough is active over workspace on the left
+    await page.waitForSelector('.brisa-ai-spot-box');
+    await page.waitForSelector('#brisa-ai-spot-badge');
+    const spotStepPills = await page.locator('.brisa-ai-spot-pill').count();
+    assert(spotStepPills >= 2, 'Assistant reply must attach interactive spotlight step pills');
     const duckedGain = await page.evaluate(() => __app.master.gain.value);
     assert(Math.abs(duckedGain - 0.24) < 0.02, 'Expected ducked gain ~0.24, got ' + duckedGain);
 
@@ -219,11 +235,10 @@ async function main() {
     assert.equal(report.elevenlabsCalls.length, 1, 'Replay with same voice must hit cache instead of ElevenLabs API');
     await playBtn.click();
     await page.waitForFunction(() => window.__app && !window.__app.state.speaking);
-    report.checks.push('openrouter-live-context-and-elevenlabs-cache-ducking');
+    report.checks.push('openrouter-live-context-spotlight-and-elevenlabs-cache-ducking');
 
-    // Switch voice in settings (Aria) and check offline fallback cleanly
-    await page.locator('.brisa-ai-head-actions button[aria-expanded]').click();
-    await page.selectOption('#brisa-ai-voice-select', '9BWtsMINqrJLrRacOk9x');
+    // Switch voice directly in header quick picker (Aria) and check offline fallback cleanly
+    await page.selectOption('#brisa-ai-voice-quick', '9BWtsMINqrJLrRacOk9x');
     await playBtn.click();
     await page.waitForFunction(() => window.__app && window.__app.state.speaking);
     assert.equal(report.elevenlabsCalls.length, 2);
@@ -238,14 +253,14 @@ async function main() {
     const lastText = await page.locator('.brisa-ai-msg-assistant').last().textContent();
     assert(lastText.length > 30, 'Offline fallback must render helpful response');
     failNetwork = false;
-    report.checks.push('voice-switch-and-offline-fallback');
+    report.checks.push('quick-voice-switch-and-offline-fallback');
 
     // Theme + High Contrast + Large Text + axe checks while #brisa-ai-dialog is open
-    for (const [theme, bigText] of [['dark', false], ['light', false], ['high', true]]) {
-      await page.evaluate(({ theme, bigText }) => __app.setState({ theme, bigText }), { theme, bigText });
+    for (const [colorScheme, contrast, big] of [['dark', 'normal', false], ['light', 'normal', false], ['dark', 'high', true]]) {
+      await page.evaluate(({ colorScheme, contrast, big }) => __app.setState({ colorScheme, contrast, big }), { colorScheme, contrast, big });
       await page.waitForTimeout(60);
       const ov = await page.locator('#brisa-ai-dialog').evaluate(el => el.scrollWidth > el.clientWidth + 1);
-      assert.equal(ov, false, `Overflow in dialog under theme=${theme} bigText=${bigText}`);
+      assert.equal(ov, false, `Overflow in dialog under theme=${colorScheme} contrast=${contrast} big=${big}`);
       if (axeSource) {
         const hasAxe = await page.evaluate(() => !!window.axe);
         if (!hasAxe) await page.addScriptTag({ content: axeSource });
@@ -254,7 +269,7 @@ async function main() {
             runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] }
           });
         });
-        assert.deepEqual(axeRes.violations, [], `Axe violations inside #brisa-ai-dialog (${theme}, big=${bigText}): ` + JSON.stringify(axeRes.violations));
+        assert.deepEqual(axeRes.violations, [], `Axe violations inside #brisa-ai-dialog (${colorScheme}, ${contrast}, big=${big}): ` + JSON.stringify(axeRes.violations));
       }
     }
     report.checks.push('themes-high-contrast-and-axe-dialog-audit');
@@ -264,7 +279,7 @@ async function main() {
     await page.waitForFunction(() => !document.querySelector('#brisa-ai-dialog'));
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => {
-      __app.setState({ theme: 'dark', bigText: false });
+      __app.setState({ colorScheme: 'dark', contrast: 'normal', big: false });
       __app.setLang('en');
     });
     const mobileBtn = page.locator('.bottomnav #brisa-ai-open');

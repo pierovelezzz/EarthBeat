@@ -4,7 +4,10 @@ const ELEVENLABS_BASE = 'https://api.elevenlabs.io/v1/text-to-speech';
 const ALLOWED_VOICES = new Set([
   'EXAVITQu4vr4xnSDxMaL',
   '9BWtsMINqrJLrRacOk9x',
-  'FGY2WhTYpPnrIDTdsKH5'
+  'FGY2WhTYpPnrIDTdsKH5',
+  'XrExE9yKIg1WjnnlVkGX',
+  'SAz9YHcvj6GT2YYXdXww',
+  'CwhRBWXzGAHq8TQ4Fs17'
 ]);
 
 export function OPTIONS(request) {
@@ -35,12 +38,12 @@ export async function POST(request) {
   }
 
   const voiceId = ALLOWED_VOICES.has(body?.voiceId) ? body.voiceId : 'EXAVITQu4vr4xnSDxMaL';
-  const modelId = typeof body?.model_id === 'string' && body.model_id ? body.model_id : 'eleven_multilingual_v2';
-  const models = modelId === 'eleven_flash_v2_5' ? [modelId] : [modelId, 'eleven_flash_v2_5'];
+  const modelId = typeof body?.model_id === 'string' && body.model_id ? body.model_id : 'eleven_flash_v2_5';
+  const models = modelId === 'eleven_multilingual_v2' ? [modelId] : [modelId, 'eleven_multilingual_v2'];
 
   for (const model of models) {
     try {
-      const res = await fetch(`${ELEVENLABS_BASE}/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`, {
+      const res = await fetch(`${ELEVENLABS_BASE}/${encodeURIComponent(voiceId)}?optimize_streaming_latency=3&output_format=mp3_22050_32`, {
         method: 'POST',
         headers: {
           'xi-api-key': apiKey,

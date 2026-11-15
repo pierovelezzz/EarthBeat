@@ -1,6 +1,13 @@
 /* Cloudflare Worker proxy for EarthRhythm Brisa AI (zero keys exposed to visitors). */
 const ALLOWED_ORIGIN = /^https:\/\/[a-z0-9-]+\.github\.io$|^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i;
-const ALLOWED_VOICES = new Set(['EXAVITQu4vr4xnSDxMaL', '9BWtsMINqrJLrRacOk9x', 'FGY2WhTYpPnrIDTdsKH5']);
+const ALLOWED_VOICES = new Set([
+  'EXAVITQu4vr4xnSDxMaL',
+  '9BWtsMINqrJLrRacOk9x',
+  'FGY2WhTYpPnrIDTdsKH5',
+  'XrExE9yKIg1WjnnlVkGX',
+  'SAz9YHcvj6GT2YYXdXww',
+  'CwhRBWXzGAHq8TQ4Fs17'
+]);
 
 function makeCors(request, env) {
   const origin = request.headers.get('origin') || '';
@@ -47,8 +54,8 @@ async function handleElevenLabs(request, env, cors) {
   const voiceId = ALLOWED_VOICES.has(body.voiceId) ? body.voiceId : 'EXAVITQu4vr4xnSDxMaL';
   const text = String(body.text || '').trim().slice(0, 1400);
   if (!text) return new Response(JSON.stringify({ error: 'Empty text' }), { status: 400, headers: { 'Content-Type': 'application/json', ...cors } });
-  for (const model of [body.model_id || 'eleven_multilingual_v2', 'eleven_flash_v2_5']) {
-    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`, {
+  for (const model of [body.model_id || 'eleven_flash_v2_5', 'eleven_multilingual_v2']) {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}?optimize_streaming_latency=3&output_format=mp3_22050_32`, {
       method: 'POST',
       headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
       body: JSON.stringify({ text, model_id: model, voice_settings: body.voice_settings || { stability: 0.45, similarity_boost: 0.78, style: 0.12, use_speaker_boost: true } })
