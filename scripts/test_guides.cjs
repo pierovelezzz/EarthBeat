@@ -177,21 +177,76 @@ test('each section has a brief, bilingual guide with real target IDs', () => {
   }
 });
 
-test('closing resumes the section step; skipping resets only guide progress', () => {
+test('contextual help is a single non-numbered card and never starts a second tutorial', () => {
   const { component: c } = setup();
   c.state.tab = 'juke';
   const original = JSON.stringify({ disc: c.state.disc, frame: c.state.frame, mute: c.state.mute, playing: c.state.playing });
-  c.tourOpen(); c.tourGo(2); c.tourClose();
+  c.tourOpen();
+  let help=c.renderVals().tour;
+  assert.equal(help.count,'');assert.equal(help.dots.length,0);assert.equal(help.showBack,false);
+  assert.equal(help.showTutorialStart,false);assert.equal(help.nextLabel,'Entendido');
+  assert.match(help.title,/Ayuda de esta pantalla/);
+  help.next();
   assert.equal(c.state.tour, 0);
   c.tourOpen();
-  assert.equal(c.state.tour, 2);
-  c.renderVals().tour.back();
   assert.equal(c.state.tour, 1);
-  c.renderVals().tour.next();
-  assert.equal(c.state.tour, 2);
   c.renderVals().tour.skip(); c.tourOpen();
   assert.equal(c.state.tour, 1);
   assert.equal(JSON.stringify({ disc: c.state.disc, frame: c.state.frame, mute: c.state.mute, playing: c.state.playing }), original);
+});
+
+test('closing or skipping the practical tutorial resumes the selected disc and completed actions, even after reload', () => {
+  const {component:c,storage}=setup();
+  c.state.tab='how';c.state.sub=0;c.state.disc=5;c.state.frame=0;c.state.col=7;
+  c.state.custom={name:'retained.png',kind:'image',url:'blob:retained',mode:'free'};
+  c.startTutorial();c.renderVals().discs[2].pick();
+  assert.equal(c.state.tour,2);assert.equal(c.state.tutorialDone.disc,true);
+  c.renderVals().tour.skip();assert.equal(c.state.tour,0);assert.equal(c.state.disc,5);
+  c.tourOpen();assert.equal(c.state.tutorial,true);assert.equal(c.state.tour,2);assert.equal(c.state.disc,2);
+  assert.equal(c.state.sub,1);assert.equal(c.state.playing,false);assert.equal(c.state.tutorialDone.disc,true);
+  assert.equal(c.renderVals().tour.canUseText,true,'A written route must not require an audio error');
+  c.renderVals().tour.useText();assert.equal(c.state.tour,3);assert.equal(c.state.tutorialDone.play,true);
+  c.tourClose();
+  const next=setup({storage:Object.fromEntries(storage)}).component;
+  next.tourOpen();assert.equal(next.state.tour,3);assert.equal(next.state.tutorial,true);assert.equal(next.state.disc,2);
+  assert.equal(next.state.playing,false);assert.equal(next.state.tutorialDone.play,true);
+  next.playerVm().legend.at(-1).choose();next.renderVals().tour.next();
+  assert.equal(next.state.tour,0);assert.equal(next.tutorialProgress.completed,true);
+  next.tourOpen();assert.equal(next.state.tutorial,false);assert.equal(next.renderVals().tour.count,'');
+  next.startTutorial(true);assert.equal(next.state.tour,1);assert.equal(next.state.tutorialDone.disc,false);
+  assert(!JSON.stringify(JSON.parse(storage.get('ts_tutorial'))).includes('retained.png'));
+  assert(!JSON.stringify(JSON.parse(storage.get('ts_tutorial'))).includes('blob:'));
+});
+
+test('tutorial storage validates checkpoints and continues in memory when storage is blocked', () => {
+  for(const value of ['invalid','{}',JSON.stringify({version:1,completed:false,step:99}),JSON.stringify({version:9,completed:true})]) {
+    const {component:c}=setup({storage:{ts_tutorial:value}});
+    assert.equal(c.tutorialProgress,null);
+  }
+  const {component:c,context}=setup();
+  context.localStorage.setItem=()=>{throw Error('blocked');};
+  assert.doesNotThrow(()=>{c.startTutorial();c.renderVals().discs[0].pick();c.tourClose();c.tourOpen();});
+  assert.equal(c.state.tour,2);assert.equal(c.state.tutorialDone.disc,true);
+});
+
+test('resuming a tutorial from another collection restores the outside collection and its analysis when paused', () => {
+  const {component:c}=setup();
+  c.applySet('prev');c.startTutorial();c.renderVals().discs[1].pick();c.tourClose();
+  c.applySet('eic');c.state.tab='juke';c.state.sub=1;c.state.disc=3;c.state.frame=2;c.state.col=4;
+  const analysis={cells:Array(448).fill(1),warm:1,cold:0,hot:0,coast:0};c.state.an['3_2']=analysis;
+  c.tourOpen();assert.equal(c.state.set,'prev');assert.equal(c.state.disc,1);assert.equal(c.state.tour,2);
+  c.tourClose();assert.equal(c.state.set,'eic');assert.equal(c.state.disc,3);assert.equal(c.state.frame,2);assert.equal(c.state.col,4);
+  assert.equal(c.cur(),analysis);assert.equal(c.tutorialProgress.set,'prev');
+});
+
+test('pausing a cross-collection tutorial restarts a pending outside player frame load', () => {
+  const {component:c}=setup();
+  c.applySet('prev');c.startTutorial();c.renderVals().discs[1].pick();c.tourClose();
+  c.applySet('eic');c.state.tab='juke';c.state.sub=1;c.state.disc=3;c.state.frame=2;c.state.an={};
+  c.tourOpen();const reloaded=[];c.loadDisc=disc=>reloaded.push({disc,frame:c.state.frame,set:c.state.set});
+  c.tourClose();
+  assert.deepEqual(reloaded,[{disc:3,frame:2,set:'eic'}]);
+  assert.equal(c.state.playing,false);
 });
 
 test('contextual help stays on the current screen and retains playback, scroll and instrument choices', () => {

@@ -1383,6 +1383,8 @@ a{color:inherit}
 .px .ways-dialog{position:fixed;inset:0;z-index:1121;margin:auto;width:min(640px,calc(100% - 24px));height:var(--ways-height,min(500px,calc(100dvh - 24px)));padding:24px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:18px;background:var(--surface);color:var(--fg);border:1px solid var(--fg);border-radius:8px;box-shadow:0 12px 80px #000}
 .px .ways-header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
 .px .ways-header h2{font:700 clamp(18px,2.4vw,26px)/1.2 var(--head);margin:0;min-width:0}
+.px .ways-progress{font-size:12px;line-height:1.4;margin:4px 0 0}
+.px .ways-header-actions{display:flex;gap:6px;flex-shrink:0}
 .px .ways-header .btn{flex-shrink:0}
 .px .ways-content{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;min-width:0;min-height:0;align-items:start}
 .px .ways-content h3{font-size:1.1em;line-height:1.25;margin:0}
@@ -2194,7 +2196,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <li class="flow-step"><svg class="flow-art flow-grid" viewBox="0 0 112 64" aria-hidden="true"><defs><pattern id="home-pixel-grid" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#a4b9c8"/></pattern></defs><rect width="112" height="64" fill="url(#home-pixel-grid)"/></svg><strong>{{tx.flowPixels}}</strong></li>
 <li class="flow-step"><span class="flow-art flow-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><strong>{{tx.flowMusic}}</strong></li>
 </ol>
-<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{tx.guideOpen}}" title="{{tx.guideOpen}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button>
+<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button>
 </div>
 </div>
 <nav class="space-destinations" data-contrast="{{planetContrast}}" aria-label="{{universe.navLabel}}">
@@ -2612,7 +2614,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </footer>
 </sc-if>
 
-<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{tx.guideOpen}}" title="{{tx.guideOpen}}">
+<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}">
 <img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="glabel">{{tx.guide}}</span>
 </button>
 </div>
@@ -2621,9 +2623,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{accessHelp.on}}">
 <div class="ways-dim" aria-hidden="true"></div>
 <section id="ways-dialog" class="ways-dialog" role="dialog" aria-modal="true" aria-labelledby="ways-title" tabindex="-1">
-<div class="ways-header"><h2 id="ways-title">{{accessHelp.title}}</h2><button id="ways-close" type="button" class="btn sm" onClick="{{accessHelp.close}}">{{accessHelp.closeLabel}}</button></div>
+<div class="ways-header"><div><h2 id="ways-title">{{accessHelp.title}}</h2><p class="ways-progress" role="status" aria-live="polite" aria-atomic="true">{{accessHelp.progress}}</p></div><div class="ways-header-actions"><button id="ways-context" type="button" class="btn sm" onClick="{{accessHelp.contextHelp}}" aria-label="{{accessHelp.contextLabel}}">{{accessHelp.helpLabel}}</button><button id="ways-close" type="button" class="btn sm" onClick="{{accessHelp.close}}">{{accessHelp.closeLabel}}</button></div></div>
 <div class="ways-content"><h3 id="ways-topic" tabindex="-1" aria-describedby="ways-text">{{accessHelp.topic}}</h3><div id="ways-copy" class="ways-copy"><p id="ways-text">{{accessHelp.text}}</p></div></div>
-<div class="ways-footer"><button id="ways-prev" type="button" class="btn sm" onClick="{{accessHelp.prev}}" disabled="{{accessHelp.prevOff}}">{{accessHelp.prevLabel}}</button><p role="status" aria-live="polite" aria-atomic="true">{{accessHelp.progress}}</p><button id="ways-next" type="button" class="btn sm" onClick="{{accessHelp.next}}" disabled="{{accessHelp.nextOff}}">{{accessHelp.nextLabel}}</button></div>
+<div class="ways-footer"><button id="ways-prev" type="button" class="btn sm" onClick="{{accessHelp.prev}}" disabled="{{accessHelp.prevOff}}">{{accessHelp.prevLabel}}</button><button id="ways-tutorial" type="button" class="btn sm" onClick="{{accessHelp.tutorial}}" aria-label="{{accessHelp.tutorialLabel}}" title="{{accessHelp.tutorialLabel}}">Tutorial</button><button id="ways-next" type="button" class="btn sm" onClick="{{accessHelp.next}}" disabled="{{accessHelp.nextOff}}">{{accessHelp.nextLabel}}</button></div>
 </section>
 </sc-if>
 
@@ -2650,7 +2652,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <img class="brisa-badge" src="./brisa/portrait.webp" alt="">
 <div class="tmeta"><span class="tn">{{tour.who}}</span><span class="tn dim">{{tour.count}}</span></div>
 <button type="button" class="tsay" onClick="{{tour.say}}" disabled="{{brisaUnavailable}}" aria-label="{{tour.voiceLabel}}" title="{{tour.voiceLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
-<button type="button" class="tsay" onClick="{{tour.close}}" aria-label="{{tx.guideClose}}" title="{{tx.guideClose}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+<button type="button" class="tsay" onClick="{{tour.close}}" aria-label="{{tour.closeLabel}}" title="{{tour.closeLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
 </div>
 <div class="tbubble" tabindex="0" role="region" aria-labelledby="tour-t">
 <h3 id="tour-t" tabindex="-1">{{tour.title}}</h3>
@@ -2658,15 +2660,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <p class="small muted">{{tour.stateLabel}}</p>
 <p role="status" class="small">{{tour.feedback}}</p>
 <p class="small muted">{{tour.speechNotice}}</p>
-<sc-if value="{{tour.showTutorialStart}}"><button type="button" class="btn sm" onClick="{{tour.startTutorial}}">{{preferences.tutorialLabel}}</button></sc-if>
+<sc-if value="{{tour.isTutorial}}"><button type="button" class="btn sm" onClick="{{tour.restart}}">{{tour.restartLabel}}</button></sc-if>
 <sc-if value="{{tour.canUseText}}"><button type="button" class="btn sm" onClick="{{tour.useText}}">{{tour.useTextLabel}}</button></sc-if>
 </div>
-<div class="tdots" aria-hidden="true"><sc-for list="{{tour.dots}}" as="d" hint-placeholder-count="6"><i class="{{d.cls}}"></i></sc-for></div>
+<sc-if value="{{tour.isTutorial}}"><div class="tdots" aria-hidden="true"><sc-for list="{{tour.dots}}" as="d" hint-placeholder-count="3"><i class="{{d.cls}}"></i></sc-for></div></sc-if>
 <div class="tact">
 <sc-if value="{{tour.showBack}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn sm quiet" onClick="{{tour.back}}">{{tx.back}}</button></sc-if>
 <button type="button" class="btn sm primary" onClick="{{tour.next}}" disabled="{{tour.nextOff}}">{{tour.nextLabel}}</button>
 <sc-if value="{{tour.hasExtra}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn sm tour-extra" onClick="{{tour.extra}}">{{tour.extraLabel}}</button></sc-if>
-<button type="button" class="skip" onClick="{{tour.skip}}">{{tx.skipGuide}}</button>
+<sc-if value="{{tour.isTutorial}}"><button type="button" class="skip" onClick="{{tour.skip}}">{{tx.skipGuide}}</button></sc-if>
 </div>
 </div>
 </sc-if>
@@ -2685,6 +2687,23 @@ function readPreferences() {
     if (value && value.version === 1 && value.values && typeof value.values === 'object') return value;
   } catch (ignored) {}
   return null;
+}
+function readTutorialProgress() {
+  try {
+    var raw = JSON.parse(localStorage.getItem('ts_tutorial'));
+    if (!raw || raw.version !== 1) return null;
+    if (raw.completed === true) return { version: 1, completed: true };
+    if (raw.completed !== false || !Number.isInteger(raw.step) || raw.step < 1 || raw.step > 3) return null;
+    var done = {}, skipped = {};
+    ['disc','play','legend'].forEach(function (key) { done[key] = raw.done?.[key] === true; skipped[key] = raw.skipped?.[key] === true; });
+    var step = raw.step;
+    if (step > 1 && !done.disc && !skipped.disc) step = 1;
+    if (step > 2 && !done.play && !skipped.play) step = 2;
+    return { version: 1, completed: false, step: step, done: done, skipped: skipped, set: raw.set === 'prev' ? 'prev' : 'eic',
+      disc: Number.isInteger(raw.disc) && raw.disc >= 0 && raw.disc < 5 ? raw.disc : 2,
+      frame: Number.isInteger(raw.frame) && raw.frame >= 0 && raw.frame < 6 ? raw.frame : 0,
+      column: Number.isInteger(raw.column) && raw.column >= -1 && raw.column < 28 ? raw.column : -1 };
+  } catch (ignored) { return null; }
 }
 function T(es, en) { return LANG === 'en' ? en : es; }
 // Los mensajes conservan sus parámetros; el idioma se resuelve al mostrarlos.
@@ -2954,21 +2973,21 @@ var GUIDES = {
     {
       "id": "tour-discs",
       "t": "1. Elige un disco",
-      "b": "Hola, soy Brisa. Te acompañaré a explorar el mapa y escuchar la Tierra en música. Pulsa la portada de un disco para empezar.",
+      "b": "Hola, soy Brisa. Exploraremos datos de la Tierra con imagen, texto y sonido opcional. Pulsa la portada de un disco para empezar.",
       "en": {
         "t": "1. Pick a disc",
-        "b": "Hi, I’m Brisa. I’ll guide you as you explore the map and listen to Earth through music. Select a disc cover to start."
+        "b": "Hi, I’m Brisa. We will explore Earth data with images, text and optional sound. Select a disc cover to start."
       },
       "sub": 0,
       "action": "disc"
     },
     {
       "id": "tour-play",
-      "t": "2. Pulsa Reproducir",
-      "b": "Pulsa Reproducir y sigue el mapa y su fecha. Puedes activar o silenciar a los músicos. Al pausar conservas tu posición.",
+      "t": "2. Explora el reproductor",
+      "b": "Puedes pulsar Reproducir o continuar con la versión escrita sin sonido. Consulta el mapa, su fecha y los controles. Al pausar conservas tu posición.",
       "en": {
-        "t": "2. Press Play",
-        "b": "Press Play and follow the map and its date. You can switch musicians on or off. Pausing keeps your position."
+        "t": "2. Explore the player",
+        "b": "Press Play or continue with the written version without sound. Inspect the map, its date and controls. Pausing keeps your position."
       },
       "sub": 1,
       "action": "play"
@@ -2976,10 +2995,10 @@ var GUIDES = {
     {
       "id": "player-legend",
       "t": "3. Interpreta la leyenda",
-      "b": "¿Qué significa el azul de la cuadrícula? Escoge su significado en la leyenda. No necesitas escuchar ni responder rápido.",
+      "b": "Elige en la leyenda una opción cuya descripción indique agua más fría de lo esperado. Puedes leer las etiquetas y los datos; no necesitas distinguir colores, escuchar ni responder rápido.",
       "en": {
         "t": "3. Read the legend",
-        "b": "What does blue mean in the grid? Choose its meaning in the legend. No hearing or quick response is needed."
+        "b": "Choose a legend option whose description means cooler-than-expected water. Read its labels and data; no color recognition, hearing or quick response is needed."
       },
       "sub": 1,
       "action": "legend"
@@ -2989,6 +3008,9 @@ var GUIDES = {
 Object.keys(GUIDES).forEach(function (section) {
   GUIDES[section].forEach(function (step, index) { step.audio = section + '-' + (index + 1); });
 });
+// The revised tutorial uses matching system speech, with written fallback,
+// rather than older recordings with different instructions.
+GUIDES.tutorial.forEach(function (step) { delete step.audio; });
 var DISC_CHAR = ['mama', 'inti', 'silbo', 'yaku', 'illapa'];
 var MES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 var MES_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -3882,7 +3904,7 @@ function paginateUsage(topics, fits) {
 }
 function usageHelp() {
   return {
-        title: T('Formas de usar EarthRhythm', 'Ways to use EarthRhythm'),
+        title: T('Formas de usar', 'Ways to use'),
         keyboard: T('Teclado: Tab y Mayús+Tab recorren los controles; Enter o Espacio activan botones. Las flechas ajustan volumen y posición. Escape cierra la guía y los ajustes.', 'Keyboard: Tab and Shift+Tab move between controls; Enter or Space activate buttons. Arrow keys adjust volume and position. Escape closes the guide and settings.'),
         screenReader: T('Lector de pantalla: usa Saltar al contenido, los encabezados y los nombres de los controles. La voz de Brisa es opcional y puedes apagarla para escuchar tu lector.', 'Screen reader: use Skip to content, headings and named controls. Brisa’s voice is optional and can be turned off while using your reader.'),
         withoutSound: T('Sin escuchar: elige un disco y una fecha con sus botones. Lee la explicación, la leyenda y Consultar datos sin usar el mapa. En celulares compatibles puedes activar y probar pulsos de vibración; son un complemento.', 'Without sound: choose a disc and date using their buttons. Read the explanation, legend and Read data without using the map. On compatible phones you can enable and test vibration pulses as a complement.'),
@@ -4155,6 +4177,7 @@ class Component extends DCLogic {
       }
     }
     this.state.tutorial = false;
+    this.tutorialProgress = readTutorialProgress();
     this.state.tutorialDone = { disc: false, play: false, legend: false };
     this.state.tutorialSkipped = {};
     this.state.tutorialFeedback = null;
@@ -4292,7 +4315,7 @@ class Component extends DCLogic {
     if (key === 'contrast' && value) this.cinema?.finish(true);
     if (key === 'voice') {
       if (!value) this.stopSpeech();
-      else if (!this.state.showPreferences) this.narrateBrisa(this.guideStep() || this.sectionNarration());
+      else if (!this.state.showPreferences) this.narrateBrisa(this.state.tour && !this.state.tutorial ? this.contextHelpStep() : this.guideStep() || this.sectionNarration());
     }
     if (key === 'big' || key === 'legible') {
       this.ensureNavVisible();
@@ -4421,6 +4444,9 @@ class Component extends DCLogic {
     var index = Math.max(0, Math.min(pages.length - 1, this.state.waysPage || 0)), page = pages[index];
     return Object.assign(usageHelp(), {
       on: !!this.state.showWays, triggerLabel: T('Formas de usar', 'Ways to use'),
+      tutorialLabel: this.tutorialEntryLabel(), contextLabel: T('Ayuda de esta pantalla', 'Help for this screen'), helpLabel: T('Ayuda', 'Help'),
+      tutorial: function () { self.closeWays(false); self.startTutorial(false, { currentTarget: document.getElementById('ways-trigger') }); },
+      contextHelp: function () { self.closeWays(false); self.openContextHelp({ currentTarget: document.getElementById('ways-trigger') }); },
       pages: pages, topic: page.title, text: page.text,
       closeLabel: T('Cerrar', 'Close'), prevLabel: T('Anterior', 'Previous'), nextLabel: T('Siguiente', 'Next'),
       progress: (index + 1) + T(' de ', ' of ') + pages.length, prevOff: index === 0, nextOff: index === pages.length - 1,
@@ -4592,7 +4618,7 @@ class Component extends DCLogic {
         if (s.tour) self.focusTourTarget();
         self.ensureNavVisible();
         self.scheduleWaysLayout();
-        if (s.voice && !s.showPreferences) self.narrateBrisa(self.guideStep() || self.sectionNarration());
+        if (s.voice && !s.showPreferences) self.narrateBrisa(s.tour && !s.tutorial ? self.contextHelpStep() : self.guideStep() || self.sectionNarration());
       });
   }
   guideKey() { return this.state.tutorial ? 'tutorial' : this.state.tab + ':' + this.state.sub; }
@@ -4651,9 +4677,40 @@ class Component extends DCLogic {
   tourOpen(event) {
     if (!this.settleArrivedRoute()) return;
     if (this.state.tour) { this.tourClose(); return; }
+    if (this.tutorialProgress && !this.tutorialProgress.completed) { this.startTutorial(false, event); return; }
+    this.openContextHelp(event);
+  }
+  openContextHelp(event) {
+    if (!this.settleArrivedRoute()) return;
+    if (this.state.tour) this.tourClose();
     this.rememberTourOrigin();
     if (event && event.currentTarget) this.tourReturnFocus = event.currentTarget;
-    this.tourGo(this.guideProgress[this.guideKey()] || 1);
+    this.tourGo(1);
+  }
+  contextHelpStep() {
+    var s = this.state, player = s.tab === 'juke' && s.sub === 1 || s.tab === 'how' && s.sub === 0 && s.custom;
+    var bodies = {
+      home: T('Explora los mapas en Escuchar, conoce a los músicos en La banda y consulta Cómo funciona o Tecnología. Accesibilidad permite combinar tus preferencias. Formas de usar ofrece instrucciones y acceso al tutorial opcional.', 'Explore maps in Listen, meet the musicians in The band and visit How it works or Technology. Accessibility combines your preferences. Ways to use provides instructions and access to the optional tutorial.'),
+      juke: T('Elige EIC o NASA GIBS y selecciona un disco. Su portada abre el reproductor sin iniciar el sonido. Puedes consultar las fechas de cada mapa y cambiar de colección.', 'Choose EIC or NASA GIBS and select a disc. Its cover opens the player without starting sound. You can inspect each map date and switch collections.'),
+      band: T('Selecciona un músico para conocer su historia. Bailar o Pausar baile controla la animación; Escuchar instrumento reproduce una muestra independiente. La voz de Brisa es opcional.', 'Select a musician to learn their story. Dance or Pause dance controls the animation; Hear instrument plays an independent sample. Brisa’s voice is optional.'),
+      how: T('En la prueba práctica puedes elegir una imagen o la muestra de lluvia. La explicación del método distingue los niveles derivados de las mediciones físicas. Puedes leer los resultados sin escuchar.', 'In the practical example, choose an image or the rainfall sample. The method explanation distinguishes derived levels from physical measurements. You can read the results without listening.'),
+      tech: T('Elige un tema para consultar las herramientas, las fuentes y los créditos. La información se conserva por escrito y puedes activar la narración opcional.', 'Choose a topic to inspect tools, sources and credits. Written information remains available and narration is optional.'),
+      game: T('El juego es opcional. Usa las flechas indicadas cuando llegan al recuadro. Puedes volver a Escuchar para explorar los mismos mapas sin una tarea cronometrada.', 'The game is optional. Use the indicated arrow keys when they reach the target. Return to Listen to explore the same maps without a timed task.')
+    };
+    return { t: T('Ayuda de esta pantalla', 'Help for this screen'), b: player ? T('Controla reproducción, volumen y posición sin perder tu selección. La leyenda explica los niveles y Consultar datos sin usar el mapa permite leerlos por columnas. El sonido es opcional; los músicos y la vibración compatible se controlan por separado.', 'Control playback, volume and position without losing your selection. The legend explains levels and Read data without using the map exposes them by column. Sound is optional; musicians and compatible vibration have separate controls.') : bodies[s.tab] || bodies.home };
+  }
+  tutorialEntryLabel() {
+    if (this.tutorialProgress && !this.tutorialProgress.completed) return T('Retomar tutorial · paso ', 'Resume tutorial · step ') + this.tutorialProgress.step + T(' de 3', ' of 3');
+    return this.tutorialProgress?.completed ? T('Repetir tutorial · 3 pasos', 'Repeat tutorial · 3 steps') : T('Iniciar tutorial · 3 pasos', 'Start tutorial · 3 steps');
+  }
+  saveTutorialProgress(completed) {
+    if (completed) this.tutorialProgress = { version: 1, completed: true };
+    else if (this.state.tutorial && this.state.tour) {
+      var s = this.state;
+      this.tutorialProgress = { version: 1, completed: false, step: s.tour, done: Object.assign({}, s.tutorialDone), skipped: Object.assign({}, s.tutorialSkipped),
+        set: s.set, disc: s.disc < 5 ? s.disc : 2, frame: s.disc < 5 ? s.frame : 0, column: s.disc < 5 ? s.col : -1 };
+    } else return;
+    try { localStorage.setItem('ts_tutorial', JSON.stringify(this.tutorialProgress)); } catch (ignored) {}
   }
   rememberTourOrigin() {
     this.tourReturnFocus = document.activeElement;
@@ -4664,30 +4721,35 @@ class Component extends DCLogic {
       appTop: app ? app.scrollTop : 0, appLeft: app ? app.scrollLeft : 0,
       pageTop: page ? page.scrollTop : 0 };
   }
-  startTutorial() {
+  startTutorial(restart, event) {
     if (!this.settleArrivedRoute()) return;
     if (this.state.more) this.closeMore();
     if (this.state.tour) this.tourClose();
+    var progress = restart ? null : this.tutorialProgress?.completed === false ? this.tutorialProgress : null;
     this.rememberTourOrigin();
+    if (event?.currentTarget) this.tourReturnFocus = event.currentTarget;
     var s = this.state, values = {};
-    ['tab','sub','disc','frame','col','custom','customMode','engine','speed','leadOverride','mute','mixCustomized','ended','upMsg'].forEach(function (key) { values[key] = s[key]; });
+    ['tab','sub','set','an','disc','frame','col','custom','customMode','engine','speed','leadOverride','mute','mixCustomized','ended','upMsg'].forEach(function (key) { values[key] = s[key]; });
     this.tutorialSnapshot = { values: values, playing: s.playing };
     if (s.tab === 'how' && s.sub === 0) this.startFileLoad();
     if (s.tab === 'band') this.cancelBandClip();
     this.stop(); this.stopSpeech();
-    this.setState({ tab: 'juke', sub: 0, tour: 0, tutorial: true,
-      tutorialDone: { disc: false, play: false, legend: false }, tutorialSkipped: {}, tutorialFeedback: null });
-    this.resetScreenScroll(); this.tourGo(1);
+    if (progress && progress.set !== this.state.set) this.applySet(progress.set);
+    this.setState(Object.assign({ tab: 'juke', sub: 0, tour: 0, tutorial: true, playing: false,
+      tutorialDone: progress ? Object.assign({}, progress.done) : { disc: false, play: false, legend: false }, tutorialSkipped: progress ? Object.assign({}, progress.skipped) : {}, tutorialFeedback: null },
+      progress ? { disc: progress.disc, frame: Math.min(progress.frame, DISCS[progress.disc].files.length - 1), col: progress.column, ended: false } : {}));
+    this.resetScreenScroll(); this.tourGo(progress ? progress.step : 1);
   }
   tutorialAction(action, answer) {
     var s = this.state;
     if (!s.tutorial || !this.guideStep() || this.guideStep().action !== action) return;
     if (action === 'legend' && answer !== true) {
-      this.setState({ tutorialFeedback: uiMessage('Busca en la leyenda la opción de agua más fría de lo esperado.', 'Find the cooler-than-expected water option in the legend.') });
+      this.setState({ tutorialFeedback: uiMessage('Busca una opción cuya descripción indique agua más fría de lo esperado.', 'Find an option whose description means cooler-than-expected water.') });
       return;
     }
     var done = Object.assign({}, s.tutorialDone); done[action] = true;
-    this.setState({ tutorialDone: done, tutorialFeedback: action === 'legend' ? uiMessage('Correcto. El azul indica agua más fría de lo esperado. Puedes terminar el tutorial.', 'Correct. Blue indicates cooler-than-expected water. You can finish the tutorial.') : null });
+    this.setState({ tutorialDone: done, tutorialFeedback: action === 'legend' ? uiMessage('Correcto. Elegiste un nivel de agua más fría de lo esperado. Puedes terminar el tutorial.', 'Correct. You chose a cooler-than-expected water level. You can finish the tutorial.') : null });
+    this.saveTutorialProgress(false);
     if (action === 'disc') this.tourGo(2);
     else if (action === 'play') this.tourGo(3);
   }
@@ -4765,11 +4827,13 @@ class Component extends DCLogic {
       var heading = document.getElementById('tour-t');
       if (heading) heading.focus({ preventScroll: true });
     });
-    if (s.voice) this.narrateBrisa(st);
+    if (s.tutorial) this.saveTutorialProgress(false);
+    if (s.voice) this.narrateBrisa(s.tutorial ? st : this.contextHelpStep());
   }
   tourClose(keepTutorialState) {
     if (!this.state.tour) return;
     var self = this, snapshot = this.state.tutorial && !keepTutorialState ? this.tutorialSnapshot : null;
+    if (this.state.tutorial && !keepTutorialState) this.saveTutorialProgress(false);
     this.guideProgress[this.guideKey()] = this.state.tour;
     if (snapshot) this.stop();
     clearTimeout(this.tourSettle); clearTimeout(this.tourSettle2); clearTimeout(this.tourResizeTimer); cancelAnimationFrame(this.tourRaf);
@@ -4780,7 +4844,10 @@ class Component extends DCLogic {
     this.tourTarget = null; this.tourCard = null; this.tourKey = '';
     this.stopSpeech();
     var origin = keepTutorialState ? null : this.tourOrigin, patch = { tour: 0, tourRect: null, tourCardH: 0, tutorial: false, tutorialFeedback: null };
-    if (snapshot) Object.assign(patch, snapshot.values);
+    if (snapshot) {
+      if (snapshot.values.set !== this.state.set) { this.invalidateLoads(); for (var d = 0; d < 5; d++) DISCS[d] = DISC_SETS[snapshot.values.set][d]; }
+      Object.assign(patch, snapshot.values);
+    }
     this.tutorialSnapshot = null;
     this.tourOrigin = null;
     if (origin && origin.tab === this.state.tab) { this.stopForScreen(origin.tab, origin.sub); patch.sub = origin.sub; }
@@ -4790,6 +4857,7 @@ class Component extends DCLogic {
         if (origin.app) { origin.app.scrollTop = origin.appTop; origin.app.scrollLeft = origin.appLeft; }
         if (origin.page) origin.page.scrollTo({ top: origin.pageTop, behavior: 'instant' });
       }
+      if (snapshot && snapshot.values.disc < 5 && snapshot.values.sub === 1 && ['juke','game'].includes(snapshot.values.tab) && !self.cur()) self.loadDisc(snapshot.values.disc);
       if (snapshot && snapshot.playing) self.play();
     });
     var target = this.tourReturnFocus;
@@ -4798,9 +4866,12 @@ class Component extends DCLogic {
   }
   tourEnd() {
     var key = this.guideKey(), s = this.state;
-    var complete = s.tutorial && s.tutorialDone.disc && s.tutorialDone.play && s.tutorialDone.legend;
-    this.tourClose(complete);
-    delete this.guideProgress[key];
+    this.tourClose();
+    if (!s.tutorial) delete this.guideProgress[key];
+  }
+  finishTutorial() {
+    if (!this.state.tutorial) return;
+    this.saveTutorialProgress(true); this.tourClose(true); delete this.guideProgress.tutorial;
   }
   setMoreInert(on) {
     if (on) {
@@ -4850,6 +4921,7 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
+    if (this.state.tutorial && this.state.tour) this.saveTutorialProgress(false);
     this.cancelSample();
     if (this.disposed) return;
     this.pendingWelcome = null;
@@ -6306,25 +6378,27 @@ class Component extends DCLogic {
     var tutorialBlocked = !!(s.tutorial && tstep && !s.tutorialDone[tstep.action]);
     var mobileInstructions = {
       disc: T('Toca la portada de un disco.', 'Tap a disc cover.'),
-      play: T('Pulsa Reproducir para escuchar el mapa.', 'Press Play to hear the map.'),
-      legend: T('Toca el color que indica agua más fría.', 'Tap the color that means cooler water.')
+      play: T('Reproduce o continúa con la versión escrita sin sonido.', 'Play or continue with the written version without sound.'),
+      legend: T('Elige una opción etiquetada como agua más fría.', 'Choose an option labeled as cooler water.')
     };
-    var tourVm = { on: !!tstep, n: s.tour, total: gsteps.length, title: tstep ? tstep.t : '',
-      body: tstep ? s.tutorial && vw < 700 ? mobileInstructions[tstep.action] : tstep.b : '',
+    var tourVm = { on: !!tstep, n: s.tour, total: s.tutorial ? gsteps.length : 1, title: tstep ? s.tutorial ? tstep.t : this.contextHelpStep().t : '',
+      body: tstep ? s.tutorial ? vw < 700 ? mobileInstructions[tstep.action] : tstep.b : this.contextHelpStep().b : '',
       nextOff: false,
       feedback: uiText(s.tutorialFeedback), speechNotice: uiText(s.speechNotice),
-      stateLabel: s.speaking ? T('Brisa está explicando.', 'Brisa is explaining.') : tutorialBlocked ? T('Tu turno. Sin límite de tiempo.', 'Your turn. No time limit.') : s.tour === 1 ? T('Bienvenida. Puedes cerrar la ayuda.', 'Welcome. You can close help.') : T('Puedes continuar o volver atrás.', 'You can continue or go back.'),
-      showTutorialStart: !s.tutorial && s.tour === 1, startTutorial: function () { self.startTutorial(); },
-      canUseText: s.tutorial && s.tour === 2 && !!s.audioError,
+      stateLabel: s.speaking ? T('Brisa está explicando.', 'Brisa is explaining.') : !s.tutorial ? T('Puedes consultar esta ayuda y cerrarla sin cambiar tus selecciones.', 'Read this help and close it without changing your selections.') : tutorialBlocked ? T('Tu turno. Sin límite de tiempo.', 'Your turn. No time limit.') : T('Puedes continuar o volver atrás.', 'You can continue or go back.'),
+      isTutorial: s.tutorial, showTutorialStart: false, restartLabel: T('Reiniciar tutorial', 'Restart tutorial'), restart: function () { self.startTutorial(true); },
+      closeLabel: s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen'),
+      canUseText: s.tutorial && s.tour === 2,
       useTextLabel: T('Continuar con la versión escrita', 'Continue with the written version'), useText: function () { self.tutorialAction('play'); },
       voiceLabel: s.speaking ? T('Detener voz de Brisa', 'Stop Brisa’s voice') : tx.guideListen,
       place: place, cardSt: cardSt, spot: !!R, spotSt: spotSt, dim: !R,
       compact: vw < 280 ? 'narrow' : '',
-      who: vw < 700 && s.tutorial ? T('Guía rápida', 'Quick guide') : tx.guideBy + ' · ' + ROUTE_LOOK[s.tab].title,
-      count: s.tour + (vw < 280 ? '/' : ' / ') + gsteps.length, modelCue: 'speak-' + (this.tourTalk || 0),
-      dots: gsteps.map(function (x, i) { return { cls: i < s.tour ? 'on' : '' }; }), showBack: s.tour > 1, hasExtra: !!(tstep && tstep.extra), extraLabel: tstep && tstep.extra ? tstep.extra : '',
-      nextLabel: tutorialBlocked ? (s.tour === gsteps.length ? T('Terminar guía', 'Finish guide') : T('Saltar paso', 'Skip this step')) : s.tour === gsteps.length ? (s.tutorial ? T('Terminar', 'Finish') : T('Entendido', 'Got it')) : T('Siguiente', 'Next'),
+      who: s.tutorial ? T('Brisa · Tutorial práctico', 'Brisa · Practical tutorial') : T('Brisa · Ayuda', 'Brisa · Help'),
+      count: s.tutorial ? s.tour + (vw < 280 ? '/' : ' / ') + gsteps.length : '', modelCue: 'speak-' + (this.tourTalk || 0),
+      dots: s.tutorial ? gsteps.map(function (x, i) { return { cls: i < s.tour ? 'on' : '' }; }) : [], showBack: s.tutorial && s.tour > 1, hasExtra: s.tutorial && !!(tstep && tstep.extra), extraLabel: tstep && tstep.extra ? tstep.extra : '',
+      nextLabel: !s.tutorial ? T('Entendido', 'Got it') : tutorialBlocked ? (s.tour === gsteps.length ? T('Terminar tutorial', 'Finish tutorial') : T('Saltar paso', 'Skip this step')) : s.tour === gsteps.length ? T('Terminar', 'Finish') : T('Siguiente', 'Next'),
       next: function () {
+        if (!s.tutorial) { self.tourClose(); return; }
         if (tutorialBlocked) {
           var skipped = Object.assign({}, self.state.tutorialSkipped); skipped[tstep.action] = true;
           self.setState({ tutorialSkipped: skipped });
@@ -6332,10 +6406,10 @@ class Component extends DCLogic {
             self.setState({ disc: 0, frame: 0, col: -1 }); self.loadDisc(0);
           }
         }
-        if (s.tour >= gsteps.length) self.tourEnd(); else self.tourGo(s.tour + 1);
+        if (s.tour >= gsteps.length) self.finishTutorial(); else self.tourGo(s.tour + 1);
       },
       back: function () { self.tourGo(s.tour - 1); }, close: function () { self.tourClose(); }, skip: function () { self.tourEnd(); },
-      say: function () { if (s.speaking) self.stopSpeech(); else self.narrateBrisa(tstep, true); },
+      say: function () { if (s.speaking) self.stopSpeech(); else self.narrateBrisa(s.tutorial ? tstep : self.contextHelpStep(), true); },
       extra: function () { if (!s.playing) self.play(); } };
     var titles = this.subTitles(), cnt = titles.length, sub = Math.min(s.sub, cnt - 1), pgOrder = PAGE_ORDER, pgNext = s.tab === 'home' ? 'juke' : pgOrder[(pgOrder.indexOf(s.tab) + 1) % pgOrder.length];
     var lastSub = sub === cnt - 1, techPgs = s.tab === 'tech' ? this.techPages() : [], techCur = techPgs[sub] || { title: '', items: [] };
@@ -6390,6 +6464,7 @@ class Component extends DCLogic {
       haptic: this.hapticVm(),
       accessibleData: this.accessibleDataVm(),
       accessHelp: this.waysVm(),
+      guideOpenLabel: s.tour ? s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen') : this.tutorialProgress && !this.tutorialProgress.completed ? this.tutorialEntryLabel() : T('Ayuda de esta pantalla', 'Help for this screen'),
       positionAccessibilityMenu: function (event) { self.positionAccessibilityMenu(event); },
       languageCode: LANG,
       languageKeys: function(event) { self.onLanguageKey(event); },
@@ -6404,7 +6479,7 @@ class Component extends DCLogic {
           ['contrast', T('Alto contraste', 'High contrast'), T('Bordes y texto con mayor contraste.', 'Stronger contrast for borders and text.')],
           ['reducedMotion', T('Movimiento reducido', 'Reduced motion'), T('Personajes y transiciones sin animación.', 'Characters and transitions without animation.')]
         ].concat(self.hapticVm().visible ? [['vibe', T('Vibración opcional', 'Optional vibration'), T('Pulsos de intensidad musical, incluso sin sonido. Puedes probarlos y detenerlos en Accesibilidad. Depende del navegador y del teléfono.', 'Musical intensity pulses, even without sound. Test or stop them in Accessibility. Availability depends on your browser and phone.')]] : []).map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: option[0] === 'reducedMotion' ? reducedMotion : !!s[option[0]], disabled: option[0] === 'vibe' && !self.haptics.supported(), change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
-        continueLabel: T('Continuar', 'Continue'), tutorialLabel: T('Ver guía · 3 pasos', 'Open guide · 3 steps'),
+        continueLabel: T('Continuar', 'Continue'), tutorialLabel: this.tutorialEntryLabel(),
         continue: function () { self.finishPreferences(false); }, tutorial: function () { self.finishPreferences(true); }
       },
       frameCount: s.disc === 5 ? T('tu archivo', 'your file') : T('fotograma ', 'frame ') + (s.frame + 1) + T(' de ', ' of ') + d.files.length, prevOff: s.frame <= 0, nextOff: s.frame >= d.files.length - 1,

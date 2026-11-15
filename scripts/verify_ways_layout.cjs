@@ -69,8 +69,8 @@ async function main(){
     await page.waitForFunction(previous=>__app.state.waysPage>previous,pages-1);
    }
    assert.deepEqual(seen.map(parts=>parts.join(' ')),expected,'Pagination must retain every word in order');
-   await page.locator('#ways-close').focus();await page.keyboard.press('Shift+Tab');
-   assert.equal(await page.evaluate(()=>document.activeElement.id),'ways-prev');
+   await page.locator('#ways-context').focus();await page.keyboard.press('Shift+Tab');
+   assert.equal(await page.evaluate(()=>document.activeElement.id),'ways-tutorial');
    await page.addScriptTag({path:axePath});
    const axe=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));
    report.violations.push(...axe.violations.map(v=>({width,height,big,lang,id:v.id,nodes:v.nodes.map(n=>n.target)})));

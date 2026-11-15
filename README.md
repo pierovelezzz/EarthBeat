@@ -47,7 +47,9 @@ node scripts/test_guides.cjs _site/index.html
 python scripts/run_browser_checks.py --list
 ```
 
-La suite de lógica contiene 142 pruebas en esta rama. El recorrido del RETO 05 se puede ejecutar con el runner usando la opción --only reto05. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+La suite de lógica contiene 146 pruebas en esta rama. El recorrido del RETO 05 se puede ejecutar con el runner usando la opción --only reto05. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+
+El [tutorial práctico y la ayuda contextual](docs/TUTORIAL.md) tienen funciones distintas: el tutorial practica tres acciones y guarda el avance al cerrarlo o saltarlo; la ayuda de cada pantalla se consulta en una sola tarjeta. Brisa retoma un tutorial pendiente, incluso tras recargar, sin iniciar música automáticamente.
 
 ## Documentación
 
