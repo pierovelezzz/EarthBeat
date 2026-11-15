@@ -23,6 +23,7 @@ CHECKS = {
     "page-lifecycle": "verify_page_lifecycle.cjs", "memory": "measure_memory.cjs",
     "compact-player": "verify_compact_player.cjs",
     "themes": "verify_themes.cjs", "reto05": "verify_reto05.cjs",
+    "tutorial": "verify_tutorial_flow.cjs",
 }
 DEFAULT = ["home", "preferences", "reflow", "method", "characters", "convert", "brisa", "player", "impacts"]
 

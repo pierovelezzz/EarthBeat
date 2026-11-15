@@ -107,9 +107,9 @@ async function main() {
     assert.equal(await page.evaluate(() => __speech.spoken.at(-1).lang),'es-MX');
     await next(page).click(); assert.equal(await page.evaluate(() => __app.state.speaking),false);
     await page.locator('#tour-card .tguide .tsay').first().click();
-    await page.getByRole('button',{name:'English',exact:true}).click(); assert.equal(await page.evaluate(() => __app.state.speaking),false);
+    await page.getByRole('button',{name:'EN English',exact:true}).click(); assert.equal(await page.evaluate(() => __app.state.speaking),false);
     assert.match(await page.locator('#tour-b').textContent(),/grid scale runs from blue/);
-    await page.getByRole('button',{name:'Español',exact:true}).click(); await close(page).click();
+    await page.getByRole('button',{name:'ES Español',exact:true}).click(); await close(page).click();
     assert.equal(await page.evaluate(() => JSON.stringify([__app.state.tab,__app.state.sub,__app.state.disc,__app.state.frame,__app.state.col,__app.state.custom.url,__app.state.customMode,__app.state.mute,__app.state.playing])),snapshot);
     assert.equal(await page.evaluate(() => document.activeElement.id),'tour-guide');
     report.journeys.push('Contextual help preserves file/date/position, restores focus and cancels voice on step/language changes');
@@ -185,7 +185,7 @@ async function main() {
       assert.equal(await stop.textContent(),'');
       assert.equal(await stop.locator('svg').getAttribute('aria-hidden'),'true');
     }
-    await speaking.getByRole('button',{name:'English',exact:true}).click();
+    await speaking.getByRole('button',{name:'EN English',exact:true}).click();
     await speaking.waitForFunction(()=>__app.brisaAudio?.src.endsWith('/en-tech-1.mp3')&&__app.brisaAudio.currentTime>0);
     await speaking.locator('#tour-a11y summary').click();
     await speaking.getByRole('button',{name:'Voice mode',exact:true}).click();

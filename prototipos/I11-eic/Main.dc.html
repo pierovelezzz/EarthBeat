@@ -1366,6 +1366,35 @@ a{color:inherit}
 .px .preferences-actions{display:flex;flex-wrap:wrap;gap:8px}
 .px .preferences-actions button{flex:1 1 180px;white-space:normal;min-height:44px}
 .px .preferences-dialog .btn[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.px .accessible-data{font-size:.9em;line-height:1.55}
+.px .accessible-data summary{cursor:pointer;min-height:44px;align-content:center;font-weight:600}
+.px .accessible-data p{margin:8px 0}
+.px .ways-trigger{min-height:44px;padding-inline:12px;gap:7px;letter-spacing:.04em;white-space:nowrap}
+.px .ways-trigger svg{width:18px;height:18px;flex-shrink:0}
+.px .ways-dim{position:fixed;inset:0;z-index:1120;background:#000b}
+.px .ways-dialog{position:fixed;inset:0;z-index:1121;margin:auto;width:min(640px,calc(100% - 24px));height:var(--ways-height,min(500px,calc(100dvh - 24px)));padding:24px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:18px;background:var(--surface);color:var(--fg);border:1px solid var(--fg);border-radius:8px;box-shadow:0 12px 80px #000}
+.px .ways-header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.px .ways-header h2{font:700 clamp(18px,2.4vw,26px)/1.2 var(--head);margin:0;min-width:0}
+.px .ways-progress{font-size:12px;line-height:1.4;margin:4px 0 0}
+.px .ways-header-actions{display:flex;gap:6px;flex-shrink:0}
+.px .ways-header .btn{flex-shrink:0}
+.px .ways-content{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;min-width:0;min-height:0;align-items:start}
+.px .ways-content h3{font-size:1.1em;line-height:1.25;margin:0}
+.px .ways-copy{position:relative;width:100%;height:100%;min-width:0;min-height:0}
+.px .ways-copy p{width:100%;max-width:none;margin:0;font-size:1em;line-height:1.6;overflow-wrap:anywhere}
+.px .ways-footer{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
+.px .ways-footer p{margin:0;width:8ch;text-align:center;font-size:clamp(12px,.8em,16px);font-variant-numeric:tabular-nums;white-space:nowrap}
+.px .ways-dialog .btn.sm{min-height:44px;font-size:clamp(12px,.75em,16px);letter-spacing:.02em;padding-inline:10px}
+.px .ways-footer .btn.sm{font-size:clamp(12px,.7em,14px);padding-inline:6px;white-space:nowrap}
+@media(max-width:1279px){.px .ways-trigger .ways-label{display:none}.px .ways-trigger{width:44px;min-width:44px;padding:0}}
+@media(min-width:1280px) and (max-width:1600px){.px .readable-nav .ways-trigger .ways-label{display:none}.px .readable-nav .ways-trigger{width:44px;min-width:44px;padding:0}}
+@media(max-width:620px),(max-height:450px){.px .ways-dialog{padding:12px;gap:10px}.px .ways-content{gap:6px}}
+.px .accessible-data label{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
+.px .accessible-data select{min-height:44px;max-width:100%;font:inherit}
+.px .accessible-data table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.px .accessible-data caption{text-align:start;padding:8px 0;font-weight:600}
+.px .accessible-data th,.px .accessible-data td{text-align:start;padding:8px 6px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.px .accessible-data th{color:var(--fg)}
 .px .brisa-badge{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;font:700 25px/1 var(--head);color:var(--fg);background:var(--bg);border:1px solid currentColor;border-radius:50%}
 .px .guidefab .brisa-badge{width:100%;height:100%;border:0}
 .px .guidefab::after{display:none}
@@ -1411,6 +1440,10 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .practice-example #tour-sample{display:grid;justify-items:start;gap:14px}
 .px .practice-example h2{font-size:clamp(1.3em,3vw,2em);overflow-wrap:anywhere}
 .px .practice-example .sample-preview{height:auto;max-height:280px;aspect-ratio:560/320}
+.px .bshow .avatar-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px}
+.px .bshow .avatar-actions>earthbeat-dance-button{justify-self:end;width:min(100%,190px);min-width:0}
+.px .bshow .avatar-actions>.btn{justify-self:start}
+.px .bshow .avatar-actions .btn{width:100%;max-width:190px;height:44px;min-height:44px;min-width:0;padding:4px 8px;font-size:clamp(12px,.85rem,16px);line-height:1.2;letter-spacing:.03em;white-space:normal}
 .px .bentering .bportrait-live{animation:bcut-reveal var(--band-entry) var(--cut-ease) both}
 .px .bresetting .bportrait-live{opacity:0}
 .px .bsel img{object-fit:contain;flex-shrink:0}
@@ -1534,6 +1567,7 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .map-reading h2{margin:0;color:var(--accent);font:700 1em/1.35 var(--head)}
 .px .map-reading-copy p{margin:0;line-height:1.35;font-size:.9em}
 .px .map-reading-copy p+p{margin-top:3px;color:var(--muted);font-size:.81em}
+.px .map-reading > .accessible-data{grid-column:1/-1;min-width:0;border-top:1px solid var(--line)}
 @media(max-width:640px){.px .map-reading{grid-template-columns:minmax(0,1fr);gap:5px}}
 .px.main-edition .stage-musician[data-on="false"]{opacity:.38}
 .px.main-edition .viewport,.px.main-edition .scr,.px.main-edition .in{min-width:0}
@@ -2182,6 +2216,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .listen-player .player-layout #tour-machine{grid-template-rows:auto minmax(88px,1fr) auto}
   .px .listen-player .legend-explanation{min-height:0;padding-block:6px}
 }
+@media(min-width:1100px){
+  .px .workspace > .in:has(.listen-player .accessible-data[open]){height:auto}
+  .px .listen-player:has(.accessible-data[open]),
+  .px .listen-player:has(.accessible-data[open]) .player-layout{flex:none}
+}
 .px .bar .side .btn,.px .bar .steps button{min-height:28px}
 .px.main-edition .language-toggle button[aria-pressed="true"]{background:#a6dbe9}
 .px.main-edition .language-toggle[data-language="es"] button[aria-pressed="true"]{background:#f3ce72}
@@ -2260,8 +2299,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="right">
 <div id="tour-lang" class="langsw language-toggle" data-language="{{languageCode}}" role="group" aria-label="{{tx.langAria}}" onKeyDown="{{languageKeys}}">
 <span class="language-thumb" aria-hidden="true"></span>
-<sc-for list="{{langs}}" as="l" hint-placeholder-count="2"><button type="button" onClick="{{l.pick}}" aria-pressed="{{l.on}}" lang="{{l.code}}" aria-label="{{l.name}}" title="{{l.name}}">{{l.short}}</button></sc-for>
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="2"><button type="button" onClick="{{l.pick}}" aria-pressed="{{l.on}}" lang="{{l.code}}" aria-label="{{l.short}} {{l.name}}" title="{{l.name}}">{{l.short}}</button></sc-for>
 </div>
+<button id="ways-trigger" type="button" class="btn sm ways-trigger" onClick="{{accessHelp.open}}" aria-label="{{accessHelp.triggerLabel}}" title="{{accessHelp.triggerLabel}}" aria-haspopup="dialog" aria-expanded="{{accessHelp.on}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9 8.5a3 3 0 0 1 6 0c0 2-3 2-3 4.5m0 3v1"/></svg><span class="ways-label">{{accessHelp.triggerLabel}}</span></button>
 <details id="tour-a11y" class="menu" onToggle="{{positionAccessibilityMenu}}">
 <summary aria-label="{{tx.a11yAria}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="7.2" r="1.5" fill="currentColor" stroke="none"></circle><path d="M7 10h10M12 10v4m0 0-3 4.5m3-4.5 3 4.5"></path></svg><span class="mlabel">{{tx.a11y}}</span></summary>
 <div class="pop" role="group" aria-label="{{tx.a11y}}">
@@ -2269,11 +2309,14 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="opt" onClick="{{a.toggle}}" aria-pressed="{{a.on}}" disabled="{{a.disabled}}"><span>{{a.label}}</span><span class="sw" aria-hidden="true"></span></button>
 </sc-for>
 <button type="button" class="opt" onClick="{{theme.toggle}}" aria-pressed="{{theme.light}}"><span>{{theme.label}}</span><span class="sw" aria-hidden="true"></span></button>
+<sc-if value="{{haptic.visible}}">
 <section class="haptics-settings" aria-labelledby="haptics-title">
 <h2 id="haptics-title">{{haptic.title}}</h2><p id="haptics-status" role="status">{{haptic.status}}</p>
+<p class="small">{{haptic.explanation}}</p>
 <div class="row"><button type="button" class="btn sm" onClick="{{haptic.test}}" disabled="{{haptic.testOff}}" aria-describedby="haptics-status">{{haptic.testLabel}}</button>
 <button type="button" class="btn sm" onClick="{{haptic.stop}}" disabled="{{haptic.stopOff}}">{{haptic.stopLabel}}</button></div>
 </section>
+</sc-if>
 <button type="button" class="preferences-shortcut" onClick="{{preferences.open}}">{{preferences.reopenLabel}}</button>
 </div>
 </details>
@@ -2318,7 +2361,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <li class="flow-step"><svg class="flow-art flow-grid" viewBox="0 0 112 64" aria-hidden="true"><defs><pattern id="home-pixel-grid" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#a4b9c8"/></pattern></defs><rect width="112" height="64" fill="url(#home-pixel-grid)"/></svg><strong>{{tx.flowPixels}}</strong></li>
 <li class="flow-step"><span class="flow-art flow-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><strong>{{tx.flowMusic}}</strong></li>
 </ol>
-<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{tx.guideOpen}}" title="{{tx.guideOpen}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button>
+<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button>
 </div>
 </div>
 <nav class="space-destinations" data-contrast="{{planetContrast}}" aria-label="{{universe.navLabel}}">
@@ -2546,10 +2589,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="band-stage" role="group" aria-label="{{tx.bandAria}}">
 <div class="band-stage-musicians">
 <sc-for list="{{stageMusicians}}" as="musician">
-<button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-describedby="stage-instrument-{{musician.key}}" aria-pressed="{{musician.on}}" disabled="{{rhythmMode}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
+<button type="button" class="listen-member stage-musician" aria-pressed="{{musician.on}}" disabled="{{rhythmMode}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
 <earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"><svg class="stage-receptor" viewBox="120 141 240 240" focusable="false"><path d="{{musician.instrumentLine}}" fill="none" stroke="currentColor" stroke-width="1.4" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"></path></svg></earthbeat-note-track>
 <span class="stage-performer" aria-hidden="true"><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance></span>
-<span class="stage-label"><strong>{{musician.displayName}}</strong><span id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span></span>
+<span class="stage-label"><strong>{{musician.displayName}}</strong> <span id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span></span>
 </button>
 </sc-for>
 </div>
@@ -2590,6 +2633,23 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <section class="player-detail map-reading" aria-labelledby="map-reading-title">
 <h2 id="map-reading-title">{{tx.see}}</h2>
 <div class="map-reading-copy"><p>{{seeText}}</p><p>{{mapMusicHint}}</p></div>
+<details id="accessible-data" class="accessible-data">
+<summary>{{accessibleData.title}}</summary>
+<p>{{accessibleData.description}}</p>
+<p>{{accessibleData.source}} · {{accessibleData.date}}</p>
+<p id="accessible-data-unit">{{accessibleData.unit}}</p>
+<sc-if value="{{accessibleData.ready}}">
+<label for="accessible-data-column">{{accessibleData.columnLabel}}
+<select id="accessible-data-column" value="{{accessibleData.column}}" onChange="{{accessibleData.select}}" aria-describedby="accessible-data-unit">
+<template data-sc-for="{{accessibleData.columns}}" data-sc-as="column"><option value="{{column.value}}">{{column.label}}</option></template>
+</select></label>
+<table aria-describedby="accessible-data-unit"><caption>{{accessibleData.caption}}</caption>
+<thead><tr><th scope="col">{{accessibleData.rowLabel}}</th><th scope="col">{{accessibleData.valueLabel}}</th><th scope="col">{{accessibleData.meaningLabel}}</th></tr></thead>
+<tbody><template data-sc-for="{{accessibleData.rows}}" data-sc-as="cell"><tr><th scope="row">{{cell.row}}</th><td>{{cell.value}}</td><td>{{cell.meaning}}</td></tr></template></tbody>
+</table>
+</sc-if>
+<sc-if value="{{accessibleData.unavailable}}"><p role="status">{{accessibleData.unavailable}}</p></sc-if>
+</details>
 </section>
 </sc-if>
 <p role="status" aria-live="polite" class="sr">{{player.announcement}}</p>
@@ -2763,10 +2823,19 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </footer>
 </sc-if>
 
-<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{tx.guideOpen}}" title="{{tx.guideOpen}}">
+<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}">
 <img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="glabel">{{tx.guide}}</span>
 </button>
 </div>
+</sc-if>
+
+<sc-if value="{{accessHelp.on}}">
+<div class="ways-dim" aria-hidden="true"></div>
+<section id="ways-dialog" class="ways-dialog" role="dialog" aria-modal="true" aria-labelledby="ways-title" tabindex="-1">
+<div class="ways-header"><div><h2 id="ways-title">{{accessHelp.title}}</h2><p class="ways-progress" role="status" aria-live="polite" aria-atomic="true">{{accessHelp.progress}}</p></div><div class="ways-header-actions"><button id="ways-context" type="button" class="btn sm" onClick="{{accessHelp.contextHelp}}" aria-label="{{accessHelp.contextLabel}}">{{accessHelp.helpLabel}}</button><button id="ways-close" type="button" class="btn sm" onClick="{{accessHelp.close}}">{{accessHelp.closeLabel}}</button></div></div>
+<div class="ways-content"><h3 id="ways-topic" tabindex="-1" aria-describedby="ways-text">{{accessHelp.topic}}</h3><div id="ways-copy" class="ways-copy"><p id="ways-text">{{accessHelp.text}}</p></div></div>
+<div class="ways-footer"><button id="ways-prev" type="button" class="btn sm" onClick="{{accessHelp.prev}}" disabled="{{accessHelp.prevOff}}">{{accessHelp.prevLabel}}</button><button id="ways-tutorial" type="button" class="btn sm" onClick="{{accessHelp.tutorial}}" aria-label="{{accessHelp.tutorialLabel}}" title="{{accessHelp.tutorialLabel}}">Tutorial</button><button id="ways-next" type="button" class="btn sm" onClick="{{accessHelp.next}}" disabled="{{accessHelp.nextOff}}">{{accessHelp.nextLabel}}</button></div>
+</section>
 </sc-if>
 
 <sc-if value="{{preferences.on}}">
@@ -2774,7 +2843,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <section id="preferences-dialog" class="preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="preferences-title" aria-describedby="preferences-body" tabindex="-1">
 <p class="kicker">EarthRhythm · Brisa</p>
 <h2 id="preferences-title">{{preferences.title}}</h2><p id="preferences-body">{{preferences.body}}</p>
-<div class="preferences-choices"><sc-for list="{{preferences.choices}}" as="p"><label for="{{p.id}}"><input id="{{p.id}}" type="checkbox" checked="{{p.on}}" onChange="{{p.change}}"><span><strong>{{p.label}}</strong><span class="small muted">{{p.hint}}</span></span></label></sc-for></div>
+<div class="preferences-choices"><sc-for list="{{preferences.choices}}" as="p"><label for="{{p.id}}"><input id="{{p.id}}" type="checkbox" checked="{{p.on}}" disabled="{{p.disabled}}" onChange="{{p.change}}"><span><strong>{{p.label}}</strong><span class="small muted">{{p.hint}}</span></span></label></sc-for></div>
 <div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-pressed="{{l.on}}" onClick="{{l.pick}}" lang="{{l.code}}">{{l.short}}</button></sc-for></div>
 <div class="preferences-actions"><button type="button" class="btn primary" onClick="{{preferences.continue}}">{{preferences.continueLabel}}</button><button type="button" class="btn" onClick="{{preferences.tutorial}}">{{preferences.tutorialLabel}}</button></div>
 </section>
@@ -2792,7 +2861,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <img class="brisa-badge" src="./brisa/portrait.webp" alt="">
 <div class="tmeta"><span class="tn">{{tour.who}}</span><span class="tn dim">{{tour.count}}</span></div>
 <button type="button" class="tsay" onClick="{{tour.say}}" disabled="{{brisaUnavailable}}" aria-label="{{tour.voiceLabel}}" title="{{tour.voiceLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
-<button type="button" class="tsay" onClick="{{tour.close}}" aria-label="{{tx.guideClose}}" title="{{tx.guideClose}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+<button type="button" class="tsay" onClick="{{tour.close}}" aria-label="{{tour.closeLabel}}" title="{{tour.closeLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
 </div>
 <div class="tbubble" tabindex="0" role="region" aria-labelledby="tour-t">
 <h3 id="tour-t" tabindex="-1">{{tour.title}}</h3>
@@ -2800,15 +2869,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <p class="small muted">{{tour.stateLabel}}</p>
 <p role="status" class="small">{{tour.feedback}}</p>
 <p class="small muted">{{tour.speechNotice}}</p>
-<sc-if value="{{tour.showTutorialStart}}"><button type="button" class="btn sm" onClick="{{tour.startTutorial}}">{{preferences.tutorialLabel}}</button></sc-if>
+<sc-if value="{{tour.isTutorial}}"><button type="button" class="btn sm" onClick="{{tour.restart}}">{{tour.restartLabel}}</button></sc-if>
 <sc-if value="{{tour.canUseText}}"><button type="button" class="btn sm" onClick="{{tour.useText}}">{{tour.useTextLabel}}</button></sc-if>
 </div>
-<div class="tdots" aria-hidden="true"><sc-for list="{{tour.dots}}" as="d" hint-placeholder-count="6"><i class="{{d.cls}}"></i></sc-for></div>
+<sc-if value="{{tour.isTutorial}}"><div class="tdots" aria-hidden="true"><sc-for list="{{tour.dots}}" as="d" hint-placeholder-count="3"><i class="{{d.cls}}"></i></sc-for></div></sc-if>
 <div class="tact">
 <sc-if value="{{tour.showBack}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn sm quiet" onClick="{{tour.back}}">{{tx.back}}</button></sc-if>
 <button type="button" class="btn sm primary" onClick="{{tour.next}}" disabled="{{tour.nextOff}}">{{tour.nextLabel}}</button>
 <sc-if value="{{tour.hasExtra}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn sm tour-extra" onClick="{{tour.extra}}">{{tour.extraLabel}}</button></sc-if>
-<button type="button" class="skip" onClick="{{tour.skip}}">{{tx.skipGuide}}</button>
+<sc-if value="{{tour.isTutorial}}"><button type="button" class="skip" onClick="{{tour.skip}}">{{tx.skipGuide}}</button></sc-if>
 </div>
 </div>
 </sc-if>
@@ -2827,6 +2896,23 @@ function readPreferences() {
     if (value && value.version === 1 && value.values && typeof value.values === 'object') return value;
   } catch (ignored) {}
   return null;
+}
+function readTutorialProgress() {
+  try {
+    var raw = JSON.parse(localStorage.getItem('ts_tutorial'));
+    if (!raw || raw.version !== 1) return null;
+    if (raw.completed === true) return { version: 1, completed: true };
+    if (raw.completed !== false || !Number.isInteger(raw.step) || raw.step < 1 || raw.step > 3) return null;
+    var done = {}, skipped = {};
+    ['disc','play','legend'].forEach(function (key) { done[key] = raw.done?.[key] === true; skipped[key] = raw.skipped?.[key] === true; });
+    var step = raw.step;
+    if (step > 1 && !done.disc && !skipped.disc) step = 1;
+    if (step > 2 && !done.play && !skipped.play) step = 2;
+    return { version: 1, completed: false, step: step, done: done, skipped: skipped, set: raw.set === 'prev' ? 'prev' : 'eic',
+      disc: Number.isInteger(raw.disc) && raw.disc >= 0 && raw.disc < 5 ? raw.disc : 2,
+      frame: Number.isInteger(raw.frame) && raw.frame >= 0 && raw.frame < 6 ? raw.frame : 0,
+      column: Number.isInteger(raw.column) && raw.column >= -1 && raw.column < 28 ? raw.column : -1 };
+  } catch (ignored) { return null; }
 }
 function T(es, en) { return LANG === 'en' ? en : es; }
 // Los mensajes conservan sus parámetros; el idioma se resuelve al mostrarlos.
@@ -3096,21 +3182,21 @@ var GUIDES = {
     {
       "id": "tour-discs",
       "t": "1. Elige un disco",
-      "b": "Hola, soy Brisa. Te acompañaré a explorar el mapa y escuchar la Tierra en música. Pulsa la portada de un disco para empezar.",
+      "b": "Hola, soy Brisa. Exploraremos datos de la Tierra con imagen, texto y sonido opcional. Pulsa la portada de un disco para empezar.",
       "en": {
         "t": "1. Pick a disc",
-        "b": "Hi, I’m Brisa. I’ll guide you as you explore the map and listen to Earth through music. Select a disc cover to start."
+        "b": "Hi, I’m Brisa. We will explore Earth data with images, text and optional sound. Select a disc cover to start."
       },
       "sub": 0,
       "action": "disc"
     },
     {
       "id": "tour-play",
-      "t": "2. Pulsa Reproducir",
-      "b": "Pulsa Reproducir y sigue el mapa y su fecha. Puedes activar o silenciar a los músicos. Al pausar conservas tu posición.",
+      "t": "2. Explora el reproductor",
+      "b": "Puedes pulsar Reproducir o continuar con la versión escrita sin sonido. Consulta el mapa, su fecha y los controles. Al pausar conservas tu posición.",
       "en": {
-        "t": "2. Press Play",
-        "b": "Press Play and follow the map and its date. You can switch musicians on or off. Pausing keeps your position."
+        "t": "2. Explore the player",
+        "b": "Press Play or continue with the written version without sound. Inspect the map, its date and controls. Pausing keeps your position."
       },
       "sub": 1,
       "action": "play"
@@ -3118,10 +3204,10 @@ var GUIDES = {
     {
       "id": "player-legend",
       "t": "3. Interpreta la leyenda",
-      "b": "¿Qué significa el azul de la cuadrícula? Escoge su significado en la leyenda. No necesitas escuchar ni responder rápido.",
+      "b": "Elige en la leyenda una opción cuya descripción indique agua más fría de lo esperado. Puedes leer las etiquetas y los datos; no necesitas distinguir colores, escuchar ni responder rápido.",
       "en": {
         "t": "3. Read the legend",
-        "b": "What does blue mean in the grid? Choose its meaning in the legend. No hearing or quick response is needed."
+        "b": "Choose a legend option whose description means cooler-than-expected water. Read its labels and data; no color recognition, hearing or quick response is needed."
       },
       "sub": 1,
       "action": "legend"
@@ -3131,6 +3217,9 @@ var GUIDES = {
 Object.keys(GUIDES).forEach(function (section) {
   GUIDES[section].forEach(function (step, index) { step.audio = section + '-' + (index + 1); });
 });
+// The revised tutorial uses matching system speech, with written fallback,
+// rather than older recordings with different instructions.
+GUIDES.tutorial.forEach(function (step) { delete step.audio; });
 var DISC_CHAR = ['mama', 'inti', 'silbo', 'yaku', 'illapa'];
 var MES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 var MES_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -3997,17 +4086,49 @@ function analyzeMapImage(img, free, legacy) {
 }
 
 var HAPTIC_PATTERNS = Object.freeze({ confirm: 15, notice: 45, alert: Object.freeze([35,55,35]), musicSoft: 25, musicMedium: 60, musicStrong: Object.freeze([45,35,75]), test: Object.freeze([25,50,25]) });
+// Phone identification is deliberately independent of viewport width and API presence.
+function isPhoneDevice(nav) {
+  if (!nav) return false;
+  if (typeof nav.userAgentData?.mobile === 'boolean') return nav.userAgentData.mobile;
+  return /iPhone|iPod|Android.*Mobile|Windows Phone/i.test(nav.userAgent || '');
+}
+function paginateUsage(topics, fits) {
+  var pages = [];
+  topics.forEach(function (topic, index) {
+    var words = topic.text.trim().split(/\s+/), start = 0;
+    while (start < words.length) {
+      var low = start + 1, high = words.length, end = low;
+      while (low <= high) {
+        var middle = Math.floor((low + high) / 2);
+        if (fits(words.slice(start, middle).join(' '))) { end = middle; low = middle + 1; }
+        else high = middle - 1;
+      }
+      pages.push({ topic: index, title: topic.title, text: words.slice(start, end).join(' '), start: start });
+      start = end;
+    }
+  });
+  return pages;
+}
+function usageHelp() {
+  return {
+        title: T('Formas de usar', 'Ways to use'),
+        keyboard: T('Teclado: Tab y Mayús+Tab recorren los controles; Enter o Espacio activan botones. Las flechas ajustan volumen y posición. Escape cierra la guía y los ajustes.', 'Keyboard: Tab and Shift+Tab move between controls; Enter or Space activate buttons. Arrow keys adjust volume and position. Escape closes the guide and settings.'),
+        screenReader: T('Lector de pantalla: usa Saltar al contenido, los encabezados y los nombres de los controles. La voz de Brisa es opcional y puedes apagarla para escuchar tu lector.', 'Screen reader: use Skip to content, headings and named controls. Brisa’s voice is optional and can be turned off while using your reader.'),
+        withoutSound: T('Sin escuchar: elige un disco y una fecha con sus botones. Lee la explicación, la leyenda y Consultar datos sin usar el mapa. En celulares compatibles puedes activar y probar pulsos de vibración; son un complemento.', 'Without sound: choose a disc and date using their buttons. Read the explanation, legend and Read data without using the map. On compatible phones you can enable and test vibration pulses as a complement.'),
+        reading: T('Lectura: combina Texto grande, Fuente legible y Alto contraste. Puedes ampliar con el navegador. No necesitas activar estas preferencias para consultar los textos o datos.', 'Reading: combine Large text, Readable font and High contrast. You can zoom with your browser. Written information and data are available without enabling these preferences.'),
+        motion: T('Menos estímulos: Movimiento reducido respeta tu sistema hasta que elijas otra opción. Puedes detener la introducción, saltar la guía y apagar la voz o los efectos sin perder tus selecciones.', 'Fewer distractions: Reduced motion follows your system until you choose otherwise. Pause the introduction, skip the guide and turn off voice or sound effects without losing your selections.')
+  };
+}
 class HapticFeedback {
   constructor(env) {
     this.env = env; this.activated = false; this.active = false; this.failed = false;
     this.lastStatus = 'ready'; this.lastAt = -Infinity; this.requests = []; this.seen = new Set();
   }
-  supported() { return typeof this.env.navigator()?.vibrate === 'function'; }
+  supported() { var nav = this.env.navigator(); return isPhoneDevice(nav) && typeof nav?.vibrate === 'function'; }
   activate() { this.activated = true; }
   status() {
     if (!this.supported()) return 'unsupported';
     if (!this.env.enabled()) return 'off';
-    if (this.env.reduced()) return 'reduced';
     if (!this.env.visible()) return 'hidden';
     return this.failed ? 'error' : this.lastStatus;
   }
@@ -4016,7 +4137,7 @@ class HapticFeedback {
     if (value == null) return false;
     var parts = Array.isArray(value) ? Array.from(value) : [value];
     if (!parts.length || parts.length > 5 || parts.some(function (n) { return !Number.isInteger(n) || n < 0 || n > 150; }) || !parts.some(Boolean) || parts.reduce(function (a,b) { return a+b; },0) > 500) return false;
-    if (!this.supported() || !this.env.enabled() || this.env.reduced() || !this.env.visible() || this.failed) return false;
+    if (!this.supported() || !this.env.enabled() || !this.env.visible() || this.failed) return false;
     var nav = this.env.navigator(), activation = nav.userActivation;
     if (activation ? !activation.hasBeenActive : !this.activated) { this.lastStatus = 'interaction'; return false; }
     var now = this.env.now(), cooldown = named && pattern.startsWith('music') ? 1100 : 700;
@@ -4244,7 +4365,9 @@ class Component extends DCLogic {
     this.state.colorScheme = 'dark';
     try { if (localStorage.getItem('ts_theme') === 'light') this.state.colorScheme = 'light'; } catch (ignored) {}
     var preferences = readPreferences(), self = this;
-    this.state.reducedMotion = false;
+    this.motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    this.motionExplicit = typeof preferences?.values.reducedMotion === 'boolean';
+    this.state.reducedMotion = !!this.motionQuery?.matches;
     if (preferences) PREFERENCE_KEYS.forEach(function (key) { if (typeof preferences.values[key] === 'boolean') self.state[key] = preferences.values[key]; });
     this.preferencesConfigured = !!(preferences && preferences.configured);
     this.state.showPreferences = false; this.state.sampleStarting = false;
@@ -4252,6 +4375,7 @@ class Component extends DCLogic {
     if (window.location?.href) {
       var entryUrl = new URL(window.location.href);
       if (entryUrl.searchParams.get('movimiento') === 'completo') {
+        this.motionExplicit = true;
         this.state.reducedMotion = false;
         if (this.savePreferences()) {
           entryUrl.searchParams.delete('movimiento');
@@ -4260,11 +4384,14 @@ class Component extends DCLogic {
       }
     }
     this.state.tutorial = false;
+    this.tutorialProgress = readTutorialProgress();
     this.state.tutorialDone = { disc: false, play: false, legend: false };
     this.state.tutorialSkipped = {};
     this.state.tutorialFeedback = null;
     this.state.legendSelection = null;
     this.state.stageNotes = {};
+    this.state.dataColumn = 0;
+    this.state.showWays = false; this.state.waysPage = 0; this.waysChunks = null;
     this.state.homePreview = 0;
     this.homePreviewDue = 0;
     this.homePreviewImages = new Map();
@@ -4277,7 +4404,6 @@ class Component extends DCLogic {
     this.haptics = new HapticFeedback({
       navigator: function () { return typeof navigator === 'undefined' ? null : navigator; },
       enabled: function () { return self.state.vibe && !self.disposed; },
-      reduced: function () { return self.bandReduced(); },
       visible: function () { return !document.hidden; }, now: function () { return Date.now(); }
     });
     this.hapticRequestSerial = 0;
@@ -4326,15 +4452,18 @@ class Component extends DCLogic {
       else self.setState({});
     };
     this.rhythmQuery?.addEventListener?.('change', this.onRhythmViewport);
+    this.onSystemMotion = function () { self.syncSystemMotion(); };
+    this.motionQuery?.addEventListener?.('change', this.onSystemMotion);
     this.onTourResize = function () {
       self.positionAccessibilityMenu();
+      self.scheduleWaysLayout();
       self.onTourLayout();
       clearTimeout(self.navResizeTimer);
       self.navResizeTimer = setTimeout(function () { if (!self.disposed) self.ensureNavVisible(); }, 100);
       clearTimeout(self.tourResizeTimer);
       if (self.state.tour) self.tourResizeTimer = setTimeout(function () { self.focusTourTarget(); }, 160);
     };
-    this.onTourKey = function (e) { if (e.isTrusted) self.haptics.activate(); if (self.state.showPreferences) { self.preferencesKey(e); return; } if (self.state.more) { self.moreKey(e); return; } if (e.key === 'Escape') { if (self.state.tour) { e.preventDefault(); self.tourClose(); } else self.closeMenus(true); } };
+    this.onTourKey = function (e) { if (e.isTrusted) self.haptics.activate(); if (self.state.showWays) { self.waysKey(e); return; } if (self.state.showPreferences) { self.preferencesKey(e); return; } if (self.state.more) { self.moreKey(e); return; } if (e.key === 'Escape') { if (self.state.tour) { e.preventDefault(); self.tourClose(); } else self.closeMenus(true); } };
     this.onMenuPointer = function (event) { if (event.isTrusted) self.haptics.activate(); document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; }); };
     document.addEventListener('pointerdown', this.onMenuPointer, true);
     this.onMoreFocus = function (e) {
@@ -4343,6 +4472,8 @@ class Component extends DCLogic {
         else if (e.target.classList && e.target.classList.contains('opt')) e.target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
       });
       if (self.cinema?.root) return;
+      var ways = document.getElementById('ways-dialog');
+      if (self.state.showWays && ways && !ways.contains(e.target)) { self.focusWays(); return; }
       var preferences = document.getElementById('preferences-dialog');
       if (self.state.showPreferences && preferences && !preferences.contains(e.target)) { self.focusPreferences(); return; }
       var dialog = document.getElementById('more-dialog');
@@ -4357,7 +4488,9 @@ class Component extends DCLogic {
     if (window.visualViewport) { window.visualViewport.addEventListener('resize', this.onTourResize); window.visualViewport.addEventListener('scroll', this.onTourLayout); }
     if (window.ResizeObserver) { this.tourObserver = new ResizeObserver(this.onTourLayout); this.tourObserver.observe(document.body); }
     this.ensureNavVisible();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!self.disposed) self.ensureNavVisible(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!self.disposed) { self.ensureNavVisible(); self.scheduleWaysLayout(); } });
+    this.onWaysFonts = function () { self.scheduleWaysLayout(); };
+    document.fonts?.addEventListener?.('loadingdone', this.onWaysFonts);
     this.syncPreferenceMotion();
     var viewport = window.visualViewport;
     this.setState({ vw: viewport ? viewport.width : window.innerWidth, vh: viewport ? viewport.height : window.innerHeight });
@@ -4374,24 +4507,27 @@ class Component extends DCLogic {
   }
   savePreferences() {
     var self = this, values = {};
-    PREFERENCE_KEYS.forEach(function (key) { values[key] = !!self.state[key]; });
+    PREFERENCE_KEYS.forEach(function (key) { if (key !== 'reducedMotion' || self.motionExplicit) values[key] = !!self.state[key]; });
     try {
       localStorage.setItem('ts_prefs', JSON.stringify({ version: 1, configured: this.preferencesConfigured, values: values }));
       return true;
     } catch (ignored) { return false; }
   }
-  setPreference(key, value) {
+  setPreference(key, value, fromSystem) {
     if (PREFERENCE_KEYS.indexOf(key) < 0) return;
+    if (key === 'vibe' && value && !this.haptics.supported()) return;
+    if (key === 'reducedMotion' && !fromSystem) this.motionExplicit = true;
     var patch = {}; patch[key] = !!value;
     this.setState(patch); this.savePreferences();
     if (key === 'contrast' && value) this.cinema?.finish(true);
     if (key === 'voice') {
       if (!value) this.stopSpeech();
-      else if (!this.state.showPreferences) this.narrateBrisa(this.guideStep() || this.sectionNarration());
+      else if (!this.state.showPreferences) this.narrateBrisa(this.state.tour && !this.state.tutorial ? this.contextHelpStep() : this.guideStep() || this.sectionNarration());
     }
     if (key === 'big' || key === 'legible') {
       this.ensureNavVisible();
       this.positionAccessibilityMenu();
+      this.scheduleWaysLayout();
     }
     if (key === 'sfx') this.syncVolume();
     if (key === 'reducedMotion') {
@@ -4400,7 +4536,6 @@ class Component extends DCLogic {
         this.cinema?.finish(true);
         if (this.journey.root) this.journey.finish(true);
         this.cancelBandClip();
-        this.haptics.stop();
       }
       this.syncPreferenceMotion();
     }
@@ -4429,7 +4564,6 @@ class Component extends DCLogic {
       unsupported: T('Este navegador no ofrece vibración. Puedes continuar con imagen, texto y sonido.', 'This browser does not offer vibration. Continue with images, text and sound.'),
       off: T('Apagada. Actívala para sentir pulsos que siguen la música.', 'Off. Turn it on to feel pulses that follow the music.'),
       stopped: T('Pulsos musicales detenidos hasta volver a reproducir.', 'Music pulses stopped until playback is restarted.'),
-      reduced: T('Pausada por Movimiento reducido.', 'Paused by Reduced motion.'),
       hidden: T('Pausada mientras esta página está oculta.', 'Paused while this page is hidden.'),
       ready: T('Activada. Los pulsos cambian con la intensidad de la música.', 'On. Pulses vary with the intensity of the music.'),
       interaction: T('Toca Probar vibración para solicitar un pulso.', 'Tap Test vibration to request a pulse.'),
@@ -4439,11 +4573,47 @@ class Component extends DCLogic {
       limited: T('Espera un momento antes de otro pulso.', 'Wait a moment before another pulse.')
     };
     return {
+      visible: isPhoneDevice(typeof navigator === 'undefined' ? null : navigator),
       title: T('Vibración del dispositivo', 'Device vibration'), status: messages[status] || messages.ready,
+      explanation: T('Pulsos suaves, medios y fuertes resumen la intensidad musical. Funcionan aunque silencies el audio o reduzcas el movimiento. No sustituyen los datos escritos; el dispositivo puede no producirlos.', 'Soft, medium and strong pulses summarize musical intensity. They work with muted audio or reduced motion. They do not replace written data; the device may not produce them.'),
       testLabel: T('Probar vibración', 'Test vibration'), stopLabel: T('Detener vibración', 'Stop vibration'),
-      testOff: !this.haptics.supported() || !this.state.vibe || this.bandReduced(), stopOff: !this.haptics.supported(),
+      testOff: !this.haptics.supported() || !this.state.vibe, stopOff: !this.haptics.supported(),
       test: function () { self.haptics.retry(); self.vibrateSafely('test', 'test:' + (++self.hapticRequestSerial)); self.setState({}); },
       stop: function () { self.musicVibrationStopped = true; self.haptics.stop(); self.haptics.lastStatus = 'ready'; self.setState({}); }
+    };
+  }
+  syncSystemMotion() {
+    if (!this.disposed && !this.motionExplicit) this.setPreference('reducedMotion', !!this.motionQuery?.matches, true);
+  }
+  selectDataColumn(event) {
+    var raw = event?.target?.value;
+    if (typeof raw !== 'string' || !raw.trim()) return;
+    var column = Number(raw);
+    if (Number.isInteger(column) && column >= 0 && column < 28) this.setState({ dataColumn: column });
+  }
+  accessibleDataVm() {
+    var self = this, s = this.state, analysis = this.cur(), local = s.disc === 5, rain = local && s.custom?.kind === 'rain';
+    var column = Number.isInteger(s.dataColumn) && s.dataColumn >= 0 && s.dataColumn < 28 ? s.dataColumn : 0;
+    var ready = !!(analysis && Array.isArray(analysis.cells) && analysis.cells.length === 448);
+    var missing = T('Sin datos', 'No data');
+    return {
+      title: T('Consultar datos sin usar el mapa', 'Read data without using the map'),
+      description: T('Elige una columna y lee sus 16 filas, de arriba abajo. Puedes revisar las 28 columnas con el teclado. Esta selección no cambia ni pausa la reproducción.', 'Choose a column and read its 16 rows from top to bottom. All 28 columns are available with the keyboard. This selection does not change or pause playback.') + (rain ? T(' Las filas son celdas del gráfico de barras, no mediciones separadas. El nivel cero también se usa para el fondo del gráfico y no demuestra lluvia promedio.', ' Rows are cells of the bar chart, not separate measurements. Zero is also used for the chart background and does not establish average rainfall.') : ''),
+      ready: ready, unavailable: ready ? '' : T('Todavía no hay un análisis disponible para este fotograma. Selecciona otro mapa o espera a que termine la carga.', 'There is no analysis available for this frame yet. Select another map or wait for loading to finish.'),
+      source: local ? rain ? 'NASA POWER' : T('Tu imagen · interpretación de color', 'Your image · color interpretation') : s.set === 'prev' ? 'NASA GIBS' : 'NASA Earth Information Center',
+      date: local ? T('Archivo seleccionado', 'Selected file') : this.frameTag(s.disc, s.frame),
+      unit: rain ? T('Nivel normalizado de −5 a +5 respecto al promedio de la serie; no son milímetros de lluvia.', 'Normalized level from −5 to +5 relative to the series average; these are not millimeters of rainfall.') : local ? T('Nivel de color derivado de −5 a +5; no es una medición ambiental.', 'Derived color level from −5 to +5; this is not an environmental measurement.') : T('Nivel derivado del color, de −5 a +5, usado para generar música. Estos valores no son grados Celsius ni mediciones calibradas. Sin datos indica celdas sin información utilizable.', 'Derived color level from −5 to +5, used to generate music. These values are not degrees Celsius or calibrated measurements. No data indicates cells without usable information.'),
+      column: column, columnLabel: T('Columna de la cuadrícula', 'Column of the grid'),
+      caption: T('Columna ', 'Column ') + (column + 1) + T(' de 28 · filas de arriba abajo', ' of 28 · rows from top to bottom'),
+      rowLabel: T('Fila', 'Row'), valueLabel: T('Nivel derivado', 'Derived level'), meaningLabel: T('Interpretación', 'Meaning'),
+      columns: Array.from({ length: 28 }, function (_, i) { return { value: i, label: T('Columna ', 'Column ') + (i + 1) + T(' de 28', ' of 28') }; }),
+      rows: ready ? Array.from({ length: 16 }, function (_, row) {
+        var value = analysis.cells[row * 28 + column], valid = Number.isFinite(value);
+        var meaning = !valid ? missing : rain ? value > 0 ? T('Sobre el promedio', 'Above average') : value < 0 ? T('Bajo el promedio', 'Below average') : T('Nivel neutro / fondo del gráfico', 'Neutral level / chart background')
+          : value > 0 ? T('Color cálido', 'Warm color') : value < 0 ? T('Color frío', 'Cool color') : T('Nivel neutro', 'Neutral level');
+        return { row: row + 1, value: valid ? value.toFixed(2) : missing, meaning: meaning };
+      }) : [],
+      select: function (event) { self.selectDataColumn(event); }
     };
   }
   syncPreferenceMotion() {
@@ -4465,6 +4635,97 @@ class Component extends DCLogic {
     var viewport = window.visualViewport;
     var viewportBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
     menu.style.setProperty('--a11y-available', Math.max(0, Math.floor(viewportBottom - panelTop - 8)) + 'px');
+  }
+  waysTopics() {
+    var copy = usageHelp();
+    return [
+      { title: T('Teclado', 'Keyboard'), text: copy.keyboard },
+      { title: T('Lector de pantalla', 'Screen reader'), text: copy.screenReader },
+      { title: T('Sin escuchar', 'Without sound'), text: copy.withoutSound },
+      { title: T('Lectura', 'Reading'), text: copy.reading },
+      { title: T('Movimiento', 'Motion'), text: copy.motion }
+    ];
+  }
+  waysVm() {
+    var self = this, pages = this.waysChunks || paginateUsage(this.waysTopics(), function () { return true; });
+    var index = Math.max(0, Math.min(pages.length - 1, this.state.waysPage || 0)), page = pages[index];
+    return Object.assign(usageHelp(), {
+      on: !!this.state.showWays, triggerLabel: T('Formas de usar', 'Ways to use'),
+      tutorialLabel: this.tutorialEntryLabel(), contextLabel: T('Ayuda de esta pantalla', 'Help for this screen'), helpLabel: T('Ayuda', 'Help'),
+      tutorial: function () { self.closeWays(false); self.startTutorial(false, { currentTarget: document.getElementById('ways-trigger') }); },
+      contextHelp: function () { self.closeWays(false); self.openContextHelp({ currentTarget: document.getElementById('ways-trigger') }); },
+      pages: pages, topic: page.title, text: page.text,
+      closeLabel: T('Cerrar', 'Close'), prevLabel: T('Anterior', 'Previous'), nextLabel: T('Siguiente', 'Next'),
+      progress: (index + 1) + T(' de ', ' of ') + pages.length, prevOff: index === 0, nextOff: index === pages.length - 1,
+      open: function (event) { self.openWays(event); }, close: function () { self.closeWays(); },
+      prev: function () { self.goWays(-1); }, next: function () { self.goWays(1); }
+    });
+  }
+  setWaysInert(on) {
+    if (on) {
+      if (this.waysInert) return;
+      this.waysInert = Array.from(document.querySelectorAll('.px > header, .px > main, .px > .bottomnav, #tour-card')).map(function (node) {
+        var previous = node.inert; node.inert = true; return { node: node, previous: previous };
+      });
+    } else {
+      (this.waysInert || []).forEach(function (entry) { entry.node.inert = entry.previous; });
+      this.waysInert = null;
+    }
+  }
+  focusWays() { document.getElementById('ways-close')?.focus({ preventScroll: true }); }
+  openWays(event) {
+    if (this.disposed || this.state.showWays || this.state.showPreferences || this.state.more || this.state.trans) return;
+    this.waysReturnFocus = event?.currentTarget || document.activeElement;
+    this.closeMenus(false); this.waysChunks = null;
+    this.setState({ showWays: true, waysPage: 0 }, () => { this.setWaysInert(true); this.focusWays(); this.scheduleWaysLayout(); });
+  }
+  closeWays(restoreFocus) {
+    if (!this.state.showWays) return;
+    cancelAnimationFrame(this.waysRaf); this.waysRaf = null; this.setWaysInert(false);
+    var target = this.waysReturnFocus; this.waysReturnFocus = null;
+    this.setState({ showWays: false });
+    if (restoreFocus !== false && !this.disposed) (target?.isConnected === false ? document.getElementById('ways-trigger') : target)?.focus({ preventScroll: true });
+  }
+  goWays(direction) {
+    var pages = this.waysVm().pages, next = (this.state.waysPage || 0) + direction;
+    if (!this.state.showWays || next < 0 || next >= pages.length) return;
+    this.setState({ waysPage: next }, function () { document.getElementById('ways-topic')?.focus({ preventScroll: true }); });
+    this.scheduleWaysLayout();
+  }
+  waysKey(event) {
+    if (event.key === 'Escape') { event.preventDefault(); this.closeWays(); return; }
+    if (event.key !== 'Tab') return;
+    var dialog = document.getElementById('ways-dialog'); if (!dialog) return;
+    var controls = Array.from(dialog.querySelectorAll('button:not(:disabled)')), first = controls[0], last = controls[controls.length - 1], active = document.activeElement;
+    if (!controls.length) { event.preventDefault(); dialog.focus(); }
+    else if (!dialog.contains(active) || (event.shiftKey ? active === first : active === last)) { event.preventDefault(); (event.shiftKey ? last : first).focus(); }
+  }
+  scheduleWaysLayout() {
+    if (!this.state.showWays || this.disposed) return;
+    cancelAnimationFrame(this.waysRaf);
+    this.waysRaf = requestAnimationFrame(() => { this.waysRaf = null; if (!this.disposed && this.state.showWays) this.layoutWays(); });
+  }
+  layoutWays() {
+    var panel = document.getElementById('ways-dialog'), box = document.getElementById('ways-copy'), text = document.getElementById('ways-text');
+    if (!panel || !box || !text) return;
+    // Paginate against the available viewport, then shrink to the current page.
+    // Measuring only the previously shrunken page would cause progressively
+    // smaller chunks and changing page counts as the reader advances.
+    panel.style.removeProperty('--ways-height');
+    if (box.clientWidth <= 0 || box.clientHeight <= 0) return;
+    var previous = this.waysVm().pages[this.state.waysPage || 0];
+    var probe = text.cloneNode(false); probe.removeAttribute('id'); probe.setAttribute('aria-hidden', 'true');
+    Object.assign(probe.style, { position: 'absolute', visibility: 'hidden', width: box.clientWidth + 'px', height: 'auto', maxHeight: 'none', margin: '0', pointerEvents: 'none' });
+    box.appendChild(probe);
+    try {
+      this.waysChunks = paginateUsage(this.waysTopics(), function (value) { probe.textContent = value; return probe.getBoundingClientRect().height <= box.clientHeight - 1; });
+    } finally { probe.remove(); }
+    var page = 0;
+    this.waysChunks.forEach(function (chunk, index) { if (chunk.topic === previous.topic && chunk.start <= previous.start) page = index; });
+    this.setState({ waysPage: page });
+    var available = panel.getBoundingClientRect().height;
+    var contentHeight = Math.ceil(available - box.clientHeight + text.getBoundingClientRect().height + 1);
+    panel.style.setProperty('--ways-height', Math.min(available, contentHeight) + 'px');
   }
   setPreferencesInert(on) {
     if (on) {
@@ -4553,6 +4814,7 @@ class Component extends DCLogic {
     var self = this, s = this.state, profile = this.profile();
     var chordIndex = profile.prog.map(function (ch) { return chordOf(profile, ch).label; }).indexOf(s.chord);
     LANG = code;
+    if (s.showWays) { this.state.waysPage = this.waysVm().pages[this.state.waysPage || 0]?.topic || 0; this.waysChunks = null; }
     try { localStorage.setItem('ts_lang', code); } catch (e) {}
     applyLang();
     this.cinema?.update();
@@ -4562,7 +4824,8 @@ class Component extends DCLogic {
       caption: T('Idioma: español.', 'Language: English.') }, function () {
         if (s.tour) self.focusTourTarget();
         self.ensureNavVisible();
-        if (s.voice && !s.showPreferences) self.narrateBrisa(self.guideStep() || self.sectionNarration());
+        self.scheduleWaysLayout();
+        if (s.voice && !s.showPreferences) self.narrateBrisa(s.tour && !s.tutorial ? self.contextHelpStep() : self.guideStep() || self.sectionNarration());
       });
   }
   guideKey() { return this.state.tutorial ? 'tutorial' : this.state.tab + ':' + this.state.sub; }
@@ -4621,9 +4884,40 @@ class Component extends DCLogic {
   tourOpen(event) {
     if (!this.settleArrivedRoute()) return;
     if (this.state.tour) { this.tourClose(); return; }
+    if (this.tutorialProgress && !this.tutorialProgress.completed) { this.startTutorial(false, event); return; }
+    this.openContextHelp(event);
+  }
+  openContextHelp(event) {
+    if (!this.settleArrivedRoute()) return;
+    if (this.state.tour) this.tourClose();
     this.rememberTourOrigin();
     if (event && event.currentTarget) this.tourReturnFocus = event.currentTarget;
-    this.tourGo(this.guideProgress[this.guideKey()] || 1);
+    this.tourGo(1);
+  }
+  contextHelpStep() {
+    var s = this.state, player = s.tab === 'juke' && s.sub === 1 || s.tab === 'how' && s.sub === 0 && s.custom;
+    var bodies = {
+      home: T('Explora los mapas en Escuchar, conoce a los músicos en La banda y consulta Cómo funciona o Tecnología. Accesibilidad permite combinar tus preferencias. Formas de usar ofrece instrucciones y acceso al tutorial opcional.', 'Explore maps in Listen, meet the musicians in The band and visit How it works or Technology. Accessibility combines your preferences. Ways to use provides instructions and access to the optional tutorial.'),
+      juke: T('Elige EIC o NASA GIBS y selecciona un disco. Su portada abre el reproductor sin iniciar el sonido. Puedes consultar las fechas de cada mapa y cambiar de colección.', 'Choose EIC or NASA GIBS and select a disc. Its cover opens the player without starting sound. You can inspect each map date and switch collections.'),
+      band: T('Selecciona un músico para conocer su historia. Bailar o Pausar baile controla la animación; Escuchar instrumento reproduce una muestra independiente. La voz de Brisa es opcional.', 'Select a musician to learn their story. Dance or Pause dance controls the animation; Hear instrument plays an independent sample. Brisa’s voice is optional.'),
+      how: T('En la prueba práctica puedes elegir una imagen o la muestra de lluvia. La explicación del método distingue los niveles derivados de las mediciones físicas. Puedes leer los resultados sin escuchar.', 'In the practical example, choose an image or the rainfall sample. The method explanation distinguishes derived levels from physical measurements. You can read the results without listening.'),
+      tech: T('Elige un tema para consultar las herramientas, las fuentes y los créditos. La información se conserva por escrito y puedes activar la narración opcional.', 'Choose a topic to inspect tools, sources and credits. Written information remains available and narration is optional.'),
+      game: T('El juego es opcional. Usa las flechas indicadas cuando llegan al recuadro. Puedes volver a Escuchar para explorar los mismos mapas sin una tarea cronometrada.', 'The game is optional. Use the indicated arrow keys when they reach the target. Return to Listen to explore the same maps without a timed task.')
+    };
+    return { t: T('Ayuda de esta pantalla', 'Help for this screen'), b: player ? T('Controla reproducción, volumen y posición sin perder tu selección. La leyenda explica los niveles y Consultar datos sin usar el mapa permite leerlos por columnas. El sonido es opcional; los músicos y la vibración compatible se controlan por separado.', 'Control playback, volume and position without losing your selection. The legend explains levels and Read data without using the map exposes them by column. Sound is optional; musicians and compatible vibration have separate controls.') : bodies[s.tab] || bodies.home };
+  }
+  tutorialEntryLabel() {
+    if (this.tutorialProgress && !this.tutorialProgress.completed) return T('Retomar tutorial · paso ', 'Resume tutorial · step ') + this.tutorialProgress.step + T(' de 3', ' of 3');
+    return this.tutorialProgress?.completed ? T('Repetir tutorial · 3 pasos', 'Repeat tutorial · 3 steps') : T('Iniciar tutorial · 3 pasos', 'Start tutorial · 3 steps');
+  }
+  saveTutorialProgress(completed) {
+    if (completed) this.tutorialProgress = { version: 1, completed: true };
+    else if (this.state.tutorial && this.state.tour) {
+      var s = this.state;
+      this.tutorialProgress = { version: 1, completed: false, step: s.tour, done: Object.assign({}, s.tutorialDone), skipped: Object.assign({}, s.tutorialSkipped),
+        set: s.set, disc: s.disc < 5 ? s.disc : 2, frame: s.disc < 5 ? s.frame : 0, column: s.disc < 5 ? s.col : -1 };
+    } else return;
+    try { localStorage.setItem('ts_tutorial', JSON.stringify(this.tutorialProgress)); } catch (ignored) {}
   }
   rememberTourOrigin() {
     this.tourReturnFocus = document.activeElement;
@@ -4634,30 +4928,35 @@ class Component extends DCLogic {
       appTop: app ? app.scrollTop : 0, appLeft: app ? app.scrollLeft : 0,
       pageTop: page ? page.scrollTop : 0 };
   }
-  startTutorial() {
+  startTutorial(restart, event) {
     if (!this.settleArrivedRoute()) return;
     if (this.state.more) this.closeMore();
     if (this.state.tour) this.tourClose();
+    var progress = restart ? null : this.tutorialProgress?.completed === false ? this.tutorialProgress : null;
     this.rememberTourOrigin();
+    if (event?.currentTarget) this.tourReturnFocus = event.currentTarget;
     var s = this.state, values = {};
-    ['tab','sub','disc','frame','col','custom','customMode','engine','speed','leadOverride','mute','mixCustomized','ended','upMsg'].forEach(function (key) { values[key] = s[key]; });
+    ['tab','sub','set','an','disc','frame','col','custom','customMode','engine','speed','leadOverride','mute','mixCustomized','ended','upMsg'].forEach(function (key) { values[key] = s[key]; });
     this.tutorialSnapshot = { values: values, playing: s.playing };
     if (s.tab === 'how' && s.sub === 0) this.startFileLoad();
     if (s.tab === 'band') this.cancelBandClip();
     this.stop(); this.stopSpeech();
-    this.setState({ tab: 'juke', sub: 0, tour: 0, tutorial: true,
-      tutorialDone: { disc: false, play: false, legend: false }, tutorialSkipped: {}, tutorialFeedback: null });
-    this.resetScreenScroll(); this.tourGo(1);
+    if (progress && progress.set !== this.state.set) this.applySet(progress.set);
+    this.setState(Object.assign({ tab: 'juke', sub: 0, tour: 0, tutorial: true, playing: false,
+      tutorialDone: progress ? Object.assign({}, progress.done) : { disc: false, play: false, legend: false }, tutorialSkipped: progress ? Object.assign({}, progress.skipped) : {}, tutorialFeedback: null },
+      progress ? { disc: progress.disc, frame: Math.min(progress.frame, DISCS[progress.disc].files.length - 1), col: progress.column, ended: false } : {}));
+    this.resetScreenScroll(); this.tourGo(progress ? progress.step : 1);
   }
   tutorialAction(action, answer) {
     var s = this.state;
     if (!s.tutorial || !this.guideStep() || this.guideStep().action !== action) return;
     if (action === 'legend' && answer !== true) {
-      this.setState({ tutorialFeedback: uiMessage('Busca en la leyenda la opción de agua más fría de lo esperado.', 'Find the cooler-than-expected water option in the legend.') });
+      this.setState({ tutorialFeedback: uiMessage('Busca una opción cuya descripción indique agua más fría de lo esperado.', 'Find an option whose description means cooler-than-expected water.') });
       return;
     }
     var done = Object.assign({}, s.tutorialDone); done[action] = true;
-    this.setState({ tutorialDone: done, tutorialFeedback: action === 'legend' ? uiMessage('Correcto. El azul indica agua más fría de lo esperado. Puedes terminar el tutorial.', 'Correct. Blue indicates cooler-than-expected water. You can finish the tutorial.') : null });
+    this.setState({ tutorialDone: done, tutorialFeedback: action === 'legend' ? uiMessage('Correcto. Elegiste un nivel de agua más fría de lo esperado. Puedes terminar el tutorial.', 'Correct. You chose a cooler-than-expected water level. You can finish the tutorial.') : null });
+    this.saveTutorialProgress(false);
     if (action === 'disc') this.tourGo(2);
     else if (action === 'play') this.tourGo(3);
   }
@@ -4735,11 +5034,13 @@ class Component extends DCLogic {
       var heading = document.getElementById('tour-t');
       if (heading) heading.focus({ preventScroll: true });
     });
-    if (s.voice) this.narrateBrisa(st);
+    if (s.tutorial) this.saveTutorialProgress(false);
+    if (s.voice) this.narrateBrisa(s.tutorial ? st : this.contextHelpStep());
   }
   tourClose(keepTutorialState) {
     if (!this.state.tour) return;
     var self = this, snapshot = this.state.tutorial && !keepTutorialState ? this.tutorialSnapshot : null;
+    if (this.state.tutorial && !keepTutorialState) this.saveTutorialProgress(false);
     this.guideProgress[this.guideKey()] = this.state.tour;
     if (snapshot) this.stop();
     clearTimeout(this.tourSettle); clearTimeout(this.tourSettle2); clearTimeout(this.tourResizeTimer); cancelAnimationFrame(this.tourRaf);
@@ -4750,7 +5051,10 @@ class Component extends DCLogic {
     this.tourTarget = null; this.tourCard = null; this.tourKey = '';
     this.stopSpeech();
     var origin = keepTutorialState ? null : this.tourOrigin, patch = { tour: 0, tourRect: null, tourCardH: 0, tutorial: false, tutorialFeedback: null };
-    if (snapshot) Object.assign(patch, snapshot.values);
+    if (snapshot) {
+      if (snapshot.values.set !== this.state.set) { this.invalidateLoads(); for (var d = 0; d < 5; d++) DISCS[d] = DISC_SETS[snapshot.values.set][d]; }
+      Object.assign(patch, snapshot.values);
+    }
     this.tutorialSnapshot = null;
     this.tourOrigin = null;
     if (origin && origin.tab === this.state.tab) { this.stopForScreen(origin.tab, origin.sub); patch.sub = origin.sub; }
@@ -4760,6 +5064,7 @@ class Component extends DCLogic {
         if (origin.app) { origin.app.scrollTop = origin.appTop; origin.app.scrollLeft = origin.appLeft; }
         if (origin.page) origin.page.scrollTo({ top: origin.pageTop, behavior: 'instant' });
       }
+      if (snapshot && snapshot.values.disc < 5 && snapshot.values.sub === 1 && ['juke','game'].includes(snapshot.values.tab) && !self.cur()) self.loadDisc(snapshot.values.disc);
       if (snapshot && snapshot.playing) self.play();
     });
     var target = this.tourReturnFocus;
@@ -4768,9 +5073,12 @@ class Component extends DCLogic {
   }
   tourEnd() {
     var key = this.guideKey(), s = this.state;
-    var complete = s.tutorial && s.tutorialDone.disc && s.tutorialDone.play && s.tutorialDone.legend;
-    this.tourClose(complete);
-    delete this.guideProgress[key];
+    this.tourClose();
+    if (!s.tutorial) delete this.guideProgress[key];
+  }
+  finishTutorial() {
+    if (!this.state.tutorial) return;
+    this.saveTutorialProgress(true); this.tourClose(true); delete this.guideProgress.tutorial;
   }
   setMoreInert(on) {
     if (on) {
@@ -4820,6 +5128,7 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
+    if (this.state.tutorial && this.state.tour) this.saveTutorialProgress(false);
     this.cancelSample();
     if (this.disposed) return;
     this.pendingWelcome = null;
@@ -4829,6 +5138,8 @@ class Component extends DCLogic {
     this.homePreviewImages.clear();
     this.cinema?.finish(false);
     this.setPreferencesInert(false);
+    this.setWaysInert(false); cancelAnimationFrame(this.waysRaf);
+    document.fonts?.removeEventListener?.('loadingdone', this.onWaysFonts);
     this.disposed = true;
     if (this.discPointerRoot) {
       this.discPointerRoot.removeEventListener('mousedown', this.onDiscPointer, true);
@@ -4844,6 +5155,7 @@ class Component extends DCLogic {
     clearTimeout(this.navResizeTimer);
     window.removeEventListener('resize', this.onTourResize);
     this.rhythmQuery?.removeEventListener?.('change', this.onRhythmViewport);
+    this.motionQuery?.removeEventListener?.('change', this.onSystemMotion);
     window.removeEventListener('scroll', this.onTourLayout, true);
     document.removeEventListener('visibilitychange', this.onTourVisible);
     document.removeEventListener('keydown', this.onTourKey);
@@ -5216,7 +5528,6 @@ class Component extends DCLogic {
   setVolume(value) {
     if (!Number.isFinite(value)) return;
     var volume = Math.max(0, Math.min(100, value));
-    if (volume === 0) this.haptics.stop();
     this.setState(volume === 0 ? { volume: volume, stageNotes: {} } : { volume: volume });
     this.syncVolume();
   }
@@ -5805,13 +6116,13 @@ class Component extends DCLogic {
   }
   playbackPulse(fired, levels) {
     var s = this.state;
-    if (!s.playing || !s.vibe || this.musicVibrationStopped || s.masterMuted || s.volume <= 0) return null;
+    if (!s.playing || !s.vibe || this.musicVibrationStopped) return null;
     var energy = 0;
     BAND.forEach(function (member) {
       var key = member.k;
       if (fired[key] && !s.mute[key]) energy += Math.pow(levels[key], 2);
     });
-    var intensity = Math.sqrt(energy) * s.volume / 100 * (s.speaking ? .3 : 1);
+    var intensity = Math.sqrt(energy);
     return intensity >= 1.05 ? 'musicStrong' : intensity >= .48 ? 'musicMedium' : intensity > .08 ? 'musicSoft' : null;
   }
   emitStep(patch, fired, chord, scheduled) {
@@ -6278,25 +6589,27 @@ class Component extends DCLogic {
     var tutorialBlocked = !!(s.tutorial && tstep && !s.tutorialDone[tstep.action]);
     var mobileInstructions = {
       disc: T('Toca la portada de un disco.', 'Tap a disc cover.'),
-      play: T('Pulsa Reproducir para escuchar el mapa.', 'Press Play to hear the map.'),
-      legend: T('Toca el color que indica agua más fría.', 'Tap the color that means cooler water.')
+      play: T('Reproduce o continúa con la versión escrita sin sonido.', 'Play or continue with the written version without sound.'),
+      legend: T('Elige una opción etiquetada como agua más fría.', 'Choose an option labeled as cooler water.')
     };
-    var tourVm = { on: !!tstep, n: s.tour, total: gsteps.length, title: tstep ? tstep.t : '',
-      body: tstep ? s.tutorial && vw < 700 ? mobileInstructions[tstep.action] : tstep.b : '',
+    var tourVm = { on: !!tstep, n: s.tour, total: s.tutorial ? gsteps.length : 1, title: tstep ? s.tutorial ? tstep.t : this.contextHelpStep().t : '',
+      body: tstep ? s.tutorial ? vw < 700 ? mobileInstructions[tstep.action] : tstep.b : this.contextHelpStep().b : '',
       nextOff: false,
       feedback: uiText(s.tutorialFeedback), speechNotice: uiText(s.speechNotice),
-      stateLabel: s.speaking ? T('Brisa está explicando.', 'Brisa is explaining.') : tutorialBlocked ? T('Tu turno. Sin límite de tiempo.', 'Your turn. No time limit.') : s.tour === 1 ? T('Bienvenida. Puedes cerrar la ayuda.', 'Welcome. You can close help.') : T('Puedes continuar o volver atrás.', 'You can continue or go back.'),
-      showTutorialStart: !s.tutorial && s.tour === 1, startTutorial: function () { self.startTutorial(); },
-      canUseText: s.tutorial && s.tour === 2 && !!s.audioError,
+      stateLabel: s.speaking ? T('Brisa está explicando.', 'Brisa is explaining.') : !s.tutorial ? T('Puedes consultar esta ayuda y cerrarla sin cambiar tus selecciones.', 'Read this help and close it without changing your selections.') : tutorialBlocked ? T('Tu turno. Sin límite de tiempo.', 'Your turn. No time limit.') : T('Puedes continuar o volver atrás.', 'You can continue or go back.'),
+      isTutorial: s.tutorial, showTutorialStart: false, restartLabel: T('Reiniciar tutorial', 'Restart tutorial'), restart: function () { self.startTutorial(true); },
+      closeLabel: s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen'),
+      canUseText: s.tutorial && s.tour === 2,
       useTextLabel: T('Continuar con la versión escrita', 'Continue with the written version'), useText: function () { self.tutorialAction('play'); },
       voiceLabel: s.speaking ? T('Detener voz de Brisa', 'Stop Brisa’s voice') : tx.guideListen,
       place: place, cardSt: cardSt, spot: !!R, spotSt: spotSt, dim: !R,
       compact: vw < 280 ? 'narrow' : '',
-      who: vw < 700 && s.tutorial ? T('Guía rápida', 'Quick guide') : tx.guideBy + ' · ' + ROUTE_LOOK[s.tab].title,
-      count: s.tour + (vw < 280 ? '/' : ' / ') + gsteps.length, modelCue: 'speak-' + (this.tourTalk || 0),
-      dots: gsteps.map(function (x, i) { return { cls: i < s.tour ? 'on' : '' }; }), showBack: s.tour > 1, hasExtra: !!(tstep && tstep.extra), extraLabel: tstep && tstep.extra ? tstep.extra : '',
-      nextLabel: tutorialBlocked ? (s.tour === gsteps.length ? T('Terminar guía', 'Finish guide') : T('Saltar paso', 'Skip this step')) : s.tour === gsteps.length ? (s.tutorial ? T('Terminar', 'Finish') : T('Entendido', 'Got it')) : T('Siguiente', 'Next'),
+      who: s.tutorial ? T('Brisa · Tutorial práctico', 'Brisa · Practical tutorial') : T('Brisa · Ayuda', 'Brisa · Help'),
+      count: s.tutorial ? s.tour + (vw < 280 ? '/' : ' / ') + gsteps.length : '', modelCue: 'speak-' + (this.tourTalk || 0),
+      dots: s.tutorial ? gsteps.map(function (x, i) { return { cls: i < s.tour ? 'on' : '' }; }) : [], showBack: s.tutorial && s.tour > 1, hasExtra: s.tutorial && !!(tstep && tstep.extra), extraLabel: tstep && tstep.extra ? tstep.extra : '',
+      nextLabel: !s.tutorial ? T('Entendido', 'Got it') : tutorialBlocked ? (s.tour === gsteps.length ? T('Terminar tutorial', 'Finish tutorial') : T('Saltar paso', 'Skip this step')) : s.tour === gsteps.length ? T('Terminar', 'Finish') : T('Siguiente', 'Next'),
       next: function () {
+        if (!s.tutorial) { self.tourClose(); return; }
         if (tutorialBlocked) {
           var skipped = Object.assign({}, self.state.tutorialSkipped); skipped[tstep.action] = true;
           self.setState({ tutorialSkipped: skipped });
@@ -6304,10 +6617,10 @@ class Component extends DCLogic {
             self.setState({ disc: 0, frame: 0, col: -1 }); self.loadDisc(0);
           }
         }
-        if (s.tour >= gsteps.length) self.tourEnd(); else self.tourGo(s.tour + 1);
+        if (s.tour >= gsteps.length) self.finishTutorial(); else self.tourGo(s.tour + 1);
       },
       back: function () { self.tourGo(s.tour - 1); }, close: function () { self.tourClose(); }, skip: function () { self.tourEnd(); },
-      say: function () { if (s.speaking) self.stopSpeech(); else self.narrateBrisa(tstep, true); },
+      say: function () { if (s.speaking) self.stopSpeech(); else self.narrateBrisa(s.tutorial ? tstep : self.contextHelpStep(), true); },
       extra: function () { if (!s.playing) self.play(); } };
     var titles = this.subTitles(), cnt = titles.length, sub = Math.min(s.sub, cnt - 1), pgOrder = PAGE_ORDER, pgNext = s.tab === 'home' ? 'juke' : pgOrder[(pgOrder.indexOf(s.tab) + 1) % pgOrder.length];
     var lastSub = sub === cnt - 1, techPgs = s.tab === 'tech' ? this.techPages() : [], techCur = techPgs[sub] || { title: '', items: [] };
@@ -6361,6 +6674,9 @@ class Component extends DCLogic {
       motionMode: reducedMotion ? 'reduced' : 'full',
       musicActive: s.playing ? 'true' : 'false',
       haptic: this.hapticVm(),
+      accessibleData: scrVm.play && !rhythmMode ? this.accessibleDataVm() : null,
+      accessHelp: this.waysVm(),
+      guideOpenLabel: s.tour ? s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen') : this.tutorialProgress && !this.tutorialProgress.completed ? this.tutorialEntryLabel() : T('Ayuda de esta pantalla', 'Help for this screen'),
       positionAccessibilityMenu: function (event) { self.positionAccessibilityMenu(event); },
       languageCode: LANG,
       languageKeys: function(event) { self.onLanguageKey(event); },
@@ -6374,8 +6690,8 @@ class Component extends DCLogic {
           ['big', T('Texto grande', 'Large text'), T('Aumenta el tamaño de lectura.', 'Increase the reading size.')],
           ['contrast', T('Alto contraste', 'High contrast'), T('Bordes y texto con mayor contraste.', 'Stronger contrast for borders and text.')],
           ['reducedMotion', T('Movimiento reducido', 'Reduced motion'), T('Personajes y transiciones sin animación.', 'Characters and transitions without animation.')]
-        ].map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: option[0] === 'reducedMotion' ? reducedMotion : !!s[option[0]], change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
-        continueLabel: T('Continuar', 'Continue'), tutorialLabel: T('Ver guía · 3 pasos', 'Open guide · 3 steps'),
+        ].concat(self.hapticVm().visible ? [['vibe', T('Vibración opcional', 'Optional vibration'), T('Pulsos de intensidad musical, incluso sin sonido. Puedes probarlos y detenerlos en Accesibilidad. Depende del navegador y del teléfono.', 'Musical intensity pulses, even without sound. Test or stop them in Accessibility. Availability depends on your browser and phone.')]] : []).map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: option[0] === 'reducedMotion' ? reducedMotion : !!s[option[0]], disabled: option[0] === 'vibe' && !self.haptics.supported(), change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
+        continueLabel: T('Continuar', 'Continue'), tutorialLabel: this.tutorialEntryLabel(),
         continue: function () { self.finishPreferences(false); }, tutorial: function () { self.finishPreferences(true); }
       },
       frameCount: s.disc === 5 ? T('tu archivo', 'your file') : T('fotograma ', 'frame ') + (s.frame + 1) + T(' de ', ' of ') + d.files.length, prevOff: s.frame <= 0, nextOff: s.frame >= d.files.length - 1,
@@ -6447,7 +6763,7 @@ class Component extends DCLogic {
       onNavKey: function (event) { self.navKey(event); },
       headerClass: s.big || s.legible ? 'readable-nav' : '',
       tabs: tabDef.map(function (t) { var on = s.tab === t.k; return { ic: self.icons[t.k], label: t.l, short: { juke: T('Escuchar','Listen'), band: T('Banda','Band'), how: T('Cómo funciona','How does it work?'), tech: T('Tecnología','Technology') }[t.k] || t.l, cur: on ? 'page' : 'false', bg: on ? th.accent : th.panel, fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line, go: function () { self.goTab(t.k); } }; }),
-      a11y: a11yDef.map(function (o) { var on = o.k === 'reducedMotion' ? reducedMotion : !!s[o.k]; return { ic: self.icons[{ contrast: 'contrast', big: 'bigtext', legible: 'legible', voice: 'voice', vibe: 'vibe', sfx: 'voice', reducedMotion: 'clock' }[o.k]], label: o.l, on: on, disabled: o.k === 'vibe' && !self.haptics.supported(), bg: on ? th.fg : 'transparent', fg: on ? th.bg : th.fg, toggle: o.k === 'reducedMotion' ? toggleMotion : tog(o.k) }; }),
+      a11y: a11yDef.filter(function (o) { return o.k !== 'vibe' || self.hapticVm().visible; }).map(function (o) { var on = o.k === 'reducedMotion' ? reducedMotion : !!s[o.k]; return { ic: self.icons[{ contrast: 'contrast', big: 'bigtext', legible: 'legible', voice: 'voice', vibe: 'vibe', sfx: 'voice', reducedMotion: 'clock' }[o.k]], label: o.l, on: on, disabled: o.k === 'vibe' && !self.haptics.supported(), bg: on ? th.fg : 'transparent', fg: on ? th.bg : th.fg, toggle: o.k === 'reducedMotion' ? toggleMotion : tog(o.k) }; }),
       sets: [{ key: 'eic', label: 'EIC', years: '2024–26' }, { key: 'prev', label: 'NASA GIBS', years: '2010–23' }].map(function (o) {
         var on = s.set === o.key;
         return { label: o.label, years: o.years, on: on, pick: function () { if (!on && self.settleArrivedRoute()) self.applySet(o.key); } };

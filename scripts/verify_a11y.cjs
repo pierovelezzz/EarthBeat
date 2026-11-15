@@ -29,12 +29,12 @@ async function main(){
     const entry={width,label,violations:result.violations.map(rule=>({id:rule.id,impact:rule.impact,help:rule.help,url:rule.helpUrl,nodes:rule.nodes.map(node=>({target:node.target,html:node.html,summary:node.failureSummary}))})),incomplete:result.incomplete.map(rule=>({id:rule.id,nodes:rule.nodes.length})),passes:result.passes.length};
     report.checks.push(entry);fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(report,null,2));console.log(label,width,'violations',entry.violations.length);
    };
-   const skipIntro=page.locator('.cinema-skip');
-   if(await skipIntro.isVisible()) await skipIntro.click();
+   // Wait for the actual lifecycle outcome: the short reduced-motion intro
+   // may detach its Skip button while fonts/axe finish loading.
    await page.locator('#preferences-dialog').waitFor();
    await audit('first-visit-preferences');await page.getByRole('button',{name:'Continuar',exact:true}).click();await page.evaluate(()=>{__app.setPreference('sfx',false);__app.setPreference('reducedMotion',true);});
    for(const lang of ['es','en']){
-    await page.getByRole('button',{name:lang==='es'?'Espa\u00f1ol':'English',exact:true}).click();
+    await page.getByRole('button',{name:lang==='es'?'ES Espa\u00f1ol':'EN English',exact:true}).click();
     assert.equal(await page.locator('html').getAttribute('lang'),lang);
     await page.locator('.brand').click();await audit(lang+'-home');
     for(const [nav,tab,count] of [[0,'juke',2],[1,'band',1],[2,'how',2],[3,'tech',5]]){

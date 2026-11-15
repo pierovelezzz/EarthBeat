@@ -1,0 +1,57 @@
+name: Publicar la vista previa V4.5
+
+on:
+  push:
+    branches: [v4.5]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/configure-pages@v5
+      - name: Generar el sitio principal y las versiones
+        run: |
+          python3 scripts/build_pages.py _site
+          git fetch --depth=1 origin \
+            refs/heads/V1:refs/remotes/origin/V1 \
+            refs/heads/V2:refs/remotes/origin/V2 \
+            refs/heads/V3:refs/remotes/origin/V3 \
+            refs/heads/v4-NASA-Space-AC:refs/remotes/origin/v4-NASA-Space-AC \
+            refs/heads/NASA-goal:refs/remotes/origin/NASA-goal \
+            refs/heads/juego-pc-basico:refs/remotes/origin/juego-pc-basico \
+            refs/heads/v4.5:refs/remotes/origin/v4.5
+          for entry in v1:V1 v2:V2 v3:V3 v4:v4-NASA-Space-AC nasa-goal:NASA-goal juego-pc:juego-pc-basico v4.5:v4.5; do
+            version="${entry%%:*}"
+            branch="${entry#*:}"
+            worktree="$RUNNER_TEMP/earthbeat-$version"
+            revision="refs/remotes/origin/$branch"
+            if [ "$branch" = v4.5 ]; then revision="$GITHUB_SHA"; fi
+            git worktree add --detach "$worktree" "$revision"
+            python3 "$worktree/scripts/build_pages.py" "$GITHUB_WORKSPACE/_site/$version"
+          done
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
