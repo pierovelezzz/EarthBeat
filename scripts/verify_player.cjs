@@ -72,7 +72,7 @@ async function main() {
       await page.evaluate(() => { __app.setState({ mute: __app.allMute(false), leadOverride: 'mama' }); });
       for (const mode of ['melody', 'raw']) {
         await page.locator('.player-modes button').nth(mode === 'melody' ? 0 : 1).click();
-        assert.equal(await page.locator('.player-detail .chips').count(),mode==='melody'?1:0);
+        assert.equal(await page.locator('.listen-band .chips').count(),mode==='melody'?1:0);
         assert.equal(await page.locator('.band-stage .stage-musician').count(),5);
         const slider = page.locator('#playback-position');
         await slider.focus(); await slider.press('Home'); await slider.press('ArrowRight');
@@ -80,10 +80,38 @@ async function main() {
         assert.equal(await page.evaluate(() => __app.state.playing), false);
         assert.equal(await page.evaluate(() => document.activeElement.id), 'playback-position');
         await page.locator('#tour-play button').click();
+        if (set === 'eic' && mode === 'melody') {
+          const instruments = await page.locator('.stage-receptor path').evaluateAll(paths =>
+            paths.map(instrument => instrument.getAttribute('d')));
+          assert.equal(new Set(instruments).size, 5, 'Every musician has a distinct instrument icon');
+          const pending = await page.waitForFunction(() => [...document.querySelectorAll('.stage-note-motion')]
+            .find(motion => parseFloat(motion.style.transform.slice(11)) > 50));
+          const rose = await pending.evaluate(async motion => {
+            const note = motion.firstElementChild;
+            const instrument = motion.parentElement.querySelector('.stage-receptor path');
+            if (note.localName !== 'svg' || note.querySelector('path')?.getAttribute('d') !== instrument.getAttribute('d')) return false;
+            const position = () => parseFloat(motion.style.transform.slice(11));
+            const start = position();
+            for (let frame = 0; frame < 8; frame++) {
+              await new Promise(requestAnimationFrame);
+              if (motion.isConnected && position() < start) return true;
+            }
+            return false;
+          });
+          assert(rose, 'The matching instrument icon climbs before the note plays');
+          await page.waitForFunction(() => {
+            const current = document.querySelector('.listen-band .chip[aria-current="true"]');
+            return current && getComputedStyle(current).boxShadow !== 'none';
+          });
+          await page.waitForFunction(() => [...document.querySelectorAll('.stage-note-track[data-strike]')]
+            .some(track => getComputedStyle(track.nextElementSibling, '::before').backgroundImage !== 'none'));
+          await page.locator('.band-stage').screenshot({ path: path.join(output, 'stage-instruments.png') });
+        }
         await page.waitForFunction(() => __app.state.playing && __app.state.col >= 4);
         await page.waitForFunction(() => __audioPeak() > .00001);
         const peak = await page.evaluate(() => __audioPeak());
         await page.locator('#tour-play button').click();
+        assert.equal(await page.locator('.stage-note, .stage-note-track[data-strike]').count(), 0);
         const paused = await slider.inputValue();
         await page.waitForTimeout(150);
         const silent = await page.evaluate(() => __audioPeak());
@@ -96,20 +124,19 @@ async function main() {
         assert.deepEqual(await page.evaluate(() => [__app.state.frame, __app.state.col, __app.state.playing]), [1, 6, false]);
         assert.equal(await slider.inputValue(), '35');
         const date = await page.locator('.when b').textContent();
-        assert(await page.evaluate(() => __app.state.events.length > 0));
         assert.equal(await page.locator('.event-history, #tour-more, .current-event').count(),0);
-        assert.equal(await page.locator('.map-legend .legend-choice').count(),3);
+        assert.equal(await page.locator('.map-legend .legend-choice').count(),14);
         assert.equal(await page.locator('#tour-machine canvas.heard').count(),1);
         assert.equal(await page.getByRole('button',{name:'Escenario',exact:true}).count(),0);
         assert.equal(await page.locator('.listen-member').count(),5);
         const before = await page.evaluate(() => __app.playerPosition());
-        await page.locator('#tour-lang button').nth(1).click();
+        await page.getByRole('button',{name:'English',exact:true}).click();
         assert.equal(await page.evaluate(() => __app.playerPosition()), before);
         assert.equal(await page.locator('html').getAttribute('lang'), 'en');
         assert.match(await page.locator('#playback-position').getAttribute('aria-valuetext'), /Map:/);
-        await page.locator('#tour-lang button').first().click();
+        await page.getByRole('button',{name:'Español',exact:true}).click();
         report.audio.push({ set, mode, peak, afterPausePeak: silent, pausedPosition: +paused, chosenDate: date, errors: [...errors] });
-        console.log('PASS playback', set, mode, 'pause/resume/seek/keyboard/history/language/audio silence');
+        console.log('PASS playback', set, mode, 'pause/resume/seek/keyboard/language/audio silence');
       }
       if (setIndex === 0) await page.evaluate(() => __app.goSub(0));
     }
@@ -121,13 +148,14 @@ async function main() {
       await page.waitForFunction(() => __app.state.col === 1 && __audioPeak() > .00001);
       const mama = page.locator('.listen-member').nth(2);
       await mama.click();
-      assert.equal(await page.locator('.band-stage .stage-musician').count(),0);
+      assert.equal(await page.locator('.stage-musician[aria-pressed="true"]').count(),0);
+      assert.equal(await mama.locator('.stage-note, .stage-note-track[data-strike]').count(), 0);
       await page.waitForTimeout(150);
       assert.equal(await page.evaluate(() => __app.state.playing), true);
       assert((await page.evaluate(() => __audioPeak())) < .00001, 'Individual mute also cuts reverb');
       assert.equal(await page.evaluate(() => !!__app.voiceGroups.mama), false);
       await mama.click();
-      assert.equal(await page.locator('.band-stage .stage-musician').count(),1);
+      assert.equal(await page.locator('.stage-musician[aria-pressed="true"]').count(),1);
       await page.waitForTimeout(30);
       assert((await page.evaluate(() => __audioPeak())) < .00001, 'Unmuting must not revive an earlier tail');
       await page.locator('#tour-play button').click();
@@ -150,6 +178,7 @@ async function main() {
       }
       await page.locator('#tour-nav button').first().click();
       await page.locator('.discgrid .dcard').first().click();
+      await page.waitForFunction(() => __app.cur() && !__app.state.trans);
     }
     if(!process.argv.includes('--layout-only')){
       await page.evaluate(()=>{__app.stop();__app.setBandMute(__app.allMute(true));__app.seekPosition(0);});
@@ -159,6 +188,27 @@ async function main() {
         assert((await page.evaluate(()=>__audioPeak()))<.00001);await page.locator('#tour-play button').click();
       }
       report.allMutedPreserved=true;console.log('PASS explicit all-instruments mute survives play and resume');
+      await page.evaluate(() => {
+        __app.setPreference('reducedMotion', true);
+        __app.setBandMute(__app.allMute(false));
+        __app.seekPosition(0);
+      });
+      await page.locator('#tour-play button').click();
+      await page.locator('.stage-note-track[data-strike]').first().waitFor();
+      assert.equal(await page.locator('.stage-note').count(), 0, 'Reduced motion uses stationary receptors');
+      assert.equal(await page.locator('.band-stage').evaluate(stage =>
+        getComputedStyle(stage, '::before').animationName), 'none', 'Reduced motion freezes the Pacific backdrop');
+      assert(await page.locator('.stage-performer').evaluateAll(performers => performers.every(performer =>
+        getComputedStyle(performer, '::before').backgroundImage !== 'none')), 'Reduced motion keeps the floor lighting steady while playing');
+      await page.locator('#tour-play button').click();
+      assert(await page.locator('.stage-performer').evaluateAll(performers => performers.every(performer =>
+        getComputedStyle(performer, '::before').backgroundImage === 'none')), 'Pausing clears the floor lighting');
+      const firstMusician = page.locator('.stage-musician').first();
+      await page.keyboard.press('Tab');
+      await firstMusician.focus();
+      assert(await firstMusician.evaluate(musician => musician.matches(':focus-visible') &&
+        getComputedStyle(musician.querySelector('.stage-performer'), '::before').borderTopColor !== 'rgba(0, 0, 0, 0)'));
+      await page.evaluate(() => __app.setPreference('reducedMotion', false));
     }
     if(process.argv.includes('--all-muted'))await page.evaluate(()=>__app.setBandMute(__app.allMute(true)));
     else await page.evaluate(()=>__app.setBandMute(__app.only('mama')));
@@ -178,10 +228,43 @@ async function main() {
           footerTop: document.querySelector('footer.bar').getBoundingClientRect().top };
       });
       await page.screenshot({ path: path.join(output, 'player-' + viewport.width + '.png') });
+      if (viewport.width === 390 && !process.argv.includes('--all-muted')) {
+        await page.evaluate(() => __app.setBandMute(__app.allMute(false)));
+        await page.locator('.band-stage').screenshot({ path: path.join(output, 'stage-instruments-mobile.png') });
+        await page.evaluate(() => __app.setBandMute(__app.only('mama')));
+      }
       report.layouts.push({ viewport, geometry });
       assert.deepEqual(geometry.clipped, [], 'Controls and legend must stay within the viewport');
       assert(geometry.screenWidth <= geometry.screenClientWidth + 1, 'No horizontal player overflow');
-      if (viewport.width >= 1280 && !process.argv.includes('--all-muted')) assert(geometry.bandBottom <= Math.min(geometry.footerTop,viewport.height),
+      const desktop = viewport.width >= 1100;
+      assert.equal(await page.locator('.listen-band .chips').evaluate(chords => getComputedStyle(chords).display),
+        desktop ? 'grid' : 'flex', 'Large chord tiles stay in the desktop layout');
+      const instrumentLabel = page.locator('.stage-label span').first();
+      assert.equal(await instrumentLabel.evaluate(label => getComputedStyle(label).clipPath === 'inset(50%)'),
+        viewport.width >= 1100, 'Instrument names are visually hidden on desktop only');
+      assert(await page.locator('.stage-musician').first().evaluate(musician =>
+        !!document.getElementById(musician.getAttribute('aria-describedby'))?.textContent),
+        'The musician control still describes its instrument');
+      const nameColors = await page.locator('.stage-label strong').evaluateAll(names =>
+        new Set(names.map(name => getComputedStyle(name).color)).size);
+      assert.equal(nameColors, viewport.width >= 1100 ? 5 : 1, 'Desktop labels use the individual musician colors');
+      assert(await page.locator('.stage-musician').evaluateAll((musicians, desktop) => musicians.every(musician => {
+        const stage = musician.closest('.band-stage').getBoundingClientRect();
+        const lane = musician.querySelector('.stage-note-track').getBoundingClientRect();
+        const icon = musician.querySelector('.stage-receptor').getBoundingClientRect();
+        const portrait = musician.querySelector('earthbeat-dance').getBoundingClientRect();
+        return icon.width >= (desktop ? 38 : 24) && icon.left >= lane.left && icon.right <= lane.right && icon.top >= stage.top + 3 &&
+          portrait.width >= 32 && portrait.height >= 60 && portrait.top - lane.bottom >= 0 &&
+          portrait.top - lane.bottom <= 10;
+      }), desktop), 'Each lane must stay above a visible portrait');
+      if (desktop) {
+        const layout = await page.locator('.listen-band').evaluate(band => ({
+          band: band.getBoundingClientRect().bottom,
+          map: document.querySelector('#tour-machine').getBoundingClientRect().bottom
+        }));
+        assert(Math.abs(layout.band - layout.map) < 2, 'The band and map panels share a baseline');
+      }
+      if (viewport.width >= 1280 && viewport.height >= 700 && !process.argv.includes('--all-muted')) assert(geometry.bandBottom <= Math.min(geometry.footerTop,viewport.height),
         'Desktop must show the map, controls, legend and five complete musicians together: ' + JSON.stringify(geometry));
     }
     assert.deepEqual(errors, []);

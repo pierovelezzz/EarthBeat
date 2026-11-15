@@ -1,4 +1,4 @@
-// The enlarged player and its plain-language explanation remain usable at narrow widths.
+// The player, legend and mode explanations remain usable at narrow widths.
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {launchBrowser}=require('./browser_fixture.cjs');
 const site=path.resolve(process.argv[2]||'_site'),output=path.resolve(process.argv[3]||'_work/layout/expanded'),base='http://terrasonic.test/';
@@ -22,7 +22,7 @@ async function checkEnd(page){
 }
 async function main(){
  fs.mkdirSync(output,{recursive:true});const browser=await launchBrowser({executablePath:process.env.TERRASONIC_CHROMIUM,args:['--no-sandbox']});
- const report={fixture:'CSS viewports/text settings, native disclosures, synthetic 200-event history; no audio, physical device or native zoom claim',checks:[],errors:[]};
+ const report={fixture:'CSS viewports/text settings, native disclosures and map legend; no audio, physical device or native zoom claim',checks:[],errors:[]};
  try{
   const context=await browser.newContext({reducedMotion:'reduce'});
   await context.route('**/*',async route=>{const url=route.request().url();if(/^(blob:|data:)/.test(url))return route.continue();if(!url.startsWith(base))return route.abort();const file=path.resolve(site,new URL(url).pathname.slice(1)||'index.html');return file.startsWith(site+path.sep)&&fs.existsSync(file)?route.fulfill({path:file}):route.fulfill({status:404});});
@@ -37,9 +37,9 @@ async function main(){
     await page.locator('.discgrid .dcard').nth(3).click();await page.evaluate(()=>__app.gotoFrame(2));
     await page.waitForFunction(()=>__app.cur()&&!__app.state.trans);
     await page.evaluate(engine=>__app.setEngine(engine),engine);
-    await page.evaluate(()=>{const events=Array.from({length:200},()=>__app.eventFor({silbo:true,inti:true,mama:true,yaku:true,illapa:true},''));__app.setState({events});});
-    await page.getByRole('button',{name:language==='es'?'Explícamelo fácil':'Explain it simply',exact:true}).click();
-    await page.locator('#easy-explanation .easy-panel').waitFor();
+    await page.locator('.legend-choice').first().click();
+    await page.locator('.mode-help summary').click();
+    assert.equal(await page.locator('.event-history, #easy-explanation').count(),0);
     const grid=page.locator('#tour-machine canvas.heard');
     const colors=await grid.evaluate(canvas=>{
       const context=canvas.getContext('2d');

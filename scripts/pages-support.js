@@ -1,19 +1,46 @@
 (() => {
   "use strict";
   const expression = /\{\{\s*([\w.]+)\s*\}\}/g;
-  const read = (scope, path) => path.split(".").reduce((value, key) => value?.[key], scope);
-  const direct = (value, scope) => read(scope, value.match(/^\{\{\s*([\w.]+)\s*\}\}$/)?.[1] ?? "");
-  const interpolate = (value, scope) => value.replace(expression, (_, path) => read(scope, path) ?? "");
+  const binding = /^\{\{\s*([\w.]+)\s*\}\}$/;
+  const read = path => {
+    const keys = path.split(".");
+    return scope => {
+      for (const key of keys) scope = scope?.[key];
+      return scope;
+    };
+  };
+  const direct = value => read(value.match(binding)?.[1] ?? "");
+  const interpolate = template => {
+    const single = template.match(binding);
+    if (single) {
+      const value = read(single[1]);
+      return scope => String(value(scope) ?? "");
+    }
+    const parts = [];
+    let end = 0;
+    for (const match of template.matchAll(expression)) {
+      parts.push({ text: template.slice(end, match.index), value: read(match[1]) });
+      end = match.index + match[0].length;
+    }
+    const tail = template.slice(end);
+    return scope => {
+      let result = "";
+      for (const part of parts) result += part.text + (part.value(scope) ?? "");
+      return result + tail;
+    };
+  };
   const dynamic = value => value.includes("{{");
   const compile = nodes => Array.from(nodes).flatMap(compileNode);
 
   function compileNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.data;
-      return dynamic(text) ? [scope => {
-        const value = interpolate(text, scope);
+      if (!dynamic(text)) return [];
+      const renderText = interpolate(text);
+      return [scope => {
+        const value = renderText(scope);
         if (node.data !== value) node.data = value;
-      }] : [];
+      }];
     }
     if (node.nodeType !== Node.ELEMENT_NODE) return [];
     const tag = node.localName;
@@ -21,14 +48,14 @@
     if (tag === "sc-if" || tag === "sc-for" || nativeList) {
       const list = tag === "sc-for" || nativeList;
       const alias = node.getAttribute(nativeList ? "data-sc-as" : "as");
-      const binding = node.getAttribute(nativeList ? "data-sc-for" : list ? "list" : "value");
+      const readItems = direct(node.getAttribute(nativeList ? "data-sc-for" : list ? "list" : "value"));
       const template = document.createElement("template");
       template.content.append(...(nativeList ? node.content.childNodes : node.childNodes));
       const anchor = document.createComment(tag);
       node.replaceWith(anchor);
       const entries = [];
       return [scope => {
-        const value = direct(binding, scope);
+        const value = readItems(scope);
         const items = list ? value ?? [] : value ? [null] : [];
         while (entries.length > items.length) {
           const { start, end } = entries.pop();
@@ -61,9 +88,10 @@
       if (!dynamic(value)) continue;
       if (name === "data-grid" && tag === "canvas") {
         node.removeAttribute(name);
+        const readColors = direct(value);
         let previous;
         updates.push(scope => {
-          const colors = direct(value, scope);
+          const colors = readColors(scope);
           if (!colors || colors === previous) return;
           const context = node.getContext("2d");
           if (!context) return;
@@ -77,16 +105,20 @@
         });
       } else if (name.startsWith("on")) {
         node.removeAttribute(name);
-        updates.push(scope => { node[name] = direct(value, scope) ?? null; });
+        const handler = direct(value);
+        updates.push(scope => { node[name] = handler(scope) ?? null; });
       } else if (name === "disabled" || name === "hidden" || name === "checked" || name === "open") {
         node.removeAttribute(name);
-        updates.push(scope => { const on = !!direct(value, scope); node.toggleAttribute(name, on); if (name === "checked") node.checked = on; });
+        const readState = direct(value);
+        updates.push(scope => { const on = !!readState(scope); node.toggleAttribute(name, on); if (name === "checked") node.checked = on; });
       } else if (name === "value" && ["select", "input", "textarea"].includes(tag) && node.type !== "file") {
         node.removeAttribute(name);
-        updates.push(scope => { const selected = interpolate(value, scope); if (node.value !== selected) node.value = selected; });
+        const readValue = interpolate(value);
+        updates.push(scope => { const selected = readValue(scope); if (node.value !== selected) node.value = selected; });
       } else {
+        const readValue = interpolate(value);
         updates.push(scope => {
-          const result = interpolate(value, scope);
+          const result = readValue(scope);
           if ((name === "src" || name === "href") && result === "") node.removeAttribute(name);
           else if (node.getAttribute(name) !== result) node.setAttribute(name, result);
         });

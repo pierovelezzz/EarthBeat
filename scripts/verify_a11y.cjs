@@ -23,27 +23,31 @@ async function main(){
    const page=await context.newPage();page.on('pageerror',error=>report.errors.push(error.message));await page.goto(base);await page.addScriptTag({path:axePath});
    report.version=await page.evaluate(()=>axe.version);
    const audit=async label=>{
+    await page.evaluate(()=>document.fonts.ready.then(()=>true));
+    await page.waitForFunction(()=>!window.__app?.state.trans);
     const result=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa','best-practice']}}));
     const entry={width,label,violations:result.violations.map(rule=>({id:rule.id,impact:rule.impact,help:rule.help,url:rule.helpUrl,nodes:rule.nodes.map(node=>({target:node.target,html:node.html,summary:node.failureSummary}))})),incomplete:result.incomplete.map(rule=>({id:rule.id,nodes:rule.nodes.length})),passes:result.passes.length};
     report.checks.push(entry);fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(report,null,2));console.log(label,width,'violations',entry.violations.length);
    };
-   await audit('first-visit-preferences');await page.getByRole('button',{name:'Continuar',exact:true}).click();await page.evaluate(()=>__app.setPreference('sfx',false));
+   const skipIntro=page.locator('.cinema-skip');
+   if(await skipIntro.isVisible()) await skipIntro.click();
+   await page.locator('#preferences-dialog').waitFor();
+   await audit('first-visit-preferences');await page.getByRole('button',{name:'Continuar',exact:true}).click();await page.evaluate(()=>{__app.setPreference('sfx',false);__app.setPreference('reducedMotion',true);});
    for(const lang of ['es','en']){
-    await page.locator('#tour-lang button').nth(lang==='es'?0:1).click();
+    await page.getByRole('button',{name:lang==='es'?'Espa\u00f1ol':'English',exact:true}).click();
+    assert.equal(await page.locator('html').getAttribute('lang'),lang);
     await page.locator('.brand').click();await audit(lang+'-home');
     for(const [nav,tab,count] of [[0,'juke',2],[1,'band',1],[2,'how',2],[3,'tech',5]]){
      await page.locator('#tour-nav button').nth(nav).click();
-     if(tab==='juke')await page.locator('.discgrid .dcard').nth(2).click();
      for(let sub=0;sub<count;sub++){
-      if(tab==='juke'||tab==='data')await page.evaluate(sub=>__app.goSub(sub),sub);
+      if(tab==='juke'&&sub===1)await page.locator('.discgrid .dcard').nth(2).click();
       else if(tab==='how'||tab==='tech')await page.locator('.topics button').nth(sub).click();
       await audit(lang+'-'+tab+'-'+sub);
      }
     }
     await page.locator('#tour-nav button').first().click();await page.locator('.discgrid .dcard').nth(2).click();
     await audit(lang+'-player-legend');
-    const explain=page.getByRole('button',{name:lang==='es'?'Explícamelo fácil':'Explain it simply',exact:true});
-    await explain.click();await audit(lang+'-player-explanation');await explain.click();
+    await page.locator('.legend-choice').first().click();await audit(lang+'-player-selected-color');
     await page.locator('#tour-guide').click();await audit(lang+'-Brisa');await page.keyboard.press('Escape');
     await page.locator('#tour-a11y > summary').click();await audit(lang+'-accessibility-menu');await page.keyboard.press('Escape');
     assert.equal(await page.locator('#tour-a11y').getAttribute('open'),null,'Escape closes the preference popover');

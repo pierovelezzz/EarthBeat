@@ -635,11 +635,6 @@ a{color:inherit}
 .px .listen-intro{display:flex;align-items:end;justify-content:space-between;gap:10px 28px}
 .px .listen-intro h1{font:700 clamp(1.8rem,4vw,3.75rem)/1 var(--head);letter-spacing:-.02em}
 .px .listen-intro p{color:var(--muted);max-width:40ch;line-height:1.4;font-size:.86em}
-.px .easy-panel{display:grid;gap:8px;padding:12px;border:1px solid var(--line);background:var(--panel);min-width:0}
-.px .easy-panel h2{font:700 1.2rem/1.2 var(--head)}
-.px .easy-panel p{line-height:1.55}
-.px .easy-panel .btn{min-height:44px;white-space:normal}
-.px .easy-panel button:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 .px .uni,.px .uleft,.px .uright{height:auto}
 .px .uni .drow{padding:8px;border:1px solid var(--line);background:var(--bg)}
 .px .uni .dchip[aria-pressed="true"]{background:color-mix(in srgb,var(--section) 9%,var(--bg))}
@@ -1021,19 +1016,6 @@ a{color:inherit}
 .px .top .brand{min-height:44px;min-width:0}
 .px .top .brandmark{flex-shrink:0}
 .px .top .nav button{flex:0 1 auto;min-width:0;white-space:normal;text-wrap:balance}
-.px details.menu .pop{width:min(16rem,calc(100vw - 2 * var(--gutter)));min-width:0;max-height:calc(100dvh - 4.5rem);overflow-y:auto}
-.px details.menu .opt{padding:6px 8px;gap:8px;overflow-wrap:anywhere}
-/* Expand preferences in the header flow so they do not cover another control. */
-.px .top:has(details.menu[open]) .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px 4px;padding-block:8px}
-.px .top:has(details.menu[open]) .right,.px details.menu[open]{display:contents}
-.px details.menu[open]::details-content{display:contents}
-.px .top:has(details.menu[open]) .brand{grid-row:1;grid-column:1}
-.px .top:has(details.menu[open]) .langsw{grid-row:1;grid-column:2}
-.px .top details.menu[open]>summary{grid-row:1;grid-column:3;justify-self:end}
-.px .top:has(details.menu[open]) .nav{grid-row:2;grid-column:1/-1;width:100%;margin:0;display:flex;flex-wrap:wrap;justify-content:center}
-.px details.menu[open] .pop{position:static;grid-row:3;grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,10em),1fr));gap:6px;width:100%;min-width:0;max-height:50svh;overflow:auto}
-.px details.menu[open] .pop .opt{min-height:44px;scroll-margin:4px}
-@media(min-width:901px){.px details.menu[open] .pop{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:1279px){
   .px .top .wrap{gap:4px 12px;min-height:0}
   .px .top .nav button{min-height:48px;padding-inline:6px;font-size:max(.8em,.8125rem);letter-spacing:.04em}
@@ -1072,14 +1054,11 @@ a{color:inherit}
 }
 /* Font-relative space also responds to enlarged text without splitting the name. */
 @container EarthRhythm-header (max-width:18em){
-  .px .top .wrap,.px .top:has(details.menu[open]) .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto}
-  .px .top .brand,.px .top:has(details.menu[open]) .brand{grid-row:1;grid-column:1/-1}
+  .px .top .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto}
+  .px .top .brand{grid-row:1;grid-column:1/-1}
   .px .top .wordmark{white-space:nowrap;overflow-wrap:normal}
   .px .top .right{grid-row:2;grid-column:1/-1;justify-self:end}
-  .px .top .nav,.px .top:has(details.menu[open]) .nav{grid-row:3;grid-column:1/-1}
-  .px .top:has(details.menu[open]) .langsw{grid-row:2;grid-column:1;justify-self:end}
-  .px .top details.menu[open]>summary{grid-row:2;grid-column:2}
-  .px .top details.menu[open] .pop{grid-row:4}
+  .px .top .nav{grid-row:3;grid-column:1/-1}
 }
 /* Espacio de trabajo común */
 .px .workspace > .in{max-width:1120px;gap:clamp(12px,2vw,18px)}
@@ -1339,11 +1318,11 @@ a{color:inherit}
 .px .uni .views>.vpanel{display:grid;grid-row:auto;grid-template-rows:auto auto auto;min-width:0;align-content:start}
 .px .uni .views .mapbox,.px .uni .views .mbox{aspect-ratio:560/320;min-height:0;height:auto;width:100%}
 .px .uni .views .mbox .heard{position:absolute;inset:0;display:block;width:100%;height:100%;image-rendering:pixelated}
-.px .grid-dim{position:absolute;inset-block:0;left:0;background:#070b1470;pointer-events:none}
+.px .grid-dim{position:absolute;inset:0;background:#070b1470;pointer-events:none;transform-origin:left;transform:scaleX(var(--grid-shade))}
 .px .uni .scanline{left:0;width:calc(100% / 28);transform:translateX(var(--scan-x));transition:transform 110ms linear}
 .px.reduce-motion .uni .scanline{transition:none}
 @media(prefers-reduced-motion:reduce){.px .uni .scanline{transition:none}}
-.px .grid-dim-after{right:0}
+.px .grid-dim-after{transform-origin:right}
 .px .map-legend{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:center;min-width:0}
 .px .map-legend h2{grid-column:1/-1;font:600 .88em/1.3 var(--head)}
 .px .legend-scale,.px .legend-labels{display:grid;grid-column:1}
@@ -1357,12 +1336,6 @@ a{color:inherit}
 .px .legend-reading{grid-column:1/-1}
 .px .legend-reading:empty{display:none}
 .px .current-event{margin:0;padding-block:6px;min-height:2em;overflow-wrap:anywhere;color:var(--muted)}
-.px .event-history{border-block:1px solid var(--line);padding:10px 0;min-width:0}
-.px .event-history summary{cursor:pointer;min-height:28px;font-size:.82em}
-.px .event-history ol{max-height:240px;overflow:auto;overscroll-behavior:contain;padding:0 0 0 26px;margin:10px 0;list-style:decimal}
-.px .event-history ol:focus-visible{outline-offset:-2px}
-.px .event-history li{padding:6px 4px;border-bottom:1px solid var(--line);font-size:.76em;line-height:1.5}
-.px .event-history li>span:first-child{margin-right:10px;color:var(--muted)}
 @media(min-width:1001px) and (max-height:720px){
   .px .workspace > .in:has(.uni){padding-block:8px}
   .px .uni .pagehead.slim{padding-bottom:4px}
@@ -1567,21 +1540,68 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px.main-edition .legend-reading:empty{display:none}
 .px.main-edition .legend-reading{font-size:.8em;font-weight:650;line-height:1.4}
 .px.main-edition .legend-description{font-size:.76em;line-height:1.5;min-height:3em}
-.px.main-edition .event-history{border-top:1px solid var(--line);padding-top:4px}
-.px.main-edition .event-history summary{min-height:44px;align-content:center;cursor:pointer}
-.px.main-edition .event-history ol{display:grid;gap:6px;padding:8px 0;list-style:none}
-.px.main-edition .event-history li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:.84em;overflow-wrap:anywhere}
-.px.main-edition .history-pages{flex-wrap:wrap;gap:8px}
-.px.main-edition .history-pages button{min-height:44px;text-transform:none;letter-spacing:normal}
 .px.main-edition .stage-musician[data-on="false"]{opacity:.38}
 .px.main-edition .viewport,.px.main-edition .scr,.px.main-edition .in{min-width:0}
 .px.main-edition button,.px.main-edition a,.px.main-edition summary{touch-action:manipulation}
 .px.main-edition .top details.menu>summary{min-width:44px;min-height:44px}
-.px.main-edition details.menu[open] .haptics-settings{grid-column:1/-1;display:grid;gap:6px;padding:10px;border-top:1px solid var(--line);text-align:left}
-.px.main-edition .haptics-settings h2{font-size:.95em}
-.px.main-edition .haptics-settings p{font-size:.85em;color:var(--muted)}
-.px.main-edition .haptics-settings .row{flex-wrap:wrap}
-.px.main-edition .haptics-settings button{min-height:44px;text-transform:none;letter-spacing:normal}
+/* Accessibility disclosure stays anchored to the header button. */
+.px #tour-a11y .pop{
+  inset-inline: auto 0;
+  inset-block-start:calc(100% + 6px);
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5em),1fr));
+  gap:0 4px;
+  width:min(25.25rem,calc(100vw - 2 * var(--gutter)));
+  min-width:0;
+  max-height:var(--a11y-available,65dvh);
+  padding:5px 7px;
+  border-radius:7px;
+  overflow:auto;
+  overscroll-behavior:contain;
+  background:var(--surface);
+  box-shadow:0 8px 24px #0005;
+}
+@media(max-width:900px){
+  .px #tour-a11y{position:static}
+  .px #tour-a11y .pop{inset-inline-end:max(var(--gutter),env(safe-area-inset-right,0px))}
+}
+.px #tour-a11y .opt{
+  min-width:0;
+  min-height:44px;
+  padding:6px;
+  gap:8px;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+  scroll-margin-block:4px;
+}
+.px #tour-a11y .opt:focus-visible,.px #tour-a11y .haptics-settings button:focus-visible,
+.px #tour-a11y .preferences-shortcut:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.px #tour-a11y .opt:disabled{color:var(--muted)}
+.px #tour-a11y .sw{width:31px;height:17px}
+.px #tour-a11y .sw::after{width:11px;height:11px}
+.px #tour-a11y .opt[aria-pressed="true"] .sw::after{transform:translateX(14px)}
+.px #tour-a11y .haptics-settings{
+  grid-column:1/-1;
+  display:grid;
+  gap:7px;
+  min-width:0;
+  border-top:1px solid var(--line);
+  padding:8px 6px 4px;
+}
+.px #tour-a11y .haptics-settings h2{font-size:1em;line-height:1.3}
+.px #tour-a11y .haptics-settings p{font-size:.85em;line-height:1.45;color:var(--muted)}
+.px #tour-a11y .haptics-settings .row{display:flex;flex-wrap:wrap;gap:7px}
+.px #tour-a11y .haptics-settings button{flex:1 1 7em;min-height:44px;padding:6px 8px;white-space:normal;letter-spacing:.04em}
+.px #tour-a11y .preferences-shortcut{
+  grid-column:1/-1;
+  justify-self:start;
+  min-height:44px;
+  padding:6px;
+  font-size:.85em;
+  text-align:start;
+  text-decoration:underline;
+  text-underline-offset:.2em;
+}
 .px.main-edition.reduce-motion .language-thumb,.px.main-edition.reduce-motion .language-toggle button{transition:none}
 @media(max-width:900px){.px.main-edition .top .brand{font-size:.86em;gap:7px}.px.main-edition .top .brandmark{width:26px}.px.main-edition .top .right{gap:6px}.px.main-edition .top .wordmark{letter-spacing:.035em}.px.main-edition .hero{grid-template-columns:minmax(0,1fr);max-width:640px;margin-inline:auto;gap:28px}.px.main-edition .herotx{width:100%;gap:14px}.px.main-edition .hero .display{max-width:15ch}.px.main-edition .home-demo{width:100%;max-width:560px}.px.main-edition .top .nav button{min-height:44px}}
 @media(max-width:480px){.px.main-edition .hero{gap:22px;padding-block:22px 12px}.px.main-edition .hero .display{font-size:clamp(2.35rem,10.3vw,3.1rem)}.px.main-edition .hero .lede{font-size:1em;line-height:1.55}.px.main-edition .hero .cta{display:grid;grid-template-columns:minmax(0,1fr)}.px.main-edition .hero .cta .btn{min-height:48px}.px.main-edition .hero-reassurance{font-size:.75em}.px.main-edition .home-process{padding:10px;gap:8px}.px.main-edition .homeflow strong{font-size:.73em}.px.main-edition .language-toggle{width:104px;flex-basis:104px}.px.main-edition .top .wrap{column-gap:5px}.px.main-edition .top .brandmark{width:23px}.px.main-edition .top .wordmark{font-size:.94em}}
@@ -1784,6 +1804,210 @@ html[data-ts-page-hidden] .px .planet-portal *{animation-play-state:paused!impor
 @media(max-height:450px){.ts-voyage{padding:10px;gap:0}.ts-voyage .voyage-copy p{display:none}}
 @media(forced-colors:active){.ts-voyage{background:Canvas;color:CanvasText}.ts-voyage button{background:ButtonFace;color:ButtonText}}
 body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{animation-play-state:paused!important}
+
+/* V4 listening workspace */
+.px .dance-frame{display:none;transform-origin:50% 85%}
+.px earthbeat-dance[data-dancing] .dance-frame{display:block}
+.px earthbeat-dance[data-dancing] .dance-pose{visibility:hidden}
+.px .stage-musician earthbeat-dance{position:relative;display:block;width:100%;height:100%;min-height:0}
+.px .player-layout{grid-template-columns:minmax(0,1.18fr) minmax(0,1fr) minmax(0,1.04fr);gap:10px;align-items:stretch}
+.px .player-layout>.player-sidebar,.px .player-layout>.file-settings{grid-column:1/-1}
+.px .player-layout>.vpanel,.px .player-layout>.listen-band{grid-column:auto;grid-row:auto;min-width:0}
+.px .player-layout>.vpanel{display:grid;grid-template-rows:auto auto 1fr;align-content:start}
+.px .player-layout .mapbox,.px .player-layout .mbox{width:100%;height:auto;min-height:0;aspect-ratio:560/320}
+.px .player-layout .mbox .heard{position:absolute;inset:0;display:block;width:100%;height:100%;image-rendering:pixelated}
+.px #tour-machine .vcap h2{font:700 1.3125em/1.3 var(--head);color:var(--fg)}
+.px .player-layout #tour-frame .mapbox{aspect-ratio:560/350}
+.px .player-layout .map-legend{align-self:end}
+.px .readout p>strong{flex:none}
+.px .player-layout .listen-band{grid-template-rows:auto 1fr auto auto;align-content:start}
+.px .stage-cue-help,.px .stage-motion-status{margin:3px 0 0;color:var(--muted);font-size:.72em;line-height:1.25}
+.px .stage-motion-status:empty{display:none}
+.px .player-layout .band-stage{height:auto;min-height:236px}
+.px .player-layout .band-stage-musicians{align-items:stretch}
+.px .player-layout .stage-musician.listen-member{padding:4px 2px;border:1px solid transparent;text-align:center;align-items:end}
+.px .player-layout .stage-musician:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
+/* Each instrument has its own lane, with the receptor above the portrait. */
+.px .stage-note-track{
+  --track-icon:clamp(24px,2.25vw,32px);
+  position:relative;display:block;width:100%;height:clamp(56px,7.5vh,72px);align-self:end;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(color-mix(in srgb,var(--member-color) 62%,#788496),transparent) center/1px 100% no-repeat;
+}
+.px .stage-receptor,.px .stage-note{
+  position:absolute;top:0;left:50%;display:block;width:var(--track-icon);height:var(--track-icon);
+  transform:translate(-50%,-50%);color:#f2f4f6;
+  background:#191b20;border:1px solid #788496;border-radius:50%;
+}
+.px .stage-receptor{z-index:2}
+.px .stage-note-track[data-strike] .stage-receptor{
+  color:var(--member-color);border-color:currentColor;box-shadow:0 0 0 2px currentColor;
+}
+.px .stage-note-motion{position:absolute;inset:0;z-index:1;transform:translateY(100%)}
+.px .stage-note{color:var(--member-color);border-color:currentColor}
+.px .stage-note[data-note="thunder"]{border-style:double;border-width:3px}
+.px.app[data-contrast="true"] .stage-receptor,.px.app[data-contrast="true"] .stage-note{background:var(--surface);color:var(--fg)}
+.px.app[data-contrast="true"] .stage-note-track[data-strike] .stage-receptor{color:var(--accent)}
+@media(forced-colors:active){
+ .px .stage-receptor,.px .stage-note{forced-color-adjust:none;background:ButtonFace;color:ButtonText;border-color:ButtonText}
+ .px .stage-note-track[data-strike] .stage-receptor{color:Highlight;border-color:Highlight}
+}
+@media(max-width:1000px){
+ .px .player-layout{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .px .player-layout #tour-frame{grid-column:1/-1}
+ .px .player-layout #tour-frame .mapbox{max-height:300px}
+}
+@media(max-width:640px){
+ .px .player-layout{grid-template-columns:minmax(0,1fr)}
+ .px .player-layout .band-stage{min-height:220px}
+ .px .readout p{flex-wrap:wrap}
+}
+.px .uni .map-toolbar{position:relative;display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:6px 10px;padding:6px}
+.px .map-toolbar .volume-control{flex:1 1 78px;min-width:0;font-size:.74em}
+.px .map-toolbar .transport-speed{display:grid;flex:0 0 auto;justify-items:start;gap:3px;font-size:.78em;white-space:nowrap}
+.px .map-toolbar .transport-speed select{width:62px;min-width:0;min-height:44px;padding:3px;font:inherit}
+.px .map-toolbar .player-modes{display:flex;align-items:center;gap:4px}
+.px .mode-help summary{display:grid;place-items:center;min-width:36px;min-height:44px;cursor:pointer;font:700 .92em var(--head);list-style:none}
+.px .mode-help summary:focus-visible{outline:2px solid var(--fg);outline-offset:-2px;border-radius:4px}
+.px .mode-help summary span{display:grid;place-items:center;width:19px;height:19px;border:1px solid currentColor;border-radius:50%;color:var(--muted)}
+.px .mode-help summary::-webkit-details-marker{display:none}
+.px .mode-help[open] summary span,.px .mode-help summary:hover span{color:var(--bg);background:var(--fg)}
+.px .mode-help dl{position:absolute;z-index:5;inset:100% 6px auto auto;width:min(230px,calc(100% - 12px));padding:10px;margin:4px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:5px;box-shadow:0 5px 12px #0006}
+.px .mode-help dt{font-weight:700}
+.px .mode-help dd{margin:0;color:var(--fg);line-height:1.4}
+.px .mode-help dd+dt{margin-top:6px}
+.px .map-toolbar .volume-control input{width:100%;min-width:0}
+.px .map-toolbar .engines button{padding-inline:6px}
+.px .map-source{margin-inline-start:auto;text-align:end}
+.px .map-transport{display:grid;gap:6px;width:100%;padding:6px}
+.px .map-transport .timeline img{display:block}
+.px .band-stage{
+  --stage-image:url('./stage.webp?v=grafito');
+  background-color:#171718;
+  background-image:var(--stage-image);
+  background-position:center bottom;
+  background-size:100% 100%;
+  grid-template-rows:minmax(0,1fr);
+}
+.px .band-stage-musicians{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px 2px;padding:5px}
+.px .player-layout .stage-musician.listen-member{
+  max-width:none;padding:2px;grid-template-columns:minmax(0,1fr);
+  grid-template-rows:minmax(78px,1fr) auto minmax(2.15em,auto);
+  gap:3px;justify-items:center;align-items:stretch;min-height:44px;background:transparent;
+}
+@supports(grid-template-rows:subgrid){
+  .px .band-stage-musicians{grid-template-rows:minmax(78px,1fr) auto auto}
+  .px .player-layout .stage-musician.listen-member{grid-row:1 / span 3;grid-template-rows:subgrid}
+}
+.px .stage-musician.listen-member .stage-performer{position:relative;isolation:isolate;grid-column:auto;display:block;width:100%;aspect-ratio:2/3;max-height:145px}
+.px .stage-performer::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;inset:auto 7% -3px;height:16px;
+  border:1px solid transparent;border-radius:50%;
+}
+.px .stage-musician:is(:hover,:focus-visible) .stage-performer::before{border-color:var(--stage-light,#f2f4f6)}
+.px:not(.reduce-motion) .stage-note-track[data-strike] + .stage-performer::before,
+.px.reduce-motion .stage-note-track[data-audible="true"] + .stage-performer::before{
+  border-color:var(--stage-light,var(--member-color));
+  background:radial-gradient(ellipse,color-mix(in srgb,var(--stage-light,var(--member-color)) 35%,transparent),transparent 72%);
+}
+.px.app[data-contrast="true"] .stage-performer{--stage-light:var(--fg)}
+@media(forced-colors:active){.px .stage-performer{--stage-light:ButtonText}}
+.px .stage-musician.listen-member img{width:100%;height:100%;object-position:center bottom}
+.px .stage-musician earthbeat-dance[data-character="inti"] img{filter:brightness(1.35)}
+.px .stage-musician.listen-member:hover,.px .stage-musician.listen-member:focus-visible{border-color:var(--line)}
+.px .stage-musician.listen-member .stage-label{
+  display:grid;grid-column:auto;align-content:center;justify-items:center;gap:2px;width:100%;
+  font:400 .72em/1.15 var(--body);text-align:center;overflow-wrap:anywhere;color:#f2f4f6;text-shadow:0 1px 4px #000;
+}
+.px .stage-musician.listen-member .stage-label strong{grid-column:auto;font:700 1em/1.15 var(--body);letter-spacing:0;text-transform:none;white-space:normal;color:inherit}
+.px .stage-musician.listen-member .stage-label span{grid-column:auto;font-size:inherit;color:inherit}
+.px.app[data-contrast="true"] .stage-musician.listen-member .stage-label{color:var(--fg);text-shadow:none}
+.px .listen-band .chips{display:flex;flex-wrap:wrap;gap:5px}
+@media(min-width:1001px) and (max-height:850px){
+ .px .player-layout .mapbox,.px .player-layout .mbox{max-height:clamp(136px,22vh,220px)}
+}
+.px .player-layout{grid-template-rows:auto}
+@keyframes pacific-swell{
+  from{transform:translate3d(-3%,1%,0) scale(1.03)}
+  to{transform:translate3d(3%,-2%,0) scale(1.1)}
+}
+@media(min-width:1100px) and (hover:hover) and (pointer:fine){
+  .px .player-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.04fr) minmax(0,1.08fr)}
+  .px .player-layout #tour-machine{grid-template-rows:auto auto auto}
+  .px .player-layout #tour-machine .mbox{max-height:none}
+  .px .player-layout .listen-band{display:flex;flex-direction:column}
+  .px .player-layout .band-stage{
+    position:relative;isolation:isolate;flex:1 0 auto;min-height:238px;
+    background-size:100% 118%;background-position:center bottom;
+  }
+  .px.app:not([data-contrast="true"]) .player-layout .band-stage{
+    background-image:linear-gradient(to bottom,#071b2c 0%,#081822e8 50%,#080f18a8 80%,#070c14 100%),var(--stage-image);
+    background-size:100% 100%,100% 118%;
+  }
+  .px.app:not([data-contrast="true"]) .band-stage::before{
+    content:"";position:absolute;z-index:-1;inset:-8% -12% 25%;pointer-events:none;
+    background:repeating-radial-gradient(ellipse at 52% -55%,transparent 0 8%,#4aa3c924 9%,transparent 10% 14%),
+      radial-gradient(ellipse at 53% 22%,#1d5c76a8,transparent 69%);
+    mask-image:linear-gradient(transparent 5%,#000 38%,transparent 100%);
+  }
+  .px.app:not(.reduce-motion) .band-stage::before{animation:pacific-swell 14s ease-in-out infinite alternate}
+  .px .band-stage-musicians{
+    grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,1.15fr) repeat(2,minmax(0,1fr));padding:28px 6px 8px;
+  }
+  .px .stage-note-track{
+    --track-icon:clamp(38px,3.25vw,52px);
+    height:auto;align-self:stretch;margin-bottom:6px;
+  }
+  .px .stage-receptor,.px .stage-note{background-color:#0b1520}
+  .px .stage-musician.listen-member .stage-performer{max-height:180px}
+  .px .stage-musician.listen-member .stage-label{
+    width:min(100%,9em);min-height:2em;padding:4px 3px;border:1px solid var(--line);
+    border-radius:4px;align-self:center;font-size:clamp(.72em,.88vw,.84em);
+  }
+  .px.app:not([data-contrast="true"]) .stage-musician.listen-member .stage-label{
+    --plaque-ink:color-mix(in srgb,var(--member-color) 72%,white);
+    color:var(--plaque-ink);background:#101822;
+    border-color:color-mix(in srgb,var(--member-color) 60%,#202a36);
+    box-shadow:inset 0 -2px color-mix(in srgb,var(--member-color) 38%,#101822);
+  }
+  .px .stage-musician.listen-member .stage-label span{
+    position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  }
+  .px .stage-musician.listen-member[aria-pressed="true"] earthbeat-dance{filter:brightness(1.12)}
+  .px .player-layout .stage-musician.listen-member[aria-pressed="false"] earthbeat-dance{opacity:.75;filter:saturate(.68)}
+  .px .stage-musician[aria-pressed="false"] .stage-label{border-style:dashed}
+  .px .listen-band .chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:6px;padding:2px}
+  .px .listen-band .chip{
+    display:grid;place-items:center;min-height:clamp(47px,7vh,70px);min-width:0;padding:4px;
+    border-radius:4px;text-align:center;overflow-wrap:anywhere;letter-spacing:0;font-size:clamp(.78em,1.07vw,1em);
+  }
+  .px .listen-band .chip[aria-current="true"]{outline:1px solid var(--fg);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 68%,transparent)}
+  .px.reduce-motion .listen-band .chip{transition:none}
+}
+.px.main-edition .legend-swatch{min-height:44px}
+.px .bar .side .btn,.px .bar .steps button{min-height:28px}
+.px.main-edition .language-toggle button[aria-pressed="true"]{background:#a6dbe9}
+.px.main-edition .language-toggle[data-language="es"] button[aria-pressed="true"]{background:#f3ce72}
+.px .stage-musician.listen-member img{transform:none;filter:none;transition:none}
+.px .stage-musician.listen-member img.dance-frame{position:absolute;inset:0}
+.px .stage-musician.listen-member[aria-pressed="false"]{opacity:1;filter:none}
+.px .stage-musician.listen-member[aria-pressed="false"] earthbeat-dance{opacity:.45;filter:saturate(.3)}
+.px .credits-layout,.px .nasa-source-layout{display:grid;align-items:stretch;gap:8px}
+.px .credits-layout{grid-template-columns:repeat(3,minmax(0,1fr))}
+.px .nasa-source-layout{grid-template-columns:minmax(0,3fr) minmax(0,2fr);margin-top:8px}
+.px .nasa-source-layout .method-sources{display:grid;gap:8px;padding-inline-start:1.2em}
+.px .section-voice{display:inline-grid;place-items:center;width:44px;min-height:44px;padding:0;flex:none}
+.px .section-voice svg{width:20px;height:20px}
+.px .section-voice[data-speaking="true"] .speaker-waves{display:none}
+.px .section-voice[data-speaking="true"]{background:var(--fg);color:var(--bg)}
+@media(max-width:820px){.px .credits-layout,.px .nasa-source-layout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.px .player-detail .readout p{flex-direction:column;gap:2px}}
+@media(forced-colors:active){.px.main-edition .legend-swatch{border-color:ButtonText}}
+.ts-cinema .cinema-copy h2{color:#fff;font-size:clamp(1.35rem,3.3vw,2.9rem);line-height:1.14;max-width:24ch;text-wrap:balance}
+@media(max-width:640px){.ts-cinema .cinema-copy h2{font-size:clamp(1.25rem,5.6vw,2rem)}}
+@media(max-height:450px){.ts-cinema .cinema-copy h2{font-size:clamp(1.1rem,5vh,1.9rem)}}
+@media(forced-colors:active){.ts-cinema .cinema-copy h2{color:CanvasText}}
 </style>
 </helmet>
 <div class="px app main-edition {{bandViewClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
@@ -1836,16 +2060,16 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <details id="tour-a11y" class="menu" onToggle="{{positionAccessibilityMenu}}">
 <summary aria-label="{{tx.a11yAria}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="7.2" r="1.5" fill="currentColor" stroke="none"></circle><path d="M7 10h10M12 10v4m0 0-3 4.5m3-4.5 3 4.5"></path></svg><span class="mlabel">{{tx.a11y}}</span></summary>
 <div class="pop" role="group" aria-label="{{tx.a11y}}">
-<sc-for list="{{a11y}}" as="a" hint-placeholder-count="5">
+<sc-for list="{{a11y}}" as="a" hint-placeholder-count="7">
 <button type="button" class="opt" onClick="{{a.toggle}}" aria-pressed="{{a.on}}" disabled="{{a.disabled}}"><span>{{a.label}}</span><span class="sw" aria-hidden="true"></span></button>
 </sc-for>
 <button type="button" class="opt" onClick="{{theme.toggle}}" aria-pressed="{{theme.light}}"><span>{{theme.label}}</span><span class="sw" aria-hidden="true"></span></button>
-<button type="button" class="opt" onClick="{{preferences.open}}">{{preferences.reopenLabel}}</button>
 <section class="haptics-settings" aria-labelledby="haptics-title">
 <h2 id="haptics-title">{{haptic.title}}</h2><p id="haptics-status" role="status">{{haptic.status}}</p>
 <div class="row"><button type="button" class="btn sm" onClick="{{haptic.test}}" disabled="{{haptic.testOff}}" aria-describedby="haptics-status">{{haptic.testLabel}}</button>
 <button type="button" class="btn sm" onClick="{{haptic.stop}}" disabled="{{haptic.stopOff}}">{{haptic.stopLabel}}</button></div>
 </section>
+<button type="button" class="preferences-shortcut" onClick="{{preferences.open}}">{{preferences.reopenLabel}}</button>
 </div>
 </details>
 </div>
@@ -1912,7 +2136,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <section class="disc-library" aria-labelledby="disc-library-title">
 <div class="pagehead">
 <div><p class="kicker">{{tx.discKicker}}</p><h1 id="disc-library-title" class="display md" tabindex="-1">{{tx.discTitle}}</h1><p class="lede">{{tx.discLede}}</p></div>
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button>
+<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 </div>
 <div id="tour-sets" class="disc-sources">
 <span id="source-label" class="tag">{{tx.setsAria}}</span>
@@ -1936,7 +2160,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{scr.dUp}}" hint-placeholder-val="{{ false }}">
 <div class="pagehead">
 <h1 class="display">{{convert.practiceTitle}}</h1>
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button>
+<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 </div>
 <div class="convert-options">
 <section class="convert-card practice-example">
@@ -1980,7 +2204,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 
 <sc-if value="{{audioError}}"><p role="alert" class="small">{{audioError}}</p></sc-if>
 <div class="player-layout">
-<div class="player-visual">
 <sc-if value="{{showFileSettings}}">
 <div class="file-settings">
 <label class="field">{{tx.colorsHow}}
@@ -1988,9 +2211,28 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 </sc-if>
 
-<div class="views">
+<div class="controls player-sidebar" aria-label="{{player.controlsLabel}}">
+<div id="tour-play" class="playwrap">
+<button type="button" class="btn primary {{playPulse}}" onClick="{{togglePlay}}" disabled="{{playPending}}" aria-busy="{{playPending}}"><svg width="14" height="14" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><path d="{{playIcon}}"></path></svg>{{playLabel}}</button>
+</div>
+<div class="when"><b>{{frameLabel}}</b><span class="signal-state {{signalClass}}">{{signalLabel}}</span></div>
+<div class="player-tools">
+<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
+<button type="button" class="btn sm quiet" onClick="{{describe}}" disabled="{{speechUnavailable}}">{{describeLabel}}</button>
+</div>
+</div>
+
 <figure id="tour-frame" class="vpanel">
-<figcaption class="vcap"><span class="muted">{{mapSource}}</span></figcaption>
+<figcaption class="vcap map-toolbar">
+<div class="volume-control"><label for="playback-volume">{{player.volumeLabel}} {{player.volume}}%</label><input id="playback-volume" type="range" min="0" max="100" step="1" value="{{player.volume}}" onInput="{{player.changeVolume}}"></div>
+<label class="transport-speed"><span>{{tx.speedLabel}}</span><select onChange="{{onSpeed}}" value="{{speed}}"><option value="180">0.75×</option><option value="110">1×</option><option value="70">1.4×</option></select></label>
+<div class="player-modes" id="tour-modes">
+<div class="engines" role="group" aria-label="{{tx.engineAria}}"><sc-for list="{{engines}}" as="e"><button type="button" onClick="{{e.pick}}" aria-pressed="{{e.on}}" aria-describedby="{{e.descriptionId}}" title="{{e.description}}">{{e.short}}</button></sc-for></div>
+<details class="mode-help"><summary aria-label="{{tx.modesHelp}}" title="{{tx.modesHelp}}"><span aria-hidden="true">?</span></summary><dl><sc-for list="{{engines}}" as="e"><dt>{{e.short}}</dt><dd>{{e.description}}</dd></sc-for></dl></details>
+<sc-for list="{{engines}}" as="e"><span class="sr" id="{{e.descriptionId}}">{{e.description}}</span></sc-for>
+</div>
+<span class="muted map-source">{{mapSource}}</span>
+</figcaption>
 <div class="mapbox">
 <img decoding="async" fetchpriority="high" class="map {{frameAnim}}" src="{{frameUrl}}" alt="{{frameAlt}}">
 <div aria-hidden="true" class="scanline" style="--scan-x: {{scanLeft}}"></div>
@@ -2003,37 +2245,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="arrow" onClick="{{nextFrame}}" disabled="{{nextOff}}" aria-label="{{tx.nextFrame}}" style="right: 8px"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6.5 3.5L12 9l-5.5 5.5"></path></svg></button>
 </sc-if>
 </div>
-</figure>
-
-<figure id="tour-machine" class="vpanel">
-<figcaption class="vcap"><span class="sr">{{tx.machineSees}}</span><span class="muted">{{tx.machineSub}}</span></figcaption>
-<div class="mbox" aria-hidden="true">
-<canvas class="heard" width="280" height="160" data-grid="{{gridColors}}"></canvas>
-<div class="grid-dim" style="width:{{gridBefore}}"></div>
-<div class="grid-dim grid-dim-after" style="left:{{gridAfter}}"></div>
-<div class="scanline" style="--scan-x: {{scanLeft}}"></div>
-</div>
-<aside id="player-legend" class="map-legend" aria-labelledby="map-legend-title">
-<h2 id="map-legend-title">{{player.legendTitle}}</h2>
-<div class="legend-swatch-grid" role="group" aria-labelledby="map-legend-title">
-<sc-for list="{{player.legend}}" as="level"><button type="button" class="legend-choice legend-swatch" style="--swatch:{{level.color}};--swatch-ink:{{level.ink}}" aria-pressed="{{level.on}}" aria-label="{{level.label}}. {{level.description}}" title="{{level.description}}" onClick="{{level.choose}}">{{level.number}}</button></sc-for>
-</div>
-<p class="legend-reading" role="status" aria-live="polite">{{player.legendReading}}</p>
-<p class="small muted legend-description">{{player.legendDescription}}</p>
-<p role="status" class="small muted">{{player.speechNotice}}</p>
-</aside>
-</figure>
-</div>
-<div class="controls player-sidebar" aria-label="{{player.controlsLabel}}">
-<div id="tour-play" class="playwrap">
-<button type="button" class="btn primary {{playPulse}}" onClick="{{togglePlay}}" disabled="{{playPending}}" aria-busy="{{playPending}}"><svg width="14" height="14" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><path d="{{playIcon}}"></path></svg>{{playLabel}}</button>
-</div>
-<div class="when"><b>{{frameLabel}}</b><span class="signal-state {{signalClass}}">{{signalLabel}}</span></div>
-<div class="player-tools">
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button>
-<sc-if value="{{isJuke}}"><button type="button" class="btn sm" onClick="{{toggleEasy}}" aria-expanded="{{easyOpen}}" aria-controls="easy-explanation">{{easyLabel}}</button></sc-if>
-<button type="button" class="btn sm quiet" onClick="{{describe}}" disabled="{{speechUnavailable}}">{{describeLabel}}</button>
-</div>
+<div class="map-transport"><div class="transport-position">
+<label for="playback-position">{{player.positionLabel}}</label>
+<output for="playback-position" class="mono">{{player.elapsed}} <span aria-hidden="true">/</span><span class="sr">{{player.of}}</span> {{player.duration}}</output>
+<input id="playback-position" type="range" min="0" max="{{player.steps}}" step="1" value="{{player.position}}" aria-valuetext="{{player.positionText}}" onInput="{{player.seek}}">
 </div>
 <sc-if value="{{showStrip}}" hint-placeholder-val="{{ true }}">
 <div id="tour-strip">
@@ -2044,73 +2259,58 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 </div>
 </sc-if>
-
 </div>
+</figure>
+
+<figure id="tour-machine" class="vpanel">
+<figcaption class="vcap"><h2>{{tx.machineSub}}</h2></figcaption>
+<div class="mbox" aria-hidden="true">
+<canvas class="heard" width="280" height="160" data-grid="{{gridColors}}"></canvas>
+<div class="grid-dim" style="--grid-shade:{{gridBefore}}"></div>
+<div class="grid-dim grid-dim-after" style="--grid-shade:{{gridAfter}}"></div>
+<div class="scanline" style="--scan-x: {{scanLeft}}"></div>
+</div>
+<aside id="player-legend" class="map-legend" aria-labelledby="map-legend-title">
+<h2 id="map-legend-title">{{player.legendTitle}}</h2>
+<div class="legend-swatch-grid" role="group" aria-labelledby="map-legend-title">
+<sc-for list="{{player.legend}}" as="level"><button type="button" class="legend-choice legend-swatch" style="--swatch:{{level.color}};--swatch-ink:{{level.ink}}" aria-pressed="{{level.on}}" aria-label="{{level.label}}. {{level.description}}" title="{{level.description}}" onClick="{{level.choose}}">{{level.number}}</button></sc-for>
+</div>
+<div role="status" aria-atomic="true"><p class="legend-reading">{{player.legendReading}}</p>
+<p class="small muted legend-description">{{player.legendDescription}}</p></div>
+</aside>
+</figure>
 <section class="listen-band" aria-labelledby="listen-band-title">
-<div class="band-stage" style="--stage-map:url('{{frameUrl}}')" aria-hidden="true">
+<div>
+<h2 id="listen-band-title">{{tx.theBand}}</h2>
+<p class="stage-cue-help">{{stageCueHelp}}</p>
+<p id="stage-motion-status" class="stage-motion-status" role="status">{{stageMotionNotice}}</p>
+</div>
+<div class="band-stage" role="group" aria-label="{{tx.bandAria}}">
 <div class="band-stage-musicians">
 <sc-for list="{{stageMusicians}}" as="musician">
-<div class="stage-musician {{musician.playingClass}}" data-on="{{musician.on}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
-<img src="{{musician.poseUrl}}" alt="">
-</div>
-</sc-for>
-</div>
-<div class="band-stage-beat">
-<span>{{stageChord}}</span>
-<sc-if value="{{stageShowBeat}}"><span>{{stageBeat}}</span></sc-if>
-</div>
-</div>
-<h2 id="listen-band-title">{{tx.theBand}}</h2>
-<sc-if value="{{bandAllMuted}}"><p role="status" class="small muted">{{bandStatus}}</p></sc-if>
-<div class="listen-members" role="group" aria-label="{{tx.bandAria}}">
-<sc-for list="{{band}}" as="b">
-<button type="button" class="listen-member" aria-pressed="{{b.on}}" onClick="{{b.toggle}}" style="--member-color: {{b.color}}">
-<ts-avatar data-view="member" data-character="{{b.key}}" data-active="{{b.spriteActive}}" data-muted="{{b.spriteMuted}}" aria-hidden="true"></ts-avatar>
-<strong>{{b.name}}</strong><span>{{b.mixLabel}}</span>
+<button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-describedby="stage-instrument-{{musician.key}}" aria-pressed="{{musician.on}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
+<earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"><svg class="stage-receptor" viewBox="120 141 240 240" focusable="false"><path d="{{musician.instrumentLine}}" fill="none" stroke="currentColor" stroke-width="1.4" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"></path></svg></earthbeat-note-track>
+<span class="stage-performer" aria-hidden="true"><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance></span>
+<span class="stage-label"><strong>{{musician.displayName}}</strong><span id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span></span>
 </button>
 </sc-for>
 </div>
-</section>
 </div>
-<div class="player-detail">
-<section class="transport" aria-label="{{player.controlsLabel}}">
-<div class="transport-position">
-<label for="playback-position">{{player.positionLabel}}</label>
-<output for="playback-position" class="mono">{{player.elapsed}} <span aria-hidden="true">/</span><span class="sr">{{player.of}}</span> {{player.duration}}</output>
-<input id="playback-position" type="range" min="0" max="{{player.steps}}" step="1" value="{{player.position}}" aria-valuetext="{{player.positionText}}" onInput="{{player.seek}}">
-</div>
-<div class="transport-tools">
-<div class="volume-control"><label for="playback-volume">{{player.volumeLabel}} {{player.volume}}%</label><input id="playback-volume" type="range" min="0" max="100" step="1" value="{{player.volume}}" onInput="{{player.changeVolume}}"></div>
-<label class="transport-speed">{{tx.speedLabel}}<select onChange="{{onSpeed}}" value="{{speed}}"><option value="180">{{tx.slow}} · 0.75×</option><option value="110">{{tx.normal}} · 1×</option><option value="70">{{tx.fast}} · 1.4×</option></select></label>
-</div>
-<div id="tour-modes" class="player-modes"><div class="engines" role="group" aria-label="{{tx.engineAria}}"><sc-for list="{{engines}}" as="e"><button type="button" onClick="{{e.pick}}" aria-pressed="{{e.on}}" aria-describedby="player-mode-description">{{e.short}}</button></sc-for></div><p id="player-mode-description" class="sr">{{engineDesc}}</p></div>
-</section>
-<div id="easy-explanation">
-<sc-if value="{{easyVisible}}">
-<section class="easy-panel" aria-labelledby="easy-title">
-  <h2 id="easy-title">{{easyLabel}}</h2>
-  <p>{{easyText}}</p>
-  <div class="row"><button type="button" class="btn sm" onClick="{{readEasy}}" disabled="{{speechUnavailable}}">{{readEasyLabel}}</button><span class="muted small">{{speechSupport}}</span></div>
-</section>
-</sc-if>
-</div>
-<div class="readout">
-<p><strong>{{tx.see}}</strong> <span>{{seeText}}</span></p>
+<sc-if value="{{bandAllMuted}}"><p class="stage-muted-status small muted" role="status">{{bandStatus}}</p></sc-if>
 <sc-if value="{{showHarmony}}">
 <div class="chips" role="group" aria-label="{{tx.chordsAria}}">
 <sc-for list="{{progItems}}" as="chord">
-<span class="chip" style="color:{{chord.fg}};background:{{chord.bg}};border-color:{{chord.border}}">{{chord.label}}</span>
+<span class="chip" aria-current="{{chord.on}}" style="color:{{chord.fg}};background:{{chord.bg}};border-color:{{chord.border}}">{{chord.label}}</span>
 </sc-for>
 </div>
 </sc-if>
+
+</section>
 </div>
-</div>
-<details class="event-history" open="{{player.eventsOpen}}" onToggle="{{player.toggleHistory}}">
-<summary>{{player.historyLabel}} · {{player.eventCount}}</summary>
-<p class="muted small">{{player.historyHelp}}</p>
-<ol aria-label="{{player.historyLabel}}"><sc-for list="{{player.events}}" as="event"><li><span class="mono">{{event.time}}</span><span>{{event.text}}</span></li></sc-for></ol>
-<div class="row history-pages"><button type="button" class="btn sm quiet" onClick="{{player.historyPrevious}}" disabled="{{player.historyPreviousOff}}">{{player.historyPreviousLabel}}</button><span class="small mono">{{player.historyPage}}</span><button type="button" class="btn sm quiet" onClick="{{player.historyNext}}" disabled="{{player.historyNextOff}}">{{player.historyNextLabel}}</button><button type="button" class="btn sm quiet" onClick="{{player.clearEvents}}" disabled="{{player.historyEmpty}}">{{player.clearLabel}}</button></div>
-</details>
+<div class="player-detail">
+<div class="readout">
+<p><strong>{{tx.see}}</strong> <span>{{seeText}}</span></p>
+</div></div>
 <p role="status" aria-live="polite" class="sr">{{player.announcement}}</p>
 </div>
 </sc-if>
@@ -2179,7 +2379,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </figcaption>
 </figure>
 <div id="tour-binfo" class="binfo">
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button>
+<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 <sc-if value="{{audioError}}"><p role="alert" class="small">{{audioError}}</p></sc-if>
 <p role="status" class="small">{{bandCur.previewStatus}}</p>
 <sc-if value="{{bandCur.previewMuted}}"><button type="button" class="btn sm" onClick="{{bandCur.previewUnmute}}">{{bandCur.previewUnmuteLabel}}</button></sc-if>
@@ -2195,7 +2395,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{scr.hA}}" hint-placeholder-val="{{ false }}">
 <div class="pagehead">
 <h1 class="display">{{tx.howTitle1}}</h1>
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button>
+<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 <p class="lede">{{tx.howLede1}}</p>
 </div>
 <ol id="tour-steps" class="cards4">
@@ -2209,7 +2409,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{scr.tPage}}" hint-placeholder-val="{{ false }}">
 <div class="pagehead">
 <div><p class="kicker">{{tx.techKicker}} · {{techCur.num}}</p><h1 class="display">{{techCur.title}}</h1></div>
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button>
+<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 </div>
 <div id="tour-techcards" class="tech-list">
 <sc-for list="{{techCur.items}}" as="t" hint-placeholder-count="6">
@@ -2220,38 +2420,40 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </article>
 </sc-for>
 </div>
-</sc-if>
-<sc-if value="{{scr.tCred}}" hint-placeholder-val="{{ false }}">
-<div class="pagehead">
-<div><p class="kicker">{{tx.techKicker}} · {{techCur.num}}</p><h1 class="display">{{tx.credTitle}}</h1></div>
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button>
-</div>
-<div class="credits-layout">
+<sc-if value="{{techCur.nasa}}">
+<div class="nasa-source-layout">
 <section class="credit-section" aria-labelledby="credit-science-title">
-<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg><h2 id="credit-science-title">{{tx.credScience}}</h2><span class="credit-index" aria-hidden="true">01</span></div>
-<p>{{tx.credDataP1}}</p><p>{{tx.credDataP2}}</p>
-<details class="credit-sources">
-<summary>{{tx.methodSourcesTitle}}</summary>
+<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg><h2 id="credit-science-title">{{tx.credScience}}</h2></div>
+<p>{{tx.credDataP1}}</p><p>{{tx.credDataP2}}</p><p>{{tx.credDataScale}}</p>
+</section>
+<section class="credit-section" aria-labelledby="nasa-links-title">
+<div class="credit-heading"><h2 id="nasa-links-title">{{tx.methodSourcesTitle}}</h2></div>
 <ul class="method-sources">
 <li><a href="https://svs.gsfc.nasa.gov/5176/" target="_blank" rel="noopener noreferrer">NASA SVS 5176 · EIC SST Anomaly ↗</a></li>
 <li><a href="https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html" target="_blank" rel="noopener noreferrer">NASA GIBS · {{tx.originalPalette}} ↗</a></li>
 <li><a href="https://power.larc.nasa.gov/docs/services/api/temporal/monthly/" target="_blank" rel="noopener noreferrer">NASA POWER · {{tx.monthlyData}} ↗</a></li>
-<li><a href="./data/impacts.v1.json" target="_blank" rel="noopener noreferrer">{{tx.impactCatalog}} ↗</a></li>
-
 </ul>
-</details>
 </section>
+</div>
+</sc-if>
+</sc-if>
+<sc-if value="{{scr.tCred}}" hint-placeholder-val="{{ false }}">
+<div class="pagehead">
+<div><p class="kicker">{{tx.techKicker}} · {{techCur.num}}</p><h1 class="display">{{tx.credTitle}}</h1></div>
+<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
+</div>
+<div class="credits-layout">
 <section class="credit-section" aria-labelledby="credit-dev-title">
-<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></svg><h2 id="credit-dev-title">{{tx.credDev}}</h2><span class="credit-index" aria-hidden="true">02</span></div>
+<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></svg><h2 id="credit-dev-title">{{tx.credDev}}</h2></div>
 <ul class="credit-tools" aria-label="{{tx.credTools}}"><li>HTML / CSS / JavaScript</li><li>Canvas 2D</li><li>Web Audio</li></ul>
 <p>{{tx.credDevP}}</p>
 </section>
 <section class="credit-section" aria-labelledby="credit-ai-title">
-<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4M18 9h4m-4 6h4M10 10h4v4h-4z"/></svg><h2 id="credit-ai-title">{{tx.credAi}}</h2><span class="credit-index" aria-hidden="true">03</span></div>
+<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4M18 9h4m-4 6h4M10 10h4v4h-4z"/></svg><h2 id="credit-ai-title">{{tx.credAi}}</h2></div>
 <p>{{tx.credAiP}}</p><p class="credit-review">{{tx.credAiReview}}</p>
 </section>
 <section class="credit-section credit-notice" aria-labelledby="credit-notice-title">
-<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v1"/></svg><h2 id="credit-notice-title">{{tx.credInstitution}}</h2><span class="credit-index" aria-hidden="true">04</span></div>
+<div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v1"/></svg><h2 id="credit-notice-title">{{tx.credInstitution}}</h2></div>
 <p>{{tx.noticeP}}</p>
 </section>
 </div>
@@ -2802,11 +3004,11 @@ var TECH = [
   {
     "cat": "Datos de la NASA",
     "name": "EIC · SST Anomaly (SVS 5176)",
-    "use": "30 imágenes del Pacífico: 16 mayo 2024–2 noviembre 2026. Son una selección almacenada, no una conexión diaria en vivo.",
+    "use": "30 imágenes del Pacífico: 16 mayo 2024–3 octubre 2026. Son una selección almacenada, no una conexión diaria en vivo.",
     "es": {
       "cat": "Datos de la NASA",
       "name": "EIC · SST Anomaly (SVS 5176)",
-      "use": "30 imágenes del Pacífico: 16 mayo 2024–2 noviembre 2026. Son una selección almacenada, no una conexión diaria en vivo."
+      "use": "30 imágenes del Pacífico: 16 mayo 2024–3 octubre 2026. Son una selección almacenada, no una conexión diaria en vivo."
     }
   },
   {
@@ -3054,7 +3256,7 @@ var TECH_EN = {
     "use": "Responsive layout, focus and reduced motion. Local Barlow, Inter, IBM Plex Mono and Atkinson Hyperlegible; system fonts provide fallbacks."
   },
   "EIC · SST Anomaly (SVS 5176)": {
-    "use": "30 Pacific images: 16 May 2024–2 November 2026. This is a stored selection, not a daily live feed."
+    "use": "30 Pacific images: 16 May 2024–3 October 2026. This is a stored selection, not a daily live feed."
   },
   "NASA GIBS · GHRSST MUR": {
     "use": "30 anomaly maps from five episodes between 2010 and 2023. Each date corresponds to the 15th of its month."
@@ -3181,7 +3383,6 @@ var TX = {
     "methodSourcesTitle": "Consultar las fuentes",
     "originalPalette": "Paleta original",
     "monthlyData": "Datos mensuales",
-    "impactCatalog": "Catálogo de impactos v1",
     "techKicker": "Tecnología",
     "techFilterAria": "Filtrar tecnologías",
     "techNote": "Detalle técnico",
@@ -3189,8 +3390,9 @@ var TX = {
     "module": "Módulo",
     "credTitle": "Créditos y uso de IA",
     "credData": "Datos",
-    "credDataP1": "Fotogramas de la visualización del Earth Information Center «Sea Surface Temperature (SST) Anomaly – Near Real Time» (NASA SVS 5176, variante Pacífico, 16 may 2024 – 2 nov 2026), recortados al Pacífico sudeste; datos JPL MUR SST. Crédito: NASA’s Scientific Visualization Studio.",
+    "credDataP1": "Fotogramas de la visualización del Earth Information Center «Sea Surface Temperature (SST) Anomaly – Near Real Time» (NASA SVS 5176, variante Pacífico, 16 may 2024 – 3 oct 2026), recortados al Pacífico sudeste; datos JPL MUR SST. Crédito: NASA’s Scientific Visualization Studio.",
     "credDataP2": "Los discos «NASA GIBS» (2010–2023) usan NASA JPL GHRSST L4 MUR 0,25° SST Anomalies, día 15 de cada mes, vía NASA GIBS/Worldview.",
+    "credDataScale": "La barra original de EIC va de −4 a +4 °C. En GIBS, los extremos agrupan valores bajo −3 °C y desde +3 °C. La cuadrícula estima diferencias a partir de los colores de cada imagen.",
     "credScience": "Fuentes científicas",
     "credDev": "Desarrollo y tecnología",
     "credTools": "Herramientas principales",
@@ -3303,7 +3505,6 @@ var TX = {
     "methodSourcesTitle": "Consult the sources",
     "originalPalette": "Original palette",
     "monthlyData": "Monthly data",
-    "impactCatalog": "Impact catalog v1",
     "techKicker": "Technology",
     "techFilterAria": "Filter technologies",
     "techNote": "Technical detail",
@@ -3311,8 +3512,9 @@ var TX = {
     "module": "Module",
     "credTitle": "Credits and AI use",
     "credData": "Data",
-    "credDataP1": "Frames from the Earth Information Center visualization “Sea Surface Temperature (SST) Anomaly – Near Real Time” (NASA SVS 5176, Pacific variant, 16 May 2024 – 2 Nov 2026), cropped to the southeast Pacific; JPL MUR SST data. Credit: NASA’s Scientific Visualization Studio.",
+    "credDataP1": "Frames from the Earth Information Center visualization “Sea Surface Temperature (SST) Anomaly – Near Real Time” (NASA SVS 5176, Pacific variant, 16 May 2024 – 3 Oct 2026), cropped to the southeast Pacific; JPL MUR SST data. Credit: NASA’s Scientific Visualization Studio.",
     "credDataP2": "The “NASA GIBS” discs (2010–2023) use NASA JPL GHRSST L4 MUR 0.25° SST Anomalies, the 15th of each month, via NASA GIBS/Worldview.",
+    "credDataScale": "The EIC color bar runs from −4 to +4 °C. GIBS groups values below −3 °C and at or above +3 °C at the ends of its scale. The grid estimates differences from each image’s colors.",
     "credScience": "Scientific sources",
     "credDev": "Development and technology",
     "credTools": "Main tools",
@@ -3653,7 +3855,7 @@ class CinematicIntro {
   togglePause(){if(!this.root||this.root.dataset.static==='true')return;this.paused=!this.paused;this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(a=>this.paused?a.pause():a.play());if(!this.paused){var self=this;this.timers.push(setTimeout(function(){self.finish(true);},Math.max(0,this.duration-Number(this.endAnimation?.currentTime||0))+500));}this.update();}
   update() {
     if (!this.root) return;
-    this.root.querySelector('h2').textContent = T('Mapas NASA hechos música.','NASA maps, made musical.');
+    this.root.querySelector('h2').textContent = T('No solo mostramos nuestro planeta. Le damos voz.', 'We don’t just visualize our planet. We give it a voice.');
     this.root.querySelector('.cinema-description').textContent = T('Explora cambios de temperatura del Pacífico con la vista y el oído.','Explore Pacific temperature patterns through sight and sound.');
     this.root.querySelector('.cinema-toolbar p').textContent = this.root.dataset.motion === 'gentle' && this.owner.bandReduced()
       ? T('Movimiento reducido · Pacífico', 'Reduced motion · Pacific')
@@ -3745,15 +3947,12 @@ class Component extends DCLogic {
       caption: T('Elige un disco y un protagonista, y pulsa Reproducir.', 'Pick a disc and a lead, then press Play.') };
     this.timer = null; this.ac = null; this.lastThunder = -9; this.routeTimers = []; this.routeRun = 0; this.routeFinish = null; this.melDeg = null;
     this.state.sfx = true;
-    this.state.easyOpen = false;
     this.state.volume = 100;
     this.state.masterMuted = false;
     this.state.mixCustomized = false;
     this.state.repeat = false;
     this.state.ended = false;
     this.state.playerAnnouncement = '';
-    this.state.events = [];
-    this.eventSerial = 0;
     this.state.audioPending = false; this.state.audioError = ''; this.audioRun = 0; this.cancelAudioWait = null;
     this.audioGraph = null; this.audioRetirements = new Map(); this.reverbImpulse = null; this.timpaniWave = null; this.cueRun = 0;
     this.voiceGroups = Object.create(null);
@@ -3839,6 +4038,7 @@ class Component extends DCLogic {
       }
     };
     this.onTourResize = function () {
+      self.positionAccessibilityMenu();
       self.onTourLayout();
       clearTimeout(self.navResizeTimer);
       self.navResizeTimer = setTimeout(function () { if (!self.disposed) self.ensureNavVisible(); }, 100);
@@ -3900,7 +4100,10 @@ class Component extends DCLogic {
       if (!value) this.stopSpeech();
       else if (!this.state.showPreferences) this.narrateBrisa(this.guideStep() || this.sectionNarration());
     }
-    if (key === 'big' || key === 'legible') this.ensureNavVisible();
+    if (key === 'big' || key === 'legible') {
+      this.ensureNavVisible();
+      this.positionAccessibilityMenu();
+    }
     if (key === 'sfx') this.syncVolume();
     if (key === 'reducedMotion') {
       if (value && this.routeFinish) this.routeFinish();
@@ -3963,8 +4166,16 @@ class Component extends DCLogic {
     if (typeof window.dispatchEvent === 'function' && typeof window.CustomEvent === 'function') window.dispatchEvent(new window.CustomEvent('terrasonic:motion'));
   }
   positionAccessibilityMenu(event) {
-    var menu = event.currentTarget;
-    if (menu.open) menu.style.setProperty('--a11y-top', Math.round(menu.querySelector('summary').getBoundingClientRect().bottom + 6) + 'px');
+    var menu = event?.currentTarget || document.getElementById('tour-a11y');
+    if (!menu) return;
+    if (!menu.open) {
+      menu.style.removeProperty('--a11y-available');
+      return;
+    }
+    var panelTop = menu.querySelector('.pop').getBoundingClientRect().top;
+    var viewport = window.visualViewport;
+    var viewportBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
+    menu.style.setProperty('--a11y-available', Math.max(0, Math.floor(viewportBottom - panelTop - 8)) + 'px');
   }
   setPreferencesInert(on) {
     if (on) {
@@ -4084,7 +4295,7 @@ class Component extends DCLogic {
   sectionNarration() {
     var s = this.state;
     if (s.tab === 'how' && s.sub === 0) return GUIDES.practice[0];
-    return this.guideSteps(s.tab)[0];
+    return this.guideSteps()[0];
   }
   narrateBrisa(step, manual) {
     if (!step || (!manual && !this.state.voice)) return;
@@ -4095,20 +4306,24 @@ class Component extends DCLogic {
     this.stopSpeech();
     var self = this;
     var audio = new window.Audio('./brisa/' + LANG + '-' + step.audio + '.mp3');
-    var finish = function (failed) {
+    var finish = function (error) {
       if (self.brisaAudio !== audio) return;
       self.brisaAudio = null;
-      self.setState({ speaking: false, speechNotice: failed ? uiMessage(
-        'Pulsa «Escuchar voz» para iniciar la narración. También puedes leer la explicación.',
-        'Press “Listen to voice” to start narration. You can also read the explanation.') : null });
+      if (error && error.name !== 'NotAllowedError') {
+        self.speak(step.t + '. ' + step.b, manual);
+        return;
+      }
+      self.setState({ speaking: false, speechNotice: error ? uiMessage(
+        'Pulsa el botón de bocina para iniciar la narración. También puedes leer la explicación.',
+        'Press the speaker button to start narration. You can also read the explanation.') : null });
       self.syncVolume();
     };
     this.brisaAudio = audio;
-    audio.onended = function () { finish(false); };
-    audio.onerror = function () { finish(true); };
+    audio.onended = function () { finish(null); };
+    audio.onerror = function () { finish(audio.error || new Error('Narration audio unavailable')); };
     this.setState({ speaking: true, speechNotice: null });
     this.syncVolume();
-    try { audio.play().catch(function () { finish(true); }); } catch (ignored) { finish(true); }
+    try { audio.play().catch(finish); } catch (error) { finish(error); }
   }
   toggleSectionVoice() {
     if (this.state.speaking) this.stopSpeech();
@@ -4648,7 +4863,7 @@ class Component extends DCLogic {
     if (this.state.tour && !this.state.tutorial) this.tourClose();
     var disc = DISCS[index], who = this.state.leadOverride || this.discLead(index, this.state.an[index + '_0']);
     var name = BAND.find(function (b) { return b.k === who; }).name;
-    this.routeChange({ tab: 'juke', disc: index, frame: 0, col: -1, sub: 1, easyOpen: false,
+    this.routeChange({ tab: 'juke', disc: index, frame: 0, col: -1, sub: 1,
       mute: this.state.mixCustomized ? this.state.mute : this.allMute(false),
       caption: T('Disco ', 'Disc ') + disc.n + ': ' + disc.title + T('. Protagonista: ', '. Lead: ') + name + T('. Pulsa Reproducir.', '. Press Play.') }, 'juke', disc.title);
     this.tutorialAction('disc');
@@ -4747,26 +4962,17 @@ class Component extends DCLogic {
       if (was && !atEnd) self.play();
     });
   }
-  eventFor(fired, chord, patch) {
-    var s = patch ? Object.assign({}, this.state, patch) : this.state;
-    var analysis = s.frame === this.state.frame ? this.cur() : s.an[s.disc + '_' + s.frame];
-    var profile = this.profile(analysis, s.frame);
-    return { id: ++this.eventSerial, discId: DISCS[s.disc].id, set: s.set, frame: s.frame,
-      date: this.frameDate(s.disc, s.frame), column: s.col + 1, engine: s.engine,
-      seconds: this.playerSeconds(Math.max(0, Math.min(this.playerSteps() - 1, s.frame * 28 + s.col))),
-      chord: chord ? profile.prog.findIndex(function (item) { return chordOf(profile, item).label === chord; }) : -1,
-      profile: s.leadOverride || this.discLead(s.disc, analysis), dark: profile.scale === MUSIC.yaku.dark.scale,
-      musicians: BAND.filter(function (b) { return fired[b.k]; }).map(function (b) { return b.name; }) };
-  }
-  recordEvent(fired, chord) {
-    this.setState({ events: this.state.events.concat([this.eventFor(fired, chord)]).slice(-200) });
-  }
-  legendVm(rain, localImage) {
+  legendVm(rain, localImage, set) {
     var self = this, selection = this.state.legendSelection;
-    var key = [LANG, !!rain, localImage, selection].join(':');
+    var key = [LANG, !!rain, localImage, set, selection].join(':');
     if (this.legendCache?.key === key) return this.legendCache.items;
     var items = RAMP.slice().reverse().map(function (level) {
-      var value = level[0], number = (value > 0 ? '+' : value < 0 ? '−' : '') + Math.abs(value).toLocaleString(LANG);
+      var value = level[0], ocean = !rain && !localImage;
+      // Undo the source's normalization for display only. The grid bins are approximate.
+      var scaleMaximum = set === 'prev' ? 3 : 4;
+      var magnitude = ocean ? Math.abs(value) / 5 * scaleMaximum : Math.abs(value);
+      var number = (value > 0 ? '+' : value < 0 ? '−' : '') + magnitude.toLocaleString(LANG, { maximumFractionDigits: 1 });
+      var reading = ocean ? (value === 0 ? '' : '≈ ') + number + ' °C' : number;
       var tone = LEGEND_LEVELS[value], intensity = LEGEND_INTENSITY[Math.abs(value)];
       var meaning = tone[0], description = tone[1];
       if (rain) {
@@ -4778,7 +4984,7 @@ class Component extends DCLogic {
         description = value === 0 ? T('Los colores de esta zona se acercan al centro de la escala.', 'Colors in this area are close to the middle of the scale.')
           : uiText(uiMessage('El tono {kind} tiene una intensidad {intensity} en la escala de tu imagen.', 'The {kind} tone has {intensity} intensity on your image’s scale.', { kind: value < 0 ? T('frío', 'cool') : T('cálido', 'warm'), intensity: intensity[LANG === 'en' ? 1 : 0] }));
       }
-      return { number: number, color: level[1], ink: legendInk(level[1]), label: number + ' · ' + uiText(meaning), description: uiText(description), on: selection === value,
+      return { number: number, color: level[1], ink: legendInk(level[1]), label: reading + ' · ' + uiText(meaning), description: uiText(description), on: selection === value,
         choose: function () { self.setState({ legendSelection: value }); self.tutorialAction('legend', value < 0); } };
     });
     this.legendCache = { key: key, items: items };
@@ -4788,11 +4994,8 @@ class Component extends DCLogic {
     var self = this, s = this.state, position = this.playerPosition(), steps = this.playerSteps();
     var elapsed = this.formatClock(this.playerSeconds(position)), duration = this.formatClock(this.playerSeconds(steps));
     var rain = s.disc === 5 && s.custom && s.custom.kind === 'rain';
-    var legend = this.legendVm(rain, s.disc === 5 && !rain);
+    var legend = this.legendVm(rain, s.disc === 5 && !rain, s.set);
     var selected = legend.find(function (level) { return level.on; });
-    const pageSize = 6;
-    const pageCount = Math.max(1, Math.ceil(s.events.length / pageSize));
-    const historyPage = Math.min(s.historyPage || 0, pageCount - 1);
     return {
       controlsLabel: T('Controles de reproducción', 'Playback controls'), positionLabel: T('Tiempo del disco', 'Disc playback time'),
       position: position, steps: steps, elapsed: elapsed, duration: duration, of: T(' de ', ' of '),
@@ -4800,44 +5003,17 @@ class Component extends DCLogic {
       seek: function (e) { self.seekPosition(Number(e.target.value)); },
       volumeLabel: T('Volumen', 'Volume'), volume: s.volume,
       changeVolume: function (e) { self.setVolume(Number(e.target.value)); },
-      legendTitle: rain ? T('Lluvia mensual', 'Monthly rainfall') : T('Escala de color', 'Color scale'),
-      legend: legend, legendReading: selected?.label || '', legendDescription: selected?.description || T('Elige un recuadro de color para saber qué significa.', 'Choose a color swatch to see what it means.'), legendColor: selected?.color || 'var(--line)',
-      speechNotice: uiText(s.speechNotice),
-      readLegendLabel: s.speaking ? T('Detener voz', 'Stop narration') : T('Escuchar leyenda', 'Hear legend'),
-      readLegend: function () {
-        if (self.state.speaking) self.stopSpeech();
-        else self.speak(legend.map(function (level) { return level.label; }).join('. '), true);
-      },
-      historyLabel: T('Eventos musicales', 'Music events'), eventCount: s.events.length, eventsOpen: !!s.eventsOpen, historyTabIndex: s.events.length ? 0 : -1,
-      historyHelp: T('Últimos 200 pasos. Se conservan al pausar o cambiar de disco. El lector de pantalla los lee cuando tú los consultas.', 'Last 200 steps. They remain when you pause or change discs. Your screen reader reads them when you choose to browse them.'),
-      events: s.eventsOpen ? s.events.slice().reverse().slice(historyPage * pageSize, (historyPage + 1) * pageSize).map(function (event) {
-        var disc = DISC_SETS.eic.concat(DISC_SETS.prev).find(function (item) { return item.id === event.discId; });
-        var profile = event.dark ? MUSIC.yaku.dark : MUSIC[event.profile];
-        var chord = event.chord >= 0 && profile.prog[event.chord] ? chordOf(profile, profile.prog[event.chord]).label : '';
-        return { time: self.formatClock(event.seconds), text: (disc ? disc.title + ' · ' + MES[event.date.m] + ' ' + event.date.y : T('Tu archivo', 'Your file')) + ' · ' +
-          T('columna ', 'column ') + event.column + '/28 · ' + (event.engine === 'melody' ? T('Melodía', 'Melody') : T('Datos', 'Data')) +
-          (chord ? ' · ' + T('acorde ', 'chord ') + chord : '') + ' · ' + (event.musicians.join(', ') || T('Sin entradas nuevas.', 'No new instrument entries.')) };
-      }) : [],
-      toggleHistory: function (event) { if (!event.target.isConnected) return; var open = event.target.open; if (open !== !!self.state.eventsOpen) self.setState({ eventsOpen: open }); },
-      historyPage: (historyPage + 1) + ' / ' + pageCount,
-      historyPreviousLabel: T('Anterior', 'Previous'), historyNextLabel: T('Siguiente', 'Next'),
-      historyPreviousOff: historyPage === 0, historyNextOff: historyPage >= pageCount - 1,
-      historyPrevious: function () { self.setState({ historyPage: Math.max(0, historyPage - 1) }); },
-      historyNext: function () { self.setState({ historyPage: Math.min(pageCount - 1, historyPage + 1) }); },
-      historyEmpty: s.events.length === 0,
-      clearLabel: T('Vaciar historial', 'Clear history'), clearEvents: function () { self.setState({ events: [], historyPage: 0 }); },
+      legendTitle: rain ? T('Lluvia mensual', 'Monthly rainfall') : s.disc === 5 ? T('Escala de color', 'Color scale')
+        : T('Anomalía estimada (°C)', 'Estimated anomaly (°C)'),
+      legend: legend, legendReading: selected?.label || '', legendDescription: selected?.description || (rain
+        ? T('Los colores muestran más o menos lluvia que el promedio de la serie.', 'Colors show more or less rainfall than the series average.')
+        : s.disc === 5 ? T('Elige un recuadro para explorar la escala de la imagen.', 'Choose a swatch to explore the image scale.')
+        : T('Diferencia aproximada respecto a lo habitual. Elige un color para ver su significado.',
+          'Approximate difference from usual conditions. Choose a color to see what it means.')),
       announcement: s.playerAnnouncement
     };
   }
-  easyExplanation() {
-    var a = this.cur();
-    if (!a || this.state.disc >= 5) return T('Elige un fotograma de temperatura para ver la explicación.', 'Pick a temperature frame to read its explanation.');
-    var mean = a.warm - a.cold;
-    var summary = mean > .15 ? T('En este mapa, el mar se ve en promedio más cálido de lo esperado para esa época.', 'On this map, the sea looks warmer on average than expected for that time of year.') :
-      mean < -.15 ? T('En este mapa, el mar se ve en promedio más frío de lo esperado para esa época.', 'On this map, the sea looks cooler on average than expected for that time of year.') :
-      T('En este mapa, el promedio está cerca de la referencia. Aun así, puede haber zonas más cálidas y otras más frías.', 'On this map, the average is close to the reference. Some areas can still be warmer and others cooler.');
-    return summary + ' ' + T('Los colores muestran diferencias frente a la referencia del mapa. La banda transforma esos datos en música.', 'The colors show differences from the map’s reference. The band turns those data into music.');
-  }
+
   analyze(d, f, force, operation, pendingCustom) {
     var key = d + '_' + f, self = this;
     if (this.disposed) return;
@@ -5335,7 +5511,6 @@ class Component extends DCLogic {
     if (!scheduled) {
       var pulse = this.playbackPulse(fired, patch.levels);
       if (pulse) this.vibrateSafely(pulse, 'music:' + this.audioRun + ':' + this.state.disc + ':' + this.state.frame + ':' + patch.col);
-      patch.events = this.state.events.concat([this.eventFor(fired, chord, patch)]).slice(-200);
       patch.stageNotes = Object.assign({}, this.state.stageNotes);
       Object.keys(fired).forEach(key => { if (fired[key]) this.updateStageNote(patch.stageNotes, key, fired[key]); });
       this.setState(patch); return;
@@ -5350,7 +5525,7 @@ class Component extends DCLogic {
   flushPlayback(now) {
     var self = this, latest = null, hapticStep = null;
     if (!this.playbackQueue?.length || this.playbackQueue[0].at > now + .002) return;
-    var events = this.state.events, previousFrame = this.state.frame, announcement;
+    var previousFrame = this.state.frame, announcement;
     var stageNotes = Object.assign({}, this.state.stageNotes), stageHits = {};
     while (this.playbackQueue.length && this.playbackQueue[0].at <= now + .002) {
       var event = this.playbackQueue.shift(), frameChanged = previousFrame !== event.frame;
@@ -5367,7 +5542,6 @@ class Component extends DCLogic {
         (names.length ? ' · ' + names.join(' · ') : T(' · sin ataque nuevo', ' · no new attack'));
       if (frameChanged) announcement = T('Mapa de ', 'Map for ') + this.frameTag(this.state.disc, event.frame) + '.';
       this.heardThunder = event.thunder;
-      events = events.concat([this.eventFor(fired, chord, patch)]).slice(-200);
       Object.keys(fired).forEach(function (key) { if (fired[key]) stageHits[key] = fired[key]; });
       latest = patch;
       // Discard late pulses if rendering fell behind the audible step.
@@ -5381,15 +5555,16 @@ class Component extends DCLogic {
       if (!this.state.masterMuted && this.state.volume > 0) Object.keys(stageHits).forEach(function (key) {
         self.updateStageNote(stageNotes, key, stageHits[key]);
       });
-      this.setState(Object.assign(latest, { events: events, stageNotes: stageNotes }));
+      this.setState(Object.assign(latest, { stageNotes: stageNotes }));
     }
     if (hapticStep) this.vibrateSafely(hapticStep.pattern, 'music:' + this.audioRun + ':' + this.state.disc + ':' + hapticStep.frame + ':' + hapticStep.column);
   }
   scheduleAudio() {
     if (!this.ac || !this.state.playing || !this.audioCursor) return;
-    var now = this.ac.currentTime, cursor = this.audioCursor;
+    var now = this.ac.currentTime, cursor = this.audioCursor, lookahead = .65;
     if (cursor.endAt != null && cursor.endAt <= now) { this.flushPlayback(now); this.tick(); return; }
-    for (var count = 0; count < 16 && cursor.at < now + .65; count++) {
+    var firstNewNote = this.playbackQueue.length;
+    for (var count = 0; count < 16 && cursor.at < now + lookahead; count++) {
       now = this.ac.currentTime;
       if (cursor.column >= 28) {
         if (cursor.frame >= DISCS[this.state.disc].files.length - 1) { cursor.endAt = cursor.at; break; }
@@ -5408,8 +5583,16 @@ class Component extends DCLogic {
       if (scheduled.patch) { cursor.levels = scheduled.patch.levels; cursor.hits = scheduled.patch.hits; cursor.flash = scheduled.patch.flash; }
       cursor.at += this.sequencerMs / 1000; cursor.column++;
     }
-    // Scheduling happens before DOM work: rendering a due UI update must not
-    // consume the safety margin of the next audio event.
+    // Send only new, scheduled entries so the lanes can use the same clock as Web Audio.
+    if (this.playbackQueue.length > firstNewNote && !document.hidden && !this.bandReduced() &&
+        !this.state.masterMuted && this.state.volume > 0 &&
+        typeof window.dispatchEvent === 'function' && typeof window.CustomEvent === 'function') {
+      var notes = this.playbackQueue.slice(firstNewNote);
+      window.dispatchEvent(new window.CustomEvent('earthbeat-stage-queue', {
+        detail: { clock: this.ac, notes: notes, lookahead: lookahead }
+      }));
+    }
+    // Schedule audio before rendering the due player state.
     this.flushPlayback(this.ac.currentTime);
   }
   setEngine(k) {
@@ -5574,7 +5757,7 @@ class Component extends DCLogic {
     }
     this.utterance = null;
     if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (ignored) {} }
-    if (this.state.speaking) this.setState({ speaking: false });
+    if (this.state.speaking || this.state.speechNotice) this.setState({ speaking: false, speechNotice: null });
     this.syncVolume();
   }
   speak(text, manual) {
@@ -5840,11 +6023,9 @@ class Component extends DCLogic {
       tPage: s.tab === 'tech' && !techCur.credits, tCred: s.tab === 'tech' && !!techCur.credits };
     var prof = this.profile(), factor = this.speedFactor(), melody = s.engine === 'melody', bpmEff = Math.round(prof.bpm * factor);
     var chordLabels = prof.prog.map(function (c) { return chordOf(prof, c).label; });
-    var progItems = melody ? chordLabels.map(function (l) { var on = s.playing && l === s.chord; return { label: l, bg: on ? th.accent : 'transparent', fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line }; }) : [];
+    var stageChord = melody && s.playing ? s.chord : '';
+    var progItems = melody ? chordLabels.map(function (l) { var on = l === stageChord; return { label: l, on: on, bg: on ? th.accent : 'transparent', fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line }; }) : [];
     var seeText = this.describeText();
-    var hearText = melody
-      ? prof.key + ' ' + prof.mode + ' · ' + bpmEff + T(' pulsaciones por minuto · progresión ', ' beats per minute · progression ') + chordLabels.join(' – ') + (s.playing && s.chord ? T(' · ahora suena ', ' · now playing ') + s.chord : '') + '.'
-      : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes. Las alturas y los timbres siguen reglas artísticas.', 'Data: derived levels converted into tones, without a chord progression. Pitches and timbres follow artistic rules.');
     var whyTiles = melody ? [
       { tag: T('TONALIDAD', 'KEY'), title: prof.key + ' ' + prof.mode, body: T('Escala y acordes elegidos para el carácter musical de ', 'Scale and chords chosen for the musical personality of ') + prof.name + ': ' + prof.story + '.' },
       { tag: 'TEMPO', title: bpmEff + T(' ppm', ' bpm'), body: T('Cada columna del fotograma es una corchea. Un fotograma dura unos ', 'Each column of the frame is an eighth note. A frame lasts about ') + Math.round(840 / bpmEff) + T(' segundos.', ' seconds.') },
@@ -5866,7 +6047,7 @@ class Component extends DCLogic {
     return {
       th: th, highContrast: hc, ic: this.icons, showBg: !hc, showDecorativePlanets: s.tab !== 'home', planetContrast: hc ? 'true' : 'false', universe: this.universeVm(), stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
       engineDesc: (melody ? T('Melodía compuesta: escalas, acordes y ritmo por disco; la melodía sale de los datos.', 'Composed melody: scales, chords and rhythm per disc; the melody comes from the data.') : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes.', 'Data: derived levels converted into tones, without a chord progression.')),
-      engines: engines, whyTiles: whyTiles, seeText: seeText, hearText: hearText, progItems: progItems, showHarmony: melody,
+      engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody,
       player: showCells ? this.playerVm() : null,
       motionClass: reducedMotion ? 'reduce-motion' : '',
       motionMode: reducedMotion ? 'reduced' : 'full',
@@ -5920,24 +6101,12 @@ class Component extends DCLogic {
       homeMap: this.homeMap(),
       heroGo: function () { self.goTab('juke'); },
       heroBand: function () { self.goTab('band'); },
-      easyLabel: T('Explícamelo fácil', 'Explain it simply'),
-      easyOpen: s.easyOpen,
-      easyVisible: isJuke && s.easyOpen,
-      easyText: this.easyExplanation(),
-      toggleEasy: function () { if (s.easyOpen) self.stopSpeech(); self.setState({ easyOpen: !s.easyOpen }); },
-      readEasyLabel: s.speaking ? T('Detener voz', 'Stop narration') : T('Leer en voz alta', 'Read aloud'),
       speechUnavailable: !window.speechSynthesis || !window.SpeechSynthesisUtterance,
       brisaUnavailable: typeof window.Audio !== 'function' && (!window.speechSynthesis || !window.SpeechSynthesisUtterance),
-      voiceModeOn: s.voice,
+      speaking: s.speaking,
       sectionVoiceLabel: s.speaking ? T('Detener voz', 'Stop voice') : T('Escuchar voz', 'Listen to voice'),
       sectionVoice: function () { self.toggleSectionVoice(); },
       sectionVoiceNotice: uiText(s.speechNotice),
-      speechSupport: window.speechSynthesis && window.SpeechSynthesisUtterance ? '' : T('La lectura en voz alta no está disponible en este navegador.', 'Read aloud is unavailable in this browser.'),
-      readEasy: function () {
-        if (s.speaking) { self.stopSpeech(); return; }
-        self.stop();
-        self.speak(self.easyExplanation(), true);
-      },
       goDiscs: function () { self.goSub(0); },
       playKicker: isData ? tx.dataListenKicker : tx.listenKicker,
       playTitle: isData ? uiLabel(s.custom) : d.title,
@@ -5967,8 +6136,8 @@ class Component extends DCLogic {
       scanLeft: (s.col < 0 ? -3 : s.col) * 100 + '%',
       silboBox: a && a.coast >= 2 ? th.accent : th.muted,
       gridColors: gridColors,
-      gridBefore: Math.max(0, s.col) / 28 * 100 + '%',
-      gridAfter: (s.col < 0 ? 100 : (s.col + 1) / 28 * 100) + '%',
+      gridBefore: Math.max(0, s.col) / 28,
+      gridAfter: s.col < 0 ? 0 : (27 - s.col) / 28,
       stats: a ? { warm: a.warm.toFixed(2), cold: a.cold.toFixed(2), hot: Math.round(a.hot * 100) + '%', coast: referenceCoast && a.coastPixels > 0 ? (a.coast >= 0 ? '+' : '') + a.coast.toFixed(1) : '—' } : { warm: '…', cold: '…', hot: '…', coast: referenceCoast ? '…' : '—' },
       tour: tourVm, nav: navVm, scr: scrVm, scrCls: scrCls,
       techCur: { title: techCur.title, items: techCur.items, nasa: !!techCur.nasa, num: ('0' + (sub + 1)).slice(-2) },
@@ -6026,17 +6195,18 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageMotionNotice: reducedMotion ? T('Movimiento reducido activado en Accesibilidad.', 'Reduced motion is on in Accessibility.') : '',
+      stageCueHelp: T('El icono sube antes de la nota. Al sonar, se ilumina el piso.', 'The icon rises before the note. The floor lights up when it plays.'),
+      stageMotionNotice: reducedMotion ? T('Con movimiento reducido, los iconos quedan fijos y el piso marca qué músicos están activos.', 'With reduced motion, the icons stay still and the floor shows which musicians are active.') : '',
       stageMusicians: band.map(function (member) {
         var level = member.on ? s.levels[member.key] || 0 : 0;
-        var note = member.on && s.playing && !s.masterMuted && s.volume > 0 ? s.stageNotes[member.key] : null;
-        var noteLabel = note?.kind === 'thunder' ? T('Trueno', 'Thunder') : '';
-        return { playingClass: member.on && s.playing && level > .04 ? 'playing' : '', noteId: note?.id || '', noteKind: note?.kind || '', noteLabel: noteLabel,
+        var audible = member.on && s.playing && !s.masterMuted && s.volume > 0;
+        var note = audible ? s.stageNotes[member.key] : null;
+        var instrument = BAND_INSTRUMENTS[member.key];
+        return { audible: audible, noteId: note?.id || '', noteKind: note?.kind || '',
+          instrumentName: instrument.name.charAt(0) + instrument.name.slice(1).toLowerCase(), instrumentLine: instrument.line,
+          displayName: member.name.charAt(0) + member.name.slice(1).toLowerCase(),
           name: member.name, on: member.on, toggle: member.toggle, key: member.key, playing: String(member.on && s.playing && level > .04), poseUrl: 'sprites/' + member.key + '/escenario.webp', color: member.color, intensity: level };
       }),
-      stageShowBeat: melody,
-      stageChord: melody ? T('Acorde', 'Chord') + ' ' + (s.chord || '—') : T('Datos', 'Data'),
-      stageBeat: bpmEff + T(' ppm', ' bpm'),
       overCls: s.over ? 'over' : '',
       showFileSettings: s.disc === 5 && hasCustom && s.custom.kind === 'image',
       customMode: s.customMode,

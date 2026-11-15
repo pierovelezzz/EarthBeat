@@ -20,6 +20,11 @@ El producto contiene dos catálogos de cinco discos y seis mapas por disco: trei
 
 EIC y GIBS tienen escalas distintas. La cuantización, el recorte, la compresión y la música añaden interpretación; sus niveles no vuelven físicamente comparables las dos visualizaciones. La anomalía de temperatura es una diferencia respecto a una referencia climática, no una temperatura absoluta.
 
+En V4, la leyenda del mapa de colores conserva los mismos 14 recuadros y muestra el valor aproximado de cada nivel en la escala de su fuente. EIC multiplica por 1,25 antes de sonificar, así que se divide el nivel entre 1,25 para rotular el recuadro. GIBS usa los intervalos de su paleta y multiplica por 5/3, así que su leyenda multiplica el nivel por 3/5. Por ejemplo, el nivel interno +5 corresponde al extremo +4 °C en EIC o al extremo superior de GIBS (≥ +3 °C). Cada recuadro representa un grupo de celdas parecido a ese valor. La cuadrícula se deriva de la imagen y no sustituye los datos de temperatura de la NASA.
+
+- [Barra oficial EIC, NASA SVS 5176](https://svs.gsfc.nasa.gov/5176/).
+- [Intervalos de la paleta oficial de GIBS](https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html).
+
 NASA POWER utiliza PRECTOTCORR para la muestra de Chiclayo. Sus valores mensuales representan promedios de precipitación diaria en mm/día; no deben rotularse como acumulados mensuales. La normalización interna conserva los datos originales y solo construye un patrón musical.
 
 La regla de impactos de Pacora es una decisión editorial fija para el episodio y mes documentados. No calcula tristeza, riesgo ni causalidad a partir de una imagen. La interfaz es educativa y no es un sistema de alerta.
