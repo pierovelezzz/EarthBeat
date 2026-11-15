@@ -1,6 +1,6 @@
 # Estado de main
 
-La introducción ilustrada del espacio al Pacífico se reproduce al abrir la portada. Puedes saltarla, pausarla o repetirla con «Ver presentación». Con movimiento reducido se muestra una bienvenida estática con el botón «Entrar». La primera visita ofrece las preferencias y el acceso a la guía de Brisa al terminar la introducción.
+La introducción ilustrada del espacio al Pacífico se reproduce al abrir la portada. Puedes saltarla, pausarla o repetirla con «Ver presentación». Con movimiento reducido, la bienvenida ofrece «Entrar» o «Reproducir animación» para ver solo esa escena. La primera visita ofrece las preferencias y el acceso a la guía de Brisa al terminar la introducción.
 
 La portada explica cómo un mapa del Pacífico se convierte en música. «Escuchar una muestra» abre el mapa que se ve en pantalla y comienza la reproducción tras pulsar el botón. También puedes explorar los discos o abrir la guía de Brisa.
 
