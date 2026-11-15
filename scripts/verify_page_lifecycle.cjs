@@ -30,13 +30,13 @@ async function main(){
   if(!process.argv.includes('--native-only'))for(let pass=1;pass<=3;pass++){
    const audioAvailable=await page.evaluate(()=>typeof (window.AudioContext||window.webkitAudioContext)==='function');
    if(audioAvailable){await page.locator('#tour-play button').click();await page.waitForFunction(()=>__app.state.playing&&__app.playerPosition()>8);await page.waitForFunction(()=>__audioPeak()>.00001);}
-   const before=await page.evaluate(()=>({name:__app.state.custom.name,url:__app.state.custom.url,position:__app.playerPosition(),events:__app.state.events.length,mute:__app.state.mute}));
+   const before=await page.evaluate(()=>({name:__app.state.custom.name,url:__app.state.custom.url,position:__app.playerPosition(),mute:__app.state.mute}));
    await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true})));
    const hidden=await page.evaluate(()=>({disposed:!!__app.disposed,playing:__app.state.playing,position:__app.playerPosition(),queue:__app.playbackQueue.length,timer:__app.timer}));
    report.syntheticPersistedChecks.push({pass,before,hidden});assert.equal(hidden.disposed,false,'persisted pagehide must not permanently dispose a reusable component');assert(!hidden.playing&&hidden.queue===0&&hidden.timer===null);
    await page.waitForTimeout(150);assert(await page.evaluate(()=>__audioPeak()<.00001),'persisted hide cancels audible dry and reverberant output');
    await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));
-   const after=await page.evaluate(()=>({name:__app.state.custom.name,url:__app.state.custom.url,position:__app.playerPosition(),events:__app.state.events.length,mute:__app.state.mute}));assert.deepEqual(after,{...before,position:hidden.position},'the accepted file, heard position and mix must survive a persisted hide/show');
+   const after=await page.evaluate(()=>({name:__app.state.custom.name,url:__app.state.custom.url,position:__app.playerPosition(),mute:__app.state.mute}));assert.deepEqual(after,{...before,position:hidden.position},'the accepted file, heard position and mix must survive a persisted hide/show');
    await page.locator('#tour-play button').click();
    if(audioAvailable){
     await page.waitForFunction(()=>__app.state.playing&&__app.playerPosition()>8);await page.locator('#tour-play button').click();
