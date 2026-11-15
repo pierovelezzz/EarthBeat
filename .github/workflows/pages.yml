@@ -27,8 +27,9 @@ jobs:
             refs/heads/V3:refs/remotes/origin/V3 \
             refs/heads/v4-NASA-Space-AC:refs/remotes/origin/v4-NASA-Space-AC \
             refs/heads/NASA-goal:refs/remotes/origin/NASA-goal \
-            refs/heads/juego-pc-basico:refs/remotes/origin/juego-pc-basico
-          for entry in v1:V1 v2:V2 v3:V3 v4:v4-NASA-Space-AC nasa-goal:NASA-goal juego-pc:juego-pc-basico; do
+            refs/heads/juego-pc-basico:refs/remotes/origin/juego-pc-basico \
+            refs/heads/v4.5:refs/remotes/origin/v4.5
+          for entry in v1:V1 v2:V2 v3:V3 v4:v4-NASA-Space-AC nasa-goal:NASA-goal juego-pc:juego-pc-basico v4.5:v4.5; do
             version="${entry%%:*}"
             branch="${entry#*:}"
             worktree="$RUNNER_TEMP/earthbeat-$version"
