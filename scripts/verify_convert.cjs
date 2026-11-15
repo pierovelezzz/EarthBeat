@@ -72,12 +72,12 @@ async function main() {
     await page.waitForFunction(() => /32 millones/.test(__app.renderVals().upMsg));
     assert.equal(await page.evaluate(() => __app.state.custom.url), accepted);
     checks.push('A tiny file declaring 1.6 billion pixels rejected before image decode');
-    await page.locator('#tour-lang button').nth(1).click();
-    assert.match(await page.locator('#player-legend').textContent(),/Cooler.*Neutral.*Warmer/s);
+    await page.getByRole('button',{name:/English/}).click();
+    assert.match(await page.locator('#player-legend').textContent(),/Cool.*Neutral.*Warm/s);
     await page.getByRole('button',{name:'From map to sound',exact:true}).click();
     await page.getByRole('button',{name:'Try it',exact:true}).click();
     assert.equal(await page.locator('.practice-example img').getAttribute('src'),accepted);
-    checks.push('The uploaded image replaces the rain sample and survives navigation and language changes');
+    checks.push('The uploaded image replaces the logo sample and survives navigation and language changes');
     for (const viewport of [{ width: 320, height: 740 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, { width: 1366, height: 768 }]) {
       await page.setViewportSize(viewport); await page.evaluate(() => __app.resetScreenScroll());
       const sizes = await page.locator('.scr').evaluate(el => [el.clientWidth, el.scrollWidth]);
