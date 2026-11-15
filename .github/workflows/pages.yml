@@ -24,9 +24,12 @@ jobs:
           git fetch --depth=1 origin \
             refs/heads/V1:refs/remotes/origin/V1 \
             refs/heads/V2:refs/remotes/origin/V2 \
-            refs/heads/V3:refs/remotes/origin/V3
-          for version in v1 v2 v3; do
-            branch="${version^^}"
+            refs/heads/V3:refs/remotes/origin/V3 \
+            refs/heads/v4-NASA-Space-AC:refs/remotes/origin/v4-NASA-Space-AC \
+            refs/heads/NASA-goal:refs/remotes/origin/NASA-goal
+          for entry in v1:V1 v2:V2 v3:V3 v4:v4-NASA-Space-AC nasa-goal:NASA-goal; do
+            version="${entry%%:*}"
+            branch="${entry#*:}"
             worktree="$RUNNER_TEMP/earthbeat-$version"
             git worktree add --detach "$worktree" "refs/remotes/origin/$branch"
             python3 "$worktree/scripts/build_pages.py" "$GITHUB_WORKSPACE/_site/$version"
