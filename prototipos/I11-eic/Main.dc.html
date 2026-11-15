@@ -1302,12 +1302,7 @@ a{color:inherit}
 .px .transport-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
 .px .transport .btn,.px .transport select,.px .map-legend .btn{min-height:44px;white-space:normal}
 .px .volume-control{display:grid;gap:4px;flex:1 1 105px}
-.px .volume-control label,.px .transport-speed{font-size:.78em}
 .px .volume-control input{width:100%;min-height:28px;margin:0;accent-color:var(--accent)}
-.px .transport-speed{font-size:.72em}
-.px .volume-control input{width:110px;min-height:28px;margin:0;accent-color:var(--accent)}
-.px .transport-speed{display:flex;gap:8px;align-items:center}
-.px .transport-speed select{max-width:145px;padding:6px}
 .px .player-modes{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
 .px .player-modes .engines{display:flex;width:auto;flex:0 0 auto;gap:0}
 .px .player-modes .engines button{min-height:44px;padding:7px 18px;border:1px solid var(--line)}
@@ -1342,8 +1337,6 @@ a{color:inherit}
   .px .uni .timeline img{height:21px}
   .px .transport{padding-block:5px;gap:5px}
   .px .transport-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-  .px .transport-speed{display:grid;gap:3px}
-  .px .transport-speed select{min-width:0;max-width:100%;padding:4px}
   .px .transport .player-modes{gap:4px}
   .px .player-modes .engines button{padding-block:5px}
   .px .listen-band{gap:4px;padding-top:4px}
@@ -1862,11 +1855,36 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
  .px .player-layout .band-stage{min-height:220px}
  .px .readout p{flex-wrap:wrap}
 }
-.px .uni .map-toolbar{position:relative;display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:6px 10px;padding:6px}
-.px .map-toolbar .volume-control{flex:1 1 78px;min-width:0;font-size:.74em}
-.px .map-toolbar .transport-speed{display:grid;flex:0 0 auto;justify-items:start;gap:3px;font-size:.78em;white-space:nowrap}
-.px .map-toolbar .transport-speed select{width:62px;min-width:0;min-height:44px;padding:3px;font:inherit}
-.px .map-toolbar .player-modes{display:flex;align-items:center;gap:4px}
+.px .uni .map-toolbar{
+  position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(132px,1.1fr);
+  align-items:start;gap:8px 12px;padding:4px 2px 8px
+}
+.px .map-toolbar .volume-control,.px .map-toolbar .speed-control{display:grid;gap:4px;min-width:0}
+.px .map-toolbar .volume-control label,.px .speed-control legend{font:700 1.05em/1.35 var(--head);color:var(--fg)}
+.px .map-toolbar .volume-control label{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.px .volume-control label svg{flex:none}
+.px .volume-percent{margin-inline-start:auto;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.px .map-toolbar .volume-control input{width:100%;min-width:0;min-height:44px}
+.px .map-toolbar .volume-control input:focus-visible{outline:2px solid var(--fg);outline-offset:-2px;border-radius:4px}
+.px .speed-control{margin:0;padding:0;border:0}
+.px .speed-control legend{padding:0 0 4px}
+.px .speed-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+.px .speed-options label{position:relative;cursor:pointer}
+.px .speed-option{
+  display:grid;place-items:center;align-content:center;gap:3px;min-height:44px;
+  background:var(--surface);border:1px solid var(--line);border-radius:4px;
+  color:var(--fg);font:700 .95em/1 var(--head);white-space:nowrap
+}
+.px .speed-options input:checked + .speed-option{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.px .speed-options label:hover .speed-option{border-color:var(--fg)}
+.px .speed-options input:focus-visible + .speed-option{outline:2px solid var(--accent);outline-offset:2px}
+.px .speed-option svg{display:block}
+.px .speed-option .speed-guides{opacity:.28}
+.px .map-toolbar .player-modes{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+.px .map-toolbar .engines{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.px .map-toolbar .engines button{min-width:0;min-height:44px;padding:6px;font-size:.95em}
+.px .map-toolbar .engines button + button{border-inline-start:0}
+@media(max-width:355px){.px .uni .map-toolbar{grid-template-columns:minmax(0,1fr)}}
 .px .mode-help summary{display:grid;place-items:center;min-width:36px;min-height:44px;cursor:pointer;font:700 .92em var(--head);list-style:none}
 .px .mode-help summary:focus-visible{outline:2px solid var(--fg);outline-offset:-2px;border-radius:4px}
 .px .mode-help summary span{display:grid;place-items:center;width:19px;height:19px;border:1px solid currentColor;border-radius:50%;color:var(--muted)}
@@ -1876,9 +1894,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .mode-help dt{font-weight:700}
 .px .mode-help dd{margin:0;color:var(--fg);line-height:1.4}
 .px .mode-help dd+dt{margin-top:6px}
-.px .map-toolbar .volume-control input{width:100%;min-width:0}
-.px .map-toolbar .engines button{padding-inline:6px}
-.px .map-source{margin-inline-start:auto;text-align:end}
+.px .map-source{
+  position:absolute;z-index:1;inset:7px auto auto 7px;max-width:calc(100% - 14px);
+  display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #bacbdd;border-radius:4px;
+  background:#101c2b;color:#f0f6ff;font:700 .78em/1.2 var(--head);pointer-events:none
+}
+.px .map-source svg{flex:none}
+@media(forced-colors:active){
+  .px .speed-options input:checked + .speed-option{border:2px solid Highlight}
+}
 .px .map-transport{display:grid;gap:6px;width:100%;padding:6px}
 .px .map-transport .timeline img{display:block}
 .px .band-stage{
@@ -2337,18 +2361,31 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{rhythmMode}}"><figcaption class="vcap"><h2>{{rhythmMapTitle}}</h2></figcaption></sc-if>
 <sc-if value="{{standardPlayer}}">
 <figcaption class="vcap map-toolbar">
-<div class="volume-control"><label for="playback-volume">{{player.volumeLabel}} {{player.volume}}%</label><input id="playback-volume" type="range" min="0" max="100" step="1" value="{{player.volume}}" onInput="{{player.changeVolume}}"></div>
-<label class="transport-speed"><span>{{tx.speedLabel}}</span><select onChange="{{onSpeed}}" value="{{speed}}"><option value="180">0.75×</option><option value="110">1×</option><option value="70">1.4×</option></select></label>
+<div class="volume-control">
+<label for="playback-volume"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4zM15 9a4 4 0 0 1 0 6m3-8a7 7 0 0 1 0 10"/></svg>{{player.volumeLabel}}<strong class="volume-percent" aria-hidden="true">{{player.volume}}%</strong></label>
+<input id="playback-volume" type="range" min="0" max="100" step="1" value="{{player.volume}}" aria-valuetext="{{player.volume}}%" onInput="{{player.changeVolume}}">
+</div>
+<fieldset class="speed-control">
+<legend>{{tx.speedLabel}}</legend>
+<div class="speed-options">
+<sc-for list="{{speedOptions}}" as="option" hint-placeholder-count="3">
+<label title="{{option.name}}">
+<input class="sr" type="radio" name="playback-speed" value="{{option.key}}" checked="{{option.selected}}" onChange="{{option.pick}}">
+<span class="speed-option"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor" aria-hidden="true" shape-rendering="crispEdges"><path class="speed-guides" d="M1 8h4v4H1zM7 5h4v7H7zM13 2h4v10h-4z"/><path d="{{option.bars}}"/></svg><span class="sr">{{option.name}} </span>{{option.rate}}</span>
+</label>
+</sc-for>
+</div>
+</fieldset>
 <div class="player-modes" id="tour-modes">
 <div class="engines" role="group" aria-label="{{tx.engineAria}}"><sc-for list="{{engines}}" as="e"><button type="button" onClick="{{e.pick}}" aria-pressed="{{e.on}}" aria-describedby="{{e.descriptionId}}" title="{{e.description}}">{{e.short}}</button></sc-for></div>
 <details class="mode-help"><summary aria-label="{{tx.modesHelp}}" title="{{tx.modesHelp}}"><span aria-hidden="true">?</span></summary><dl><sc-for list="{{engines}}" as="e"><dt>{{e.short}}</dt><dd>{{e.description}}</dd></sc-for></dl></details>
 <sc-for list="{{engines}}" as="e"><span class="sr" id="{{e.descriptionId}}">{{e.description}}</span></sc-for>
 </div>
-<span class="muted map-source">{{mapSource}}</span>
 </figcaption>
 </sc-if>
 <div class="mapbox">
 <img decoding="async" fetchpriority="high" class="map {{frameAnim}}" src="{{frameUrl}}" alt="{{frameAlt}}">
+<sc-if value="{{standardPlayer}}"><span class="map-source"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="7" r="1"/><path d="m3 15 5-5 3 3 3-4 3 4"/></svg>{{mapSource}}</span></sc-if>
 <div aria-hidden="true" class="scanline" style="--scan-x: {{scanLeft}}"></div>
 <sc-if value="{{showSilbo}}" hint-placeholder-val="{{ true }}">
 <div aria-hidden="true" style="position: absolute; left: 82.8%; top: 45%; width: 9.3%; height: 37.5%; border: 1px dashed {{silboBox}}; transition: border-color .4s"></div>
@@ -3004,6 +3041,7 @@ var MES_EN = ['January','February','March','April','May','June','July','August',
 var MESC_ES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 var MESC_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var MES = MES_ES, MESC = MESC_ES;
+var PLAYBACK_SPEEDS = { 180: 0.75, 110: 1, 70: 1.4 };
 var PAGES = { home: ['00'], juke: ['01'], band: ['02'], how: ['03'], tech: ['04'], game: ['05'] };
 var PAGE_ORDER = ['juke', 'band', 'how', 'tech'];
 var ROUTE_LOOK = {
@@ -3481,7 +3519,7 @@ var TX = {
     "changeDisc": "Cambiar disco",
     "changeFile": "Cambiar archivo",
     "youSee": "Lo que ves tú",
-    "youSeeSub": "imagen de la NASA",
+    "youSeeSub": "Imagen de la NASA",
     "machineSees": "Lo que ve la máquina",
     "machineSub": "Mapa de colores",
     "prevFrame": "Fotograma anterior",
@@ -5644,7 +5682,13 @@ class Component extends DCLogic {
   }
   speedFactor() {
     var speed = this.state.tab === 'game' ? 70 : this.state.speed;
-    return { 180: 0.75, 110: 1, 70: 1.4 }[speed] || 1;
+    return PLAYBACK_SPEEDS[speed] || 1;
+  }
+  setPlaybackSpeed(speed) {
+    if (speed === this.state.speed) return;
+    var wasPlaying = this.state.playing || this.state.audioPending;
+    this.stop();
+    this.setState({ speed: speed }, () => { if (wasPlaying) this.play(); });
   }
   stepMs() {
     return this.frameStepMs(this.state.frame);
@@ -6392,7 +6436,17 @@ class Component extends DCLogic {
         self.speak(text, true);
       },
       prevFrame: function () { self.gotoFrame(s.frame - 1); }, nextFrame: function () { self.gotoFrame(s.frame + 1); },
-      speed: String(s.speed), onSpeed: function (e) { var was = s.playing; self.stop(); self.setState({ speed: parseInt(e.target.value, 10) }, function () { if (was) self.play(); }); },
+      speedOptions: [
+        { key: 180, name: T('Lenta', 'Slow'), bars: 'M1 8h4v4H1z' },
+        { key: 110, name: T('Normal', 'Normal'), bars: 'M1 8h4v4H1zM7 5h4v7H7z' },
+        { key: 70, name: T('Rápida', 'Fast'), bars: 'M1 8h4v4H1zM7 5h4v7H7zM13 2h4v10h-4z' }
+      ].map(function (option) {
+        var rate = String(PLAYBACK_SPEEDS[option.key]);
+        return Object.assign({}, option, {
+          rate: T(rate.replace('.', ','), rate) + '×', selected: s.speed === option.key,
+          pick: function () { self.setPlaybackSpeed(option.key); }
+        });
+      }),
       caption: s.caption,
       bandAllMuted: activeN === 0,
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
