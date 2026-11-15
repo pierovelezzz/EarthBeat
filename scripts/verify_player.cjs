@@ -97,6 +97,12 @@ async function main() {
             return false;
           });
           assert(rose, 'The matching instrument icon climbs before the note plays');
+          await page.waitForFunction(() => {
+            const current = document.querySelector('.listen-band .chip[aria-current="true"]');
+            const label = document.querySelector('.stage-chord-now strong');
+            return current && label.textContent === current.textContent;
+          });
+          assert(await page.locator('.stage-chord-light').first().isVisible(), 'The active chord lights the edge of the desktop stage');
           await page.waitForFunction(() => [...document.querySelectorAll('.stage-note-track[data-strike]')]
             .some(track => getComputedStyle(track.nextElementSibling, '::before').backgroundImage !== 'none'));
           await page.locator('.band-stage').screenshot({ path: path.join(output, 'stage-instruments.png') });
@@ -190,6 +196,7 @@ async function main() {
       await page.locator('#tour-play button').click();
       await page.locator('.stage-note-track[data-strike]').first().waitFor();
       assert.equal(await page.locator('.stage-note').count(), 0, 'Reduced motion uses stationary receptors');
+      assert.equal(await page.locator('.stage-chord-light:visible').count(), 0, 'Reduced motion skips the chord light');
       assert(await page.locator('.stage-performer').evaluateAll(performers => performers.every(performer =>
         getComputedStyle(performer, '::before').backgroundImage !== 'none')), 'Reduced motion keeps the floor lighting steady while playing');
       await page.locator('#tour-play button').click();
@@ -228,6 +235,16 @@ async function main() {
       report.layouts.push({ viewport, geometry });
       assert.deepEqual(geometry.clipped, [], 'Controls and legend must stay within the viewport');
       assert(geometry.screenWidth <= geometry.screenClientWidth + 1, 'No horizontal player overflow');
+      assert.equal(await page.locator('.stage-chord-now').isVisible(), viewport.width >= 1100, 'The chord summary stays in the desktop layout');
+      const instrumentLabel = page.locator('.stage-label span').first();
+      assert.equal(await instrumentLabel.evaluate(label => getComputedStyle(label).clipPath === 'inset(50%)'),
+        viewport.width >= 1100, 'Instrument names are visually hidden on desktop only');
+      assert(await page.locator('.stage-musician').first().evaluate(musician =>
+        !!document.getElementById(musician.getAttribute('aria-describedby'))?.textContent),
+        'The musician control still describes its instrument');
+      const nameColors = await page.locator('.stage-label strong').evaluateAll(names =>
+        new Set(names.map(name => getComputedStyle(name).color)).size);
+      assert.equal(nameColors, viewport.width >= 1100 ? 5 : 1, 'Desktop labels use the individual musician colors');
       assert(await page.locator('.stage-musician').evaluateAll(musicians => musicians.every(musician => {
         const stage = musician.closest('.band-stage').getBoundingClientRect();
         const lane = musician.querySelector('.stage-note-track').getBoundingClientRect();

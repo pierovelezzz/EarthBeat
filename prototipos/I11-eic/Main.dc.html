@@ -1882,8 +1882,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .map-transport{display:grid;gap:6px;width:100%;padding:6px}
 .px .map-transport .timeline img{display:block}
 .px .band-stage{
+  --stage-image:url('./stage.webp?v=grafito');
   background-color:#171718;
-  background-image:url('./stage.webp?v=grafito');
+  background-image:var(--stage-image);
   background-position:center bottom;
   background-size:100% 100%;
   grid-template-rows:minmax(0,1fr);
@@ -1926,6 +1927,38 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
  .px .player-layout .mapbox,.px .player-layout .mbox{max-height:clamp(136px,22vh,220px)}
 }
 .px .player-layout{grid-template-rows:auto}
+.px .stage-chord-row{display:contents}
+.px .stage-chord-now,.px .stage-chord-light{display:none}
+@keyframes stage-chord-floor{from{opacity:.82}to{opacity:.22}}
+@media(min-width:1100px) and (hover:hover) and (pointer:fine){
+  .px .player-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.04fr) minmax(0,1.08fr)}
+  .px .player-layout #tour-machine{grid-template-rows:auto auto auto}
+  .px .player-layout #tour-machine .mbox{max-height:none}
+  .px .player-layout .listen-band{align-self:start;grid-template-rows:auto auto auto auto}
+  .px .player-layout .band-stage{
+    position:relative;min-height:clamp(232px,34vh,344px);
+    background-size:100% 118%;background-position:center bottom;
+  }
+  .px.app:not([data-contrast="true"]) .player-layout .band-stage{
+    background-image:linear-gradient(to top,#101217 0 2.2em,transparent 2.2em),var(--stage-image);
+    background-size:100% 100%,100% 118%;
+  }
+  .px .stage-musician.listen-member .stage-performer{max-height:174px}
+  .px.app:not([data-contrast="true"]) .stage-musician.listen-member .stage-label{
+    color:color-mix(in srgb,var(--member-color) 88%,white);
+  }
+  .px .stage-musician.listen-member .stage-label span{
+    position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  }
+  .px .stage-chord-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 8px}
+  .px .stage-chord-now{display:block;margin:0 0 0 auto;color:var(--muted);font-size:.74em;line-height:1.3;text-align:end}
+  .px .stage-chord-now strong{color:var(--fg)}
+  .px:not(.reduce-motion) .stage-chord-light{
+    position:absolute;display:block;inset:auto 0 0;height:4px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--accent) 25% 75%,transparent);
+    animation:stage-chord-floor .35s ease-out both;
+  }
+}
 .px.main-edition .legend-swatch{min-height:44px}
 .px .bar .side .btn,.px .bar .steps button{min-height:28px}
 .px.main-edition .language-toggle button[aria-pressed="true"]{background:#a6dbe9}
@@ -2236,13 +2269,17 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </button>
 </sc-for>
 </div>
+<sc-for list="{{progItems}}" as="chord"><sc-if value="{{chord.on}}"><span class="stage-chord-light" aria-hidden="true"></span></sc-if></sc-for>
 </div>
 <sc-if value="{{bandAllMuted}}"><p class="stage-muted-status small muted" role="status">{{bandStatus}}</p></sc-if>
 <sc-if value="{{showHarmony}}">
+<div class="stage-chord-row">
 <div class="chips" role="group" aria-label="{{tx.chordsAria}}">
 <sc-for list="{{progItems}}" as="chord">
-<span class="chip" style="color:{{chord.fg}};background:{{chord.bg}};border-color:{{chord.border}}">{{chord.label}}</span>
+<span class="chip" aria-current="{{chord.on}}" style="color:{{chord.fg}};background:{{chord.bg}};border-color:{{chord.border}}">{{chord.label}}</span>
 </sc-for>
+</div>
+<p class="stage-chord-now">{{stageChordLabel}} <strong>{{stageChord}}</strong></p>
 </div>
 </sc-if>
 
@@ -5964,7 +6001,8 @@ class Component extends DCLogic {
       tPage: s.tab === 'tech' && !techCur.credits, tCred: s.tab === 'tech' && !!techCur.credits };
     var prof = this.profile(), factor = this.speedFactor(), melody = s.engine === 'melody', bpmEff = Math.round(prof.bpm * factor);
     var chordLabels = prof.prog.map(function (c) { return chordOf(prof, c).label; });
-    var progItems = melody ? chordLabels.map(function (l) { var on = s.playing && l === s.chord; return { label: l, bg: on ? th.accent : 'transparent', fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line }; }) : [];
+    var stageChord = melody && s.playing ? s.chord : '';
+    var progItems = melody ? chordLabels.map(function (l) { var on = l === stageChord; return { label: l, on: on, bg: on ? th.accent : 'transparent', fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line }; }) : [];
     var seeText = this.describeText();
     var whyTiles = melody ? [
       { tag: T('TONALIDAD', 'KEY'), title: prof.key + ' ' + prof.mode, body: T('Escala y acordes elegidos para el carácter musical de ', 'Scale and chords chosen for the musical personality of ') + prof.name + ': ' + prof.story + '.' },
@@ -5988,6 +6026,7 @@ class Component extends DCLogic {
       th: th, highContrast: hc, ic: this.icons, showBg: !hc, showDecorativePlanets: s.tab !== 'home', planetContrast: hc ? 'true' : 'false', universe: this.universeVm(), stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
       engineDesc: (melody ? T('Melodía compuesta: escalas, acordes y ritmo por disco; la melodía sale de los datos.', 'Composed melody: scales, chords and rhythm per disc; the melody comes from the data.') : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes.', 'Data: derived levels converted into tones, without a chord progression.')),
       engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody,
+      stageChordLabel: T('Acorde actual', 'Current chord'), stageChord: stageChord || '—',
       player: showCells ? this.playerVm() : null,
       motionClass: reducedMotion ? 'reduce-motion' : '',
       motionMode: reducedMotion ? 'reduced' : 'full',
