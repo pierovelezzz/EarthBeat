@@ -1,94 +1,14 @@
-# Revisión de la banda 3D
+# Estado del material 3D en V2
 
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
+> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-> Edición documental de esta copia: **14/11/2026 19:03:12 (UTC-05:00)** · EarthBeat `V2`.
-> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+Esta rama no contiene escenas `.blend`, modelos `.glb`, `scripts/avatar3d.js`, copia de Three.js ni generador de modelos. Su producto es 2D.
 
-## Línea base y propuestas
+Este archivo se conserva para aclarar el alcance de la versión: los estudios 3D de V1 no se trasladan a V2. Los recursos efectivos son las imágenes de `prototipos/I11-eic/sprites/` y los archivos que copia `scripts/build_pages.py`.
 
-La base `REVISION_PREVIA` tiene cinco relieves con textura frontal, derivados de las ilustraciones del equipo. Se inspeccionaron en Blender 5.2.2 LTS. Los perfiles mostraban volumen inflado sin anatomía independiente y la espalda conservaba partes del dibujo frontal. Los cinco tenían la misma altura de 2,9 unidades. El total de sus GLB era 8 274 192 bytes.
+El build distribuye `pose-banda.webp`, `pose-banda-animada.webp`, `escenario.webp` y `miniatura-banda.webp` de cada músico. Los cinco `pose-banda-animada.webp` contienen siete fotogramas; esta rama no tiene `scripts/band-dance.js` ni carpetas `baile/`.
 
-El generador `scripts/modelar_banda.py` ahora construye cuerpos, rostros, prendas y objetos completos con geometría propia. Se conservan los nombres, colores y elementos reconocibles de la biblia visual. Es una propuesta de estilo volumétrico simplificado para revisión del equipo. Las ilustraciones originales y sus prompts permanecen disponibles y se pueden recuperar los modelos anteriores desde el commit base.
+---
 
-| Personaje | Rasgos del modelo nuevo | Altura Blender | Triángulos | GLB, bytes |
-| --- | --- | --- | --- | --- |
-| Silbo | Cabello y bigote plateados, media luna, orejeras, túnica, quena con agujeros y botella con asa | 2,70 | 17 872 | 674 444 |
-| Inti | Sombrero, medallón solar, camisa, chaqueta, marimba con resonadores y dos mazos | 2,56 | 13 952 | 572 612 |
-| Mamacocha | Trenzas, cabello largo, abrigo con ondas, medallón tejido y arpa con cuerdas | 2,55 | 17 736 | 679 524 |
-| Yaku | Capucha con cresta, gafas, mochila, botas y tres botellas con diferentes niveles | 2,10 | 17 582 | 674 644 |
-| Illapa | Sombrero, poncho asimétrico, gafas abiertas, honda, bombo con tensores y baqueta | 2,81 | 13 592 | 547 024 |
-
-El conjunto ocupa 3 148 248 bytes, un 62 % menos que los GLB de la base. Cada modelo utiliza una malla y un material con atlas PBR de 64 × 32, con color, rugosidad y metalicidad. Las texturas van dentro de cada GLB. Las poses de respaldo y retratos WebP de los cinco suman 133 010 bytes.
-
-## Rig y movimiento
-
-El pulido posterior separó la muestra musical de los controles 3D: escuchar/detener sigue disponible sin WebGL o si no carga el runtime. El retrato cancela su arrastre al terminar/perder un puntero y no gira con dos punteros; `pan-y pinch-zoom` conserva los gestos del navegador. Las pruebas usan ratón real automatizado y PointerEvents sintéticos, no un teléfono físico ni zoom nativo.
-
-Una excepción provocada al dibujar reveló que el modelo podía permanecer en la escena compartida. Se retiró mediante `finally` incluso ante error; la pose sigue disponible y el siguiente personaje se renderiza sin el anterior. `verify_avatar_interactions.cjs` registra escena vacía tras el fallo y un solo personaje por dibujo. La prueba controla el error; no demuestra una pérdida física de GPU.
-
-Cada personaje tiene 17 huesos con jerarquía explícita de raíz, cadera, torso, cabeza, brazos, antebrazos, manos, muslos, piernas, pies e instrumento. Las piezas están ponderadas a su articulación. No se simula tela. Los clips Idle, Play, Walk, Dance y Speak son bucles cortos y mantienen la raíz en su sitio.
-
-Walk es un paso en el lugar para una presentación web. Se muestrearon inicio, cuartos, mitad y final de los cinco clips por personaje. Los mínimos de la malla evaluada están sobre el suelo, con diferencias numéricas menores que la tolerancia de 2 cm. La inspección visual incluye frente, perfil, espalda y frames de Play y Walk. La captura de hechos está en `_work/models/after/state.json`; los renders están en el mismo directorio.
-
-Las miniaturas y bustos muestran una imagen obtenida de la escena y no cargan el motor 3D. Las vistas grandes y los miembros activos de Escuchar cargan el modelo al entrar en el área visible. Una pose estática está disponible antes de esa descarga, con errores de red y sin WebGL. Al pausar se usa Idle en tiempo cero. Con movimiento reducido, una acción manual también conserva la pose. Girar sigue disponible como acción discreta.
-
-## Referencias culturales y límites
-
-Las formas nuevas son diseños del proyecto asistidos por código. Las referencias a materiales y lugares orientan el diseño. No se han importado modelos, texturas o fotos de terceros para estos personajes.
-
-- **Silbo.** La media luna y las orejeras continúan la propuesta moche de `docs/PLAN.md`. La documentación del Ministerio de Cultura describe tocados de media luna en contextos de Sipán. El sombrero de Catacaos es una referencia contemporánea distinta; falta incorporar y revisar esa adaptación del personaje solicitada en el encargo. [Artículo de Arqueológicas](https://revistas.cultura.gob.pe/index.php/arqueologicas/article/download/445/526/1850), [declaratoria de Catacaos](https://transparencia.cultura.gob.pe/rvm-ndeg-033-2013-vmpcic-mc)
-- **Inti.** La marimba toma como referencia el instrumento de madera de palma con resonadores de bambú descrito por UNESCO para comunidades afrodescendientes del Pacífico colombiano y Esmeraldas. El personaje no representa a esas comunidades. El traje de faena de Paita y el episodio 2015–2016 necesitan una ficha histórica y revisión adicional. [UNESCO, expediente 01099](https://ich.unesco.org/en/RL/marimba-music-traditional-chants-and-dances-from-the-colombia-south-pacific-region-and-esmeraldas-province-of-ecuador-01099)
-- **Mamacocha.** La fibra de iraca se usa en tejeduría y cestería de Usiacurí; el documento consultado describe una estructura de alambre revestida de tejido. El medallón es una interpretación geométrica nueva. La fuente no acredita un arpa de iraca ni una indumentaria de Santa Lucía. El arpa sigue siendo ficción del diseño del equipo. [Artesanías de Colombia](https://repositorio.artesaniasdecolombia.com.co/items/ad4424f8-ba9a-4b58-93d3-f8a65cd9f159)
-- **Yaku.** La ficha de MINCETUR identifica a Mórrope y el tejido en algodón nativo. El parche de colores crema y pardo es una propuesta visual. Mórrope y Pacora son referencias geográficas distintas; la relación con el episodio de marzo de 2023 está pendiente de documentar. [MINCETUR, ficha 13353](https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=13353)
-- **Illapa.** PROMPERÚ documenta trabajos de pasalla, fibra del tallo del plátano, en la artesanía de Tumbes. La fuente acredita artesanía y no el uso de esa fibra en un poncho. La adaptación del vestuario y la ficha del episodio 2023–2024 siguen pendientes. [Guía de Tumbes, página 6 del PDF](https://repositorio.promperu.gob.pe/server/api/core/bitstreams/354822f2-1e01-450c-93a2-ee46f6076285/content#page=6)
-
-Se consultaron los principios de UNESCO sobre diálogo, consentimiento y papel de las comunidades ante representaciones de su patrimonio. Falta revisión por el equipo y por personas vinculadas a esas prácticas. Las tres imágenes históricas mencionadas en el encargo no se pudieron recuperar de la conversación compartida. [Principios éticos de UNESCO](https://ich.unesco.org/en/ethics-and-ich-00866)
-
-## Pruebas reproducibles
-
-La escena editable se guarda en `assets/avatares/terrasonic-banda.blend`. Los modelos e imágenes nuevos se generan con estos comandos desde la raíz del repositorio.
-
-```powershell
-& 'D:/Blender Foundation/blender.exe' --background --factory-startup --threads 4 --python scripts/modelar_banda.py
-& 'D:/Blender Foundation/blender.exe' --background assets/avatares/terrasonic-banda.blend --threads 4 --python scripts/inspect_banda.py -- --output _work/models/after --render --motion-renders --fallbacks
-python scripts/build_pages.py _site
-node scripts/test_guides.cjs _site/index.html
-node --test scripts/models.test.cjs
-```
-
-La comprobación web usa una instalación existente de Playwright Core y Chromium mediante variables, sin añadir dependencias al producto.
-
-```powershell
-$env:TERRASONIC_PLAYWRIGHT = 'ruta/a/playwright-core'
-$env:TERRASONIC_CHROMIUM = 'ruta/a/chrome-headless-shell.exe'
-node scripts/verify_models.cjs _site _work/models/browser
-node scripts/benchmark_browser.cjs _site _work/benchmarks/after.json
-```
-
-La regresión de navegador prueba cinco personajes en seis situaciones: carga normal, movimiento reducido, ausencia de WebGL, modelo lento, modelo ausente y runtime ausente. Comprueba además los cuerpos completos en Escuchar y la activación compartida con Escenario. Las capturas y el JSON se guardan fuera del paquete público.
-
-## Rendimiento y límites
-
-La revisión normativa adicional usa [glTF Validator de Khronos](https://github.com/KhronosGroup/glTF-Validator), paquete oficial `2.0.0-dev.3.10`, descargado localmente desde npm con SHA-512 comprobado y sin ejecutar scripts de instalación. Ningún modelo se subió a una herramienta remota. Los cinco GLB tienen **cero errores**, una advertencia por archivo y reportes completos sin truncar en `_work/models/validator-current/`.
-
-La advertencia `NODE_SKINNED_MESH_NON_ROOT` indica que la malla articulada es hija del rig. El nodo padre exportado no tiene traslación, rotación, escala ni matriz adicionales; las animaciones pertenecen a los huesos y los recorridos web comprueban poses, tamaños y movimiento. Se conserva esta advertencia de portabilidad: no equivale a cinco archivos sin advertencias ni asegura el comportamiento de cualquier visor que añada transformaciones al padre. No se ocultó con opciones del validador.
-
-```powershell
-$env:TERRASONIC_GLTF_VALIDATOR = 'ruta/al/paquete/gltf-validator'
-node scripts/validate_gltf.cjs prototipos/I11-eic/modelos _work/models/validator
-```
-
-El perfil local emula 390 × 844, latencia de 150 ms, descarga de 200 KiB/s, CPU ×4 y caché deshabilitada. La comparación de tres recorridos entre la base `REVISION_PREVIA` y el checkpoint `REVISION_PREVIA` dio medianas de 6,067 → 2,726 s hasta Inicio utilizable y 36,516 → 8,765 s desde Banda hasta el primer render 3D. Son recorridos emulados en esta laptop, con SwiftShader. Las imágenes de respaldo permanecen visibles durante la descarga. Los bytes GLB completos se obtienen del disco, pues CDP puede registrar transferencias parciales cuando se cambia de pantalla. Perfil, tiempos de Escuchar, muestras y límites: [RENDIMIENTO.md](RENDIMIENTO.md).
-
-Las fichas históricas y culturales ya se incorporaron a `data/characters.v1.json` y se explican en `docs/PERSONAJES.md`. Las menciones de tareas históricas pendientes en el inventario inicial de arriba quedan resueltas por ese catálogo; la revisión cultural externa y la referencia visual para una posible adaptación de Silbo siguen pendientes.
-
-La continuidad del nuevo reproductor ya se midió bajo carga y en cuatro discos completos; [AUDIO_RELOJ.md](AUDIO_RELOJ.md) distingue programación, renders y salida sintetizada de escucha humana. El paquete `REVISION_PREVIA` tiene integridad comprobada y conserva los originales, pero las correcciones posteriores requieren otro checkpoint. Siguen pendientes teléfono físico, escucha humana y revisión cultural. Esta revisión de modelos no acredita el cierre del encargo completo de TerraSonic.
-
-
-## Encuadre animado en el navegador
-
-`verify_model_framing.cjs` comprueba el volumen animado contra la cámara ortográfica real del runtime, sin copiar su fórmula de encuadre. El fixture captura esa cámara y usa los vértices con skinning de Three.js. Si la envolvente de una caja parece cruzar el encuadre, verifica los vértices reales para evitar atribuir un recorte a una esquina vacía.
-
-Pasaron **2.500 muestras Chromium**, con cero recortes detectados: cinco personajes × cinco clips × cinco fracciones de cada clip, en retrato, músico del reproductor y escenario, a 390×844 y 1342×605. El retrato incluye ocho giros separados por 45°; escenario y músicos conservan sus orientaciones reales. Son muestras de geometría/pose conducidas por el fixture, sin audio, no todos los fotogramas ni una aprobación cultural. Los encuadres de cara/busto deliberados y las imágenes estáticas tienen comprobaciones separadas.
-
-Evidencia: `_work/models/framing-native-chromium/results.json`. Reproducción: `node --max-old-space-size=256 scripts/verify_model_framing.cjs _site _work/models/framing`. También figura como `models-framing` en el runner. La prueba usa un perfil de navegador aislado y no modifica el .blend, los GLB ni la fórmula de cámara del producto.
+[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)

@@ -1,23 +1,18 @@
-# Brisa, preferencias y tutorial
+# Brisa y preferencias en V2
 
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
+> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-> Edición documental de esta copia: **14/11/2026 19:03:12 (UTC-05:00)** · EarthBeat `V2`.
-> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz está activada en los valores iniciales del componente, empieza tras interacción y se puede apagar desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
 
-Brisa es la guía de la interfaz, separada de los cinco músicos. No se encontró una referencia visual aprobada de Brisa en los recursos disponibles ni se pudo recuperar la conversación compartida. Se utiliza su nombre con un símbolo de ayuda convencional. No se inventó un retrato, vestimenta o personaje 3D para ella.
+El idioma sigue una elección guardada válida o la configuración inicial del navegador. Cambiar pantalla, idioma o paso cancela la locución anterior. La guía y el tutorial conservan alternativas escritas y no requieren oír para progresar.
 
-En la primera visita se pregunta «¿Cómo prefieres usar TerraSonic?». Guía hablada, texto grande, alto contraste y movimiento reducido se pueden combinar. No se pide información sobre discapacidad. Las preferencias se guardan como booleanos conocidos en `ts_prefs`, con versión, y se pueden reabrir desde Accesibilidad. No requieren una cuenta.
+Las preferencias de voz, texto grande, contraste, movimiento reducido, fuente legible, vibración y efectos se guardan en `ts_prefs`; el idioma se guarda en `ts_lang`. No requieren una cuenta. Las preferencias pueden reabrirse desde Accesibilidad.
 
-El idioma inicial sigue `navigator.language`: español para `es` y variantes, inglés en los demás casos. Una elección manual válida guardada en `ts_lang` tiene prioridad. La interfaz, `lang`, mensajes, nombres y guía se presentan en ese idioma. Cambiarlo detiene la locución anterior.
+El tutorial de la aplicación guía la elección de un disco, su reproducción y la interpretación de la leyenda. Se puede cerrar o saltar. Las regresiones de estado y foco están en `scripts/test_guides.cjs`; una simulación de voz no equivale a escucha humana.
 
-La ayuda contextual utiliza objetivos de la pantalla actual. Abrir, avanzar o cerrarla no cambia la pantalla, disco, fecha, columna, archivo ni reproducción. Devuelve el foco al botón que la abrió y conserva el desplazamiento. Sus pasos se recuerdan por pantalla.
+El movimiento reducido conserva contenido, poses y controles. La reproducción de la música tiene sus propios controles.
 
-El tutorial es opcional y se puede reabrir. Exige elegir una portada NASA, pulsar Reproducir e interpretar el azul/flecha hacia abajo en la leyenda. No depende de oír ni de responder rápido. Si falta Web Audio hay un paso explícito para seguir con texto. Incluye progreso, atrás, cierre y salto. Al saltar o cerrar recupera la pantalla y posición previas; al terminar conserva el disco elegido y la reproducción que inició el usuario.
+---
 
-La voz está apagada inicialmente. Se elige una voz disponible del idioma seleccionado y se permite detenerla. Una lista vacía, idioma ausente o error mantiene la explicación escrita. La locución reduce la música al 30 % de su volumen y la restaura al terminar o cancelarse. Pasos, pantalla e idioma cancelan la locución anterior. No se ha verificado el timbre mediante escucha humana.
-
-La preferencia de movimiento se combina con la del sistema operativo. Detiene CSS, transiciones, gestos manuales y animaciones 3D; conserva las poses y controles. No cambia la reproducción musical.
-
-Se consultaron las recomendaciones de [COGA sobre contenido usable](https://www.w3.org/TR/coga-usable/) y las [heurísticas de Nielsen](https://www.nngroup.com/articles/ten-usability-heuristics/) para mantener la ayuda localizable, lenguaje cotidiano, pasos breves y salidas claras. Son criterios de diseño, no una certificación ni una prueba con usuarios.
-
-La prueba `node scripts/verify_brisa.cjs _site _work/brisa/browser` verifica tres combinaciones de idioma, teclado y persistencia; estado conservado y foco; voz simulada y mezcla de música real; las tres acciones a 1366 y 390 píxeles; movimiento 3D reducido manualmente; y ausencia de voz y Web Audio. Las voces son fixtures para comprobar ciclo de vida e idioma. No representan un lector de pantalla ni timbres reales. Las regresiones de lógica están en `scripts/test_guides.cjs`.
+[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)

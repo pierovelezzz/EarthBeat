@@ -1,34 +1,27 @@
-# Método y tecnologías de esta versión
+# Método de sonificación de V2
 
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
+> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-> Edición documental de esta copia: **14/11/2026 19:03:12 (UTC-05:00)** · EarthBeat `V2`.
-> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+El analizador de la aplicación reduce las imágenes a una cuadrícula de 28 × 16, con 448 celdas. Los niveles derivados van de −5 a +5. Son una interpretación del color y decisiones de sonificación; no son grados de temperatura ni una medición calibrada de cualquier imagen.
 
-La interfaz pública explica la secuencia real: imágenes fechadas, reducción a 448 celdas, búsqueda de color en la paleta del producto, niveles derivados, barrido por columnas, motor Melodía/Datos, decisiones editoriales y alternativas locales. Conserva los ocho objetivos de el proyecto y sus rutas al producto. El enlace del proyecto usa la ruta oficial `the-Pacific Ocean Sonification`; la búsqueda oficial la confirma, aunque la consulta directa devolvió 502 durante esta revisión.
+El producto contiene dos catálogos de cinco discos y seis mapas por disco: treinta EIC y treinta históricos GIBS. `data/discos.json` describe los treinta EIC, cuya selección almacenada va del 16 de mayo de 2024 al 3 de octubre de 2026. Los mapas históricos están en `prototipos/I11-eic/fotogramas-anteriores/`. No se consulta un mapa nuevo durante la reproducción. NASA POWER conserva series mensuales de 1981–2024; la muestra de Chiclayo utiliza 48 valores de 2015–2018. Las fechas pertenecen a observaciones o fuentes y se conservan como tales.
 
-## Datos y alcance
+## Del mapa al sonido
 
-- EIC: 30 archivos conservados del video Pacífico SVS 5176, selección cada 30 días entre el 16 de mayo de 2024 y el 3 de octubre de 2026. `data/discos.json` y `scripts/descargar_fotogramas.py` conservan la selección y fechas. Se corrigió el texto que anunciaba noviembre aunque el último archivo seleccionado es de octubre. No se consulta una actualización diaria durante la visita.
-- GIBS: 30 mapas de los cinco episodios históricos de 2010–2023. La fecha de cada mapa es el día 15. Se conserva la [paleta oficial GHRSST](https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html) y su huella en `data/colormaps/`.
-- Región: Pacífico 140°–70°O y 25°S–15°N. El recuadro costero utilizado por Silbo es una selección del algoritmo, no la delimitación administrativa de todas las localidades citadas.
-- NASA POWER: el JSON existente conserva precipitación, temperatura y humedad mensuales 1981–2024 de tres lugares. El ejemplo público utiliza 48 valores de Chiclayo 2015–2018, en −6,77°, −79,84°, parámetro PRECTOTCORR. Son promedios mensuales de precipitación diaria en mm/día, no acumulados mensuales. [Documentación del servicio mensual](https://power.larc.nasa.gov/docs/services/api/temporal/monthly/).
+1. Cargar una imagen almacenada o una entrada local aceptada.
+2. Reducir el encuadre a 140 × 80 píxeles para el análisis y agruparlo en 28 × 16 celdas.
+3. Aplicar la lectura de color correspondiente a la fuente o el modo de imagen propia.
+4. Distinguir valores cálidos, fríos, extremos y regiones sin valor utilizable.
+5. Recorrer las 28 columnas y sintetizar música con los perfiles del código.
+6. Actualizar mapa, estado, leyenda y descripción de la reproducción.
 
-La anomalía es una diferencia respecto a una referencia climática, no temperatura absoluta. La extracción de color de imágenes reducidas no recupera sin pérdida el campo científico original. EIC y GIBS utilizan paletas y rangos distintos; los niveles derivados entre −5 y +5 no son grados ni hacen ambos productos físicamente comparables. El producto lo explica junto al mapa y en Método. La tabla de colores es la representación propia de TerraSonic; las leyendas textuales del reproductor diferencian fuente, referencia y ausencia de datos.
+EIC y GIBS tienen escalas distintas. La cuantización, el recorte, la compresión y la música añaden interpretación; sus niveles no vuelven físicamente comparables las dos visualizaciones. La anomalía de temperatura es una diferencia respecto a una referencia climática, no una temperatura absoluta.
 
-En tablas se selecciona el valor de mayor desviación respecto a la media en cada grupo de la serie, se normaliza con la mitad de su rango y se representa en 28 pasos. Los niveles de una foto propia o una serie numérica tampoco son anomalías oceánicas.
+NASA POWER utiliza PRECTOTCORR para la muestra de Chiclayo. Sus valores mensuales representan promedios de precipitación diaria en mm/día; no deben rotularse como acumulados mensuales. La normalización interna conserva los datos originales y solo construye un patrón musical.
 
-## Música y fuentes de impactos
+La regla de impactos de Pacora es una decisión editorial fija para el episodio y mes documentados. No calcula tristeza, riesgo ni causalidad a partir de una imagen. La interfaz es educativa y no es un sistema de alerta.
 
-Las escalas y acordes son decisiones compositivas. `docs/REPRODUCTOR.md` documenta su concordancia con las notas; `docs/IMPACTOS.md` documenta el catálogo y la reducción fija de 10 ppm en Melodía de Yaku durante marzo de 2023, basada en el registro de Pacora. La regla no convierte víctimas en emociones ni aplica daños de periodos distintos. Las fichas culturales se explican en `docs/PERSONAJES.md`.
+---
 
-El modo Datos no presenta una progresión que no reproduce: oculta los acordes y el carácter compositivo de Melodía. Se retiraron las promesas «datos puros»/«traducción literal»; también este modo utiliza normalización, selección de frecuencias y timbres artísticos. La explicación de posición usa «vertical» para archivos propios y distingue la orientación norte–sur de los mapas. Los textos de niveles no confunden ausencia de valores con tierra ni atribuyen una medición física a un silbido.
-
-## Tecnología
-
-La página tiene cuatro categorías estables y créditos. Los filtros «Todo», «Navegador», «Producción» y «Datos» distinguen dónde se utiliza cada herramienta; un filtro sin coincidencias conserva la categoría y muestra un estado vacío recuperable. Se retiraron servicios y bibliotecas planeados: Tone.js, Tonal.js, Magenta, Lyria, Stable Audio, ElevenLabs, Krita y Piskel.
-
-Se declara la carga diferida de Three.js/GLTFLoader y el respaldo WebP, Web Audio, Canvas, lectura local y preferencias, voz/vibración condicionadas a disponibilidad y tipografías con alternativas. Blender/Python, ffmpeg, Node/Playwright y Git son herramientas de producción o verificación; no se ejecutan como servicios remotos de la app. El sitio sigue estático y no tiene backend, base de datos remota ni generación de música por IA. La declaración de IA se limita al registro y explicita la revisión humana pendiente.
-
-## Evidencia
-
-116 pruebas pasan tras esta revisión. `scripts/verify_method.cjs` recorre Método y Tecnología en español e inglés, cinco anchos (320, 390, 768, 1366, 1920), ocho pantallas en total y los cuatro filtros de cada categoría técnica. Comprueba contexto conservado, contenido, fuentes y ausencia de desbordamiento horizontal. Las capturas están en `_work/method/browser/`. Son comprobaciones Chromium, no una certificación ni una evaluación con usuarios.
+[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)
