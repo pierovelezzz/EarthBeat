@@ -1366,9 +1366,6 @@ a{color:inherit}
 .px .preferences-actions{display:flex;flex-wrap:wrap;gap:8px}
 .px .preferences-actions button{flex:1 1 180px;white-space:normal;min-height:44px}
 .px .preferences-dialog .btn[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-.px .accessible-data{font-size:.9em;line-height:1.55}
-.px .accessible-data summary{cursor:pointer;min-height:44px;align-content:center;font-weight:600}
-.px .accessible-data p{margin:8px 0}
 .px .ways-trigger{min-height:44px;padding-inline:12px;gap:7px;letter-spacing:.04em;white-space:nowrap}
 .px .ways-trigger svg{width:18px;height:18px;flex-shrink:0}
 .px .ways-dim{position:fixed;inset:0;z-index:1120;background:#000b}
@@ -1389,12 +1386,6 @@ a{color:inherit}
 @media(max-width:1279px){.px .ways-trigger .ways-label{display:none}.px .ways-trigger{width:44px;min-width:44px;padding:0}}
 @media(min-width:1280px) and (max-width:1600px){.px .readable-nav .ways-trigger .ways-label{display:none}.px .readable-nav .ways-trigger{width:44px;min-width:44px;padding:0}}
 @media(max-width:620px),(max-height:450px){.px .ways-dialog{padding:12px;gap:10px}.px .ways-content{gap:6px}}
-.px .accessible-data label{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
-.px .accessible-data select{min-height:44px;max-width:100%;font:inherit}
-.px .accessible-data table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-.px .accessible-data caption{text-align:start;padding:8px 0;font-weight:600}
-.px .accessible-data th,.px .accessible-data td{text-align:start;padding:8px 6px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
-.px .accessible-data th{color:var(--fg)}
 .px .brisa-badge{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;font:700 25px/1 var(--head);color:var(--fg);background:var(--bg);border:1px solid currentColor;border-radius:50%}
 .px .guidefab .brisa-badge{width:100%;height:100%;border:0}
 .px .guidefab::after{display:none}
@@ -1567,7 +1558,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .map-reading h2{margin:0;color:var(--accent);font:700 1em/1.35 var(--head)}
 .px .map-reading-copy p{margin:0;line-height:1.35;font-size:.9em}
 .px .map-reading-copy p+p{margin-top:3px;color:var(--muted);font-size:.81em}
-.px .map-reading > .accessible-data{grid-column:1/-1;min-width:0;border-top:1px solid var(--line)}
 @media(max-width:640px){.px .map-reading{grid-template-columns:minmax(0,1fr);gap:5px}}
 .px.main-edition .stage-musician[data-on="false"]{opacity:.38}
 .px.main-edition .viewport,.px.main-edition .scr,.px.main-edition .in{min-width:0}
@@ -1903,6 +1893,23 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(132px,1.1fr);
   align-items:start;gap:8px 12px;padding:4px 2px 8px
 }
+.px .playback-settings{width:100%;min-width:0}
+.px .listen-player .playback-settings{margin-bottom:8px}
+.px .playback-settings > summary:not([hidden]){
+  display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;
+  min-height:44px;border:1px solid var(--line);border-radius:4px;background:var(--surface);
+  color:var(--fg);cursor:pointer;list-style:none;font:700 .9em/1.25 var(--head)
+}
+.px .playback-settings > summary::-webkit-details-marker{display:none}
+.px .playback-settings > summary::after{
+  content:"";flex:none;width:7px;height:7px;border:solid currentColor;border-width:0 2px 2px 0;
+  transform:translateY(-2px) rotate(45deg)
+}
+.px .playback-settings[open] > summary::after{transform:translateY(2px) rotate(225deg)}
+.px .playback-settings > summary:hover{border-color:var(--accent)}
+.px .playback-settings > summary:focus-visible{outline:2px solid var(--fg);outline-offset:-3px}
+.px .playback-settings > summary .current-mode{margin-inline-start:auto;color:var(--accent)}
+.px .listen-player .playback-settings .map-toolbar{padding-top:8px}
 .px .map-toolbar .volume-control,.px .map-toolbar .speed-control{display:grid;gap:4px;min-width:0}
 .px .map-toolbar .volume-control label,.px .speed-control legend{font:700 1.05em/1.35 var(--head);color:var(--fg)}
 .px .map-toolbar .volume-control label{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
@@ -2170,9 +2177,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   }
   .px .listen-player .player-layout > .vpanel{grid-template-rows:auto minmax(min-content,1fr) auto}
   .px .listen-player .player-layout #tour-machine{grid-template-rows:auto minmax(100px,1fr) auto}
-  .px .listen-player .player-layout #tour-frame .mapbox,
   .px .listen-player .player-layout #tour-machine .mbox{height:100%;min-height:100px;max-height:none;aspect-ratio:auto}
-  .px .listen-player #tour-frame .mapbox img.map{position:absolute;inset:0}
   .px .listen-player #tour-machine .map-legend{
     align-self:stretch;grid-template-rows:auto auto minmax(min-content,1fr);align-items:start
   }
@@ -2214,15 +2219,20 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .listen-player .map-toolbar :is(.speed-option,.engines button,.volume-control input),
   .px.main-edition .listen-player .legend-swatch{min-height:36px}
   .px .listen-player .transport-position input{min-height:24px}
-  .px .listen-player .player-layout #tour-frame .mapbox,
   .px .listen-player .player-layout #tour-machine .mbox{min-height:88px}
   .px .listen-player .player-layout #tour-machine{grid-template-rows:auto minmax(88px,1fr) auto}
   .px .listen-player .legend-explanation{min-height:0;padding-block:6px}
 }
 @media(min-width:1100px){
-  .px .workspace > .in:has(.listen-player .accessible-data[open]){height:auto}
-  .px .listen-player:has(.accessible-data[open]),
-  .px .listen-player:has(.accessible-data[open]) .player-layout{flex:none}
+  .px .workspace > .in:has(.listen-player .playback-settings[open]){height:auto}
+  .px .listen-player:has(.playback-settings[open]),
+  .px .listen-player:has(.playback-settings[open]) .player-layout{flex:none}
+}
+.px .listen-player .player-layout #tour-frame{grid-template-rows:auto auto auto}
+.px .listen-player .player-layout #tour-frame .mapbox{height:auto;min-height:0;max-height:none;aspect-ratio:auto}
+.px .listen-player #tour-frame .mapbox img.map{position:static;width:100%;height:auto;object-fit:contain}
+@media(min-width:1100px) and (hover:hover) and (pointer:fine){
+  .px .listen-player .player-layout{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr) minmax(0,1.04fr)}
 }
 .px .bar .side .btn,.px .bar .steps button{min-height:28px}
 .px.main-edition .language-toggle button[aria-pressed="true"]{background:#a6dbe9}
@@ -2500,7 +2510,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <figure id="tour-frame" class="vpanel">
 <sc-if value="{{rhythmMode}}"><figcaption class="vcap"><h2>{{rhythmMapTitle}}</h2></figcaption></sc-if>
 <sc-if value="{{standardPlayer}}">
-<figcaption class="vcap map-toolbar">
+<figcaption class="vcap">
+<details id="tour-modes" class="playback-settings" open="{{playbackSettingsOpen}}">
+<summary hidden="{{isData}}" onClick="{{togglePlaybackSettings}}"><span>{{playbackSettingsLabel}}</span><span class="current-mode">{{playbackModeLabel}}</span></summary>
+<div class="map-toolbar">
 <div class="volume-control">
 <label for="playback-volume"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4zM15 9a4 4 0 0 1 0 6m3-8a7 7 0 0 1 0 10"/></svg>{{player.volumeLabel}}<strong class="volume-percent" aria-hidden="true">{{player.volume}}%</strong></label>
 <input id="playback-volume" type="range" min="0" max="100" step="1" value="{{player.volume}}" aria-valuetext="{{player.volume}}%" onInput="{{player.changeVolume}}">
@@ -2517,10 +2530,12 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </sc-for>
 </div>
 </fieldset>
-<div class="player-modes" id="tour-modes">
+<div class="player-modes">
 <div class="engines" role="group" aria-label="{{tx.engineAria}}"><sc-for list="{{engines}}" as="e"><button type="button" onClick="{{e.pick}}" aria-pressed="{{e.on}}" aria-describedby="{{e.descriptionId}}" title="{{e.description}}">{{e.short}}</button></sc-for></div>
 <sc-for list="{{engines}}" as="e"><span class="sr" id="{{e.descriptionId}}">{{e.description}}</span></sc-for>
 </div>
+</div>
+</details>
 </figcaption>
 </sc-if>
 <div class="mapbox">
@@ -2636,25 +2651,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <section class="player-detail map-reading" aria-labelledby="map-reading-title">
 <h2 id="map-reading-title">{{tx.see}}</h2>
 <div class="map-reading-copy"><p>{{seeText}}</p><p>{{mapMusicHint}}</p></div>
-<details id="accessible-data" class="accessible-data" onToggle="{{toggleDataReading}}">
-<summary>{{readDataLabel}}</summary>
-<sc-if value="{{accessibleData}}">
-<p>{{accessibleData.description}}</p>
-<p>{{accessibleData.source}} · {{accessibleData.date}}</p>
-<p id="accessible-data-unit">{{accessibleData.unit}}</p>
-<sc-if value="{{accessibleData.ready}}">
-<label for="accessible-data-column">{{accessibleData.columnLabel}}
-<select id="accessible-data-column" value="{{accessibleData.column}}" onChange="{{accessibleData.select}}" aria-describedby="accessible-data-unit">
-<template data-sc-for="{{accessibleData.columns}}" data-sc-as="column"><option value="{{column.value}}">{{column.label}}</option></template>
-</select></label>
-<table aria-describedby="accessible-data-unit"><caption>{{accessibleData.caption}}</caption>
-<thead><tr><th scope="col">{{accessibleData.rowLabel}}</th><th scope="col">{{accessibleData.valueLabel}}</th><th scope="col">{{accessibleData.meaningLabel}}</th></tr></thead>
-<tbody><template data-sc-for="{{accessibleData.rows}}" data-sc-as="cell"><tr><th scope="row">{{cell.row}}</th><td>{{cell.value}}</td><td>{{cell.meaning}}</td></tr></template></tbody>
-</table>
-</sc-if>
-<sc-if value="{{accessibleData.unavailable}}"><p role="status">{{accessibleData.unavailable}}</p></sc-if>
-</sc-if>
-</details>
 </section>
 </sc-if>
 <p role="status" aria-live="polite" class="sr">{{player.announcement}}</p>
@@ -4119,7 +4115,7 @@ function usageHelp() {
         title: T('Formas de usar', 'Ways to use'),
         keyboard: T('Teclado: Tab y Mayús+Tab recorren los controles; Enter o Espacio activan botones. Las flechas ajustan volumen y posición. Escape cierra la guía y los ajustes.', 'Keyboard: Tab and Shift+Tab move between controls; Enter or Space activate buttons. Arrow keys adjust volume and position. Escape closes the guide and settings.'),
         screenReader: T('Lector de pantalla: usa Saltar al contenido, los encabezados y los nombres de los controles. La voz de Brisa es opcional y puedes apagarla para escuchar tu lector.', 'Screen reader: use Skip to content, headings and named controls. Brisa’s voice is optional and can be turned off while using your reader.'),
-        withoutSound: T('Sin escuchar: elige un disco y una fecha con sus botones. Lee la explicación, la leyenda y Consultar datos sin usar el mapa. En celulares compatibles puedes activar y probar pulsos de vibración; son un complemento.', 'Without sound: choose a disc and date using their buttons. Read the explanation, legend and Read data without using the map. On compatible phones you can enable and test vibration pulses as a complement.'),
+        withoutSound: T('Sin escuchar, elige un disco y una fecha con sus botones. Lee «Qué muestra» y la leyenda para entender el mapa. En celulares compatibles puedes activar y probar pulsos de vibración.', 'To explore without sound, choose a disc and date using their buttons. Read the map description and legend to understand the map. On compatible phones you can enable and test vibration pulses.'),
         reading: T('Lectura: combina Texto grande, Fuente legible y Alto contraste. Puedes ampliar con el navegador. No necesitas activar estas preferencias para consultar los textos o datos.', 'Reading: combine Large text, Readable font and High contrast. You can zoom with your browser. Written information and data are available without enabling these preferences.'),
         motion: T('Menos estímulos: Movimiento reducido respeta tu sistema hasta que elijas otra opción. Puedes detener la introducción, saltar la guía y apagar la voz o los efectos sin perder tus selecciones.', 'Fewer distractions: Reduced motion follows your system until you choose otherwise. Pause the introduction, skip the guide and turn off voice or sound effects without losing your selections.')
   };
@@ -4395,7 +4391,6 @@ class Component extends DCLogic {
     this.state.tutorialFeedback = null;
     this.state.legendSelection = null;
     this.state.stageNotes = {};
-    this.state.dataColumn = 0;
     this.state.showWays = false; this.state.waysPage = 0; this.waysChunks = null;
     this.state.homePreview = 0;
     this.homePreviewDue = 0;
@@ -4584,7 +4579,7 @@ class Component extends DCLogic {
     return {
       visible: isPhoneDevice(typeof navigator === 'undefined' ? null : navigator),
       title: T('Vibración del dispositivo', 'Device vibration'), status: messages[status] || messages.ready,
-      explanation: T('Pulsos suaves, medios y fuertes resumen la intensidad musical. Funcionan aunque silencies el audio o reduzcas el movimiento. No sustituyen los datos escritos; el dispositivo puede no producirlos.', 'Soft, medium and strong pulses summarize musical intensity. They work with muted audio or reduced motion. They do not replace written data; the device may not produce them.'),
+      explanation: T('Pulsos suaves, medios y fuertes resumen la intensidad musical. Funcionan aunque silencies el audio o reduzcas el movimiento. La vibración depende del dispositivo.', 'Soft, medium and strong pulses summarize musical intensity. They work with muted audio or reduced motion. Vibration depends on the device.'),
       testLabel: T('Probar vibración', 'Test vibration'), stopLabel: T('Detener vibración', 'Stop vibration'),
       testOff: !this.haptics.supported() || !this.state.vibe, stopOff: !this.haptics.supported(),
       test: function () { self.haptics.retry(); self.vibrateSafely('test', 'test:' + (++self.hapticRequestSerial)); self.setState({}); },
@@ -4593,46 +4588,6 @@ class Component extends DCLogic {
   }
   syncSystemMotion() {
     if (!this.disposed && !this.motionExplicit) this.setPreference('reducedMotion', !!this.motionQuery?.matches, true);
-  }
-  selectDataColumn(event) {
-    var raw = event?.target?.value;
-    if (typeof raw !== 'string' || !raw.trim()) return;
-    var column = Number(raw);
-    if (Number.isInteger(column) && column >= 0 && column < 28 && column !== this.state.dataColumn) this.setState({ dataColumn: column });
-  }
-  toggleDataReading(event) {
-    var detail = event.currentTarget;
-    if (!detail.isConnected) return;
-    var openDetail = detail.open ? detail : null;
-    if (this.openDataReading !== openDetail) {
-      this.openDataReading = openDetail;
-      this.setState({});
-    }
-  }
-  accessibleDataVm() {
-    var self = this, s = this.state, analysis = this.cur(), local = s.disc === 5, rain = local && s.custom?.kind === 'rain';
-    var column = Number.isInteger(s.dataColumn) && s.dataColumn >= 0 && s.dataColumn < 28 ? s.dataColumn : 0;
-    var ready = !!(analysis && Array.isArray(analysis.cells) && analysis.cells.length === 448);
-    var missing = T('Sin datos', 'No data');
-    return {
-      title: T('Consultar datos sin usar el mapa', 'Read data without using the map'),
-      description: T('Elige una columna y lee sus 16 filas, de arriba abajo. Puedes revisar las 28 columnas con el teclado. Esta selección no cambia ni pausa la reproducción.', 'Choose a column and read its 16 rows from top to bottom. All 28 columns are available with the keyboard. This selection does not change or pause playback.') + (rain ? T(' Las filas son celdas del gráfico de barras, no mediciones separadas. El nivel cero también se usa para el fondo del gráfico y no demuestra lluvia promedio.', ' Rows are cells of the bar chart, not separate measurements. Zero is also used for the chart background and does not establish average rainfall.') : ''),
-      ready: ready, unavailable: ready ? '' : T('Todavía no hay un análisis disponible para este fotograma. Selecciona otro mapa o espera a que termine la carga.', 'There is no analysis available for this frame yet. Select another map or wait for loading to finish.'),
-      source: local ? rain ? 'NASA POWER' : T('Tu imagen · interpretación de color', 'Your image · color interpretation') : s.set === 'prev' ? 'NASA GIBS' : 'NASA Earth Information Center',
-      date: local ? T('Archivo seleccionado', 'Selected file') : this.frameTag(s.disc, s.frame),
-      unit: rain ? T('Nivel normalizado de −5 a +5 respecto al promedio de la serie; no son milímetros de lluvia.', 'Normalized level from −5 to +5 relative to the series average; these are not millimeters of rainfall.') : local ? T('Nivel de color derivado de −5 a +5; no es una medición ambiental.', 'Derived color level from −5 to +5; this is not an environmental measurement.') : T('Nivel derivado del color, de −5 a +5, usado para generar música. Estos valores no son grados Celsius ni mediciones calibradas. Sin datos indica celdas sin información utilizable.', 'Derived color level from −5 to +5, used to generate music. These values are not degrees Celsius or calibrated measurements. No data indicates cells without usable information.'),
-      column: column, columnLabel: T('Columna de la cuadrícula', 'Column of the grid'),
-      caption: T('Columna ', 'Column ') + (column + 1) + T(' de 28 · filas de arriba abajo', ' of 28 · rows from top to bottom'),
-      rowLabel: T('Fila', 'Row'), valueLabel: T('Nivel derivado', 'Derived level'), meaningLabel: T('Interpretación', 'Meaning'),
-      columns: Array.from({ length: 28 }, function (_, i) { return { value: i, label: T('Columna ', 'Column ') + (i + 1) + T(' de 28', ' of 28') }; }),
-      rows: ready ? Array.from({ length: 16 }, function (_, row) {
-        var value = analysis.cells[row * 28 + column], valid = Number.isFinite(value);
-        var meaning = !valid ? missing : rain ? value > 0 ? T('Sobre el promedio', 'Above average') : value < 0 ? T('Bajo el promedio', 'Below average') : T('Nivel neutro / fondo del gráfico', 'Neutral level / chart background')
-          : value > 0 ? T('Color cálido', 'Warm color') : value < 0 ? T('Color frío', 'Cool color') : T('Nivel neutro', 'Neutral level');
-        return { row: row + 1, value: valid ? value.toFixed(2) : missing, meaning: meaning };
-      }) : [],
-      select: function (event) { self.selectDataColumn(event); }
-    };
   }
   syncPreferenceMotion() {
     if (document.documentElement.dataset) {
@@ -4922,7 +4877,7 @@ class Component extends DCLogic {
       tech: T('Elige un tema para consultar las herramientas, las fuentes y los créditos. La información se conserva por escrito y puedes activar la narración opcional.', 'Choose a topic to inspect tools, sources and credits. Written information remains available and narration is optional.'),
       game: T('El juego es opcional. Usa las flechas indicadas cuando llegan al recuadro. Puedes volver a Escuchar para explorar los mismos mapas sin una tarea cronometrada.', 'The game is optional. Use the indicated arrow keys when they reach the target. Return to Listen to explore the same maps without a timed task.')
     };
-    return { t: T('Ayuda de esta pantalla', 'Help for this screen'), b: player ? T('Controla reproducción, volumen y posición sin perder tu selección. La leyenda explica los niveles y Consultar datos sin usar el mapa permite leerlos por columnas. El sonido es opcional; los músicos y la vibración compatible se controlan por separado.', 'Control playback, volume and position without losing your selection. The legend explains levels and Read data without using the map exposes them by column. Sound is optional; musicians and compatible vibration have separate controls.') : bodies[s.tab] || bodies.home };
+    return { t: T('Ayuda de esta pantalla', 'Help for this screen'), b: player ? T('En Escuchar, abre Ajustes de reproducción para cambiar el volumen, la velocidad o el modo. Usa la barra de tiempo para elegir qué parte oír. «Qué muestra» y la leyenda explican el mapa.', 'In Listen, open Playback settings to change volume, speed or mode. Use the timeline to choose a position. The map description and legend explain the map.') : bodies[s.tab] || bodies.home };
   }
   tutorialEntryLabel() {
     if (this.tutorialProgress && !this.tutorialProgress.completed) return T('Retomar tutorial · paso ', 'Resume tutorial · step ') + this.tutorialProgress.step + T(' de 3', ' of 3');
@@ -6702,9 +6657,13 @@ class Component extends DCLogic {
       motionMode: reducedMotion ? 'reduced' : 'full',
       musicActive: s.playing ? 'true' : 'false',
       haptic: this.hapticVm(),
-      readDataLabel: T('Consultar datos sin usar el mapa', 'Read data without using the map'),
-      toggleDataReading: function (event) { self.toggleDataReading(event); },
-      accessibleData: scrVm.play && !rhythmMode && this.openDataReading?.isConnected && this.openDataReading.open ? this.accessibleDataVm() : null,
+      playbackSettingsLabel: T('Ajustes de reproducción', 'Playback settings'),
+      playbackModeLabel: melody ? T('Melodía', 'Melody') : T('Datos', 'Data'),
+      playbackSettingsOpen: !isJuke || !!s.playbackSettingsOpen,
+      togglePlaybackSettings: function (event) {
+        event.preventDefault();
+        self.setState({ playbackSettingsOpen: !self.state.playbackSettingsOpen });
+      },
       accessHelp: s.showWays ? this.waysVm() : Object.assign(usageHelp(), {
         on: false, triggerLabel: T('Formas de usar', 'Ways to use'), open: function (event) { self.openWays(event); }
       }),

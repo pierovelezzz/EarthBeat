@@ -70,6 +70,8 @@ async function main() {
       await page.locator('.discgrid .dcard').first().click();
       await page.waitForFunction(() => __app.cur());
       await page.evaluate(() => { __app.setState({ mute: __app.allMute(false), leadOverride: 'mama' }); });
+      const foldedSettings = page.locator('.playback-settings:not([open]) > summary');
+      if (await foldedSettings.count()) await foldedSettings.click();
       for (const mode of ['melody', 'raw']) {
         await page.locator('.player-modes button').nth(mode === 'melody' ? 0 : 1).click();
         assert.equal(await page.locator('.listen-band .chips').count(),mode==='melody'?1:0);

@@ -1737,50 +1737,30 @@ test('automatic motion changes remain automatic after saving other preferences',
   next.syncSystemMotion();assert.equal(next.bandReduced(),false);
 });
 
-test('written data exposes each selected column, absent cells and normalized units without changing playback', () => {
+test('listening playback settings fold without resetting the current map or mix', () => {
   const {component:c}=setup();
-  c.state.tab='juke';c.state.sub=1;c.state.disc=0;c.state.frame=0;
-  const cells=Array.from({length:448},(_,i)=>(i%11)-5);
-  cells[0]=null;cells[28]=NaN;cells[56]=Infinity;cells[84]=0;
-  c.state.an['0_0']={cells,warm:1,cold:2,hot:.1,coast:0};
-  c.state.playing=true;c.state.col=12;
-  const playing=c.state.playing,heard=c.state.col,frame=c.state.frame,mute=c.state.mute;
-  let data=c.accessibleDataVm();
-  assert.equal(data.rows.length,16);assert.equal(data.columns.length,28);
-  assert.match(data.unit,/derivad/);assert.doesNotMatch(data.unit,/°C/);
-  assert.match(data.rows[0].value,/Sin datos/);assert.match(data.rows[1].value,/Sin datos/);assert.match(data.rows[2].value,/Sin datos/);
-  assert.equal(data.rows[3].value,'0.00');
-  for(let column=0;column<28;column++) {
-    c.selectDataColumn({target:{value:String(column)}});
-    data=c.accessibleDataVm();assert.equal(data.column,column);
-    for(let row=0;row<16;row++) {
-      const value=cells[row*28+column];
-      assert.equal(data.rows[row].value,Number.isFinite(value)?value.toFixed(2):'Sin datos');
-    }
-  }
-  for(const invalid of ['-1','28','NaN','1.5','']) {c.selectDataColumn({target:{value:invalid}});assert.equal(c.accessibleDataVm().column,27);}
-  assert.equal(c.state.playing,playing);assert.equal(c.state.col,heard);assert.equal(c.state.frame,frame);assert.equal(c.state.mute,mute);
-  c.setLang('en');data=c.accessibleDataVm();assert.match(data.unit,/derived/i);assert.match(data.columnLabel,/Column/);
-  assert.equal(data.column,27);assert.equal(c.state.playing,true);
-});
-
-test('written data describes unavailable analysis, local images and rainfall without inventing measurements', () => {
-  const {component:c}=setup();
-  assert.equal(c.accessibleDataVm().ready,false);assert.deepEqual(Array.from(c.accessibleDataVm().rows),[]);
-  c.state.disc=5;c.state.frame=0;
-  c.state.custom={kind:'image',name:'local.png',url:'blob:local'};
-  c.state.an['5_0']={cells:Array(448).fill(.5),warm:.5,cold:0,hot:0,coast:0};
-  let data=c.accessibleDataVm();assert.match(data.source,/Tu imagen/);assert.match(data.unit,/color/);assert.doesNotMatch(data.source,/NASA/);
-  c.state.custom={kind:'rain',name:'rain',url:'blob:rain'};
-  data=c.accessibleDataVm();assert.match(data.source,/NASA POWER/);assert.match(data.unit,/normaliz/);assert.doesNotMatch(data.unit,/°C|mm\/d/);
-  c.state.an['5_0']=c.seriesAnalysis([0,10]);
-  data=c.accessibleDataVm();
-  assert.equal(data.rows[0].value,'0.00');
-  assert.match(data.rows[0].meaning,/fondo/i);
-  assert.doesNotMatch(data.rows[0].meaning,/promedio/i);
-  assert.match(data.description,/celdas.*gráfico/i);
+  c.state.tab='juke';
+  c.state.sub=1;
+  c.state.frame=2;
+  const mix=c.state.mute;
+  assert.equal(c.renderVals().playbackSettingsOpen,false);
+  let prevented=false;
+  const event={preventDefault(){prevented=true;}};
+  c.renderVals().togglePlaybackSettings(event);
+  assert.equal(prevented,true);
+  assert.equal(c.renderVals().playbackSettingsOpen,true);
+  assert.equal(c.state.frame,2);
+  assert.equal(c.state.mute,mix);
+  c.renderVals().togglePlaybackSettings(event);
+  assert.equal(c.renderVals().playbackSettingsOpen,false);
   assert.match(c.renderVals().accessHelp.keyboard,/Tab/);
-  assert.match(c.renderVals().accessHelp.withoutSound,/datos/i);
+  assert.match(c.renderVals().accessHelp.withoutSound,/leyenda/);
+  assert(!html.includes('id="accessible-data"'));
+  c.setLang('en');
+  assert.equal(c.renderVals().playbackSettingsLabel,'Playback settings');
+  c.state.tab='how';
+  c.state.sub=0;
+  assert.equal(c.renderVals().playbackSettingsOpen,true);
 });
 
 test('standalone usage help preserves playback, traps focus and restores its own opener', () => {

@@ -86,27 +86,39 @@ async function main() {
       await page.locator('#tour-nav button').first().click();
       await page.locator('.dcard').first().click();
       await page.waitForFunction(()=>__app.cur());
-      await page.locator('#accessible-data > summary').focus();
+      assert.equal(await page.locator('#accessible-data').count(),0);
+      const playback=page.locator('.listen-player .playback-settings');
+      const summary=playback.locator('summary');
+      const map=page.locator('#tour-frame img.map');
+      const mapSize=async()=>{
+        await map.evaluate(img=>img.decode());
+        return map.evaluate(img=>({width:img.clientWidth,height:img.clientHeight,naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight,panelWidth:img.parentElement.clientWidth}));
+      };
+      const closedSize=await mapSize();
+      assert.equal(closedSize.width,closedSize.panelWidth);
+      assert(Math.abs(closedSize.height-closedSize.width*closedSize.naturalHeight/closedSize.naturalWidth)<2,JSON.stringify(closedSize));
+      assert.equal(await playback.getAttribute('open'),null);
+      await summary.focus();
       await page.keyboard.press('Enter');
       await page.keyboard.press('Tab');
-      assert.equal(await page.evaluate(()=>document.activeElement.id),'accessible-data-column');
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'playback-volume');
+      await page.keyboard.press('Home');
+      assert.equal(await page.locator('#playback-volume').inputValue(),'0');
       await page.keyboard.press('End');
-      assert.equal(await page.locator('#accessible-data-column').inputValue(),'27');
-      assert.equal(await page.locator('#accessible-data tbody tr').count(),16);
-      assert.equal(await page.locator('#accessible-data-column option').count(),28);
-      const analysis=await page.evaluate(()=>({values:__app.cur().cells.filter((_,i)=>i%28===27).map(v=>Number.isFinite(v)?v.toFixed(2):'Sin datos'),playing:__app.state.playing,frame:__app.state.frame}));
-      assert.deepEqual(await page.locator('#accessible-data tbody td:first-of-type').allTextContents(),analysis.values);
-      await audit('player-data');
-      await page.screenshot({path:path.join(output,scenario.name+'-data.png'),fullPage:true});
+      assert.equal(await page.locator('#playback-volume').inputValue(),'100');
+      assert.deepEqual(await mapSize(),closedSize);
+      const frame=await page.evaluate(()=>__app.state.frame);
+      await audit('player-settings');
+      await page.screenshot({path:path.join(output,scenario.name+'-settings.png'),fullPage:true});
       await page.getByRole('button',{name:'EN English',exact:true}).click();
       assert.equal(await page.locator('html').getAttribute('lang'),'en');
-      assert.equal(await page.locator('#accessible-data-column').inputValue(),'27');
-      assert.equal(await page.evaluate(()=>__app.state.frame),analysis.frame);
-      await audit('player-data-en');
+      assert.match(await summary.innerText(),/Playback settings/);
+      assert.equal(await page.evaluate(()=>__app.state.frame),frame);
+      await audit('player-settings-en');
       await page.evaluate(()=>{__app.setPreference('contrast',true);__app.setPreference('big',true);__app.setPreference('legible',true);});
       await page.setViewportSize({width:320,height:900});
       await audit('player-reading-320');
-      const overflow=await page.locator('#accessible-data').evaluate(el=>({client:el.clientWidth,scroll:el.scrollWidth}));
+      const overflow=await playback.evaluate(el=>({client:el.clientWidth,scroll:el.scrollWidth}));
       assert(overflow.scroll<=overflow.client+1,JSON.stringify(overflow));
       await page.screenshot({path:path.join(output,scenario.name+'-reading.png'),fullPage:true});
       if(scenario.phone&&scenario.api) {
@@ -121,7 +133,7 @@ async function main() {
         await page.evaluate(()=>__app.stop());
         assert.equal(await page.evaluate(()=>__vibrations.at(-1)),0);
       }
-      report.checks.push({scenario:scenario.name,phoneOnly:true,systemMotion:true,writtenData:true,keyboard:true,translation:true,reflow:true});
+      report.checks.push({scenario:scenario.name,phoneOnly:true,systemMotion:true,fullMap:true,keyboard:true,translation:true,reflow:true});
       await context.close();
     }
   } finally {

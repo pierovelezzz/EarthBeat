@@ -51,6 +51,8 @@ async function main() {
     report.timing={profile,times,medianStepSeconds:median};report.checks.push('Real Web Audio scheduling follows the Pacora tempo change');
     await page.locator('#tour-lang button').nth(1).click();assert.equal(await page.evaluate(()=>__app.profile().bpm),profile.bpm);
     await page.screenshot({path:path.join(output,'pacora-english.png')});
+    const foldedSettings=page.locator('.playback-settings:not([open]) > summary');
+    if(await foldedSettings.count())await foldedSettings.click();
     await page.locator('.player-modes button').nth(1).click();
     assert.equal(await page.evaluate(()=>__app.profile().impactId),undefined);assert.equal(await page.evaluate(()=>__app.stepMs()),110);
     await page.locator('.player-modes button').first().click();await page.locator('.timeline button').nth(3).click();

@@ -47,7 +47,7 @@ async function main(){
     await page.waitForFunction(()=>{const image=document.querySelector('.mapbox img.map');return image?.complete&&image.naturalWidth>0;});
     assert.equal(await page.locator('.legend-choice').count(),4);
     for(const mode of fullPlayer?[0,1]:[0]){
-     if(fullPlayer){await page.locator('.player-modes button').nth(mode).click();const position=page.locator('#playback-position');await position.focus();await position.press('Home');await position.press('ArrowRight');assert.equal(await position.inputValue(),'1');assert.equal(await page.locator('.chordsrow').count(),mode===0?1:0);}
+     if(fullPlayer){const foldedSettings=page.locator('.playback-settings:not([open]) > summary');if(await foldedSettings.count())await foldedSettings.click();await page.locator('.player-modes button').nth(mode).click();const position=page.locator('#playback-position');await position.focus();await position.press('Home');await position.press('ArrowRight');assert.equal(await position.inputValue(),'1');assert.equal(await page.locator('.chordsrow').count(),mode===0?1:0);}
      await page.locator('#tour-play button').click();await page.waitForFunction(()=>__app.state.playing&&__app.state.col>=2);await page.locator('#tour-play button').click();assert.equal(await page.evaluate(()=>__app.state.playing),false);
      if(fullPlayer){
       const position=page.locator('#playback-position');await position.focus();await position.press('Home');await position.press('ArrowRight');assert.equal(await position.inputValue(),'1');

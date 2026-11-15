@@ -39,6 +39,7 @@ async function main(){
    await page.keyboard.press('Space');assert.equal(await page.evaluate(()=>__app.state.playing),false);
    const paused=await range.inputValue();await page.waitForTimeout(200);assert.equal(await range.inputValue(),paused);
    await range.focus();await range.press('ArrowRight');assert(Number(await range.inputValue())>Number(paused));
+   await page.locator('.playback-settings:not([open]) > summary').press('Enter');
    const volume=page.locator('#playback-volume');await volume.focus();await page.keyboard.press('Home');assert.equal(await page.evaluate(()=>__app.state.volume),0);
    await page.keyboard.press('End');assert.equal(await page.evaluate(()=>__app.state.volume),100);
    await page.locator('.listen-member').first().focus();const before=await page.evaluate(()=>__app.state.mute.silbo);await page.keyboard.press('Space');assert.equal(await page.evaluate(()=>__app.state.mute.silbo),!before);
