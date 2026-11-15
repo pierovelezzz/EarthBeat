@@ -1,9 +1,6 @@
-# Inventario de archivos de V2
+# Inventario de archivos de main
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
-
-Esta lista enumera los 419 archivos versionados de la rama V2. Una ruta incluida no implica que forme parte del sitio generado.
+Esta lista enumera los 419 archivos versionados de la rama main. Una ruta incluida no implica que forme parte del sitio generado.
 
 | Área | Función |
 |---|---|

@@ -34,14 +34,25 @@ test('Listen has only discs and player, while every date remains selectable', ()
   }
 });
 
-test('the grid legend uses its exact palette and three bilingual labels', () => {
+test('the interactive grid legend uses each color of the exact palette in both languages', () => {
   const {component:c,context}=setup();
   c.state.tab='juke';c.state.sub=1;
-  const colors=c.playerVm().scale;
-  assert.deepEqual([...colors],Array.from(context.RAMP,pair=>pair[1]));
-  assert.deepEqual(Array.from(c.playerVm().legend,level=>level.label),['−5 · Más frío','0 · Neutro','+5 · Más cálido']);
+  const legend=c.playerVm().legend;
+  assert.deepEqual(Array.from(legend,level=>level.color),Array.from(context.RAMP,pair=>pair[1]).reverse());
+  assert.equal(legend[0].label,'+5 · Calor extremo');
+  assert.equal(legend.find(level=>level.number==='0').label,'0 · Cerca de lo habitual');
+  assert.equal(legend.at(-1).label,'−5 · Frío extremo');
+  assert.equal(c.playerVm().legendReading,'');
+  assert.match(c.playerVm().legendDescription,/Elige un recuadro/);
+  assert.equal(new Set(legend.map(level=>level.description)).size,14);
+  for(const [rain, image] of [[true,false],[false,true]]) {
+    const alternate=c.legendVm(rain,image);
+    assert.equal(new Set(alternate.map(level=>level.description)).size,14);
+  }
+  legend.at(-1).choose();
+  assert.equal(c.playerVm().legendReading,'−5 · Frío extremo');
   c.setLang('en');
-  assert.deepEqual(Array.from(c.playerVm().legend,level=>level.label),['−5 · Cooler','0 · Neutral','+5 · Warmer']);
+  assert.equal(c.playerVm().legendReading,'−5 · Extreme cooling');
   assert.equal(c.state.sub,1);
 });
 
@@ -281,7 +292,7 @@ test('Brisa’s help button stays visible when targeted and Escape closes the gu
 
 test('language changes retain upload errors, filenames and application state', () => {
   const { component: c } = setup();
-  c.state.tab = 'how'; c.state.sub = 1;
+  c.state.tab = 'how'; c.state.sub = 0;
   c.handleFile({ name: 'mi archivo.csv', size: 9 * 1024 * 1024 });
   const spanishError = c.renderVals().upMsg;
   c.state.frame = 2; c.state.playing = true; c.state.tour = 2; c.state.more = true;
@@ -332,7 +343,7 @@ test('all fixed UI keys, guides, method and technology content render in both la
 
 test('sample labels translate without replacing the rainfall analysis', async () => {
   const {component:c,context}=setup();
-  c.state.tab='how';c.state.sub=1;
+  c.state.tab='how';c.state.sub=0;
   context.fetch=async()=>({ok:true,json:async()=>({chiclayo:{p:Array.from({length:500},(_,i)=>i)}})});
   c.drawSeries=(_,done)=>done('blob:sample');
   c.loadSample();
@@ -354,7 +365,7 @@ test('reduced motion keeps all five portraits static at mobile and desktop width
       const view = c.renderVals().bandCur;
       assert.equal(c.state.bsel, i);
       assert.equal(view.entering, false);
-      assert.equal(view.moving, false);
+      assert.equal(c.renderVals().motionMode, 'reduced');
       assert.equal(view.entrance, '');
       assert.match(c.renderVals().bandSel[i].thumbUrl,new RegExp('/'+view.key+'/'));
     }
@@ -447,7 +458,7 @@ test('the 448-cell grid is visible in the disc player and after a practical samp
   const {component:c}=setup();
   c.state.tab='juke';c.state.sub=0;assert.equal(c.renderVals().gridColors,null);
   c.state.sub=1;assert.equal(c.renderVals().gridColors.length,448);
-  c.state.tab='how';assert.equal(c.renderVals().gridColors,null);
+  c.state.tab='how';c.state.sub=0;assert.equal(c.renderVals().gridColors,null);
   c.state.custom={kind:'image',name:'map.webp'};assert.equal(c.renderVals().gridColors.length,448);
 });
 
@@ -464,7 +475,7 @@ function delayedImages() {
       return { data };
     } }) };
   };
-  h.component.state.tab = 'how'; h.component.state.sub = 1; h.component.state.customMode = 'free';
+  h.component.state.tab = 'how'; h.component.state.sub = 0; h.component.state.customMode = 'free';
   // Concurrency cases keep decoding/encoding synchronous. Native geometry is covered in
   // verify_image_geometry.cjs; delayed encoding has its own lifecycle regression below.
   h.component.freezeImage = (image, custom, done) => done(image, {name:custom.name+'-preview'});
@@ -606,7 +617,7 @@ test('re-analysis of the same frame or custom image ignores superseded callbacks
 
 test('late rainfall canvases are released after unmount', async () => {
   const {component:c,context}=setup(), callbacks=[], revoked=[];
-  c.state.tab='how';c.state.sub=1;
+  c.state.tab='how';c.state.sub=0;
   context.URL={revokeObjectURL:url=>revoked.push(url)};
   context.fetch=async()=>({ok:true,json:async()=>({chiclayo:{p:Array.from({length:500},(_,i)=>i)}})});
   c.drawSeries=(_,done)=>callbacks.push(done);
@@ -618,12 +629,12 @@ test('late rainfall canvases are released after unmount', async () => {
 
 test('late rainfall canvases are released after leaving practice', async () => {
   const {component:c,context}=setup(), callbacks=[], revoked=[];
-  c.state.tab='how';c.state.sub=1;
+  c.state.tab='how';c.state.sub=0;
   context.URL={revokeObjectURL:url=>revoked.push(url)};
   context.fetch=async()=>({ok:true,json:async()=>({chiclayo:{p:Array.from({length:500},(_,i)=>i)}})});
   c.drawSeries=(_,done)=>callbacks.push(done);
   c.loadSample();await new Promise(resolve=>setImmediate(resolve));
-  c.goSub(0);const before=JSON.stringify(c.state);
+  c.goSub(1);const before=JSON.stringify(c.state);
   callbacks[0]('blob:late');
   assert.equal(JSON.stringify(c.state),before);assert.deepEqual(revoked,['blob:late']);
 });
@@ -831,7 +842,7 @@ test('late completion of a timed-out resume cannot finish a newer activation', a
 test('stop, navigation, file operations and unmount settle a pending activation immediately', async () => {
   for (const cancel of [c => c.stop(), c => c.goTab('tech'), c => c.handleFile({name:'new.csv',type:'text/csv',size:1}), c => c.componentWillUnmount()]) {
     const { component: c, context, timers, intervals, AudioContextStub } = audioHarness();
-    c.state.tab = 'how'; c.state.sub = 1;
+    c.state.tab = 'how'; c.state.sub = 0;
     let rejectLate;
     context.window.AudioContext = class extends AudioContextStub {
       constructor() { super(); this.state = 'suspended'; }
@@ -919,8 +930,8 @@ test('navigation keyboard supports arrows, Home and End without activating anoth
 
 test('compact navigation has four bilingual labels while preserving full section names and the active page', () => {
   const { component: c, context } = setup();
-  c.state.tab = 'how'; c.state.sub = 1;
-  const expected = { es: ['Escuchar','Banda','Cómo funciona','Tecnología'], en: ['Listen','Band','How it works','Technology'] };
+  c.state.tab = 'how'; c.state.sub = 0;
+  const expected = { es: ['Escuchar','Banda','Cómo funciona','Tecnología'], en: ['Listen','Band','How does it work?','Technology'] };
   for (const lang of ['es','en','es']) {
     c.setLang(lang);
     const tabs = c.renderVals().tabs;
@@ -928,7 +939,7 @@ test('compact navigation has four bilingual labels while preserving full section
     context.PAGE_ORDER.forEach((key,i) => assert.equal(tabs[i].label, context.ROUTE_LOOK[key].title));
     assert.equal(tabs[2].label, lang === 'es' ? '¿Cómo funciona?' : 'How does it work?');
     assert.equal(tabs[2].cur, 'page'); assert.equal(tabs.filter(t => t.cur === 'page').length, 1);
-    assert.equal(c.state.tab, 'how'); assert.equal(c.state.sub, 1);
+    assert.equal(c.state.tab, 'how'); assert.equal(c.state.sub, 0);
   }
 });
 
@@ -962,7 +973,7 @@ test('resize reveals the active tab again and releases the resize callback on un
 
 test('leaving a playback screen stops immediately, clears activity and preserves instrument preferences', async () => {
   for (const [tab,sub,leave] of [
-    ['juke',1,c=>c.goSub(0)], ['how',1,c=>c.goSub(0)],
+    ['juke',1,c=>c.goSub(0)], ['how',0,c=>c.goSub(1)],
     ['juke',1,c=>c.goTab('juke')], ['juke',1,c=>c.goTab('how')],
     ['band',0,c=>c.goTab('juke')], ['band',0,c=>c.goTab('how')], ['band',0,c=>c.goTab('tech')]
   ]) {
@@ -1064,7 +1075,7 @@ test('character transition owns its outgoing portrait and removes temporary stat
   c.pickBand(1);
   assert.equal(c.renderVals().bandCur.hasOutgoing,true);assert.match(c.renderVals().bandCur.previousPoseUrl,/silbo\/pose-banda\.webp/);
   const id=c.bandTimer,finish=timers.get(id);timers.delete(id);finish();
-  assert.equal(c.renderVals().bandCur.moving,true);
+  assert.equal(c.state.bphase,'play');
   const gesture=c.bandTimer,settle=timers.get(gesture);timers.delete(gesture);settle();
   assert.equal(c.renderVals().bandCur.entering,false);assert.equal(c.renderVals().bandCur.hasOutgoing,false);assert.equal(c.bandTimer,null);
 });
@@ -1352,7 +1363,7 @@ test('color scheme persists independently from reading preferences and safely ig
 });
 
 test('switching theme preserves file, selected date, playback position, mix and open help', () => {
-  const {component:c}=setup();c.state.tab='how';c.state.sub=1;c.state.disc=5;c.state.frame=0;c.state.col=7;c.state.playing=true;c.state.tour=2;
+  const {component:c}=setup();c.state.tab='how';c.state.sub=0;c.state.disc=5;c.state.frame=0;c.state.col=7;c.state.playing=true;c.state.tour=2;
   c.state.custom={name:'retained.csv',url:'blob:retained',kind:'csv',cols:[]};const keys=['tab','sub','disc','frame','col','playing','tour','custom','mute'];
   const before=JSON.stringify(keys.map(key=>c.state[key]));c.setColorScheme('light');assert.equal(JSON.stringify(keys.map(key=>c.state[key])),before);
 });
@@ -1367,7 +1378,8 @@ test('light and slate themes combine with high contrast without changing the sel
 test('the four preferences combine and persist without asking for a diagnosis or opening a guide', () => {
   const { component:c, context, storage } = setup({ firstVisit:true, language:'es-PE' });
   context.window.matchMedia=()=>({matches:false});
-  assert.equal(c.state.showPreferences,true); assert.equal(c.state.tour,0);
+  assert.equal(c.state.showPreferences,false); assert.equal(c.state.tour,0);
+  c.openPreferences(); assert.equal(c.state.showPreferences,true);
   assert.equal(c.renderVals().preferences.choices.length,4);
   for (const key of ['voice','big','contrast','reducedMotion']) c.setPreference(key,true);
   assert.equal(c.bandReduced(),true); c.finishPreferences(false);
@@ -1379,13 +1391,14 @@ test('the four preferences combine and persist without asking for a diagnosis or
 
 test('stored preferences only accept known boolean values and recover from invalid JSON', () => {
   let c=setup({firstVisit:true,storage:{ts_prefs:'not JSON'}}).component;
-  assert.equal(c.state.showPreferences,true);
+  assert.equal(c.state.showPreferences,false);
+  assert.equal(c.state.voice,false);
   c=setup({storage:{ts_prefs:JSON.stringify({version:1,configured:true,values:{big:'yes',contrast:true,unknown:true}})}}).component;
   assert.equal(c.state.big,false); assert.equal(c.state.contrast,true); assert.equal(c.state.unknown,undefined);
 });
 
 test('contextual help never changes the active file, date, position or playback', () => {
-  for (const [tab,sub] of [['juke',0],['juke',1],['how',1],['tech',1]]) {
+  for (const [tab,sub] of [['juke',0],['juke',1],['how',0],['tech',1]]) {
     const {component:c}=setup();
     c.state.tab=tab; c.state.sub=sub; c.state.frame=2; c.state.col=11; c.state.playing=true;
     c.state.custom={name:'retained.csv',url:'blob:retained',kind:'csv',cols:[]};
@@ -1395,22 +1408,21 @@ test('contextual help never changes the active file, date, position or playback'
   }
 });
 
-test('the tutorial progresses only through choosing a disc, playback and interpreting the legend', async () => {
+test('the tutorial progresses through choosing a disc, playback and interpreting the legend', async () => {
   const {component:c}=playbackHarness();
-  c.startTutorial(); assert.equal(c.state.tour,1); assert(c.renderVals().tour.nextOff);
-  c.renderVals().tour.next(); assert.equal(c.state.tour,1);
+  c.startTutorial(); assert.equal(c.state.tour,1); assert.match(c.renderVals().tour.nextLabel,/Saltar paso/);
   c.renderVals().discs[2].pick(); assert.equal(c.state.tour,2); assert.equal(c.state.disc,2); assert.equal(c.state.playing,false);
-  c.renderVals().tour.next(); assert.equal(c.state.tour,2);
+  assert.match(c.renderVals().tour.nextLabel,/Saltar paso/);
   await c.play(); assert.equal(c.state.tour,3); assert.equal(c.state.playing,true);
-  c.playerVm().legend[2].choose(); assert.equal(c.state.tutorialDone.legend,false); assert(c.renderVals().tour.feedback);
-  c.playerVm().legend[0].choose(); assert.equal(c.state.tutorialDone.legend,true); assert.equal(c.renderVals().tour.nextOff,false);
+  c.playerVm().legend[0].choose(); assert.equal(c.state.tutorialDone.legend,false); assert(c.renderVals().tour.feedback);
+  c.playerVm().legend.at(-1).choose(); assert.equal(c.state.tutorialDone.legend,true); assert.equal(c.renderVals().tour.nextOff,false);
   c.renderVals().tour.next(); assert.equal(c.state.tour,0); assert.equal(c.state.tutorial,false);
   assert.equal(c.state.disc,2); assert.equal(c.state.sub,1); assert.equal(c.state.playing,true); c.stop();
 });
 
 test('skipping the tutorial restores the previous file and paused position', () => {
   const {component:c}=playbackHarness();
-  c.state.tab='how'; c.state.sub=1; c.state.disc=5; c.state.frame=0; c.state.col=7;
+  c.state.tab='how'; c.state.sub=0; c.state.disc=5; c.state.frame=0; c.state.col=7;
   c.state.custom={name:'retained.png',kind:'image',url:'blob:retained',mode:'free'};
   const before=JSON.stringify(['tab','sub','disc','frame','col','custom','mute','playing'].map(key=>c.state[key]));
   c.startTutorial(); c.renderVals().discs[0].pick(); c.tourEnd();
@@ -1542,7 +1554,8 @@ test('vibration is initially off, handles absent or failing APIs, and stops on t
     const {component:c,context}=playbackHarness(),pulses=[];
     context.navigator.vibrate=pattern=>{pulses.push(pattern);return true;};
     assert.equal(c.state.vibe,false);assert.equal(c.vibrateSafely(25),false);assert.equal(pulses.length,0);
-    c.setPreference('vibe',true);assert.equal(c.vibrateSafely(25),true);assert.equal(pulses.at(-1),25);
+    context.window.matchMedia=()=>({matches:false});context.navigator.userActivation={hasBeenActive:true};
+    c.setPreference('vibe',true);assert.equal(pulses.at(-1),15);
     await c.play();
     if(operation==='pause')c.stop();
     if(operation==='seek')c.seekPosition(50);
@@ -1553,7 +1566,7 @@ test('vibration is initially off, handles absent or failing APIs, and stops on t
     if(operation==='preference')c.setPreference('vibe',false);
     assert.equal(pulses.at(-1),0,operation);
   }
-  const {component:c,context}=playbackHarness();c.state.vibe=true;
+  const {component:c,context}=playbackHarness();c.state.vibe=true;context.window.matchMedia=()=>({matches:false});context.navigator.userActivation.hasBeenActive=true;
   delete context.navigator.vibrate;assert.equal(c.vibrateSafely(25),false);
   let attempts=0;context.navigator.vibrate=()=>{attempts++;throw new Error('unavailable hardware');};
   assert.equal(c.vibrateSafely(25),false);assert.equal(c.vibrateSafely(25),false);assert.equal(attempts,1);
@@ -1567,18 +1580,35 @@ function clockHarness() {
   c.stepMelody=c.step=function(col,options){
     if(!options){this.setState({col});return;}
     scheduled.push({frame:options.state.frame,col,at:options.at});
-    this.emitStep({col,levels:{silbo:1,inti:0,mama:0,yaku:0,illapa:0},hits:{silbo:col+1,inti:0,mama:0,yaku:0,illapa:0},flash:0}, {silbo:true}, '', options,25);
+    this.emitStep({col,levels:{silbo:1,inti:0,mama:0,yaku:0,illapa:0},hits:{silbo:col+1,inti:0,mama:0,yaku:0,illapa:0},flash:0}, {silbo:true}, '', options);
   };
   return {...h,scheduled};
 }
 
 test('audio clock schedules ahead while position, history and vibration follow the heard step', async()=>{
   const {component:c,context,scheduled}=clockHarness(),pulses=[];context.navigator.vibrate=pattern=>{pulses.push(pattern);return true;};
-  c.state.vibe=true;await c.play();c.scheduleAudio();
+  c.state.vibe=true;context.window.matchMedia=()=>({matches:false});context.navigator.userActivation.hasBeenActive=true;await c.play();c.scheduleAudio();
   assert(scheduled.length>=1);assert(scheduled.every(event=>event.at>c.ac.currentTime));
-  assert.equal(c.state.col,-1);assert.equal(c.state.events.length,0);assert.deepEqual(pulses,[]);
-  c.ac.currentTime=scheduled[0].at;c.scheduleAudio();assert.equal(c.state.col,0);assert.equal(c.state.events.length,1);assert.equal(pulses.at(-1),25);
-  const event=c.state.events[0];assert.equal(event.column,1);assert.equal(event.frame,0);
+  assert.equal(c.state.col,-1);assert.equal(c.state.events.length,0);assert.deepEqual(pulses,[]);assert.equal(Object.keys(c.state.stageNotes).length,0);
+  c.ac.currentTime=scheduled[0].at;c.scheduleAudio();assert.equal(c.state.col,0);assert.equal(c.state.events.length,1);assert.equal(pulses.at(-1),60);
+  const event=c.state.events[0];assert.equal(event.column,1);assert.equal(event.frame,0);assert.equal(c.state.stageNotes.silbo.kind,'note');
+});
+
+test('musical vibration follows the intensity of audible attacks and is silent for rests and zero volume', () => {
+  const {component:c}=setup();
+  c.state.playing=true;
+  c.state.vibe=true;
+  assert.equal(c.playbackPulse({}, {mama:1}),null);
+  assert.equal(c.playbackPulse({mama:true}, {mama:.2}),'musicSoft');
+  assert.equal(c.playbackPulse({mama:true}, {mama:.6}),'musicMedium');
+  assert.equal(c.playbackPulse({mama:true, inti:true}, {mama:.8,inti:.8}),'musicStrong');
+  c.state.mute.inti=true;
+  assert.equal(c.playbackPulse({mama:true, inti:true}, {mama:.8,inti:.8}),'musicMedium');
+  c.state.volume=0;
+  assert.equal(c.playbackPulse({mama:true}, {mama:1}),null);
+  c.state.volume=100;
+  c.musicVibrationStopped=true;
+  assert.equal(c.playbackPulse({mama:true}, {mama:1}),null);
 });
 
 test('a delayed UI callback retains exact planned spacing within the lookahead', async()=>{
@@ -1600,7 +1630,7 @@ test('pause and seeking cancel the future visual queue without moving past the l
 test('queued animation levels and event names respect a musician muted before its note', async()=>{
   const {component:c,scheduled}=clockHarness();await c.play();c.scheduleAudio();
   c.setBandMute(c.allMute(true));c.ac.currentTime=scheduled[0].at;c.flushPlayback(c.ac.currentTime);
-  assert.equal(c.state.levels.silbo,0);assert.equal(c.state.hits.silbo,0);assert.equal(c.state.events[0].musicians.length,0);
+  assert.equal(c.state.levels.silbo,0);assert.equal(c.state.hits.silbo,0);assert.equal(c.state.events[0].musicians.length,0);assert.equal(c.state.stageNotes.silbo,undefined);
   c.setBandMute(c.only('silbo'));c.ac.currentTime=1;c.flushPlayback(1);
   assert.equal(c.state.hits.silbo,0,'reenabling does not animate notes cancelled by an earlier mute');
 });
@@ -1612,7 +1642,38 @@ test('queued chords and event captions use the language selected at their actual
   await c.play();c.scheduleAudio();assert(c.playbackQueue.length>0);const first=c.playbackQueue[0];
   assert.equal(first.chord,'Rem7');c.setLang('en');c.ac.currentTime=first.at;c.flushPlayback(first.at);
   assert.equal(c.state.chord,'Dm7');assert.match(c.state.caption,/chord Dm7/);assert.match(c.state.caption,/column 1\/28/);
-  assert.equal(c.state.events[0].chord,0);
+  assert.equal(c.state.events[0].chord,0);assert.equal(c.state.stageNotes.mama.kind,'note');
+});
+
+test('Illapa cues reflect actual attacks and distinguish rhythm from the extreme-data thunder',()=>{
+  const {component:c,context}=clockHarness();
+  const attacks=[];
+  c.ac={currentTime:0};
+  c.state.playing=true;
+  c.state.mute=c.only('illapa');
+  c.timpani=(...args)=>attacks.push({type:'timpani',midi:args[0]});
+  c.noiseBurst=()=>attacks.push({type:'noise'});
+  const melody=context.ComponentUnderTest.prototype.stepMelody.bind(c);
+  const raw=context.ComponentUnderTest.prototype.step.bind(c);
+  melody(0);
+  assert.equal(c.state.stageNotes.illapa.kind,'rhythm');
+  const cue=c.state.stageNotes.illapa;
+  melody(1);
+  assert.equal(c.state.stageNotes.illapa,cue,'a decaying note is never counted as a new entry');
+  melody(8);
+  assert.equal(c.state.stageNotes.illapa.kind,'rhythm');
+  assert.equal(c.state.stageNotes.illapa.id,cue.id + 1);
+  assert.deepEqual(attacks.map(a=>a.type),['timpani','timpani']);
+
+  c.state.engine='raw';
+  c.state.stageNotes={};
+  raw(0);
+  assert.equal(c.state.stageNotes.illapa,undefined);
+  c.state.an['0_0']={...c.state.an['0_0'],cells:Array(448).fill(4.8)};
+  raw(0);
+  assert.equal(c.state.stageNotes.illapa.kind,'thunder');
+  c.setBandMute(c.allMute(true));
+  assert.equal(c.state.stageNotes.illapa,undefined);
 });
 
 test('the audio cursor crosses a month using that frame’s tempo while the map waits for its actual time',async()=>{
@@ -1625,20 +1686,23 @@ test('the audio cursor crosses a month using that frame’s tempo while the map 
   assert.equal(c.profile().bpm,76);assert.equal(c.state.events.at(-1).date.m,3);
 });
 
-test('loading a disc requests its selected date first and still covers all six dates once',()=>{
+test('loading a disc requests its selected date before loading the remaining dates',()=>{
   const {component:c,context}=setup(),calls=[];c.state.disc=3;c.state.frame=4;
   c.analyze=(disc,frame)=>calls.push([disc,frame]);context.ComponentUnderTest.prototype.loadDisc.call(c,3);
+  assert.deepEqual(calls,[[3,4]]);
+  c.state.an['3_4']={};calls.length=0;
+  context.ComponentUnderTest.prototype.loadDisc.call(c,3);
   assert.deepEqual(calls,[[3,4],[3,0],[3,1],[3,2],[3,3],[3,5]]);
   calls.length=0;context.ComponentUnderTest.prototype.loadDisc.call(c,5);assert.deepEqual(calls,[]);
 });
 
 test('map descriptions report derived source values independently of mute and avoid implying ocean conditions for a table',()=>{
   const {component:c}=setup();c.cur=()=>({cells:Array(448).fill(-1),cold:1,warm:0,hot:.25,coast:0,coastPixels:0});
-  const description=c.describeText();assert.match(description,/25 por ciento de los píxeles/);assert.match(description,/no tiene píxeles utilizables/);
+  const description=c.describeText();assert.match(description,/más frío de lo habitual/);assert.match(description,/faltan datos útiles/);assert.doesNotMatch(description,/\d/);
   c.state.mute=c.allMute(true);assert.equal(c.describeText(),description,'map interpretation is independent of the enabled instruments');
   c.state.disc=5;c.state.custom={name:'Chiclayo',kind:'rain'};
-  assert.match(c.describeText(),/por debajo del promedio de la serie/);assert(!/océano|canta|suena|Silbo/.test(c.describeText()));
-  c.setLang('en');assert.match(c.describeText(),/below the series average/);assert.match(c.describeText(),/drawn cells/);
+  assert.match(c.describeText(),/menos lluvia que el promedio de la serie/);assert(!/océano|canta|suena|Silbo/.test(c.describeText()));
+  c.setLang('en');assert.match(c.describeText(),/below-average rainfall/);assert.doesNotMatch(c.describeText(),/\d/);
 });
 
 test('a stale preview encoder cannot create URLs, replace the accepted image, or commit after navigation',()=>{
@@ -1650,7 +1714,7 @@ test('a stale preview encoder cannot create URLs, replace the accepted image, or
   encoders[0].done(encoders[0].image,{name:'stale-preview'});assert.equal(c.state.custom,accepted);
   assert(revoked.includes('blob:old.png'));assert(!revoked.includes(accepted.url));
   encoders[1].done(encoders[1].image,{name:'new-preview'});assert.equal(c.state.custom.name,'new.png');assert.equal(c.state.custom.url,'blob:new-preview');assert(revoked.includes(accepted.url));
-  upload('leaving.png');images[3].onload();c.goSub(0);const snapshot=JSON.stringify(c.state);
+  upload('leaving.png');images[3].onload();c.goSub(1);const snapshot=JSON.stringify(c.state);
   encoders[2].done(encoders[2].image,{name:'offscreen-preview'});assert.equal(JSON.stringify(c.state),snapshot);assert(revoked.includes('blob:leaving.png'));
 });
 
@@ -1685,9 +1749,9 @@ test('a heard step commits map position and its textual event in one render',asy
   assert.equal(c.state.events[0].frame,c.state.frame);assert.equal(c.state.events[0].column,c.state.col+1);
 });
 
-test('the suggested solo follows a new disc while an explicitly edited band mix is preserved',()=>{
+test('the complete band is active by default and an explicitly edited mix is preserved',()=>{
   const {component:c}=setup();c.state.tab='juke';c.state.sub=0;c.renderVals().discs[0].pick();
-  assert.equal(c.leadChar(),'mama');assert.equal(c.state.mute.mama,false);assert.equal(c.state.mute.silbo,true);
+  assert.equal(c.leadChar(),'mama');assert.equal(Object.values(c.state.mute).filter(Boolean).length,0);
   c.goSub(0);const manual=c.allMute(false);manual.yaku=true;c.setBandMute(manual);c.renderVals().discs[4].pick();
   assert.deepEqual(c.state.mute,manual);assert.equal(c.leadChar(),'illapa');
 });
@@ -1700,7 +1764,9 @@ test('play and resume never override an explicit all-instruments mute',async()=>
 
 test('an accepted local file preserves an edited mix and explicit lead choice',()=>{
   const {component:c}=setup();const analysis={cells:Array(448).fill(-1),warm:0,cold:1,hot:0,coast:0};
-  c.selectLead('illapa');c.showCustom({name:'first.png',url:'blob:first',kind:'image'},analysis,'ready',c.only('mama'));
+  c.showCustom({name:'default.png',url:'blob:default',kind:'image'},analysis,'ready');
+  assert.deepEqual(c.state.mute,c.allMute(false));
+  c.selectLead('illapa');c.showCustom({name:'first.png',url:'blob:first',kind:'image'},analysis,'ready');
   assert.equal(c.state.mute.illapa,false);assert.equal(Object.values(c.state.mute).filter(value=>!value).length,1);
   const manual=c.allMute(true);c.setBandMute(manual);c.showCustom({name:'next.csv',url:'blob:next',cols:[]},analysis,'ready');
   assert.deepEqual(c.state.mute,manual);assert.equal(c.state.mixCustomized,true);
@@ -1722,7 +1788,7 @@ test('local image and rainfall have no reference coast, and rainfall has average
   assert.equal(c.renderVals().stats.coast,'—');
   c.state.custom={name:'Chiclayo',kind:'rain'};
   assert.equal(c.renderVals().stats.coast,'—');
-  assert.match(c.playerVm().legend[0].label,/Bajo el promedio/);
+  assert.match(c.playerVm().legend.at(-1).label,/Menos lluvia/);
 });
 
 test('player explanations distinguish derived Data tones from composed harmony and local image position',()=>{
@@ -1749,4 +1815,18 @@ test('final disposal revokes the accepted file once while repeated disposal rema
   c.state.custom={name:'accepted.csv',url:'blob:accepted'};c.pendingImageUrl='blob:pending';
   c.componentWillUnmount();assert(revoked.includes('blob:accepted'));assert(revoked.includes('blob:pending'));
   const first=JSON.stringify(revoked);c.componentWillUnmount();assert.equal(JSON.stringify(revoked),first);
+});
+
+test('music history groups retained events into pages and clears its position', () => {
+  const {component:c}=setup();
+  c.state.eventsOpen=true;
+  c.state.events=Array.from({length:20},()=>c.eventFor({silbo:true},''));
+  assert.equal(c.playerVm().events.length,6);
+  assert.equal(c.playerVm().historyPage,'1 / 4');
+  c.playerVm().historyNext();
+  assert.equal(c.playerVm().historyPage,'2 / 4');
+  c.playerVm().clearEvents();
+  assert.equal(c.playerVm().historyPage,'1 / 1');
+  assert.equal(c.playerVm().events.length,0);
+  assert.equal(c.playerVm().historyNextOff,true);
 });

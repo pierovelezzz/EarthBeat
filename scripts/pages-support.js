@@ -134,6 +134,7 @@
         component.stopSpeech?.();
         component.stop?.();
         component.cancelBandClip?.();
+        component.cinema?.finish(false);
         component.routeFinish?.();
       } else component.componentWillUnmount?.();
     });

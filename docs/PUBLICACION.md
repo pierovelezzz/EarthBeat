@@ -1,9 +1,6 @@
-# Publicación de V2
+# Publicación de main
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
-
-El código de esta versión está en [EarthBeat, rama V2](https://github.com/pierovelezzz/EarthBeat/tree/V2). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
+El código de esta versión está en [EarthBeat, rama main](https://github.com/pierovelezzz/EarthBeat/tree/main). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
 
 ## Preparar y revisar el sitio
 
@@ -17,7 +14,7 @@ Editar la fuente I11 y reconstruir; no tratar `_site` como fuente canónica. Ide
 
 ## Workflow incluido
 
-`.github/workflows/pages.yml` se ejecuta automáticamente en pushes a `main` y también define `workflow_dispatch`. Un push a V2 no activa por sí mismo la condición de push de ese workflow. El despliegue requiere la configuración y permisos de GitHub Pages del repositorio, o alojar los archivos estáticos generados en otro servicio.
+`.github/workflows/pages.yml` se ejecuta en pushes a `main` y con `workflow_dispatch`. GitHub Pages debe estar configurado para desplegar el sitio generado.
 
 No se acredita aquí una URL pública de la aplicación ni un despliegue nuevo. Las copias de código y los paquetes deben referirse a la rama y al commit realmente seleccionados.
 

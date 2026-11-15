@@ -1,17 +1,14 @@
 # EarthBeat · Pacific Ocean Sonification
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
-
-Esta es la rama **V2** de [EarthBeat](https://github.com/pierovelezzz/EarthBeat/tree/V2). La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
+Esta es la rama **main** de EarthBeat. La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
 
 ## Qué incluye esta versión
 
-Cuatro apartados principales: Escuchar, La banda, ¿Cómo funciona? y Tecnología. ¿Cómo funciona? contiene Del mapa al sonido y Prueba práctica, en ese orden. Brisa tiene retrato y narraciones MP3 locales. Esta rama no incorpora la clase de introducción cinematográfica de V1/V3 ni el runtime de baile de V3.
+La portada muestra un mapa de la NASA y permite escuchar ese mismo mapa con un toque. Escuchar, La banda, ¿Cómo funciona? y Tecnología conservan la estructura de V2. El selector EN/ES admite teclado, guarda el idioma e indica la selección.
 
-El build distribuye `pose-banda.webp`, `pose-banda-animada.webp`, `escenario.webp` y `miniatura-banda.webp` de cada músico. Los cinco `pose-banda-animada.webp` contienen siete fotogramas; esta rama no tiene `scripts/band-dance.js` ni carpetas `baile/`.
+La banda conserva las poses, las transiciones y los WebP animados de V2. El reproductor incorpora la leyenda interactiva y la mezcla de V3, además del historial paginado de V1.
 
-Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz está activada en los valores iniciales del componente, empieza tras interacción y se puede apagar desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
+Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz se activa desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
 
 El analizador de la aplicación reduce las imágenes a una cuadrícula de 28 × 16, con 448 celdas. Los niveles derivados van de −5 a +5. Son una interpretación del color y decisiones de sonificación; no son grados de temperatura ni una medición calibrada de cualquier imagen.
 
@@ -38,7 +35,7 @@ node scripts/test_guides.cjs _site/index.html
 python scripts/run_browser_checks.py --list
 ```
 
-La suite de lógica contiene 132 pruebas en esta rama. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+La suite de lógica contiene 135 pruebas en esta rama. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
 
 ## Documentación
 

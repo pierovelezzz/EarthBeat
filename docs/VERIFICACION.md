@@ -1,7 +1,4 @@
-# Verificación de V2
-
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
+# Verificación de main
 
 ## Comprobaciones reproducibles
 
@@ -20,11 +17,11 @@ python scripts/run_browser_checks.py --list
 |---|---|
 | Huellas y tamaños de fuentes y avisos | 12 archivos verificados |
 | Generación del sitio desde esta rama | Correcta |
-| Suite de lógica del HTML generado | 132 pruebas, sin fallos |
+| Suite de lógica del HTML generado | 135 pruebas, sin fallos |
 | Enlaces Markdown locales y referencias de archivos | Revisados con nombres y mayúsculas del árbol Git |
 | Código y recursos ajenos a documentación | Conservados |
 
-La comprobación básica de navegador de esta revisión usa Chromium con contexto limpio: carga local, montaje de aplicación, navegación principal, títulos visibles, selector de imágenes, retrato de Brisa según la rama, cambio a inglés y ausencia de errores de recursos. Se comprobaron 1342 × 768 y 390 × 844 píxeles. No equivale a ejecutar todos los guiones históricos de regresión.
+En Chromium se probó la portada, el selector EN/ES con teclado, la reproducción del mapa de la portada, la leyenda y la banda en 320 × 568, 390 × 844, 768 × 1024, 844 × 390 y 1440 × 900. En 390 × 844 se comprobó también la apertura de preferencias y el cierre de la presentación.
 
 ## Guiones de navegador disponibles
 
