@@ -1,9 +1,9 @@
 # TerraSonic · Pacific Ocean Sonification
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V1`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V1`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-Esta es la rama **V1** de [EarthBeat](https://github.com/pierovelezzz/EarthBeat/tree/V1). La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
+Esta es la rama **V1** de [EarthRhythm](https://github.com/pierovelezzz/EarthRhythm/tree/V1). La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
 
 ## Qué incluye esta versión
 

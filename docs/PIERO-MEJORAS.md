@@ -1,9 +1,9 @@
 # Correspondencia y estado de V1
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V1`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V1`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-Esta edición corresponde únicamente a **V1** de EarthBeat. La correspondencia de las copias es: piero-mejoras → V1, piero-mejoras-v2 → V2 y piero-mejoras-v3 → V3. Las implementaciones permanecen separadas.
+Esta edición corresponde únicamente a **V1** de EarthRhythm. La correspondencia de las copias es: piero-mejoras → V1, piero-mejoras-v2 → V2 y piero-mejoras-v3 → V3. Las implementaciones permanecen separadas.
 
 Cinco apartados principales: Escuchar, La banda, Tu imagen, ¿Cómo funciona? y Tecnología. Portada con muestra de mapas, introducción ilustrada y viajes del fondo que abren discos. La banda usa el runtime 2D con cuatro PNG por músico.
 

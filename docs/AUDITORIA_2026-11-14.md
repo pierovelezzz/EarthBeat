@@ -1,6 +1,6 @@
 # Revisión documental y comprobaciones de V1
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V1`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V1`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 La documentación se ha contrastado con la fuente I11, el build, los recursos que existen en esta rama y sus pruebas de lógica. Se corrigieron descripciones de CSV, 3D, voz, pantallas, recursos retirados y comandos de salida que no correspondían al árbol actual.

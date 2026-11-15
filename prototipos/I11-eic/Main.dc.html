@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="terrasonic-ai-use" content="Code, procedural SVG illustrations and procedural ambient-audio design assisted by OpenAI Codex. NASA source imagery is credited separately; no NASA branding was generated or modified.">
-<title>Terrasonic · Earth Jukebox</title>
+<title>EarthRhythm · Earth Jukebox</title>
 <style>html,body{margin:0;background:#171e2b;color:#eff3f8}
 </style>
 <script src="./support.js"></script>
@@ -2009,7 +2009,7 @@ html[data-ts-page-hidden] .px .planet-portal *{animation-play-state:paused!impor
 <div class="wrap">
 <button type="button" class="brand" onClick="{{goHome}}" aria-label="{{tx.brandAria}}">
 <svg class="brandmark" width="38" height="24" viewBox="0 0 25 16" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><path d="M4 0h8v1h-8zM20 0h1v1h-1zM2 1h3v1h-3zM11 1h3v1h-3zM18 1h6v1h-6zM1 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM1 3h1v1h-1zM14 3h1v1h-1zM0 4h2v1h-2zM14 4h2v1h-2zM0 5h1v1h-1zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h1v1h-1zM15 9h1v1h-1zM0 10h1v1h-1zM15 10h1v1h-1zM0 11h2v1h-2zM14 11h2v1h-2zM1 12h1v1h-1zM14 12h1v1h-1zM1 13h2v1h-2zM13 13h2v1h-2zM2 14h3v1h-3zM11 14h3v1h-3zM4 15h8v1h-8z"></path><path d="M19 4h1v1h-1zM3 5h2v1h-2zM9 5h2v1h-2zM18 5h1v1h-1zM21 5h1v1h-1zM2 6h1v1h-1zM5 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM17 6h1v1h-1zM20 6h1v1h-1zM6 7h2v1h-2zM12 7h2v1h-2zM19 7h1v1h-1zM3 9h2v1h-2zM9 9h2v1h-2zM2 10h1v1h-1zM5 10h1v1h-1zM8 10h1v1h-1zM11 10h1v1h-1zM6 11h2v1h-2zM12 11h2v1h-2z" fill="#FFD447"></path></svg>
-<span class="wordmark">Terrasonic</span>
+<span class="wordmark">EarthRhythm</span>
 </button>
 <nav id="tour-nav" class="nav" aria-label="{{tx.sections}}" onKeyDown="{{onNavKey}}">
 <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
@@ -2458,7 +2458,7 @@ html[data-ts-page-hidden] .px .planet-portal *{animation-play-state:paused!impor
 <div class="preferences-dim" aria-hidden="true"></div>
 <section id="preferences-dialog" class="preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="preferences-title" aria-describedby="preferences-body" tabindex="-1">
 <div class="preferences-content">
-<div class="preferences-header"><p class="kicker">TerraSonic · Brisa</p><div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-pressed="{{l.on}}" onClick="{{l.pick}}" lang="{{l.code}}">{{l.short}}</button></sc-for></div></div>
+<div class="preferences-header"><p class="kicker">EarthRhythm · Brisa</p><div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-pressed="{{l.on}}" onClick="{{l.pick}}" lang="{{l.code}}">{{l.short}}</button></sc-for></div></div>
 <h2 id="preferences-title">{{preferences.title}}</h2><p id="preferences-body">{{preferences.body}}</p>
 <div class="preferences-choices"><sc-for list="{{preferences.choices}}" as="p"><label for="{{p.id}}"><input id="{{p.id}}" type="checkbox" checked="{{p.on}}" onChange="{{p.change}}"><span><strong>{{p.label}}</strong><span class="small muted">{{p.hint}}</span></span></label></sc-for></div>
 </div>
@@ -2560,10 +2560,10 @@ var GUIDES = {
     {
       "id": "tour-cta",
       "t": "Hola, soy Brisa",
-      "b": "Te ayudo a explorar TerraSonic. Puedes leer esta ayuda, escucharla si quieres o cerrarla en cualquier momento.",
+      "b": "Te ayudo a explorar EarthRhythm. Puedes leer esta ayuda, escucharla si quieres o cerrarla en cualquier momento.",
       "en": {
         "t": "Hi, I’m Brisa",
-        "b": "I help you explore TerraSonic. Read this help, listen if you want, or close it at any time."
+        "b": "I help you explore EarthRhythm. Read this help, listen if you want, or close it at any time."
       }
     },
     {
@@ -2696,10 +2696,10 @@ var GUIDES = {
     {
       "id": "tour-steps",
       "t": "Del mapa a la música",
-      "b": "El método explica qué datos se usan y qué decisiones toma TerraSonic. Los niveles estimados de color no son grados medidos.",
+      "b": "El método explica qué datos se usan y qué decisiones toma EarthRhythm. Los niveles estimados de color no son grados medidos.",
       "en": {
         "t": "From map to music",
-        "b": "The method explains which data are used and which decisions TerraSonic makes. Estimated color levels are not measured degrees."
+        "b": "The method explains which data are used and which decisions EarthRhythm makes. Estimated color levels are not measured degrees."
       }
     },
     {
@@ -2745,10 +2745,10 @@ var GUIDES = {
     {
       "id": "credit-science-title",
       "t": "Fuentes NASA",
-      "b": "Estos enlaces identifican los productos y datos utilizados. TerraSonic es un proyecto independiente.",
+      "b": "Estos enlaces identifican los productos y datos utilizados. EarthRhythm es un proyecto independiente.",
       "en": {
         "t": "NASA sources",
-        "b": "These links identify the products and data used. TerraSonic is an independent project."
+        "b": "These links identify the products and data used. EarthRhythm is an independent project."
       }
     },
     {
@@ -3185,7 +3185,7 @@ var ROUTE_EN = { home: 'Home', juke: 'Listen', band: 'The band', data: 'Your ima
 /* Textos fijos de la interfaz */
 var TX = {
   es: {
-    brandAria: 'Terrasonic, ir al inicio', sections: 'Secciones', langAria: 'Idioma', a11y: 'Accesibilidad', a11yAria: 'Opciones de accesibilidad', skipContent: 'Saltar al contenido',
+    brandAria: 'EarthRhythm, ir al inicio', sections: 'Secciones', langAria: 'Idioma', a11y: 'Accesibilidad', a11yAria: 'Opciones de accesibilidad', skipContent: 'Saltar al contenido',
     heroKicker: 'Sonificación del Pacífico', heroTitle: 'Escucha los datos del Pacífico',
     heroLede: 'Convertimos los colores de mapas NASA en música para explorar cambios de temperatura del mar.',
     heroCta: 'Escuchar una muestra', heroBand: 'Cómo funciona',
@@ -3204,7 +3204,7 @@ var TX = {
     theBand: 'La banda', all: 'Todos', none: 'Ninguno', bandAria: 'Banda', bandMixHelp: 'Activa o silencia a cada músico.', staticPose: 'Pose estática', bandDesign: 'Diseño artístico del proyecto. Las referencias culturales y las historias se documentan por separado.',
     bandEyebrow: 'La banda del Pacífico', pickMusician: 'Elegir músico', inScene: 'En escena', fullBody: 'en pose de cuerpo completo con su instrumento', constellation: 'Constelación',
     starring: 'Protagoniza', listens: 'Escucha', plays: 'Toca', persona: 'Carácter', instrument: 'Instrumento', bandGo: 'Armar la banda y escuchar',
-    teamCharacter: 'Personaje de ficción del equipo', proposedStory: 'Historia del personaje', howItPlays: 'Cómo suena en TerraSonic', factsAndReferences: 'Hechos, cultura y fuentes', documentedEpisode: 'Episodio documentado', culturalReference: 'Referencia cultural', visualProposal: 'Diseño del personaje', ethicalPrinciples: 'Principios éticos', teamInspiration: 'Inspiración original del equipo',
+    teamCharacter: 'Personaje de ficción del equipo', proposedStory: 'Historia del personaje', howItPlays: 'Cómo suena en EarthRhythm', factsAndReferences: 'Hechos, cultura y fuentes', documentedEpisode: 'Episodio documentado', culturalReference: 'Referencia cultural', visualProposal: 'Diseño del personaje', ethicalPrinciples: 'Principios éticos', teamInspiration: 'Inspiración original del equipo',
     dataKicker: 'Convierte en música · paso 1', dataTitle: 'Tu imagen en música', dataLede: 'Elige una imagen: sus colores se convierten en notas. También puedes explorar una muestra de lluvia de NASA POWER.',
     dropTitle: 'Elegir una imagen', dropSub: 'También puedes arrastrar el archivo aquí. Máx. 8 MB. Solo imágenes PNG, JPG, WebP o GIF.', sample: 'Probar con la lluvia de Chiclayo', dataExplainer: 'Cómo sonará tu archivo',
     colorsHow: 'Cómo leer los colores', modePalette: 'Mapa de anomalía (escala NASA)', modeFree: 'Color libre (cualquier imagen)', column: 'Columna a escuchar',
@@ -3217,11 +3217,11 @@ var TX = {
     methodRule: 'Los hechos de impacto se vinculan a episodio, territorio y mes. En Pacora/marzo 2023, 29 viviendas afectadas documentadas activan una reducción editorial fija de 10 ppm en Melodía de Yaku. No se calcula tristeza ni se escala el daño en notas. Sin evidencia y regla aplicables se mantiene la armonía base.',
     methodSourcesTitle: 'Consultar las fuentes', originalPalette: 'Paleta original', monthlyData: 'Datos mensuales', impactCatalog: 'Catálogo de impactos v1',
     howTitle2: 'Paletas y niveles',
-    scaleIntro: 'Del color al nivel, del nivel a la música. TerraSonic interpreta los fotogramas y transforma sus patrones en una banda sonora.',
-    scaleSource: 'El análisis compara los colores con la escala del producto NASA. Los colores de esta leyenda y la asignación de músicos son la representación de TerraSonic; la NASA no determina quién toca.',
-    scaleDirection: 'Niveles · de cálido a frío ↓', scaleLabel: 'Leyenda de niveles y músicos de TerraSonic',
-    scaleMusic: 'Representación musical · TerraSonic', scaleRead: 'Cómo leer esta escala',
-    scaleContext: 'La tabla muestra la paleta propia de TerraSonic, no los colores originales de ambos productos NASA. Las asociaciones son un resumen artístico: el sonido depende de promedios, filas, motor e instrumentos activos. En Melodía pueden sonar acordes sobre el nivel 0. En el mapa original, sin datos no equivale a frío. Usa la leyenda escrita junto al mapa para interpretar cada producto.', howTitle3: 'Lo que pide el reto y dónde verlo',
+    scaleIntro: 'Del color al nivel, del nivel a la música. EarthRhythm interpreta los fotogramas y transforma sus patrones en una banda sonora.',
+    scaleSource: 'El análisis compara los colores con la escala del producto NASA. Los colores de esta leyenda y la asignación de músicos son la representación de EarthRhythm; la NASA no determina quién toca.',
+    scaleDirection: 'Niveles · de cálido a frío ↓', scaleLabel: 'Leyenda de niveles y músicos de EarthRhythm',
+    scaleMusic: 'Representación musical · EarthRhythm', scaleRead: 'Cómo leer esta escala',
+    scaleContext: 'La tabla muestra la paleta propia de EarthRhythm, no los colores originales de ambos productos NASA. Las asociaciones son un resumen artístico: el sonido depende de promedios, filas, motor e instrumentos activos. En Melodía pueden sonar acordes sobre el nivel 0. En el mapa original, sin datos no equivale a frío. Usa la leyenda escrita junto al mapa para interpretar cada producto.', howTitle3: 'Lo que pide el reto y dónde verlo',
     techKicker: 'Tecnología', techFilterAria: 'Filtrar tecnologías', techNote: 'Detalle técnico', techEmpty: 'No hay herramientas con este filtro en la categoría. Elige «Todo» para verlas.', module: 'Módulo', credTitle: 'Datos, créditos y uso de IA', credData: 'Datos',
     credDataP1: 'Fotogramas de la visualización del Earth Information Center «Sea Surface Temperature (SST) Anomaly – Near Real Time» (NASA SVS 5176, variante Pacífico, 16 may 2024 – 2 nov 2026), recortados al Pacífico sudeste; datos JPL MUR SST. Crédito: NASA’s Scientific Visualization Studio.',
     credDataP2: 'Los discos «NASA GIBS» (2010–2023) usan NASA JPL GHRSST L4 MUR 0,25° SST Anomalies, día 15 de cada mes, vía NASA GIBS/Worldview.',
@@ -3236,7 +3236,7 @@ var TX = {
     guide: 'Guía', guideOpen: 'Abrir ayuda de Brisa', guideClose: 'Cerrar guía y continuar después', guideListen: 'Escuchar a Brisa', skipGuide: 'Saltar guía', guideBy: 'Brisa · tu guía'
   },
   en: {
-    brandAria: 'Terrasonic, go home', sections: 'Sections', langAria: 'Language', a11y: 'Accessibility', a11yAria: 'Accessibility options', skipContent: 'Skip to content',
+    brandAria: 'EarthRhythm, go home', sections: 'Sections', langAria: 'Language', a11y: 'Accessibility', a11yAria: 'Accessibility options', skipContent: 'Skip to content',
     heroKicker: 'Pacific Ocean Sonification', heroTitle: 'Hear the Pacific through data',
     heroLede: 'We turn colors in NASA maps into music, so you can explore changes in sea temperature.',
     heroCta: 'Play a sample', heroBand: 'How it works',
@@ -3255,7 +3255,7 @@ var TX = {
     theBand: 'The band', all: 'All', none: 'None', bandAria: 'Band', bandMixHelp: 'Switch each musician on or off.', staticPose: 'Static pose', bandDesign: 'Artistic design for the project. Cultural references and stories are documented separately.',
     bandEyebrow: 'The Pacific band', pickMusician: 'Pick a musician', inScene: 'On stage', fullBody: 'in a full-body pose with their instrument', constellation: 'Constellation',
     starring: 'Leads', listens: 'Listens to', plays: 'Plays', persona: 'Personality', instrument: 'Instrument', bandGo: 'Assemble the band and listen',
-    teamCharacter: 'Fictional character by the team', proposedStory: 'Character story', howItPlays: 'How it sounds in TerraSonic', factsAndReferences: 'Facts, culture and sources', documentedEpisode: 'Documented episode', culturalReference: 'Cultural reference', visualProposal: 'Character design', ethicalPrinciples: 'Ethical principles', teamInspiration: 'The team’s original inspiration',
+    teamCharacter: 'Fictional character by the team', proposedStory: 'Character story', howItPlays: 'How it sounds in EarthRhythm', factsAndReferences: 'Facts, culture and sources', documentedEpisode: 'Documented episode', culturalReference: 'Cultural reference', visualProposal: 'Character design', ethicalPrinciples: 'Ethical principles', teamInspiration: 'The team’s original inspiration',
     dataKicker: 'Convert to music · step 1', dataTitle: 'Your image as music', dataLede: 'Choose an image and turn its colors into notes. You can also explore a NASA POWER rainfall sample.',
     dropTitle: 'Choose an image', dropSub: 'You can also drag the file here. 8 MB max. PNG, JPG, WebP or GIF images only.', sample: 'Try Chiclayo’s rainfall', dataExplainer: 'How your file will sound',
     colorsHow: 'How to read the colors', modePalette: 'Anomaly map (NASA scale)', modeFree: 'Free color (any image)', column: 'Column to listen to',
@@ -3268,11 +3268,11 @@ var TX = {
     methodRule: 'Impact facts match an episode, territory and month. In Pacora/March 2023, 29 documented affected homes activate a fixed editorial reduction of 10 bpm in Yaku Melody. Sadness is not calculated, and damage is not scaled into notes. Without applicable evidence and a rule, base harmony remains.',
     methodSourcesTitle: 'Consult the sources', originalPalette: 'Original palette', monthlyData: 'Monthly data', impactCatalog: 'Impact catalog v1',
     howTitle2: 'Palettes and levels',
-    scaleIntro: 'From color to level, from level to music. TerraSonic interprets the frames and turns their patterns into a soundtrack.',
-    scaleSource: 'The analysis compares colors against the NASA product scale. The colors in this legend and the musician assignments are TerraSonic’s representation; NASA does not determine who plays.',
-    scaleDirection: 'Levels · warm to cold ↓', scaleLabel: 'TerraSonic level and musician legend',
-    scaleMusic: 'Musical representation · TerraSonic', scaleRead: 'How to read this scale',
-    scaleContext: 'The table shows TerraSonic’s own palette, not the original colors of both NASA products. Associations are an artistic summary: sound depends on means, rows, engine and active instruments. Melody may play chords at level 0. On the original map, missing data does not mean cold. Use the written legend beside the map to interpret each product.', howTitle3: 'What the challenge asks for and where to see it',
+    scaleIntro: 'From color to level, from level to music. EarthRhythm interprets the frames and turns their patterns into a soundtrack.',
+    scaleSource: 'The analysis compares colors against the NASA product scale. The colors in this legend and the musician assignments are EarthRhythm’s representation; NASA does not determine who plays.',
+    scaleDirection: 'Levels · warm to cold ↓', scaleLabel: 'EarthRhythm level and musician legend',
+    scaleMusic: 'Musical representation · EarthRhythm', scaleRead: 'How to read this scale',
+    scaleContext: 'The table shows EarthRhythm’s own palette, not the original colors of both NASA products. Associations are an artistic summary: sound depends on means, rows, engine and active instruments. Melody may play chords at level 0. On the original map, missing data does not mean cold. Use the written legend beside the map to interpret each product.', howTitle3: 'What the challenge asks for and where to see it',
     techKicker: 'Technology', techFilterAria: 'Filter technologies', techNote: 'Technical detail', techEmpty: 'No tools in this category match the filter. Choose “All” to see them.', module: 'Module', credTitle: 'Data, credits and AI use', credData: 'Data',
     credDataP1: 'Frames from the Earth Information Center visualization “Sea Surface Temperature (SST) Anomaly – Near Real Time” (NASA SVS 5176, Pacific variant, 16 May 2024 – 2 Nov 2026), cropped to the southeast Pacific; JPL MUR SST data. Credit: NASA’s Scientific Visualization Studio.',
     credDataP2: 'The “NASA GIBS” discs (2010–2023) use NASA JPL GHRSST L4 MUR 0.25° SST Anomalies, the 15th of each month, via NASA GIBS/Worldview.',
@@ -3513,7 +3513,7 @@ class CinematicIntro {
     this.finish(false); this.markSeen();
     var preferences=document.getElementById('preferences-dialog');
     if(preferences){this.coveredPreferences={node:preferences,inert:preferences.inert,hidden:preferences.getAttribute('aria-hidden')};preferences.inert=true;preferences.setAttribute('aria-hidden','true');}
-    var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de TerraSonic','TerraSonic presentation'));
+    var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de EarthRhythm','EarthRhythm presentation'));
     root.innerHTML=`<div class="cinema-space" aria-hidden="true"><div class="cinema-stars"></div><div class="cinema-stars near"></div><div class="cinema-sun"></div><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i></div>
 <div class="cinema-world" aria-hidden="true"><svg viewBox="0 0 500 500"><defs>
 <radialGradient id="intro-ocean" cx="30%" cy="28%" r="77%"><stop stop-color="#3f9bb5"/><stop offset=".45" stop-color="#1e6088"/><stop offset=".8" stop-color="#14324e"/><stop offset="1" stop-color="#0d192b"/></radialGradient>
@@ -3527,7 +3527,7 @@ class CinematicIntro {
 <g fill="none" stroke="#e8f9ff" stroke-opacity=".3" stroke-linecap="round" stroke-width="5"><path d="M119 141q63-26 103-8m75 34q43-12 65 3M163 264q38-18 69-4m46 71q39-17 78-3M136 378q55 19 106 5"/></g><circle cx="250" cy="250" r="210" fill="url(#intro-night)"/></g>
 <g class="cinema-orbit" fill="none" stroke="#e8b969" stroke-opacity=".4"><ellipse cx="250" cy="250" rx="242" ry="93" transform="rotate(-24 250 250)"/><path d="M250 12v16m0 444v16M12 250h16m444 0h16"/></g></svg></div>
 <svg class="cinema-wave" viewBox="0 0 560 110" fill="none" aria-hidden="true"><path d="M0 55h80l16-9 16 18 16-29 16 46 16-65 16 81 16-66 16 42 16-28 16 20 16-17 16 13 16-18 16 25 16-36 16 43 16-36 16 25 16-16 16 9h80" stroke="currentColor" stroke-width="1.5"/></svg>
-<div class="cinema-copy"><p class="cinema-brand">TERRASONIC</p><h2></h2><p class="cinema-description"></p></div>
+<div class="cinema-copy"><p class="cinema-brand">EARTHRHYTHM</p><h2></h2><p class="cinema-description"></p></div>
 <div class="cinema-toolbar"><p></p><div class="cinema-actions"><button type="button" class="cinema-skip"></button><button type="button" class="cinema-pause"></button></div></div>`;
     this.paused=false;this.update();this.returnFocus=trigger||document.activeElement;document.body.append(root);
     root.style.fontFamily=getComputedStyle(document.querySelector('.px.app')).fontFamily;
@@ -5667,7 +5667,7 @@ class Component extends DCLogic {
         ].map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: option[0]==='reducedMotion' ? !!self.bandReduced() : !!s[option[0]], change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
         continueLabel: T('Continuar', 'Continue'), tutorialLabel: T('Ver guía · 3 pasos', 'Try the guide · 3 steps'),
         continue: function () { self.finishPreferences(false); }, tutorial: function () { self.finishPreferences(true); },
-        reopenLabel: T('Cómo prefiero usar TerraSonic', 'How I prefer to use TerraSonic'), open: function () { self.openPreferences(); }
+        reopenLabel: T('Cómo prefiero usar EarthRhythm', 'How I prefer to use EarthRhythm'), open: function () { self.openPreferences(); }
       },
       frameCount: s.disc === 5 ? T('tu archivo', 'your file') : T('fotograma ', 'frame ') + (s.frame + 1) + T(' de ', ' of ') + d.files.length, prevOff: s.frame <= 0, nextOff: s.frame >= d.files.length - 1,
       trans: s.trans, route: s.route, pageName: ROUTE_LOOK[s.tab].title,

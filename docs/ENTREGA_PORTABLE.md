@@ -1,6 +1,6 @@
 # Entrega portátil de V1
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V1`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V1`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 ## Fuente comprometida
@@ -9,7 +9,7 @@ Para generar un ZIP de los archivos versionados del commit seleccionado, desde l
 
 ```bash
 git rev-parse HEAD
-git archive --format=zip --output=../EarthBeat-V1-source.zip HEAD
+git archive --format=zip --output=../EarthRhythm-V1-source.zip HEAD
 ```
 
 La salida no incluye `.git`, archivos sin seguimiento ni el sitio `_site` generado. Extraer en una carpeta nueva y ejecutar el build permite obtener el sitio estático correspondiente.
