@@ -5,10 +5,9 @@ La copia `accesibilidad/v4-flujo-inclusivo` ofrece un único tutorial práctico 
 ## Acceder al tutorial
 
 - En las preferencias de bienvenida: Iniciar tutorial, Retomar tutorial o Repetir tutorial, según el progreso guardado.
-- En Formas de usar: botón Tutorial. El contador de las páginas de instrucciones aparece junto al título para distinguirlo del tutorial.
+- En Accesibilidad, abre Mis preferencias y elige el tutorial.
 - En el botón Brisa: si hay un tutorial pendiente, lo retoma directamente. Si no lo hay, abre Ayuda de esta pantalla.
 
-Formas de usar también incluye el botón Ayuda. Permite consultar la ayuda contextual aunque haya un tutorial pendiente, sin borrar ese avance.
 
 ## Los tres pasos
 
@@ -37,7 +36,6 @@ La voz sigue siendo opcional. El texto revisado del tutorial y la ayuda contextu
 ## Verificación
 
 - `node scripts/test_guides.cjs _site/index.html`: 146 pruebas aprobadas, incluidas reanudación de pasos 2 y 3, recarga, almacenamiento bloqueado, datos inválidos, finalización, reinicio y retorno entre colecciones con una imagen pendiente.
-- `node scripts/verify_tutorial_flow.cjs _site`: recorridos reales en Chromium en español/inglés y 390/1366 píxeles; verifica entrada desde bienvenida y Formas de usar, una sola tarjeta, cierre/reanudación, recarga, ruta escrita, finalización y reinicio. Incluye axe.
-- `node scripts/verify_ways_layout.cjs _site _work/ways-tutorial-entry`: verifica la lectura compacta y el teclado después de añadir los accesos separados a Ayuda y Tutorial.
+- `node scripts/verify_tutorial_flow.cjs _site`: recorridos reales en Chromium en español/inglés y 390/1366 píxeles; verifica entrada desde bienvenida y Mis preferencias, una sola tarjeta, cierre/reanudación, recarga, ruta escrita, finalización y reinicio. Incluye axe.
 
 Los guiones de navegador usan `TERRASONIC_PLAYWRIGHT` y `TERRASONIC_CHROMIUM`; para axe se admite `TERRASONIC_AXE`, con el paquete de QA en `_work/qa/` como opción local. Los resultados de los recorridos se guardan en `_work/tutorial-final/`. Estas pruebas no sustituyen la evaluación con personas usuarias o lectores de pantalla reales.

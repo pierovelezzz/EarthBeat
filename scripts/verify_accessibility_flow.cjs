@@ -52,11 +52,7 @@ async function main() {
         console.log('AUDIT',scenario.name,label,result.violations.length);
       };
       await audit('home');
-      await page.locator('#ways-trigger').click();
-      await page.waitForFunction(()=>__app.waysChunks?.length);
-      await audit('standalone-usage-help');
-      await page.keyboard.press('Escape');
-      assert.equal(await page.evaluate(()=>document.activeElement.id),'ways-trigger');
+      assert.equal(await page.locator('#ways-trigger').count(),0);
       await page.locator('#tour-a11y > summary').click();
       assert.equal(await page.locator('.haptics-settings').count(),scenario.phone?1:0);
       assert.equal(await page.getByRole('button',{name:'Vibración',exact:true}).count(),scenario.phone?1:0);
@@ -112,7 +108,7 @@ async function main() {
       await page.screenshot({path:path.join(output,scenario.name+'-settings.png'),fullPage:true});
       await page.getByRole('button',{name:'EN English',exact:true}).click();
       assert.equal(await page.locator('html').getAttribute('lang'),'en');
-      assert.match(await summary.innerText(),/Playback settings/);
+      assert.match(await summary.innerText(),/Settings/);
       assert.equal(await page.evaluate(()=>__app.state.frame),frame);
       await audit('player-settings-en');
       await page.evaluate(()=>{__app.setPreference('contrast',true);__app.setPreference('big',true);__app.setPreference('legible',true);});

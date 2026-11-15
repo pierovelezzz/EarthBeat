@@ -32,7 +32,6 @@ La rama `accesibilidad/v4-flujo-inclusivo` conserva la distribución original y 
 
 - La vibración opcional aparece solo en teléfonos identificados por el navegador. Incluye prueba, parada y explicación de disponibilidad. Puede combinarse con audio silenciado y movimiento visual reducido; resume intensidad musical, no sustituye la lectura de datos.
 - El desplegable «Consultar datos sin usar el mapa» permite elegir cualquiera de las 28 columnas y leer sus 16 filas con teclado o lector de pantalla. Distingue niveles derivados, ausencia de datos y fondo del gráfico de lluvia.
-- El botón independiente «Formas de usar» (icono de interrogación en pantallas estrechas) abre instrucciones de teclado, lectura, alternativas al sonido y reducción de estímulos, en español e inglés. El texto ocupa todo el ancho y se reparte en páginas según el espacio disponible, sin desplazamiento interno.
 
 [Resultados y límites de la comprobación](docs/ACCESIBILIDAD_VERIFICACION.md). La identificación de teléfonos es aproximada y la vibración física depende del navegador y del dispositivo.
 
