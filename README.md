@@ -8,6 +8,14 @@ La bienvenida se inicia automáticamente al abrir o recargar la portada. La secu
 
 La banda usa los cuatro fotogramas originales de cada personaje y permite pausar el baile o escuchar el instrumento por separado. El reproductor recupera el mapa, la banda y los controles de V3. La leyenda interactiva muestra diferencias aproximadas de temperatura según la fuente del mapa. Con movimiento reducido, la bienvenida usa un fundido breve y los accesos desde los astros abren el disco directamente.
 
+### Discos de expansión
+
+Los tres discos están disponibles en Escuchar y Jugar. Los mapas y el sonido comparten la misma cuadrícula de 28 × 16, generada por `scripts/build_expansion_discs.py` a partir de los siguientes datos. Los bordes de referencia proceden de Natural Earth.
+
+- **El Niño 1997–98.** NOAA ERSST v5, de septiembre de 1997 a febrero de 1998. La variable `ssta` es una diferencia de temperatura en °C.
+- **Lluvias del norte del Perú.** NASA POWER, precipitación corregida MERRA-2 `PRECTOTCORR`, de enero a junio de 2017. El promedio mensual en mm/día se multiplica por los días del mes para estimar el total en mm.
+- **Corrientes del Pacífico.** HYCOM + NCODA GOFS 3.1. Para cada mes de enero a junio de 2023 se toma el día 15 a las 12:00 UTC en el nivel superficial del modelo. Se calcula la rapidez en m/s a partir de las componentes este y norte.
+
 Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz se activa desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
 
 El analizador de la aplicación reduce las imágenes a una cuadrícula de 28 × 16, con 448 celdas. Los niveles derivados van de −5 a +5. Son una interpretación del color y decisiones de sonificación; no son grados de temperatura ni una medición calibrada de cualquier imagen.

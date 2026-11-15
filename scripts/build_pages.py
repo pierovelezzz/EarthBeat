@@ -48,6 +48,11 @@ def build(destination: Path) -> None:
     if character_marker not in html:
         raise ValueError("Falta el marcador del catálogo estático de personajes.")
     html = html.replace(character_marker, "var CHARACTER_CATALOG = " + json.dumps(character_catalog, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + ";", 1)
+    expansion = json.loads((root / "data" / "expansion-discs.json").read_text(encoding="utf-8"))
+    expansion_marker = "var EXPANSION_DISCS = [];"
+    if expansion_marker not in html:
+        raise ValueError("Falta el marcador del catálogo de expansión.")
+    html = html.replace(expansion_marker, "var EXPANSION_DISCS = " + json.dumps(expansion, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + ";", 1)
     html = html.replace(
         '<meta charset="utf-8">',
         '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -80,6 +85,7 @@ def build(destination: Path) -> None:
     copytree(root / "assets" / "fonts", destination / "fonts", dirs_exist_ok=True)
     for folder in ("fotogramas", "fotogramas-anteriores", "brisa", "miniaturas"):
         copytree(prototype / folder, destination / folder, dirs_exist_ok=True)
+    copytree(prototype / "discos-extra", destination / "discos-extra", dirs_exist_ok=True)
     for musician in sorted(musicians):
         for filename in ("miniatura-banda.webp", "escenario.webp"):
             sprite = Path("sprites") / musician / filename
