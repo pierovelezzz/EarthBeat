@@ -81,7 +81,7 @@ function setup(options = {}) {
     cancelAnimationFrame: id => timers.delete(id),
     DCLogic: class { constructor(props) { this.props = props; } setState(patch, done) { Object.assign(this.state, patch); done?.(); } }
   };
-  if (options.language) context.navigator = { language: options.language };
+  if (options.language || options.navigator) context.navigator = { language: options.language || 'es', ...options.navigator };
   vm.createContext(context);
   vm.runInContext(source + '\nglobalThis.ComponentUnderTest = Component;', context);
   if (!context.IMPACT_CATALOG.records.length) context.IMPACT_CATALOG = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/impacts.v1.json'), 'utf8'));
@@ -361,10 +361,13 @@ test('sample labels translate without replacing the rainfall analysis', async ()
   assert.match(c.renderVals().playTitle,/rainfall/);
 });
 
-test('full motion is the default and an explicit reduction persists', () => {
+test('system motion is adopted on first visit and manual choices take precedence', () => {
   const { component: c, context, storage } = setup({ firstVisit: true, reducedMotion: true });
   assert.equal(context.window.matchMedia('(prefers-reduced-motion: reduce)').matches, true);
+  assert.equal(c.renderVals().motionMode, 'reduced');
+  c.setPreference('reducedMotion', false);
   assert.equal(c.renderVals().motionMode, 'full');
+  assert.equal(setup({ reducedMotion: true, storage: Object.fromEntries(storage) }).component.bandReduced(), false);
   c.setPreference('reducedMotion', true);
   const reloaded = setup({ reducedMotion: true, storage: Object.fromEntries(storage) });
   assert.equal(reloaded.component.renderVals().motionMode, 'reduced');
@@ -675,7 +678,7 @@ test('modal restores existing inert state and releases the background before nav
 function audioHarness() {
   const h = setup(), intervals = new Set();
   h.context.document.timeline = { currentTime: 0 };
-  h.context.navigator = { userActivation: { isActive: true } };
+  h.context.navigator = { userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) Mobile', userActivation: { isActive: true } };
   h.context.setInterval = fn => { intervals.add(fn); return fn; };
   h.context.clearInterval = fn => intervals.delete(fn);
   class AudioContextStub {
@@ -1610,7 +1613,7 @@ test('audio clock schedules ahead while position, stage and vibration follow the
   assert.equal(c.state.frame,0);assert.equal(c.state.stageNotes.silbo.kind,'note');
 });
 
-test('musical vibration follows the intensity of audible attacks and is silent for rests and zero volume', () => {
+test('musical vibration follows selected attacks independently of audio volume and visual motion', () => {
   const {component:c}=setup();
   c.state.playing=true;
   c.state.vibe=true;
@@ -1621,10 +1624,108 @@ test('musical vibration follows the intensity of audible attacks and is silent f
   c.state.mute.inti=true;
   assert.equal(c.playbackPulse({mama:true, inti:true}, {mama:.8,inti:.8}),'musicMedium');
   c.state.volume=0;
-  assert.equal(c.playbackPulse({mama:true}, {mama:1}),null);
+  assert.equal(c.playbackPulse({mama:true}, {mama:1}),'musicMedium');
+  c.state.masterMuted=true;
+  c.state.reducedMotion=true;
+  assert.equal(c.playbackPulse({mama:true}, {mama:1}),'musicMedium');
   c.state.volume=100;
   c.musicVibrationStopped=true;
   assert.equal(c.playbackPulse({mama:true}, {mama:1}),null);
+});
+
+test('vibration controls and engine are phone-only even when desktop exposes the API', () => {
+  for (const navigator of [
+    {userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'},
+    {userAgent:'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X)'},
+    {userAgent:'Mozilla/5.0 (Linux; Android 14; Tablet)', userAgentData:{mobile:false}}
+  ]) {
+    const pulses=[];
+    const {component:c}=setup({navigator:{...navigator,vibrate:p=>{pulses.push(p);return true;},userActivation:{hasBeenActive:true}}});
+    c.state.vibe=true;
+    assert.equal(c.hapticVm().visible,false);
+    assert.equal(c.renderVals().a11y.some(o=>/Vibraci/.test(o.label)),false);
+    assert.equal(c.vibrateSafely(25),false);
+    assert.deepEqual(pulses,[]);
+  }
+  for (const userAgent of ['Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Mobile Safari/537.36','Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)']) {
+    const {component:c,context}=setup({navigator:{userAgent,userActivation:{hasBeenActive:true}}});
+    assert.equal(c.hapticVm().visible,true);
+    assert.equal(c.hapticVm().testOff,true);
+    assert.match(c.hapticVm().status,/no ofrece vibración/);
+    const pulses=[];context.navigator.vibrate=p=>{pulses.push(p);return true;};
+    c.setPreference('reducedMotion',true);
+    c.setPreference('vibe',true);
+    assert.equal(c.hapticVm().testOff,false);
+    assert.deepEqual(pulses,[15]);
+    c.setVolume(0);
+    assert.deepEqual(pulses,[15],'silencing audio must not cancel tactile feedback');
+    c.setPreference('reducedMotion',true);
+    assert.deepEqual(pulses,[15],'reducing visual motion must not cancel tactile feedback');
+    c.setPreference('vibe',false);
+    assert.deepEqual(pulses,[15,0]);
+  }
+});
+
+test('automatic motion changes remain automatic after saving other preferences', () => {
+  const {component:c,context,storage}=setup({firstVisit:true,reducedMotion:true});
+  c.setPreference('big',true);
+  assert.equal('reducedMotion' in JSON.parse(storage.get('ts_prefs')).values,false);
+  c.motionQuery.matches=false;
+  c.syncSystemMotion();assert.equal(c.bandReduced(),false);
+  c.motionQuery.matches=true;
+  c.syncSystemMotion();assert.equal(c.bandReduced(),true);
+  c.setPreference('reducedMotion',false);
+  c.syncSystemMotion();assert.equal(c.bandReduced(),false);
+  const next=setup({reducedMotion:true,storage:Object.fromEntries(storage)}).component;
+  assert.equal(next.bandReduced(),false);
+  next.disposed=true;next.motionExplicit=false;next.motionQuery.matches=true;
+  next.syncSystemMotion();assert.equal(next.bandReduced(),false);
+});
+
+test('written data exposes each selected column, absent cells and normalized units without changing playback', () => {
+  const {component:c}=setup();
+  c.state.tab='juke';c.state.sub=1;c.state.disc=0;c.state.frame=0;
+  const cells=Array.from({length:448},(_,i)=>(i%11)-5);
+  cells[0]=null;cells[28]=NaN;cells[56]=Infinity;cells[84]=0;
+  c.state.an['0_0']={cells,warm:1,cold:2,hot:.1,coast:0};
+  c.state.playing=true;c.state.col=12;
+  const playing=c.state.playing,heard=c.state.col,frame=c.state.frame,mute=c.state.mute;
+  let data=c.accessibleDataVm();
+  assert.equal(data.rows.length,16);assert.equal(data.columns.length,28);
+  assert.match(data.unit,/derivad/);assert.doesNotMatch(data.unit,/°C/);
+  assert.match(data.rows[0].value,/Sin datos/);assert.match(data.rows[1].value,/Sin datos/);assert.match(data.rows[2].value,/Sin datos/);
+  assert.equal(data.rows[3].value,'0.00');
+  for(let column=0;column<28;column++) {
+    c.selectDataColumn({target:{value:String(column)}});
+    data=c.accessibleDataVm();assert.equal(data.column,column);
+    for(let row=0;row<16;row++) {
+      const value=cells[row*28+column];
+      assert.equal(data.rows[row].value,Number.isFinite(value)?value.toFixed(2):'Sin datos');
+    }
+  }
+  for(const invalid of ['-1','28','NaN','1.5','']) {c.selectDataColumn({target:{value:invalid}});assert.equal(c.accessibleDataVm().column,27);}
+  assert.equal(c.state.playing,playing);assert.equal(c.state.col,heard);assert.equal(c.state.frame,frame);assert.equal(c.state.mute,mute);
+  c.setLang('en');data=c.accessibleDataVm();assert.match(data.unit,/derived/i);assert.match(data.columnLabel,/Column/);
+  assert.equal(data.column,27);assert.equal(c.state.playing,true);
+});
+
+test('written data describes unavailable analysis, local images and rainfall without inventing measurements', () => {
+  const {component:c}=setup();
+  assert.equal(c.accessibleDataVm().ready,false);assert.deepEqual(Array.from(c.accessibleDataVm().rows),[]);
+  c.state.disc=5;c.state.frame=0;
+  c.state.custom={kind:'image',name:'local.png',url:'blob:local'};
+  c.state.an['5_0']={cells:Array(448).fill(.5),warm:.5,cold:0,hot:0,coast:0};
+  let data=c.accessibleDataVm();assert.match(data.source,/Tu imagen/);assert.match(data.unit,/color/);assert.doesNotMatch(data.source,/NASA/);
+  c.state.custom={kind:'rain',name:'rain',url:'blob:rain'};
+  data=c.accessibleDataVm();assert.match(data.source,/NASA POWER/);assert.match(data.unit,/normaliz/);assert.doesNotMatch(data.unit,/°C|mm\/d/);
+  c.state.an['5_0']=c.seriesAnalysis([0,10]);
+  data=c.accessibleDataVm();
+  assert.equal(data.rows[0].value,'0.00');
+  assert.match(data.rows[0].meaning,/fondo/i);
+  assert.doesNotMatch(data.rows[0].meaning,/promedio/i);
+  assert.match(data.description,/celdas.*gráfico/i);
+  assert.match(c.renderVals().accessHelp.keyboard,/Tab/);
+  assert.match(c.renderVals().accessHelp.withoutSound,/datos/i);
 });
 
 test('a delayed UI callback retains exact planned spacing within the lookahead', async()=>{
