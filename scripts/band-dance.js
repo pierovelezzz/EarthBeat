@@ -258,6 +258,12 @@ class StageNoteTrack extends HTMLElement {
 customElements.define('earthbeat-note-track', StageNoteTrack);
 
 const arrowKeys = ['ArrowLeft', 'ArrowDown', 'ArrowUp', 'ArrowRight'];
+// One step every other map column, starting at column 2. Pairs share an onset.
+const rhythmChart = [
+  [0], [1], [2, 3], [0],
+  [1], [2], [0, 3], [1],
+  [2], [0, 1], [3], [2], [0]
+];
 
 class RhythmGame extends HTMLElement {
   static observedAttributes = ['data-playing', 'data-ended'];
@@ -336,25 +342,29 @@ class RhythmGame extends HTMLElement {
     this.resultTimers.clear();
   }
 
-  queue = ({ detail: { clock, notes, lookahead } }) => {
+  queue = ({ detail: { clock, notes, lookahead, raw } }) => {
     if (this.dataset.playing !== 'true' || document.hidden) return;
     this.clock = clock;
     this.lookahead = lookahead;
     for (const event of notes) {
-      if (event.patch.col % 4 !== 2 || !event.info.k) continue;
-      // w and c are the positive and negative means over the same valid pixels.
-      const mean = event.info.w - event.info.c;
-      const index = Math.abs(mean) >= 2 ? 3 : mean <= -.5 ? 0 : mean >= .5 ? 2 : 1;
-      const lane = this.lanes[index];
-      const flight = document.createElement('span');
-      flight.className = 'rhythm-flight';
-      flight.setAttribute('aria-hidden', 'true');
-      const arrow = document.createElement('span');
-      arrow.className = 'rhythm-note';
-      arrow.append(lane.querySelector('.rhythm-receptor svg').cloneNode(true));
-      flight.append(arrow);
-      lane.append(flight);
-      this.notes.push({ at: event.at, index, flight });
+      const step = (event.patch.col - 2) / 2;
+      if (!Number.isInteger(step) || !rhythmChart[step]) continue;
+      // The data sonification scans faster. Space its cues and leave time for
+      // the last response before the playback ends.
+      if (raw && (step % 2 || step === rhythmChart.length - 1)) continue;
+      for (const direction of rhythmChart[step]) {
+        const index = (direction + event.frame) % arrowKeys.length;
+        const lane = this.lanes[index];
+        const flight = document.createElement('span');
+        flight.className = 'rhythm-flight';
+        flight.setAttribute('aria-hidden', 'true');
+        const arrow = document.createElement('span');
+        arrow.className = 'rhythm-note';
+        arrow.append(lane.querySelector('.rhythm-receptor svg').cloneNode(true));
+        flight.append(arrow);
+        lane.append(flight);
+        this.notes.push({ at: event.at, index, flight });
+      }
     }
     if (this.notes.length && this.frame == null) this.advance();
   };

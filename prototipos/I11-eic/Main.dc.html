@@ -2003,7 +2003,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .listen-band[data-rhythm="true"] .band-stage{min-height:clamp(390px,56vh,550px)}
   .px .rhythm-map-key{display:grid;gap:8px;align-content:start;padding:8px 3px 2px}
   .px .rhythm-map-key h3{margin:0;font:700 .86em/1.3 var(--head)}
-  .px .rhythm-map-key p{display:flex;align-items:center;gap:7px;margin:0;color:var(--muted);font-size:.82em}
+  .px .rhythm-map-key p{display:flex;align-items:center;gap:9px;margin:4px 0 0;color:var(--fg);font:700 1.08em/1.35 var(--head)}
   .px .rhythm-map-key ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 10px;margin:0;padding:0;list-style:none}
   .px .rhythm-map-key li{display:flex;align-items:center;gap:7px;font-size:.82em}
   .px .rhythm-map-key kbd{
@@ -2022,7 +2022,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .rhythm-tally strong{font-size:1.24em}
   .px .rhythm-summary:not(:empty){color:#d6f4ff;background:#111c28;padding:4px 7px;border-radius:4px}
   .px .rhythm-result{
-    position:absolute;z-index:3;top:26px;left:50%;translate:-50% 0;
+    position:absolute;z-index:1;top:26px;left:50%;translate:-50% 0;
     pointer-events:none;white-space:nowrap
   }
   .px .rhythm-result-badge{
@@ -2058,7 +2058,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
     outline:2px solid var(--rhythm-ink);outline-offset:2px;box-shadow:0 0 13px var(--rhythm-ink)
   }
   .px .rhythm-runway[data-cue] .rhythm-receptor{color:#070f18;background:var(--rhythm-ink);box-shadow:0 0 8px var(--rhythm-ink)}
-  .px .rhythm-flight{position:absolute;inset:0;pointer-events:none}
+  .px .rhythm-flight{position:absolute;z-index:1;inset:0;pointer-events:none}
   .px .rhythm-note{color:#081018;background:var(--rhythm-ink)}
   .px.app[data-contrast="true"] :is(.rhythm-lane,.rhythm-map-key li){--rhythm-ink:#fff}
 }
@@ -2349,7 +2349,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="rhythm-map-key" id="rhythm-help">
 <h3 id="rhythm-key-title">{{rhythmKeyLabel}}</h3>
 <ul aria-labelledby="rhythm-key-title"><sc-for list="{{rhythmLanes}}" as="lane"><li data-direction="{{lane.direction}}"><kbd>{{lane.arrow}}</kbd><span>{{lane.label}}</span></li></sc-for></ul>
-<p><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><path d="M2 3h2V1h2v2h4V1h2v2h2v12H2zm2 5v5h8V8z"/><path d="M6 9h2v2H6z"/></svg>{{rhythmHelp}}</p>
+<p><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><path d="M2 3h2V1h2v2h4V1h2v2h2v12H2zm2 5v5h8V8z"/><path d="M6 9h2v2H6z"/></svg>{{rhythmHelp}}</p>
 </div>
 </sc-if>
 <sc-if value="{{standardPlayer}}">
@@ -5740,7 +5740,7 @@ class Component extends DCLogic {
         typeof window.dispatchEvent === 'function' && typeof window.CustomEvent === 'function') {
       var notes = this.playbackQueue.slice(firstNewNote);
       window.dispatchEvent(new window.CustomEvent(game ? 'earthrhythm-game-queue' : 'earthbeat-stage-queue', {
-        detail: { clock: this.ac, notes: notes, lookahead: lookahead }
+        detail: { clock: this.ac, notes: notes, lookahead: lookahead, raw: this.state.engine === 'raw' }
       }));
     }
     // Schedule audio before rendering the due player state.
@@ -6351,12 +6351,12 @@ class Component extends DCLogic {
       rhythmToggleLabel: T('Jugar este disco', 'Play this disc'),
       rhythmExitLabel: T('Salir de la partida', 'Leave game'),
       rhythmMapTitle: T('Mapa de la NASA', 'NASA map'),
-      rhythmKeyLabel: T('El mar respecto a lo habitual', 'Ocean temperature compared with usual'),
+      rhythmKeyLabel: T('Teclas para jugar', 'Arrow keys to play'),
       rhythmHitLabel: T('¡Acierto!', 'Hit!'),
       rhythmScoreLabel: T('Aciertos', 'Hits'),
       rhythmLanes: rhythmMode ? [
-        { arrow: '←', direction: 'left', label: T('Más frío', 'Cooler') }, { arrow: '↓', direction: 'down', label: T('Casi igual', 'Near usual') },
-        { arrow: '↑', direction: 'up', label: T('Más cálido', 'Warmer') }, { arrow: '→', direction: 'right', label: T('Mucho más frío o cálido', 'Much colder or warmer') }
+        { arrow: '←', direction: 'left', label: T('Izquierda', 'Left') }, { arrow: '↓', direction: 'down', label: T('Abajo', 'Down') },
+        { arrow: '↑', direction: 'up', label: T('Arriba', 'Up') }, { arrow: '→', direction: 'right', label: T('Derecha', 'Right') }
       ] : [],
       rhythmHelp: T('Un barrido del mapa por mes', 'One map scan per month'),
       playThisDisc: function () { self.openRhythmDisc(s.disc); },
@@ -6374,10 +6374,10 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageCueHelp: rhythmMode ? T('Pulsa la flecha del teclado cuando su recuadro se llene de color.', 'Press the matching arrow key when its target fills with color.')
+      stageCueHelp: rhythmMode ? T('Pulsa la flecha que se ilumine. Si se iluminan dos, pulsa las dos.', 'Press the arrow key that lights up. When two light up, press both.')
         : T('El icono sube antes de la nota. Al sonar, se ilumina el piso.', 'The icon rises before the note. The floor lights up when it plays.'),
       stageMotionNotice: reducedMotion ? rhythmMode
-        ? T('Pulsa la flecha del recuadro iluminado.', 'Press the arrow key in the highlighted target.')
+        ? T('Con movimiento reducido, las flechas se quedan fijas.', 'With reduced motion, the arrows stay in place.')
         : T('Con movimiento reducido, los iconos quedan fijos y el piso marca qué músicos están activos.', 'With reduced motion, the icons stay still and the floor shows which musicians are active.') : '',
       stageMusicians: band.map(function (member) {
         var level = member.on ? s.levels[member.key] || 0 : 0;
