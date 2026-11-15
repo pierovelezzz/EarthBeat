@@ -908,7 +908,7 @@ test('Technology has four unfiltered tool lists and one credits page in both lan
 
 test('Technology lists used tools and omits the removed 3D stack', () => {
   const {context}=setup();
-  for(const tool of context.TECH) assert.doesNotMatch(tool.name,/Three\.js|GLTFLoader|Blender|Tonal\.js|Tone\.js|Magenta|Lyria|ElevenLabs/);
+  for(const tool of context.TECH) assert.doesNotMatch(tool.name,/Three\.js|GLTFLoader|Blender|Tonal\.js|Tone\.js|Magenta|Lyria/);
 });
 
 

@@ -2,6 +2,7 @@
 
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 from shutil import copy2, copytree
 from sys import argv
@@ -18,6 +19,17 @@ def build(destination: Path) -> None:
     support_runtime = root / "scripts" / "pages-support.js"
     avatar_runtime = root / "scripts" / "avatar2d.js"
     dance_runtime = root / "scripts" / "band-dance.js"
+    brisa_config_runtime = root / "scripts" / "brisa-ai-config.js"
+    brisa_local_config = root / "scripts" / "brisa-ai-config.local.js"
+    proxy_url = os.environ.get("BRISA_PROXY_URL", "").strip().rstrip("/")
+    brisa_config_bytes = lf_bytes(brisa_config_runtime)
+    if proxy_url:
+        brisa_config_bytes += f'\nif (typeof window !== "undefined" && window.EARTH_BRISA_CONFIG) window.EARTH_BRISA_CONFIG.proxyBaseUrl = {json.dumps(proxy_url)};\n'.encode("utf-8")
+    brisa_config_version = sha256(brisa_config_bytes).hexdigest()[:12]
+    brisa_local_tag = ""
+    if brisa_local_config.is_file():
+        brisa_local_version = sha256(lf_bytes(brisa_local_config)).hexdigest()[:12]
+        brisa_local_tag = f'<script src="./runtime/brisa-ai-config.local.js?v={brisa_local_version}"></script>\n'
     musicians = {"silbo", "inti", "mama", "yaku", "illapa"}
     support_version = sha256(lf_bytes(support_runtime)).hexdigest()[:12]
     avatar_version = sha256(lf_bytes(avatar_runtime))
@@ -62,6 +74,8 @@ def build(destination: Path) -> None:
     html = html.replace(support_marker, f'src="./support.js?v={support_version}"', 1)
     html = html.replace(
         "</head>",
+        f'<script src="./runtime/brisa-ai-config.js?v={brisa_config_version}"></script>\n'
+        f'{brisa_local_tag}'
         f'<script type="module" src="./runtime/avatar2d.js?v={avatar_version.hexdigest()[:12]}"></script>\n'
         f'<script type="module" src="./runtime/band-dance.js?v={dance_version.hexdigest()[:12]}"></script>\n</head>',
         1,
@@ -74,6 +88,9 @@ def build(destination: Path) -> None:
     copy2(prototype / "earthrhythm-icon.svg", destination)
     copy2(support_runtime, destination / "support.js")
     (destination / "runtime").mkdir(exist_ok=True)
+    (destination / "runtime" / "brisa-ai-config.js").write_bytes(brisa_config_bytes)
+    if brisa_local_config.is_file():
+        copy2(brisa_local_config, destination / "runtime" / "brisa-ai-config.local.js")
     copy2(avatar_runtime, destination / "runtime")
     copy2(dance_runtime, destination / "runtime")
     copy2(prototype / "stage.webp", destination)
