@@ -18,7 +18,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/configure-pages@v5
-      - run: python3 scripts/build_pages.py _site
+      - name: Generar el sitio principal y las versiones
+        run: |
+          python3 scripts/build_pages.py _site
+          git fetch --depth=1 origin \
+            refs/heads/V1:refs/remotes/origin/V1 \
+            refs/heads/V2:refs/remotes/origin/V2 \
+            refs/heads/V3:refs/remotes/origin/V3
+          for version in v1 v2 v3; do
+            branch="${version^^}"
+            worktree="$RUNNER_TEMP/earthbeat-$version"
+            git worktree add --detach "$worktree" "refs/remotes/origin/$branch"
+            python3 "$worktree/scripts/build_pages.py" "$GITHUB_WORKSPACE/_site/$version"
+          done
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
