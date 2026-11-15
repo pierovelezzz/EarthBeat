@@ -1,0 +1,97 @@
+# Pruebas reproducibles y límites
+
+
+> Edición documental de esta copia: **14/11/2026 19:03:11 (UTC-05:00)** · EarthBeat `V1`.
+> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+
+El sitio se genera desde `prototipos/I11-eic/Main.dc.html`; editar `_site/index.html` no modifica la fuente. Se recomienda Python 3.10 o posterior para todos los scripts de build/paquete/pruebas; esta revisión utiliza 3.12.14. No requiere instalar dependencias Python. Node ejecuta las regresiones de producto. Los navegadores, axe y Blender son herramientas de revisión, no servicios del producto.
+
+```powershell
+python scripts/verify_fonts.py
+python scripts/build_pages.py _site
+node scripts/test_guides.cjs _site/index.html
+node scripts/models.test.cjs
+python scripts/run_browser_checks.py --list
+```
+
+Para los recorridos, `TERRASONIC_PLAYWRIGHT` debe apuntar a una instalación de `playwright-core`, y `TERRASONIC_CHROMIUM` al ejecutable de Chromium de prueba. Para axe se usa `TERRASONIC_AXE`. El runner mantiene los procesos secuenciales y guarda JSON con código de salida, duración real del proceso y log de cada caso; esa duración no se suma al tiempo efectivo de trabajo.
+
+El runner admite `--timeout` por caso, con 300 segundos predeterminados. Si vence, termina únicamente el árbol del proceso de prueba que creó y mantiene el código 124; no deja su navegador huérfano ni presenta el timeout como una pasada. Una regresión controlada con un padre/hijo propios confirmó terminación del hijo en 1,6 segundos para un límite de un segundo. Los 72 casos de paneles en WebKit pueden requerir un límite mayor en una laptop con presión de memoria. Las pasadas de navegadores se ejecutan de una en una.
+
+Cada proceso Node del runner limita explícitamente su generación antigua de heap a 256 MiB; esto no limita buffers nativos ni memoria de los navegadores. Una repetición de Firefox de las 09:46 terminó con código 134 por falta de memoria del driver antes de producir evidencia del caso desplegado. Las comprobaciones compactas, preferencias y conversión de ese mismo recorrido sí pasaron. Se conservó el fallo y la inspección no encontró un Firefox huérfano del PID fallido. No se cerraron procesos personales ni se cambió el archivo de paginación. La nueva ejecución acotada conserva su propio reporte; no se transforma el fallo anterior en una pasada.
+
+```powershell
+python scripts/run_browser_checks.py --site _site --evidence _work/qa/local --only home fonts preferences reflow keyboard a11y method characters convert image-geometry image-formats expanded-layout brisa player impacts models avatar-interactions
+```
+
+La instalación utilizada es Playwright Core 1.58.2 y Chromium Headless Shell 156.0.8078.4. Las pruebas adicionales usan Firefox 146.0.1, revisión 1509, y WebKit 26.0, revisión 2248, correspondientes al catálogo de esa instalación de Playwright. Los binarios se obtuvieron de las URL oficiales del CLI y se extrajeron en D. El instalador inicial quedó atascado en la extracción; se detuvieron exclusivamente sus dos procesos identificados, y la descarga/extracción aislada por Python completó los paquetes. No se instalaron navegadores globales ni se usaron perfiles personales.
+
+`TERRASONIC_FIREFOX` y `TERRASONIC_WEBKIT` permiten señalar sus ejecutables. `PLAYWRIGHT_BROWSERS_PATH` puede indicar una instalación convencional del CLI. No se debe copiar una ruta absoluta de esta laptop a otra sin comprobarla.
+
+```powershell
+python scripts/run_browser_checks.py --browser firefox --site _site --evidence _work/qa/firefox
+python scripts/run_browser_checks.py --browser webkit --site _site --evidence _work/qa/webkit --only home preferences reflow a11y method characters convert image-geometry image-formats expanded-layout brisa models avatar-interactions
+```
+
+Estos son motores de prueba para Windows: WebKit no acredita Safari en iPhone, y un viewport móvil no equivale a un teléfono físico. Las pruebas con árboles de accesibilidad y eventos de teclado no equivalen a una persona con lector de pantalla. La voz usa stubs para cancelación/mezcla y APIs ausentes; no se ha escuchado su timbre.
+
+El binario WebKit 26.0 de Windows no expone `AudioContext` ni `webkitAudioContext` en la observación realizada. Sus intentos de recorridos de audio fallaron antes de corregir la instrumentación; no se presentan como reproducción verificada. La pasada de Brisa se adaptó para comprobar la alternativa escrita real y documenta `nativeAudioAvailable: false`. Chromium y Firefox sí completan los recorridos de audio/impactos. El audio en Safari y dispositivos Apple queda pendiente.
+
+El comando WebKit anterior selecciona deliberadamente las comprobaciones sin Web Audio; el conjunto predeterminado del runner incluye reproductor e impactos y no es apropiado para este binario sin audio. No se marcan esas pruebas como pasadas ni se reemplaza el motor nativo por un sintetizador falso.
+
+## Hallazgos que cambiaron el producto
+
+- El menú rompía palabras con texto doble: ahora calcula las columnas con espacio relativo a la fuente. La marca reserva otra fila cuando hace falta. A 320 px la navegación usa dos filas y evita palabras partidas.
+- WebKit no desplazaba de manera fiable el foco dentro de preferencias en una vista de 320×256. El foco de cada opción se lleva a la zona visible con desplazamiento inmediato; Escape restaura y hace visible el resumen. La preferencia de movimiento reducido del sistema también desactiva el desplazamiento suave de `html`.
+- Firefox añade una parada nativa al contenedor desplazable: se conserva y la prueba recorre después los ocho controles en orden. No se eliminó una función válida para conseguir un conteo idéntico al de Chromium.
+- El selector CSV usaba una etiqueta personalizada dentro de `select`; Firefox perdía las opciones durante el análisis HTML. Se usa una plantilla nativa `template` y se comprueban las tres opciones, la elección y su conservación al cambiar idioma. [Modelo de contenido de select, HTML](https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element).
+- En WebKit, un clic en Brisa no trasladaba siempre el foco al botón como ocurre en Chromium. La ayuda recuerda ahora el elemento que la abre; al cerrarla devuelve el foco allí sin cambiar archivo, fecha ni posición.
+- Las imágenes propias se estiraban para el análisis y se recortaban en la vista. Ahora se centran sin deformar y se usa la misma imagen fija para ambas representaciones. [Detalles y evidencia](CONVERTIR.md).
+- La orientación JPG se verifica con las ocho combinaciones EXIF, y WebP con un archivo real. Nueve casos pasan en los tres motores sin aplicar una rotación adicional sobre la decodificación nativa. El runner los identifica como `image-formats`.
+- El análisis secundario distinguía mal «Extremo» de su cálculo real, que cuenta niveles positivos ≥ +4. Ahora se nombra el umbral y el denominador, y no se presenta una costa para archivos sin referencia geográfica. La leyenda de esos archivos también evita atribuir datos de mar.
+- El historial de 200 eventos no era alcanzable con Tab en WebKit. La lista desplazable recibe foco explícito cuando tiene contenido, conserva su semántica de lista y muestra contorno. La lista vacía no añade una parada. Se sigue la regla WAI de [contenido desplazable accesible mediante foco secuencial](https://www.w3.org/WAI/standards-guidelines/act/rules/0ssw9k/), sin sustituir las teclas nativas de desplazamiento.
+
+## Interpretación de la evidencia
+
+Se conservan los fallos iniciales y las pasadas corregidas por separado. El fixture bloquea peticiones externas, pero permite `blob:` y `data:` locales; en WebKit interceptarlas y abortarlas producía un falso fallo de carga. Los reportes de rendimiento usan un servidor HTTP real, perfil declarado y caché deshabilitada, sin ejecutar otros recorridos del proyecto a la vez.
+
+axe informa infracciones detectadas y casos incompletos; un resultado cero no prueba conformidad completa. La redistribución comprueba desbordamiento y recorte, mientras las capturas y verificaciones específicas de texto detectan palabras partidas. No hay una línea base visual aprobada por el equipo; las capturas constituyen una revisión de la propuesta, no una certificación de igualdad con Figma ni una aprobación cultural.
+
+El zoom nativo no se pudo revisar por la herramienta de control de ventana y se mantiene pendiente. Sí se prueban anchos CSS de hasta 320 px, texto de base 32 px, espaciado WCAG y el tamaño original de captura 1342×605. El desplazamiento vertical con texto ampliado se conserva para no sacrificar lectura.
+
+`verify_cached_release.cjs` usa HTTP real con un único contexto conservado: primero carga dos veces el checkpoint antiguo y comprueba que reutiliza su script desde caché; después cambia el servidor al build nuevo. El generador añade al URL de `support.js` una versión derivada de sus bytes LF, para que el navegador reciba la implementación nueva de atributos booleanos. La prueba comprueba una descarga por versión, reutilización posterior y cuadrícula cerrada/abierta con cero/448 celdas. El fixture simula las cabeceras de caché, sin cambiar las de producción.
+
+```powershell
+node scripts/verify_cached_release.cjs ruta/al/build-anterior ruta/al/build-nuevo _work/cache-release
+```
+
+El fixture de caché obtiene el URL real del runtime anterior, incluidos sus parámetros, para cubrir también una actualización entre dos versiones ya identificadas. El conteo antiguo asumía `/support.js` sin query y rechazaba ese escenario antes de evaluar la aplicación. La actualización REVISION_PREVIA → compilación de atributos nueva pasa en Chromium y Firefox: una descarga de cada runtime y reutilización posterior. Los JSON conservan `oldSupportUrl` y `supportVersion`; las cabeceras siguen siendo exclusivas del servidor de prueba.
+
+La emulación de cambio de movimiento en WebKit de esta instalación dejó objetos `MediaQueryList` creados antes del cambio con `matches: true`, aunque una consulta nueva ya devolvía false. El diagnóstico se conserva; no se atribuye ese resultado a un teléfono ni al sistema operativo real. Los contextos nuevos con cada preferencia sí permiten verificar las poses iniciales y animaciones, y la preferencia manual de la aplicación detiene los clips. Chromium y Firefox mantienen además el recorrido de cambio de preferencia del sistema dentro de la sesión.
+
+Referencias: [Playwright y sus motores](https://playwright.dev/docs/browsers), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), [COGA](https://www.w3.org/TR/coga-usable/).
+
+## Salida, regreso e historial del navegador
+
+El listener `pagehide` cerraba permanentemente el componente incluso con `persisted: true`, aunque ese documento pudiera volver desde la caché de navegación. Ahora ese caso detiene voz, audio, colas y clips sin revocar el archivo aceptado ni destruir listeners. `pageshow` vuelve a dibujar y medir el contenido; la salida definitiva sigue liberando el componente. Se quitó el listener de un solo uso para que varios ciclos conserven el mismo comportamiento. Véase [caché Atrás/Adelante, web.dev](https://web.dev/articles/bfcache).
+
+`verify_page_lifecycle.cjs` distingue la evidencia: navegación HTTP real hacia un documento local y regreso no activó una restauración persistida en ninguno de los tres motores de esta instalación. Chromium comunicó un motivo `masked`; no se le atribuye una causa más concreta. Por separado, tres pares de `PageTransitionEvent` sintéticos `pagehide/pageshow` con `persisted: true` verifican archivo/URL/mezcla/posición conservados, reproducción manual recuperable, colas canceladas y salida sintetizada cero tras 150 ms. Chromium y Firefox usan Web Audio nativo con salida final del fixture silenciada; WebKit comprueba su error de audio recuperable. El evento final no persistido destruye el componente. Esas pruebas pasan en los tres motores y no acreditan una restauración nativa de BFCache ni suspensión física.
+
+Las carpetas `before-*` conservan el fallo y los intentos nativos. Resultados corregidos: `_work/lifecycle/after-chromium-audio/`, `after-firefox/`, `after-webkit/`. El runner lo llama `page-lifecycle`; `--native-only` omite los eventos sintéticos en una ejecución directa.
+
+## Memoria y presión de la laptop
+
+La pasada paralela de las 08:31 consumió la memoria disponible junto con las demás aplicaciones abiertas. Chromium falló al escribir evidencia y se detuvieron exclusivamente los procesos identificados de esos recorridos; WebKit quedó interrumpido. Sus reportes no son pasadas válidas. Firefox sí terminó sus 72 combinaciones y los recorridos de Método/ciclo de página. Se cambió a ejecución secuencial y el `finally` de la prueba de paneles garantiza cerrar su navegador incluso si falla la escritura del JSON. No se cerraron aplicaciones personales ni se borraron archivos.
+
+C pasó de unos 30,0 GB libres a 16,9 GB en esa observación. Se comprobó que `C:\pagefile.sys` fue ampliado por Windows a 25.652.625.408 bytes; no se modificó su configuración. La recuperación posterior de espacio no se atribuye a una limpieza del agente. Las evidencias y descargas del proyecto siguen en D.
+
+`measure_memory.cjs` mide 25 ciclos de archivo CSV, paneles con 200 eventos, personaje y regreso a Inicio, con un único Chromium sin WebGL ni sonido. El cierre definitivo no liberaba la URL del archivo aceptado: se corrigió y se hizo idempotente. Hay una sola URL activa durante el uso y cero después del cierre; 139 pruebas de producto pasan.
+
+El diagnóstico inicial sumaba 50 nodos y dos listeners por ciclo después de recoger basura. El snapshot controlado encontró referencias directas del inspector a antiguos `HTMLInputElement`. No se atribuye esa retención al producto: un control que usa `File/DataTransfer` sintéticos y el mismo manejador nativo `change`, sin `setInputFiles`, dio cero nodos y cero listeners netos entre ciclos 5 y 25. El heap JS todavía creció 199.224 bytes en esa ventana; no se afirma crecimiento cero de toda la memoria ni una garantía de duración ilimitada. El estado conserva siete análisis y 200 eventos, y el fixture mantiene su propio registro de URLs.
+
+Evidencias separadas: `_work/memory/navigation-upload-journey/` antes de liberar la URL; `cleanup-with-snapshot/` para el diagnóstico del inspector; `file-api-control/` para el control de 25 ciclos. La recogida explícita y la inspección son técnicas de diagnóstico, no código de gestión de memoria del producto. El snapshot no se incluye en la entrega pública. La versión `--file-api` no acredita un selector físico de archivos.
+
+```powershell
+node scripts/measure_memory.cjs ruta/al/build _work/memory/native-input
+node scripts/measure_memory.cjs ruta/al/build _work/memory/file-api --file-api
+```

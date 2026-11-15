@@ -1,0 +1,27 @@
+# Conversión local de imágenes y tablas
+
+
+> Edición documental de esta copia: **14/11/2026 19:03:11 (UTC-05:00)** · EarthBeat `V1`.
+> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+
+> Alcance actualizado: [experiencia interactiva](experiencia.md). Este documento conserva detalles de la revisión anterior. Se retiraron CSV, Escenario, Método y los controles marcados en el brief; la guía permite omitir pasos y ya no usa una caja con scroll interno.
+
+La normalización de CSV se calcula tras escalar por el mayor valor absoluto, manteniendo intactos los números originales de la columna. Esto evita desbordar la suma con valores finitos cercanos a 10^308 y evita aplanar series pequeñas por un corte absoluto de 10^−9. Las constantes se representan en cero. La regresión compara patrones equivalentes a escalas muy grandes y muy pequeñas, y el recorrido de navegador selecciona ambas columnas. No convierte niveles artísticos en unidades físicas.
+
+El panel secundario nombra el porcentaje «Nivel ≥ +4», explica su denominador y no atribuye una costa a una imagen propia o una tabla. La leyenda de esos archivos dice «Sin valor utilizable»; la referencia al mar se conserva solo para los mapas NASA. La suma actual es de 136 pruebas de producto, que incluye esta distinción.
+
+`verify_image_formats.cjs` comprueba JPG mediante ocho orientaciones EXIF, incluidas las reflejadas, y un WebP real de cuatro colores. Verifica orden de los cuadrantes, proporciones, transparencia exterior y análisis disponible tras convertir a PNG. Los nueve casos pasan en Chromium, Firefox y WebKit para Windows. Los archivos son sintéticos, generados con Canvas: no se usaron fotos personales ni se acredita una cámara o teléfono físico. Las dimensiones naturales ya incluyen la orientación de metadatos según el [estándar HTML](https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-naturalwidth-dev); no se aplica una segunda rotación manual.
+
+La entrada principal ofrece una imagen NASA ya incluida y un selector de imagen propia. La muestra corresponde al fotograma EIC del 11 de enero de 2025. Se analiza con la paleta EIC; una imagen propia empieza en color libre y puede cambiar de lectura en el reproductor. Los dos resultados usan la misma cuadrícula y controles de reproducción.
+
+Lluvia de Chiclayo y CSV/TSV/TXT están en una sección secundaria desplegable. Se conserva la muestra mensual NASA POWER, su selección de columna y el procesamiento local. El archivo mensual original sigue en `data/nasa_power_monthly.json`; la interfaz usa los 48 valores del periodo seleccionado por el proyecto.
+
+Los archivos se limitan a 8 MiB. PNG, JPG, WebP y GIF se analizan como una imagen fija, hasta 32 millones de píxeles. Se leen las dimensiones de las cabeceras conocidas antes de crear la URL de la imagen y se vuelve a comprobar el tamaño al cargarla. Las tablas admiten hasta 5000 filas de datos y una columna válida debe contener al menos ocho números. Las selecciones tardías se descartan mediante el identificador de carga.
+
+Los errores no borran el archivo aceptado. El selector se puede usar otra vez y permite escoger el mismo archivo corregido. PDF y SVG no están admitidos. El archivo se lee en el navegador, con `File`, Canvas y URL locales; no se envía por red.
+
+Las imágenes propias conservan proporciones y se centran sobre un lienzo transparente de 560×320. Se congela la imagen predeterminada de una animación y se genera una vista PNG local: la imagen visible y la cuadrícula analizan exactamente ese mismo encuadre, sin recortar ni estirar el contenido. Las bandas transparentes no se convierten en agua neutra. La API Canvas usa la imagen predeterminada o primera de una animación, conforme al [estándar HTML](https://html.spec.whatwg.org/multipage/canvas.html#image-sources-for-2d-rendering-contexts).
+
+`verify_image_geometry.cjs` añade cinco archivos sintéticos: panorámico, vertical, cuadrado, transparente y GIF de dos cuadros. Comprueba dimensiones, transparencia, una sola URL vigente y conservación de la vista al cambiar la paleta. Pasó en Chromium, Firefox y WebKit de prueba para Windows. No son teléfonos ni Safari de producción. Las regresiones de codificación tardía y error conservan el archivo aceptado; 128 pruebas de producto pasan. El fixture permite `blob:`/`data:` locales: WebKit sí los expone a la interceptación de red y bloquearlos generaba un fallo de prueba ajeno al producto.
+
+`node scripts/verify_convert.cjs _site _work/convert/browser` comprueba imagen de ejemplo, imagen propia, paleta libre, PDF inválido, imagen corrupta, archivo de más de 8 MiB, imagen comprimida con dimensiones excesivas, CSV inválido, tres columnas, cambio de columna y NASA POWER en inglés. Conserva el archivo anterior ante errores y verifica que no haya peticiones distintas de GET. Guarda capturas a 320, 390, 768 y 1366 píxeles. Las pruebas son de Chromium con archivos y tamaños de pantalla emulados.
