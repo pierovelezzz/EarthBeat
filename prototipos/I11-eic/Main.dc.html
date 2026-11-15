@@ -1380,7 +1380,7 @@ a{color:inherit}
 .px .ways-trigger{min-height:44px;padding-inline:12px;gap:7px;letter-spacing:.04em;white-space:nowrap}
 .px .ways-trigger svg{width:18px;height:18px;flex-shrink:0}
 .px .ways-dim{position:fixed;inset:0;z-index:1120;background:#000b}
-.px .ways-dialog{position:fixed;inset:0;z-index:1121;margin:auto;width:min(780px,calc(100% - 24px));height:min(500px,calc(100dvh - 24px));padding:24px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:18px;background:var(--surface);color:var(--fg);border:1px solid var(--fg);border-radius:8px;box-shadow:0 12px 80px #000}
+.px .ways-dialog{position:fixed;inset:0;z-index:1121;margin:auto;width:min(640px,calc(100% - 24px));height:var(--ways-height,min(500px,calc(100dvh - 24px)));padding:24px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:18px;background:var(--surface);color:var(--fg);border:1px solid var(--fg);border-radius:8px;box-shadow:0 12px 80px #000}
 .px .ways-header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
 .px .ways-header h2{font:700 clamp(18px,2.4vw,26px)/1.2 var(--head);margin:0;min-width:0}
 .px .ways-header .btn{flex-shrink:0}
@@ -1459,6 +1459,10 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .listen-member>ts-avatar{grid-row:1/3;width:24px;height:30px}
 .px .listen-member[aria-pressed="false"] ts-avatar{filter:grayscale(.85);opacity:.65}
 .px ts-sprite-controls{display:grid;gap:4px}
+.px .bshow .avatar-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px}
+.px .bshow .avatar-actions ts-sprite-controls{justify-self:start;width:min(100%,190px);min-width:0}
+.px .bshow .avatar-actions>.btn{justify-self:end;align-self:start}
+.px .bshow .avatar-actions .btn{width:100%;max-width:190px;height:44px;min-height:44px;min-width:0;padding:4px 8px;font-size:clamp(12px,.85rem,16px);line-height:1.2;letter-spacing:.03em;white-space:normal}
 .px .sprite-readout{font-size:.8em;line-height:1.5;color:var(--muted)}
 .px .bentering .bportrait-live{animation:bcut-reveal var(--band-entry) var(--cut-ease) both}
 .px .bresetting .bportrait-live{opacity:0}
@@ -4444,7 +4448,7 @@ class Component extends DCLogic {
   }
   closeWays(restoreFocus) {
     if (!this.state.showWays) return;
-    cancelAnimationFrame(this.waysRaf); this.setWaysInert(false);
+    cancelAnimationFrame(this.waysRaf); this.waysRaf = null; this.setWaysInert(false);
     var target = this.waysReturnFocus; this.waysReturnFocus = null;
     this.setState({ showWays: false });
     if (restoreFocus !== false && !this.disposed) (target?.isConnected === false ? document.getElementById('ways-trigger') : target)?.focus({ preventScroll: true });
@@ -4466,11 +4470,16 @@ class Component extends DCLogic {
   scheduleWaysLayout() {
     if (!this.state.showWays || this.disposed) return;
     cancelAnimationFrame(this.waysRaf);
-    this.waysRaf = requestAnimationFrame(() => { if (!this.disposed && this.state.showWays) this.layoutWays(); });
+    this.waysRaf = requestAnimationFrame(() => { this.waysRaf = null; if (!this.disposed && this.state.showWays) this.layoutWays(); });
   }
   layoutWays() {
-    var box = document.getElementById('ways-copy'), text = document.getElementById('ways-text');
-    if (!box || !text || box.clientWidth <= 0 || box.clientHeight <= 0) return;
+    var panel = document.getElementById('ways-dialog'), box = document.getElementById('ways-copy'), text = document.getElementById('ways-text');
+    if (!panel || !box || !text) return;
+    // Paginate against the available viewport, then shrink to the current page.
+    // Measuring only the previously shrunken page would cause progressively
+    // smaller chunks and changing page counts as the reader advances.
+    panel.style.removeProperty('--ways-height');
+    if (box.clientWidth <= 0 || box.clientHeight <= 0) return;
     var previous = this.waysVm().pages[this.state.waysPage || 0];
     var probe = text.cloneNode(false); probe.removeAttribute('id'); probe.setAttribute('aria-hidden', 'true');
     Object.assign(probe.style, { position: 'absolute', visibility: 'hidden', width: box.clientWidth + 'px', height: 'auto', maxHeight: 'none', margin: '0', pointerEvents: 'none' });
@@ -4481,6 +4490,9 @@ class Component extends DCLogic {
     var page = 0;
     this.waysChunks.forEach(function (chunk, index) { if (chunk.topic === previous.topic && chunk.start <= previous.start) page = index; });
     this.setState({ waysPage: page });
+    var available = panel.getBoundingClientRect().height;
+    var contentHeight = Math.ceil(available - box.clientHeight + text.getBoundingClientRect().height + 1);
+    panel.style.setProperty('--ways-height', Math.min(available, contentHeight) + 'px');
   }
   setPreferencesInert(on) {
     if (on) {

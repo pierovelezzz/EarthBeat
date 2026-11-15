@@ -22,6 +22,12 @@ La corrección tiene 142 pruebas de lógica aprobadas y una comprobación del fl
 
 Una revisión independiente detectó el caso de fuentes demoradas, corregido con repaginación al terminar la carga inicial y las cargas posteriores. Se corrigió también el ajuste de los botones del pie en pantallas pequeñas para mantener constante el espacio de lectura al cambiar el número de página.
 
+### Ajuste del tamaño y los botones de la banda
+
+Se redujo el ancho máximo de la ayuda a 640 píxeles CSS y se calcula la altura según el texto de la página actual. La paginación sigue calculándose contra el espacio disponible en pantalla, de modo que reducir el recuadro no provoca páginas cada vez más pequeñas. El verificador comprueba que no quede una zona de lectura vacía grande.
+
+En La banda, los botones de baile e instrumento ocupan columnas simétricas, se alinean a izquierda y derecha y miden lo mismo: 44 píxeles CSS de alto y hasta 190 de ancho, adaptándose a pantallas estrechas. El estado del baile queda debajo de su botón y ya no estira el botón vecino. `scripts/verify_band_actions.cjs` verificó 30 combinaciones de personaje, idioma y ancho de pantalla (390, 768 y 1366 píxeles). Las capturas quedan en `_work/band-actions/`.
+
 ## Necesidades atendidas y límites
 
 | Necesidad | Acceso disponible | Validación pendiente |

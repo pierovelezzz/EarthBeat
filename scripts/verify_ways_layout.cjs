@@ -48,6 +48,7 @@ async function main(){
    const initialPageCount=await page.evaluate(()=>__app.waysVm().pages.length);
    const seen=expected.map(()=>[]);let pages=0;
    for(;;){
+    await page.waitForFunction(()=>__app.waysRaf==null);
     assert.equal(await page.evaluate(()=>__app.waysVm().pages.length),initialPageCount,'Page count must remain stable while reading at a fixed size');
     const check=await page.evaluate(()=>{
      const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
@@ -56,6 +57,7 @@ async function main(){
     });
     assert(check.panel.top>=-1&&check.panel.bottom<=height+1,JSON.stringify(check));
     assert(check.text.bottom<=check.copy.bottom+1&&check.text.right<=check.copy.right+1,JSON.stringify(check));
+    assert(check.copy.height-check.text.height<=3,'Help height must fit its content: '+JSON.stringify(check));
     assert(Math.abs(check.text.width-check.copy.width)<1,'Text must use the complete reading width');
     assert(check.scroll<=check.client+1,'The help panel must not need vertical scrolling');
     assert(check.bodyScroll<=width+1,'The header must not overflow horizontally');
