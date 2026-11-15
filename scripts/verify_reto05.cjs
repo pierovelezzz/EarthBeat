@@ -46,8 +46,51 @@ async function main() {
     });
     const page = await context.newPage();
     page.on('pageerror', error => errors.push(error.message));
+    const narrationRequests = [];
+    page.on('request', request => {
+      if (request.url().includes('/brisa/') && request.url().endsWith('.mp3')) narrationRequests.push(request.url());
+    });
     await page.goto(base);
+    const readWithoutAudio = page.getByRole('button', { name: 'Leer este mapa sin audio', exact: true });
+    await readWithoutAudio.waitFor();
+    assert.equal(await page.locator('.ts-cinema, #preferences-dialog').count(), 0);
+    assert.equal(await page.locator('.px.app').getAttribute('data-motion-mode'), 'reduced');
+    const homeMap = await page.locator('.home-map img').getAttribute('src');
+    await readWithoutAudio.press('Enter');
+    const observation = page.locator('.observation');
+    await observation.waitFor();
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'observation-title');
+    assert.equal(await page.locator('#tour-frame img.map').getAttribute('src'), homeMap);
+    assert.equal(await page.locator('#tour-play button').textContent(), 'Reproducir');
+    assert.equal(await page.locator('.section-voice-status').textContent(), '');
+    assert.deepEqual(narrationRequests, []);
+    assert.equal(await observation.locator('time').getAttribute('datetime'), '2025-05-11');
+    assert.match(await observation.locator('a').getAttribute('href'), /svs\.gsfc\.nasa\.gov\/5176/);
+    await observation.locator('summary').press('Enter');
+    const cells = observation.locator('td');
+    await page.waitForFunction(() => document.querySelector('.observation td')?.textContent !== '—');
+    const counts = (await cells.allTextContents()).map(Number);
+    const validCells = await page.locator('#tour-machine canvas').evaluate(el => {
+      const context = el.getContext('2d');
+      return Array.from({ length: 448 }, (_, index) => {
+        const pixel = context.getImageData((index % 28) * 10 + 4, Math.floor(index / 28) * 10 + 4, 1, 1).data;
+        return pixel[0] !== 35 || pixel[1] !== 42 || pixel[2] !== 74;
+      }).filter(Boolean).length;
+    });
+    assert.equal(counts.length, 9);
+    assert(counts.every(Number.isInteger));
+    assert(counts.reduce((sum, count) => sum + count, 0) > 0);
+    assert.equal(counts.reduce((sum, count) => sum + count, 0), validCells);
+    await page.getByRole('button', { name: 'Mapa siguiente', exact: true }).press('Enter');
+    assert.equal(await observation.locator('time').getAttribute('datetime'), '2025-06-10');
+    assert.equal(await observation.locator('details').getAttribute('open'), '');
+    await page.setViewportSize({ width: 320, height: 568 });
+    assert(await observation.locator('table').evaluate(el => el.getBoundingClientRect().right <= innerWidth));
+    await page.screenshot({ path: path.join(output, 'lectura-movil-es.png'), fullPage: true });
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await page.locator('.brand').press('Enter');
     const intro = page.locator('.ts-cinema h2');
+    await page.getByRole('button', { name: 'Ver introducción', exact: true }).press('Enter');
     await intro.waitFor();
     assert.equal(await intro.textContent(), 'No solo mostramos nuestro planeta. Le damos voz.');
     assert.equal(await intro.evaluate(el => getComputedStyle(el).color), 'rgb(255, 255, 255)');
@@ -116,6 +159,8 @@ async function main() {
     assert.equal(await swatches.first().textContent(), '+3');
     assert.equal(await swatches.last().textContent(), '−3');
     assert.match(await swatches.first().getAttribute('aria-label'), /≈ \+3 °C/);
+    assert.equal(await observation.locator('time').getAttribute('datetime'), '2010-08-15');
+    assert.match(await observation.locator('a').getAttribute('href'), /worldview\.earthdata\.nasa\.gov/);
     await page.locator('#tour-nav button').nth(3).press('Enter');
     await page.getByRole('button', { name: 'NASA data', exact: true }).press('Enter');
     const sourceCards = page.locator('.nasa-source-layout');
@@ -133,10 +178,11 @@ async function main() {
     await page.screenshot({ path: path.join(output, 'creditos-en.png') });
 
     await page.reload();
+    await page.getByRole('button', { name: 'Watch introduction', exact: true }).press('Enter');
     await intro.waitFor();
     assert.equal(await intro.textContent(), 'We don’t just visualize our planet. We give it a voice.');
     assert.deepEqual(errors, []);
-    console.log('PASS intro ES/EN, blocked and fallback voice, MP3, 3-column player, 14 source-specific °C swatches, responsive layout, NASA sources and credits.');
+    console.log('PASS silent reading, map table, source dates, intro ES/EN, voice fallback, source-specific scales and credits.');
   } finally {
     await browser.close();
   }

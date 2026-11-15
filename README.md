@@ -1,12 +1,12 @@
 # EarthRhythm · Pacific Ocean Sonification
 
-Esta es la rama **main** de EarthRhythm. La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
+Esta es la rama **NASA-goal** de EarthRhythm, creada a partir de V4 para el reto The Earth Information Jukebox. La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
 
 ## Qué incluye esta versión
 
-La bienvenida se inicia automáticamente al abrir o recargar la portada. La secuencia de entrada, las estrellas fugaces, las naves y los vuelos a los discos se basan en el commit `991cc70` de `piero-mejoras`. El Sol, la Luna, Saturno y Aqua abren discos de mapas del Pacífico. La portada cambia de mapa cada tres segundos y permite escuchar el que está a la vista. El selector EN/ES admite teclado, guarda el idioma e indica la selección.
+La portada permite **escuchar el mapa que se muestra** o **leerlo sin audio**. Presenta una imagen fija al entrar y permite cambiarla manualmente o activar la rotación. La introducción y las preferencias se abren a petición del visitante. Se respeta la configuración de movimiento reducido del dispositivo hasta que la persona elige otra opción.
 
-La banda usa los cuatro fotogramas originales de cada personaje y permite pausar el baile o escuchar el instrumento por separado. El reproductor incorpora la leyenda interactiva y la mezcla de V3, además del historial paginado de V1. Con movimiento reducido, la bienvenida usa un fundido breve y los accesos desde los astros abren el disco directamente.
+La banda permite escuchar los instrumentos por separado o combinarlos. El reproductor ofrece dos modos de sonido, selección de fecha, volumen, velocidad, una leyenda interactiva en grados aproximados según la fuente y lectura por zonas con una tabla de celdas cálidas, cercanas a lo habitual y frías. Los modos de imágenes propias y lluvia siguen disponibles en **Cómo funciona**.
 
 Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz se activa desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
 
@@ -24,7 +24,7 @@ python -m http.server 8765 --bind 127.0.0.1 --directory _site
 
 Abrir [la aplicación local](http://127.0.0.1:8765/). Detener el servidor con Ctrl+C. La revisión utiliza Python 3.12.14 y Node 26.13.0. Node se necesita para las pruebas, no para servir el sitio.
 
-EarthRhythm inicia con las animaciones completas. La elección de movimiento reducido se controla desde Accesibilidad y se guarda para las próximas visitas. El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) permite volver al modo completo.
+La elección de movimiento reducido se controla desde Accesibilidad y se guarda para las próximas visitas.
 
 ## Fuente de la aplicación
 
@@ -37,7 +37,7 @@ node scripts/test_guides.cjs _site/index.html
 python scripts/run_browser_checks.py --list
 ```
 
-La suite de lógica contiene 135 pruebas en esta rama. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+La comprobación del reto y de la lectura sin audio está en el runner como reto05. Para preparar la presentación, usa el [guion y las fuentes de NASA-goal](docs/pitch/NASA_GOAL.md).
 
 ## Documentación
 

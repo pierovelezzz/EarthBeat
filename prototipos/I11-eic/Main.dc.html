@@ -1863,6 +1863,23 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 @media(max-width:640px){.ts-cinema .cinema-copy h2{font-size:clamp(1.25rem,5.6vw,2rem)}}
 @media(max-height:450px){.ts-cinema .cinema-copy h2{font-size:clamp(1.1rem,5vh,1.9rem)}}
 @media(forced-colors:active){.ts-cinema .cinema-copy h2{color:CanvasText}}
+
+.px .home-options{display:flex;flex-wrap:wrap;gap:4px 12px}
+.px .home-options .btn{min-height:44px;padding:6px 10px;letter-spacing:normal;text-transform:none}
+.px .home-preview-navigation{display:flex;flex-wrap:wrap;padding:4px 10px;gap:0 10px;border-bottom:1px solid var(--line)}
+.px .home-preview-navigation .btn{min-height:44px;white-space:normal;letter-spacing:normal;text-transform:none;padding:4px 8px}
+.px .home-preview-navigation .btn[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.px .observation{display:grid;gap:8px;padding-top:12px;border-top:1px solid var(--line);line-height:1.55}
+.px .observation h2{font-size:1.1em}
+.px .observation p{max-width:75ch}
+.px .observation-source a{text-underline-offset:.2em}
+.px .observation-dates{display:flex;flex-wrap:wrap;gap:6px}
+.px .observation-dates .btn{min-height:44px;white-space:normal}
+.px .observation summary{width:fit-content;min-height:44px;align-content:center;cursor:pointer;font-weight:650}
+.px .observation table{width:min(100%,42rem);border-collapse:collapse;table-layout:fixed;font-size:.85em;margin-top:8px}
+.px .observation th,.px .observation td{text-align:start;padding:6px;border:1px solid var(--line);overflow-wrap:anywhere}
+.px .observation th{color:var(--fg);font-weight:650}
+.px .observation td{font-variant-numeric:tabular-nums}
 </style>
 </helmet>
 <div class="px app main-edition {{bandViewClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
@@ -1950,13 +1967,22 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <h1 id="home-title" class="display xl">{{tx.heroTitle}}</h1>
 <p class="lede">{{tx.heroLede}}</p>
 <div id="tour-cta" class="row cta">
-<button type="button" class="btn primary sample-cta" onClick="{{sample.start}}" disabled="{{sample.pending}}" aria-busy="{{sample.pending}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M4 2.5 13 8l-9 5.5z"/></svg>{{sample.label}}</button>
-<button type="button" class="btn quiet" onClick="{{heroGo}}">{{tx.heroBand}}</button>
+<sc-if value="{{sample.audioAvailable}}"><button type="button" class="btn primary sample-cta" onClick="{{sample.start}}" disabled="{{sample.pending}}" aria-busy="{{sample.pending}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M4 2.5 13 8l-9 5.5z"/></svg>{{sample.label}}</button></sc-if>
+<button type="button" class="btn quiet" onClick="{{sample.explore}}">{{sample.exploreLabel}}</button>
 </div>
 <p class="hero-reassurance">{{tx.heroHelp}}</p>
+<div class="home-options">
+<button type="button" class="btn sm quiet" onClick="{{preferences.open}}">{{preferences.reopenLabel}}</button>
+<button type="button" class="btn sm quiet" onClick="{{playIntro}}">{{tx.heroIntro}}</button>
+</div>
 </div>
 <div class="home-demo">
 <figure class="home-map"><img fetchpriority="high" decoding="async" src="{{homeMap.url}}" alt="{{homeMap.alt}}"><figcaption>{{homeMap.caption}}</figcaption></figure>
+<div class="home-preview-navigation">
+<button type="button" class="btn sm quiet" onClick="{{preview.next}}">{{preview.nextLabel}}</button>
+<button type="button" class="btn sm quiet" onClick="{{preview.autoToggle}}" aria-pressed="{{preview.auto}}" disabled="{{preview.autoDisabled}}">{{preview.autoLabel}}</button>
+<span class="sr" role="status">{{preview.notice}}</span>
+</div>
 <div class="home-process">
 <ol class="homeflow" aria-label="{{tx.flowAria}}">
 <li class="flow-step"><img class="flow-art" src="{{homeMap.thumbnail}}" alt=""><strong>{{tx.flowImage}}</strong></li>
@@ -2053,7 +2079,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="pagehead slim">
 <div><p class="kicker">{{playKicker}}</p><h1 id="player-title" class="display md" tabindex="-1">{{playTitle}}</h1></div>
 <div class="row headtools">
-<sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{tx.changeDisc}}</button></sc-if>
+<sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet" onClick="{{focusReading}}">{{tx.readMap}}</button><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{tx.changeDisc}}</button></sc-if>
 </div>
 </div>
 
@@ -2163,7 +2189,29 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="player-detail">
 <div class="readout">
 <p><strong>{{tx.see}}</strong> <span>{{seeText}}</span></p>
-</div></div>
+</div>
+<sc-if value="{{player.observation.available}}">
+<section class="observation" aria-labelledby="observation-title">
+<h2 id="observation-title" tabindex="-1">{{player.observation.title}}</h2>
+<p class="small observation-source"><time datetime="{{player.observation.iso}}">{{player.observation.date}}</time> · <a href="{{player.observation.url}}">{{player.observation.source}}</a></p>
+<p class="observation-example">{{player.observation.example}}</p>
+<details>
+<summary>{{player.observation.zoneLabel}}</summary>
+<p class="small" id="zone-method">{{player.observation.zoneMethod}}</p>
+<table aria-describedby="zone-method">
+<caption class="sr">{{player.observation.zoneLabel}}</caption>
+<thead><tr><th scope="col">{{player.observation.area}}</th><th scope="col">{{player.observation.warm}}</th><th scope="col">{{player.observation.near}}</th><th scope="col">{{player.observation.cold}}</th></tr></thead>
+<tbody><template data-sc-for="{{player.observation.zones}}" data-sc-as="zone"><tr><th scope="row">{{zone.name}}</th><td>{{zone.warm}}</td><td>{{zone.near}}</td><td>{{zone.cold}}</td></tr></template></tbody>
+</table>
+</details>
+<div class="observation-dates" role="group" aria-label="{{tx.compareDates}}">
+<button type="button" class="btn sm quiet" onClick="{{prevFrame}}" disabled="{{prevOff}}">{{tx.previousMap}}</button>
+<button type="button" class="btn sm quiet" onClick="{{nextFrame}}" disabled="{{nextOff}}">{{tx.nextMap}}</button>
+</div>
+<p class="small">{{player.observation.sound}}</p>
+</section>
+</sc-if>
+</div>
 <p role="status" aria-live="polite" class="sr">{{player.announcement}}</p>
 </div>
 </sc-if>
@@ -2857,11 +2905,11 @@ var TECH = [
   {
     "cat": "Datos de la NASA",
     "name": "EIC · SST Anomaly (SVS 5176)",
-    "use": "30 imágenes del Pacífico: 16 mayo 2024–2 noviembre 2026. Son una selección almacenada, no una conexión diaria en vivo.",
+    "use": "30 imágenes del Pacífico: 16 mayo 2024–3 octubre 2026. Son una selección almacenada, no una conexión diaria en vivo.",
     "es": {
       "cat": "Datos de la NASA",
       "name": "EIC · SST Anomaly (SVS 5176)",
-      "use": "30 imágenes del Pacífico: 16 mayo 2024–2 noviembre 2026. Son una selección almacenada, no una conexión diaria en vivo."
+      "use": "30 imágenes del Pacífico: 16 mayo 2024–3 octubre 2026. Son una selección almacenada, no una conexión diaria en vivo."
     }
   },
   {
@@ -3109,7 +3157,7 @@ var TECH_EN = {
     "use": "Responsive layout, focus and reduced motion. Local Barlow, Inter, IBM Plex Mono and Atkinson Hyperlegible; system fonts provide fallbacks."
   },
   "EIC · SST Anomaly (SVS 5176)": {
-    "use": "30 Pacific images: 16 May 2024–2 November 2026. This is a stored selection, not a daily live feed."
+    "use": "30 Pacific images: 16 May 2024–3 October 2026. This is a stored selection, not a daily live feed."
   },
   "NASA GIBS · GHRSST MUR": {
     "use": "30 anomaly maps from five episodes between 2010 and 2023. Each date corresponds to the 15th of its month."
@@ -3165,8 +3213,12 @@ var TX = {
     "skipContent": "Saltar al contenido",
     "heroKicker": "Mapas de la NASA. Tu propia banda.",
     "heroTitle": "El Pacífico, hecho música.",
-    "heroLede": "Los colores del océano se convierten en notas. Escucha un mapa y descubre qué cambia.",
-    "heroCta": "Escuchar una muestra",
+    "heroLede": "Descubre dónde el agua del Pacífico estuvo más cálida o más fría de lo habitual. Escucha cómo se convierte ese patrón en música o explora el mismo mapa por escrito.",
+    "heroIntro": "Ver introducción",
+    "readMap": "Leer el mapa",
+    "compareDates": "Explorar otras fechas",
+    "previousMap": "Mapa anterior",
+    "nextMap": "Mapa siguiente",
     "heroBand": "Explorar los mapas",
     "homeMapAlt": "Mapa de la NASA del Pacífico que muestra dónde el mar estuvo más frío o más cálido de lo habitual.",
     "flowAria": "Del mapa NASA al análisis de píxeles y a la música",
@@ -3243,7 +3295,7 @@ var TX = {
     "module": "Módulo",
     "credTitle": "Créditos y uso de IA",
     "credData": "Datos",
-    "credDataP1": "Fotogramas de la visualización del Earth Information Center «Sea Surface Temperature (SST) Anomaly – Near Real Time» (NASA SVS 5176, variante Pacífico, 16 may 2024 – 2 nov 2026), recortados al Pacífico sudeste; datos JPL MUR SST. Crédito: NASA’s Scientific Visualization Studio.",
+    "credDataP1": "Fotogramas de la visualización del Earth Information Center «Sea Surface Temperature (SST) Anomaly – Near Real Time» (NASA SVS 5176, variante Pacífico, 16 may 2024 – 3 oct 2026), recortados al Pacífico sudeste; datos JPL MUR SST. Visualización: Kel Elkins (USRA) para NASA’s Scientific Visualization Studio.",
     "credDataP2": "Los discos «NASA GIBS» (2010–2023) usan NASA JPL GHRSST L4 MUR 0,25° SST Anomalies, día 15 de cada mes, vía NASA GIBS/Worldview.",
     "credDataScale": "La barra original de EIC va de −4 a +4 °C. En GIBS, los extremos agrupan valores bajo −3 °C y desde +3 °C. La cuadrícula estima diferencias a partir de los colores de cada imagen.",
     "credScience": "Fuentes científicas",
@@ -3287,8 +3339,12 @@ var TX = {
     "skipContent": "Skip to content",
     "heroKicker": "NASA maps. Your own band.",
     "heroTitle": "The Pacific, made musical.",
-    "heroLede": "Ocean colors become musical notes. Listen to a map and discover what changes.",
-    "heroCta": "Listen to a sample",
+    "heroLede": "Find out where the Pacific was warmer or cooler than usual. Hear that pattern turn into music or explore the same map in writing.",
+    "heroIntro": "Watch introduction",
+    "readMap": "Read the map",
+    "compareDates": "Explore other dates",
+    "previousMap": "Previous map",
+    "nextMap": "Next map",
     "heroBand": "Explore the maps",
     "homeMapAlt": "NASA map of the Pacific showing where the sea was warmer or cooler than usual.",
     "flowAria": "From NASA imagery to pixel analysis and music",
@@ -3365,7 +3421,7 @@ var TX = {
     "module": "Module",
     "credTitle": "Credits and AI use",
     "credData": "Data",
-    "credDataP1": "Frames from the Earth Information Center visualization “Sea Surface Temperature (SST) Anomaly – Near Real Time” (NASA SVS 5176, Pacific variant, 16 May 2024 – 2 Nov 2026), cropped to the southeast Pacific; JPL MUR SST data. Credit: NASA’s Scientific Visualization Studio.",
+    "credDataP1": "Frames from the Earth Information Center visualization “Sea Surface Temperature (SST) Anomaly – Near Real Time” (NASA SVS 5176, Pacific variant, 16 May 2024 – 3 Oct 2026), cropped to the southeast Pacific; JPL MUR SST data. Visualization: Kel Elkins (USRA) for NASA’s Scientific Visualization Studio.",
     "credDataP2": "The “NASA GIBS” discs (2010–2023) use NASA JPL GHRSST L4 MUR 0.25° SST Anomalies, the 15th of each month, via NASA GIBS/Worldview.",
     "credDataScale": "The EIC color bar runs from −4 to +4 °C. GIBS groups values below −3 °C and at or above +3 °C at the ends of its scale. The grid estimates differences from each image’s colors.",
     "credScience": "Scientific sources",
@@ -3612,21 +3668,13 @@ class HapticFeedback {
   retry() { this.failed = false; this.lastStatus = 'ready'; }
 }
 
-// Starts on each new home document before first-visit preferences.
+// Opened from the home page when the visitor chooses to watch it.
 class CinematicIntro {
-  constructor(owner) { this.owner=owner; this.animations=[]; this.timers=[]; this.seen=false; }
-  markSeen() { this.seen=true; }
-  hasSeen() { return this.seen; }
+  constructor(owner) { this.owner=owner; this.animations=[]; this.timers=[]; }
   start() {
     var self=this, app=this.owner;
     if(typeof document.createElement!=='function'||!document.body?.append)return;
-    if(app.disposed||app.state.showPreferences||app.state.tab!=='home'||app.state.tour||document.hidden||this.hasSeen())return;
-    if (['#banda', '#escuchar', '#listen'].includes(document.location?.hash)) {
-      this.markSeen();
-      app.entryWelcomePending = false;
-      return;
-    }
-    this.markSeen();
+    if(this.root||app.disposed||app.state.showPreferences||app.state.tab!=='home'||app.state.tour||document.hidden)return;
     var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de EarthRhythm','EarthRhythm presentation'));
     root.innerHTML=`<div class="cinema-space" aria-hidden="true"><div class="cinema-stars"></div><div class="cinema-stars near"></div><div class="cinema-sun"></div><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i></div>
 <div class="cinema-world" aria-hidden="true"><svg viewBox="0 0 500 500"><defs>
@@ -3725,7 +3773,6 @@ class CinematicIntro {
     if(restoreFocus&&focused){var target=this.returnFocus?.isConnected&&this.returnFocus!==document.body?this.returnFocus:document.querySelector('.hero .btn.primary');target?.focus({preventScroll:true});}
     this.returnFocus=null;
     this.owner.completeWelcome();
-    if (restoreFocus) this.owner.showEntryPreferences();
   }
 }
 
@@ -3799,7 +3846,7 @@ class Component extends DCLogic {
       mute: { silbo: false, inti: false, mama: false, yaku: false, illapa: false }, levels: { silbo: 0, inti: 0, mama: 0, yaku: 0, illapa: 0 }, an: {},
       caption: T('Elige un disco y un protagonista, y pulsa Reproducir.', 'Pick a disc and a lead, then press Play.') };
     this.timer = null; this.ac = null; this.lastThunder = -9; this.routeTimers = []; this.routeRun = 0; this.routeFinish = null; this.melDeg = null;
-    this.state.sfx = true;
+    this.state.sfx = false;
     this.state.volume = 100;
     this.state.masterMuted = false;
     this.state.mixCustomized = false;
@@ -3814,11 +3861,10 @@ class Component extends DCLogic {
     this.state.colorScheme = 'dark';
     try { if (localStorage.getItem('ts_theme') === 'light') this.state.colorScheme = 'light'; } catch (ignored) {}
     var preferences = readPreferences(), self = this;
-    this.state.reducedMotion = false;
+    this.state.reducedMotion = !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (preferences) PREFERENCE_KEYS.forEach(function (key) { if (typeof preferences.values[key] === 'boolean') self.state[key] = preferences.values[key]; });
     this.preferencesConfigured = !!(preferences && preferences.configured);
     this.state.showPreferences = false; this.state.sampleStarting = false;
-    this.entryWelcomePending = !this.preferencesConfigured;
     if (window.location?.href) {
       var entryUrl = new URL(window.location.href);
       if (entryUrl.searchParams.get('movimiento') === 'completo') {
@@ -3836,6 +3882,8 @@ class Component extends DCLogic {
     this.state.legendSelection = null;
     this.state.stageNotes = {};
     this.state.homePreview = 0;
+    this.state.homeAuto = false;
+    this.state.homePreviewNotice = '';
     this.homePreviewDue = 0;
     this.homePreviewImages = new Map();
     this.journey = new SpaceJourney(this);
@@ -3884,9 +3932,7 @@ class Component extends DCLogic {
         self.haptics.stop();
         self.cinema?.finish(false);
       } else {
-        self.cinema?.start();
         self.completeWelcome();
-        self.showEntryPreferences();
         if (self.state.tour) self.focusTourTarget();
       }
     };
@@ -3926,7 +3972,6 @@ class Component extends DCLogic {
     this.setState({ vw: viewport ? viewport.width : window.innerWidth, vh: viewport ? viewport.height : window.innerHeight });
     if (this.state.showPreferences) { this.setPreferencesInert(true); this.focusPreferences(); }
     this.cinema = new CinematicIntro(this);
-    this.cinema.start();
     this.homePreviewTimer = setInterval(function () { self.syncHomePreview(); }, 200);
   }
   closeMenus(restoreFocus) {
@@ -3946,6 +3991,7 @@ class Component extends DCLogic {
   setPreference(key, value) {
     if (PREFERENCE_KEYS.indexOf(key) < 0) return;
     var patch = {}; patch[key] = !!value;
+    if (key === 'reducedMotion' && value) patch.homeAuto = false;
     this.setState(patch); this.savePreferences();
     if (key === 'contrast' && value) this.cinema?.finish(true);
     if (key === 'voice') {
@@ -4030,14 +4076,9 @@ class Component extends DCLogic {
     }
   }
   focusPreferences() { var target = document.getElementById('preferences-voice') || document.getElementById('preferences-dialog'); if (target) target.focus({ preventScroll: true }); }
-  showEntryPreferences() {
-    if (!this.entryWelcomePending || !this.cinema?.hasSeen() || this.cinema.root || document.hidden || this.disposed) return;
-    this.entryWelcomePending = false;
-    if (this.state.tab === 'home' && !this.state.tour) this.openPreferences();
-  }
-  openPreferences() {
+  openPreferences(trigger) {
     const menu = document.getElementById('tour-a11y');
-    this.preferencesReturnFocus = menu?.querySelector('summary');
+    this.preferencesReturnFocus = trigger && !menu?.contains(trigger) ? trigger : menu?.querySelector('summary');
     if (menu) menu.open = false;
     this.stopSpeech();
     this.setState({ showPreferences: true }, () => {
@@ -4053,7 +4094,6 @@ class Component extends DCLogic {
     this.setState({ showPreferences: false });
     this.savePreferences();
     this.syncPreferenceMotion();
-    this.cinema?.start();
     this.completeWelcome();
   }
   completeWelcome() {
@@ -4110,7 +4150,7 @@ class Component extends DCLogic {
     this.cinema?.update();
     this.stopSpeech();
     var chord = chordIndex < 0 ? s.chord : chordOf(this.profile(), this.profile().prog[chordIndex]).label;
-    this.setState({ lang: code, chord: chord, route: Object.assign({}, s.route, { title: this.subTitles()[s.sub] || ROUTE_LOOK[s.tab].title, section: ROUTE_LOOK[s.tab].title + ' · ' + PAGES[s.tab][0] }),
+    this.setState({ lang: code, chord: chord, homePreviewNotice: '', route: Object.assign({}, s.route, { title: this.subTitles()[s.sub] || ROUTE_LOOK[s.tab].title, section: ROUTE_LOOK[s.tab].title + ' · ' + PAGES[s.tab][0] }),
       caption: T('Idioma: español.', 'Language: English.') }, function () {
         if (s.tour) self.focusTourTarget();
         self.ensureNavVisible();
@@ -4372,13 +4412,13 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
+    clearInterval(this.homePreviewTimer);
+    this.homePreviewImages.forEach(function (entry) { entry.image.onload = null; entry.image.onerror = null; });
+    this.homePreviewImages.clear();
     this.cancelSample();
     if (this.disposed) return;
     this.pendingWelcome = null;
     this.journey.finish(false);
-    clearInterval(this.homePreviewTimer);
-    this.homePreviewImages.forEach(function (entry) { entry.image.onload = null; entry.image.onerror = null; });
-    this.homePreviewImages.clear();
     this.cinema?.finish(false);
     this.setPreferencesInert(false);
     this.disposed = true;
@@ -4619,7 +4659,7 @@ class Component extends DCLogic {
       else this.setState({ sampleStarting: false });
     }
   }
-  startSample() {
+  startSample(withAudio) {
     if (this.disposed || this.state.tab !== 'home' || this.state.sampleStarting) return;
     var map = HOME_PREVIEW[this.state.homePreview];
     var set = 'eic', disc = map.disc, frame = map.frame;
@@ -4628,8 +4668,8 @@ class Component extends DCLogic {
     if (this.state.tour) this.tourClose();
     if (this.state.set !== set) this.applySet(set);
     this.setState({ disc: disc, frame: frame, col: -1, engine: 'melody', mute: mix, ended: false, audioError: '' });
-    this.goTab('juke', 1);
-    if (typeof (window.AudioContext || window.webkitAudioContext) !== 'function') return;
+    this.routeChange({ tab: 'juke', sub: 1 }, 'juke', DISCS[disc].title, !withAudio);
+    if (!withAudio || typeof (window.AudioContext || window.webkitAudioContext) !== 'function') return;
     var self = this, run = ++this.sampleRun, deadline = Date.now() + 12000;
     this.setState({ sampleStarting: true }); this.loadDisc(disc);
     // Unlock Web Audio within the user's click before image decoding finishes.
@@ -4652,7 +4692,7 @@ class Component extends DCLogic {
 
   syncHomePreview(){
     var s=this.state,card=document.querySelector('.home-demo');
-    if(this.disposed||s.tab!=='home'||s.trans||s.showPreferences||s.more||s.tour||document.hidden||this.bandReduced()||this.cinema?.root||this.journey?.root||!card||card.matches(':hover')||card.contains(document.activeElement)){this.homePreviewDue=0;return;}
+    if(!s.homeAuto||this.disposed||s.tab!=='home'||s.trans||s.showPreferences||s.more||s.tour||document.hidden||this.bandReduced()||this.cinema?.root||this.journey?.root||!card||card.matches(':hover')||card.contains(document.activeElement)){this.homePreviewDue=0;return;}
     var now=Date.now();if(!this.homePreviewDue)this.homePreviewDue=now+3000;
     for(var offset=1;offset<HOME_PREVIEW.length;offset++){
       var next=(s.homePreview+offset)%HOME_PREVIEW.length,slide=HOME_PREVIEW[next],url=DISC_SETS.eic[slide.disc].files[slide.frame],entry=this.homePreviewImages.get(url);
@@ -4666,6 +4706,11 @@ class Component extends DCLogic {
       if(entry.ready&&now>=this.homePreviewDue){this.homePreviewDue=now+3000;this.setState({homePreview:next});}
       return;
     }
+  }
+  changeHomePreview() {
+    var next = (this.state.homePreview + 1) % HOME_PREVIEW.length;
+    this.homePreviewDue = 0;
+    this.setState({ homePreview: next }, () => this.setState({ homePreviewNotice: this.homeMap().caption }));
   }
   homeMap() {
     var slide = HOME_PREVIEW[this.state.homePreview], disc = DISC_SETS.eic[slide.disc];
@@ -4719,14 +4764,14 @@ class Component extends DCLogic {
     if (this.state.trans && this.state.routeArrived && this.routeFinish) this.routeFinish();
     return !this.state.trans;
   }
-  routeChange(patch, tab, title) {
+  routeChange(patch, tab, title, silent = false) {
     if (!this.settleArrivedRoute()) return;
     this.cinema?.finish(false);
     this.stopForScreen(tab, patch.sub == null ? this.state.sub : patch.sub);
     this.routeTimers.forEach(clearTimeout);
     this.routeTimers = [];
     var self = this, run = ++this.routeRun, swapped = false;
-    this.playCue(PAGE_CUES[tab]);
+    if (!silent) this.playCue(PAGE_CUES[tab]);
     var swap = function (finished) {
       if (run !== self.routeRun || swapped) return;
       swapped = true;
@@ -4734,10 +4779,11 @@ class Component extends DCLogic {
       self.setState(Object.assign({ routeArrived: !finished && self.state.trans }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
         self.resetScreenScroll();
         self.ensureNavVisible();
-        if (self.state.voice && !self.state.tutorial && !self.state.showPreferences) self.narrateBrisa(self.sectionNarration());
+        if (!silent && self.state.voice && !self.state.tutorial && !self.state.showPreferences) self.narrateBrisa(self.sectionNarration());
         if (self.state.tab === 'juke') {
           var sub = self.state.sub;
           if (sub === 1) self.loadDisc(self.state.disc);
+          if (silent && sub === 1) { self.focusMapReading(); return; }
           var headingId = ['disc-library-title', 'player-title', null][sub];
           var heading = headingId && document.getElementById(headingId);
           if (heading) heading.focus({ preventScroll: true });
@@ -4831,6 +4877,51 @@ class Component extends DCLogic {
     this.legendCache = { key: key, items: items };
     return items;
   }
+  focusMapReading() {
+    var heading = document.getElementById('observation-title');
+    if (!heading) return;
+    heading.scrollIntoView({ block: 'start', behavior: 'instant' });
+    heading.focus({ preventScroll: true });
+  }
+  observationVm() {
+    var s = this.state;
+    if (s.disc === 5) return { available: false };
+    var analysis = this.cur(), key = [LANG, s.set, s.disc, s.frame].join(':');
+    if (this.observationCache?.key === key && this.observationCache.analysis === analysis) return this.observationCache.value;
+    var disc = DISCS[s.disc], date = this.frameDate(s.disc, s.frame);
+    var iso = disc.dates?.[s.frame] || [date.y, String(date.m + 1).padStart(2, '0'), '15'].join('-');
+    var dateText = new Intl.DateTimeFormat(LANG, { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
+    var zones = [
+      { name: T('Oeste', 'West'), from: 0, to: 9 },
+      { name: T('Centro', 'Middle'), from: 9, to: 19 },
+      { name: T('Este', 'East'), from: 19, to: 28 }
+    ].map(function (zone) {
+      var counts = { warm: 0, near: 0, cold: 0 };
+      analysis?.cells.forEach(function (value, index) {
+        var column = index % 28;
+        if (value === null || column < zone.from || column >= zone.to) return;
+        counts[value > .25 ? 'warm' : value <= -.25 ? 'cold' : 'near']++;
+      });
+      var usable = counts.warm + counts.near + counts.cold;
+      return { name: zone.name, warm: usable ? counts.warm : '—', near: usable ? counts.near : '—', cold: usable ? counts.cold : '—' };
+    });
+    var value = {
+      available: true, iso: iso, date: dateText, title: T('Cómo leer este mapa', 'How to read this map'),
+      source: s.set === 'prev' ? 'NASA Worldview / GIBS' : 'NASA EIC / SVS 5176',
+      url: s.set === 'prev' ? 'https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR25_Sea_Surface_Temperature_Anomalies&v=-140,-25,-70,15&t=' + iso
+        : 'https://svs.gsfc.nasa.gov/5176/',
+      example: T('Si lo habitual fuera 20 °C, una diferencia de +2 °C indicaría unos 22 °C. Cerca de 0 °C significa que el agua estuvo cerca de su temperatura habitual.',
+        'If the usual temperature were 20 °C, a difference of +2 °C would mean about 22 °C. Close to 0 °C means the water was near its usual temperature.'),
+      zoneLabel: T('Leer el mapa por zonas', 'Read the map by area'),
+      zoneMethod: T('Celdas de la cuadrícula, agrupadas de izquierda a derecha. Cada conteo se estima a partir de los colores. Se excluyen las celdas sin datos útiles. Compara fechas de la misma fuente.',
+        'Grid cells grouped from left to right. The counts are estimated from the colors. Cells without usable data are excluded. Compare dates from the same source.'),
+      area: T('Zona', 'Area'), warm: T('Más cálido', 'Warmer'), near: T('Cerca de lo habitual', 'Near usual'), cold: T('Más frío', 'Cooler'), zones: zones,
+      sound: T('Al reproducir, el mapa se recorre de oeste a este. Inti responde a las zonas cálidas y Mamacocha a las frías. Melodía añade acordes y ritmo. Datos usa tonos sin acordes.',
+        'On playback, the map is scanned from west to east. Inti responds to warmer water and Mamacocha to cooler water. Melody adds chords and rhythm. Data uses tones without chords.')
+    };
+    this.observationCache = { key: key, analysis: analysis, value: value };
+    return value;
+  }
   playerVm() {
     var self = this, s = this.state, position = this.playerPosition(), steps = this.playerSteps();
     var elapsed = this.formatClock(this.playerSeconds(position)), duration = this.formatClock(this.playerSeconds(steps));
@@ -4851,7 +4942,8 @@ class Component extends DCLogic {
         : s.disc === 5 ? T('Elige un recuadro para explorar la escala de la imagen.', 'Choose a swatch to explore the image scale.')
         : T('Diferencia aproximada respecto a lo habitual. Elige un color para ver su significado.',
           'Approximate difference from usual conditions. Choose a color to see what it means.')),
-      announcement: s.playerAnnouncement
+      announcement: s.playerAnnouncement,
+      observation: this.observationVm()
     };
   }
 
@@ -5887,9 +5979,17 @@ class Component extends DCLogic {
       positionAccessibilityMenu: function (event) { self.positionAccessibilityMenu(event); },
       languageCode: LANG,
       languageKeys: function(event) { self.onLanguageKey(event); },
-      sample: { pending: !!s.sampleStarting, label: s.sampleStarting ? T('Preparando muestra…', 'Preparing sample…') : typeof(window.AudioContext || window.webkitAudioContext) === 'function' ? tx.heroCta : T('Explorar una muestra', 'Explore a sample'), start: function() { self.startSample(); } },
+      sample: {
+        audioAvailable: typeof (window.AudioContext || window.webkitAudioContext) === 'function',
+        pending: !!s.sampleStarting,
+        label: s.sampleStarting ? T('Preparando audio…', 'Preparing audio…') : T('Escuchar este mapa', 'Hear this map'),
+        start: function () { self.startSample(true); },
+        exploreLabel: T('Leer este mapa sin audio', 'Read this map without audio'),
+        explore: function () { self.startSample(false); }
+      },
+      playIntro: function () { self.cinema?.start(); },
       preferences: {
-        reopenLabel: T('Mis preferencias', 'My preferences'), open: function() { self.openPreferences(); },
+        reopenLabel: T('Mis preferencias', 'My preferences'), open: function (event) { self.openPreferences(event.currentTarget); },
         on: s.showPreferences, title: T('¿Cómo prefieres usarlo?', 'How would you like to use it?'),
         body: T('Puedes cambiarlo luego en Accesibilidad.', 'You can change it later in Accessibility.'),
         choices: [
@@ -5930,7 +6030,14 @@ class Component extends DCLogic {
       langs: [{ code: 'en', short: 'EN', name: 'English' }, { code: 'es', short: 'ES', name: 'Español' }].map(function (l) { return { code: l.code, short: l.short, name: l.name, on: LANG === l.code, pick: function () { self.setLang(l.code); } }; }),
       scrKind: s.tab === 'home' ? 'home' : scrVm.jDisc ? '' : 'workspace',
       homeMap: this.homeMap(),
-      heroGo: function () { self.goTab('juke'); },
+      preview: {
+        next: function () { self.changeHomePreview(); },
+        nextLabel: T('Ver otro mapa', 'See another map'),
+        autoLabel: T('Rotar mapas', 'Rotate maps'),
+        auto: s.homeAuto, autoDisabled: reducedMotion,
+        autoToggle: function () { self.homePreviewDue = 0; self.setState({ homeAuto: !self.state.homeAuto, homePreviewNotice: '' }); },
+        notice: s.homePreviewNotice
+      },
       heroBand: function () { self.goTab('band'); },
       speechUnavailable: !window.speechSynthesis || !window.SpeechSynthesisUtterance,
       brisaUnavailable: typeof window.Audio !== 'function' && (!window.speechSynthesis || !window.SpeechSynthesisUtterance),
@@ -5939,6 +6046,7 @@ class Component extends DCLogic {
       sectionVoice: function () { self.toggleSectionVoice(); },
       sectionVoiceNotice: uiText(s.speechNotice),
       goDiscs: function () { self.goSub(0); },
+      focusReading: function () { self.focusMapReading(); },
       playKicker: isData ? tx.dataListenKicker : tx.listenKicker,
       playTitle: isData ? uiLabel(s.custom) : d.title,
       mapSource: isJuke ? tx.youSeeSub : s.custom?.kind === 'rain' ? 'NASA POWER' : T('Tu imagen', 'Your image'),

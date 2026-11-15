@@ -71,6 +71,7 @@ async function main() {
   try {
     for (const sample of [{locale:'es-PE',expected:'es'}, {locale:'fr-FR',expected:'en'}, {locale:'fr-FR',savedLang:'es',expected:'es'}]) {
       const { context, page } = await create(sample);
+      await page.locator('.home-options button').first().click();
       await page.locator('#preferences-dialog').waitFor();
       assert.equal(await page.locator('html').getAttribute('lang'), sample.expected);
       assert.equal(await page.evaluate(() => document.activeElement.id), 'preferences-voice');

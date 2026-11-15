@@ -29,8 +29,7 @@ async function main(){
     const entry={width,label,violations:result.violations.map(rule=>({id:rule.id,impact:rule.impact,help:rule.help,url:rule.helpUrl,nodes:rule.nodes.map(node=>({target:node.target,html:node.html,summary:node.failureSummary}))})),incomplete:result.incomplete.map(rule=>({id:rule.id,nodes:rule.nodes.length})),passes:result.passes.length};
     report.checks.push(entry);fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(report,null,2));console.log(label,width,'violations',entry.violations.length);
    };
-   const skipIntro=page.locator('.cinema-skip');
-   if(await skipIntro.isVisible()) await skipIntro.click();
+   await page.locator('.home-options button').first().click();
    await page.locator('#preferences-dialog').waitFor();
    await audit('first-visit-preferences');await page.getByRole('button',{name:'Continuar',exact:true}).click();await page.evaluate(()=>{__app.setPreference('sfx',false);__app.setPreference('reducedMotion',true);});
    for(const lang of ['es','en']){
@@ -48,6 +47,7 @@ async function main(){
     await page.locator('#tour-nav button').first().click();await page.locator('.discgrid .dcard').nth(2).click();
     await audit(lang+'-player-legend');
     await page.locator('.legend-choice').first().click();await audit(lang+'-player-selected-color');
+    await page.locator('.observation summary').click();await audit(lang+'-map-by-area');
     await page.locator('#tour-guide').click();await audit(lang+'-Brisa');await page.keyboard.press('Escape');
     await page.locator('#tour-a11y > summary').click();await audit(lang+'-accessibility-menu');await page.keyboard.press('Escape');
     assert.equal(await page.locator('#tour-a11y').getAttribute('open'),null,'Escape closes the preference popover');
