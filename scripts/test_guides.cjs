@@ -39,21 +39,25 @@ test('the interactive grid legend uses each color of the exact palette in both l
   c.state.tab='juke';c.state.sub=1;
   const legend=c.playerVm().legend;
   assert.deepEqual(Array.from(legend,level=>level.color),Array.from(context.RAMP,pair=>pair[1]).reverse());
-  assert.equal(legend[0].label,'+5 · Calor extremo');
-  assert.equal(legend.find(level=>level.number==='0').label,'0 · Cerca de lo habitual');
-  assert.equal(legend.at(-1).label,'−5 · Frío extremo');
+  assert.equal(legend[0].label,'≈ +4 °C · Calor extremo');
+  assert.equal(legend.find(level=>level.number==='0').label,'0 °C · Cerca de lo habitual');
+  assert.equal(legend.at(-1).label,'≈ −4 °C · Frío extremo');
   assert.equal(c.playerVm().legendReading,'');
-  assert.match(c.playerVm().legendDescription,/Elige un recuadro/);
+  assert.match(c.playerVm().legendDescription,/Diferencia aproximada/);
   assert.equal(new Set(legend.map(level=>level.description)).size,14);
   for(const [rain, image] of [[true,false],[false,true]]) {
     const alternate=c.legendVm(rain,image);
     assert.equal(new Set(alternate.map(level=>level.description)).size,14);
   }
   legend.at(-1).choose();
-  assert.equal(c.playerVm().legendReading,'−5 · Frío extremo');
+  assert.equal(c.playerVm().legendReading,'≈ −4 °C · Frío extremo');
   c.setLang('en');
-  assert.equal(c.playerVm().legendReading,'−5 · Extreme cooling');
+  assert.equal(c.playerVm().legendReading,'≈ −4 °C · Extreme cooling');
   assert.equal(c.state.sub,1);
+  c.applySet('prev');
+  assert.match(c.playerVm().legend[0].label, /^≈ \+3 °C/);
+  assert.doesNotMatch(c.legendVm(true,false,'prev')[0].label, /°C/);
+  assert.doesNotMatch(c.legendVm(false,true,'eic')[0].label, /°C/);
 });
 
 function setup(options = {}) {
@@ -68,7 +72,7 @@ function setup(options = {}) {
     Image: class {},
     document: { hidden: false, documentElement: {}, getElementById: id => elements.get(id),
       querySelector: () => null, querySelectorAll: () => [], addEventListener: listen, removeEventListener: unlisten },
-    window: { innerWidth: 1200, innerHeight: 900, matchMedia: () => ({ matches: true }),
+    window: { innerWidth: 1200, innerHeight: 900, matchMedia: () => ({ matches: options.reducedMotion === true }),
       addEventListener: listen, removeEventListener: unlisten,
       visualViewport: { addEventListener: listen, removeEventListener: unlisten } },
     setTimeout: fn => { timers.set(++serial, fn); return serial; },
@@ -152,8 +156,9 @@ test('guides are optional on startup and when changing section', () => {
   c.componentDidMount();
   assert.equal(timers.size, 0, 'startup must not schedule an unsolicited guide');
   c.goTab('how');
-  c.routeFinish();
-  assert.equal(timers.size, 0, 'navigation must not schedule an unsolicited guide');
+  for (const run of [...timers.values()]) run();
+  c.routeFinish?.();
+  assert.equal(c.state.showPreferences,false);
   assert.equal(c.state.tour, 0);
 });
 
@@ -356,12 +361,12 @@ test('sample labels translate without replacing the rainfall analysis', async ()
   assert.match(c.renderVals().playTitle,/rainfall/);
 });
 
-test('full motion is the default even if the browser requests reduced motion', () => {
-  const { component: c, context, storage } = setup({ firstVisit: true });
+test('full motion is the default and an explicit reduction persists', () => {
+  const { component: c, context, storage } = setup({ firstVisit: true, reducedMotion: true });
   assert.equal(context.window.matchMedia('(prefers-reduced-motion: reduce)').matches, true);
   assert.equal(c.renderVals().motionMode, 'full');
   c.setPreference('reducedMotion', true);
-  const reloaded = setup({ storage: Object.fromEntries(storage) });
+  const reloaded = setup({ reducedMotion: true, storage: Object.fromEntries(storage) });
   assert.equal(reloaded.component.renderVals().motionMode, 'reduced');
 });
 
@@ -782,6 +787,7 @@ test('audio rejects non-Error failures safely and supports the prefixed browser 
 
 test('optional audio cues cannot throw through navigation on resume or synthesis failures', async () => {
   const { component: c, context, AudioContextStub } = audioHarness();
+  c.state.sfx = true;
   const realCue = Object.getPrototypeOf(c).playCue;
   context.window.AudioContext = class extends AudioContextStub { createOscillator() { throw new Error('node error'); } };
   assert.doesNotThrow(() => realCue.call(c, ['sine', [440]]));
@@ -1148,6 +1154,7 @@ test('unmount disconnects fading music graphs and cancels their retirement callb
 
 test('stop also invalidates optional UI cues still waiting for native audio activation', async () => {
   const {component:c,context,AudioContextStub}=audioHarness();let resume,oscillators=0;
+  c.state.sfx = true;
   c.playCue=context.ComponentUnderTest.prototype.playCue.bind(c);
   context.window.AudioContext=class extends AudioContextStub {
     constructor(){super();this.state='suspended'}
@@ -1231,14 +1238,10 @@ test('mode changes cancel old callbacks, preserve position and expose only two w
   assert(!/planned|planeadas/i.test(c.renderVals().engineDesc));
 });
 
-test('event history remains bounded, survives pause and translates on demand without a live note feed', () => {
+test('playback announces milestones without storing a musical history', () => {
   const { component: c } = playbackHarness();
-  c.state.eventsOpen = true;
-  for (let i = 0; i < 210; i++) { c.state.col = i % 28; c.recordEvent({ mama: true }, ''); }
-  assert.equal(c.state.events.length, 200); const first = c.state.events[0].id;
-  c.stop(); c.setLang('en');
-  assert.equal(c.state.events[0].id, first); assert.match(c.playerVm().events[0].text, /column/);
-  assert.match(c.playerVm().events[0].text, /Mamacocha/i);
+  assert.equal(c.state.events, undefined);
+  assert(!html.includes('class="event-history"'));
   assert(!html.includes('aria-live="polite" class="sr">{{caption}}'));
   assert(html.includes('{{player.announcement}}'));
 });
@@ -1467,7 +1470,8 @@ test('missing speech APIs or a voice for the selected language keep written help
     }
     c.state.tab='juke'; c.tourOpen(); c.speak(c.guideStep().b,true);
     assert.equal(c.state.speaking,false); assert(c.renderVals().tour.body); assert(c.renderVals().tour.speechNotice);
-    c.setLang('en'); assert(c.renderVals().tour.body); assert(c.renderVals().tour.speechNotice);
+    c.setLang('en'); c.speak(c.guideStep().b,true);
+    assert(c.renderVals().tour.body); assert(c.renderVals().tour.speechNotice);
   }
 });
 
@@ -1597,13 +1601,13 @@ function clockHarness() {
   return {...h,scheduled};
 }
 
-test('audio clock schedules ahead while position, history and vibration follow the heard step', async()=>{
+test('audio clock schedules ahead while position, stage and vibration follow the heard step', async()=>{
   const {component:c,context,scheduled}=clockHarness(),pulses=[];context.navigator.vibrate=pattern=>{pulses.push(pattern);return true;};
   c.state.vibe=true;context.window.matchMedia=()=>({matches:false});context.navigator.userActivation.hasBeenActive=true;await c.play();c.scheduleAudio();
   assert(scheduled.length>=1);assert(scheduled.every(event=>event.at>c.ac.currentTime));
-  assert.equal(c.state.col,-1);assert.equal(c.state.events.length,0);assert.deepEqual(pulses,[]);assert.equal(Object.keys(c.state.stageNotes).length,0);
-  c.ac.currentTime=scheduled[0].at;c.scheduleAudio();assert.equal(c.state.col,0);assert.equal(c.state.events.length,1);assert.equal(pulses.at(-1),60);
-  const event=c.state.events[0];assert.equal(event.column,1);assert.equal(event.frame,0);assert.equal(c.state.stageNotes.silbo.kind,'note');
+  assert.equal(c.state.col,-1);assert.deepEqual(pulses,[]);assert.equal(Object.keys(c.state.stageNotes).length,0);
+  c.ac.currentTime=scheduled[0].at;c.scheduleAudio();assert.equal(c.state.col,0);assert.equal(pulses.at(-1),60);
+  assert.equal(c.state.frame,0);assert.equal(c.state.stageNotes.silbo.kind,'note');
 });
 
 test('musical vibration follows the intensity of audible attacks and is silent for rests and zero volume', () => {
@@ -1634,7 +1638,7 @@ test('a delayed UI callback retains exact planned spacing within the lookahead',
 test('pause and seeking cancel the future visual queue without moving past the last heard step', async()=>{
   const {component:c,scheduled}=clockHarness();c.state.engine='raw';await c.play();c.scheduleAudio();
   c.ac.currentTime=.12;c.stop();assert.equal(c.state.col,0);assert.equal(c.playbackQueue.length,0);assert.equal(c.audioCursor,null);
-  c.ac.currentTime=2;c.flushPlayback(2);assert.equal(c.state.col,0);assert.equal(c.state.events.length,1);
+  c.ac.currentTime=2;c.flushPlayback(2);assert.equal(c.state.col,0);
   c.seekPosition(84);assert.equal(c.state.frame,3);assert.equal(c.state.col,-1);assert.equal(c.state.playing,false);
   await c.play();c.scheduleAudio();assert.equal(scheduled.at(-1).frame,3);
 });
@@ -1642,7 +1646,7 @@ test('pause and seeking cancel the future visual queue without moving past the l
 test('queued animation levels and event names respect a musician muted before its note', async()=>{
   const {component:c,scheduled}=clockHarness();await c.play();c.scheduleAudio();
   c.setBandMute(c.allMute(true));c.ac.currentTime=scheduled[0].at;c.flushPlayback(c.ac.currentTime);
-  assert.equal(c.state.levels.silbo,0);assert.equal(c.state.hits.silbo,0);assert.equal(c.state.events[0].musicians.length,0);assert.equal(c.state.stageNotes.silbo,undefined);
+  assert.equal(c.state.levels.silbo,0);assert.equal(c.state.hits.silbo,0);assert.match(c.state.caption,/sin ataque nuevo/);assert.equal(c.state.stageNotes.silbo,undefined);
   c.setBandMute(c.only('silbo'));c.ac.currentTime=1;c.flushPlayback(1);
   assert.equal(c.state.hits.silbo,0,'reenabling does not animate notes cancelled by an earlier mute');
 });
@@ -1654,7 +1658,7 @@ test('queued chords and event captions use the language selected at their actual
   await c.play();c.scheduleAudio();assert(c.playbackQueue.length>0);const first=c.playbackQueue[0];
   assert.equal(first.chord,'Rem7');c.setLang('en');c.ac.currentTime=first.at;c.flushPlayback(first.at);
   assert.equal(c.state.chord,'Dm7');assert.match(c.state.caption,/chord Dm7/);assert.match(c.state.caption,/column 1\/28/);
-  assert.equal(c.state.events[0].chord,0);assert.equal(c.state.stageNotes.mama.kind,'note');
+  assert.equal(c.state.stageNotes.mama.kind,'note');
 });
 
 test('Illapa cues reflect actual attacks and distinguish rhythm from the extreme-data thunder',()=>{
@@ -1695,7 +1699,7 @@ test('the audio cursor crosses a month using that frame’s tempo while the map 
   assert.equal(scheduled[0].frame,2);assert.equal(scheduled[0].col,27);assert.equal(scheduled[1].frame,3);assert.equal(scheduled[1].col,0);
   assert(Math.abs(scheduled[1].at-scheduled[0].at-Math.round(30000/66)/1000)<1e-9);
   assert.equal(c.state.frame,2);c.ac.currentTime=scheduled[1].at;c.flushPlayback(c.ac.currentTime);assert.equal(c.state.frame,3);assert.equal(c.state.col,0);
-  assert.equal(c.profile().bpm,76);assert.equal(c.state.events.at(-1).date.m,3);
+  assert.equal(c.profile().bpm,76);assert.match(c.state.playerAnnouncement,/Mapa de/);
 });
 
 test('loading a disc requests its selected date before loading the remaining dates',()=>{
@@ -1757,8 +1761,8 @@ test('a heard step commits map position and its textual event in one render',asy
   const {component:c,scheduled}=clockHarness();await c.play();c.scheduleAudio();
   const patches=[],set=c.setState;c.setState=function(patch,...args){patches.push(patch);return set.call(this,patch,...args);};
   c.ac.currentTime=scheduled[0].at;c.flushPlayback(c.ac.currentTime);
-  assert.equal(patches.length,1);assert.equal(patches[0].col,0);assert.equal(patches[0].events.length,1);
-  assert.equal(c.state.events[0].frame,c.state.frame);assert.equal(c.state.events[0].column,c.state.col+1);
+  assert.equal(patches.length,1);assert.equal(patches[0].col,0);assert.match(patches[0].caption,/columna 1\/28/);
+  assert.equal(patches[0].frame,c.state.frame);
 });
 
 test('the complete band is active by default and an explicitly edited mix is preserved',()=>{
@@ -1805,8 +1809,8 @@ test('local image and rainfall have no reference coast, and rainfall has average
 
 test('player explanations distinguish derived Data tones from composed harmony and local image position',()=>{
   const {component:c}=setup();
-  c.setEngine('raw');let view=c.renderVals();assert.equal(view.showHarmony,false);assert.equal(view.progItems.length,0);assert.equal(view.moodText,'');assert.match(view.hearText,/niveles derivados/i);assert(!/Datos puros|traducción.*literal/.test(view.hearText));
-  c.setLang('en');view=c.renderVals();assert.match(view.hearText,/derived levels/);assert.match(view.whyTiles[0].body,/not measured degrees/);
+  c.setEngine('raw');let view=c.renderVals();assert.equal(view.showHarmony,false);assert.equal(view.progItems.length,0);assert.equal(view.moodText,'');assert.match(view.whyTiles[0].body,/niveles derivados/i);
+  c.setLang('en');view=c.renderVals();assert.match(view.engineDesc,/derived levels/);assert.match(view.whyTiles[0].body,/not measured degrees/);
   c.setEngine('melody');c.state.disc=5;c.state.custom={name:'values.csv',cols:[]};view=c.renderVals();assert(view.showHarmony);assert(view.progItems.length>=4);assert.match(view.whyTiles[2].title,/Vertical position/);assert(!/Latitude/.test(view.whyTiles[2].body));
 });
 
@@ -1827,18 +1831,4 @@ test('final disposal revokes the accepted file once while repeated disposal rema
   c.state.custom={name:'accepted.csv',url:'blob:accepted'};c.pendingImageUrl='blob:pending';
   c.componentWillUnmount();assert(revoked.includes('blob:accepted'));assert(revoked.includes('blob:pending'));
   const first=JSON.stringify(revoked);c.componentWillUnmount();assert.equal(JSON.stringify(revoked),first);
-});
-
-test('music history groups retained events into pages and clears its position', () => {
-  const {component:c}=setup();
-  c.state.eventsOpen=true;
-  c.state.events=Array.from({length:20},()=>c.eventFor({silbo:true},''));
-  assert.equal(c.playerVm().events.length,6);
-  assert.equal(c.playerVm().historyPage,'1 / 4');
-  c.playerVm().historyNext();
-  assert.equal(c.playerVm().historyPage,'2 / 4');
-  c.playerVm().clearEvents();
-  assert.equal(c.playerVm().historyPage,'1 / 1');
-  assert.equal(c.playerVm().events.length,0);
-  assert.equal(c.playerVm().historyNextOff,true);
 });

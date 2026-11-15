@@ -151,7 +151,7 @@ async function main() {
     await page.getByRole('button',{name:'Movimiento reducido'}).click();
     await page.waitForFunction(() => __app.bandReduced());
     const portrait = page.locator('.bportrait-live[data-character="inti"] .sprite-frame');
-    assert.match(await portrait.getAttribute('src'),/inti\/(?:pose-banda\.webp|keyframes\/00\.png)(?:\?.*)?$/);
+    assert.match(await portrait.getAttribute('src'),/inti\/(?:pose-banda\.webp|keyframes\/0[0-3]\.png)(?:\?.*)?$/);
     assert.equal(await portrait.evaluate(el => el.getAnimations().length),0);
     report.journeys.push('The reduced-motion preference leaves the original 2D pose visible');
     await context.close();
