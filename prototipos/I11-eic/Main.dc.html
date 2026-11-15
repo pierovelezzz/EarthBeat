@@ -1979,10 +1979,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .player-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.04fr) minmax(0,1.08fr)}
   .px .player-layout #tour-machine{grid-template-rows:auto auto auto}
   .px .player-layout #tour-machine .mbox{max-height:none}
-  .px .listen-player #tour-machine{grid-template-rows:auto auto minmax(0,1fr)}
-  .px .listen-player #tour-machine .map-legend{align-self:stretch;grid-template-rows:auto auto minmax(4.5em,1fr);align-items:start}
-  .px .listen-player #tour-machine .mbox{max-height:clamp(120px,calc(100dvh - 552px),300px)}
-  .px .listen-player .band-stage .stage-musician.listen-member .stage-label{padding-inline:2px}
   .px .player-layout .listen-band{display:flex;flex-direction:column}
   .px .player-layout .band-stage{
     position:relative;isolation:isolate;flex:1 0 auto;min-height:238px;
@@ -2123,32 +2119,64 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .rhythm-note{color:#081018;background:var(--rhythm-ink)}
   .px.app[data-contrast="true"] :is(.rhythm-lane,.rhythm-map-key li){--rhythm-ink:#fff}
 }
-@media(min-width:1100px) and (max-height:900px) and (hover:hover) and (pointer:fine){
-  .px .workspace > .in:has(.listen-player){padding-block:8px}
-  .px .listen-player{gap:8px}
+@media(min-width:1100px){
+  .px .workspace > .in:has(.listen-player){height:100%;padding-block:8px}
+  .px .listen-player{flex:1 1 0;min-height:0;height:auto;gap:8px}
+  .px .listen-player .pagehead.slim,.px .listen-player .map-reading{flex:none}
   .px .listen-player .pagehead.slim{padding-bottom:6px}
   .px .listen-player .pagehead .display{font-size:clamp(1.7rem,2.7vw,2.4rem)}
-  .px .listen-player .player-layout{gap:8px}
-  .px .listen-player #tour-frame .mapbox{max-height:clamp(112px,calc(100dvh - 600px),260px)}
+  .px .listen-player .player-layout{
+    flex:1 1 0;min-height:min-content;grid-template-rows:auto minmax(min-content,1fr);gap:8px;
+  }
+  .px .listen-player .player-layout > .vpanel{grid-template-rows:auto minmax(min-content,1fr) auto}
+  .px .listen-player .player-layout #tour-machine{grid-template-rows:auto minmax(100px,1fr) auto}
+  .px .listen-player .player-layout #tour-frame .mapbox,
+  .px .listen-player .player-layout #tour-machine .mbox{height:100%;min-height:100px;max-height:none;aspect-ratio:auto}
+  .px .listen-player #tour-frame .mapbox img.map{position:absolute;inset:0}
+  .px .listen-player #tour-machine .map-legend{
+    align-self:stretch;grid-template-rows:auto auto minmax(min-content,1fr);align-items:start
+  }
+  .px .listen-player .legend-explanation{min-height:4.4em}
   .px .listen-player .map-transport{gap:3px;padding:4px 1px}
   .px .listen-player .timeline img{height:clamp(15px,calc((100dvh - 590px) / 8),26px)}
+  .px .listen-player .player-layout .band-stage{flex:1 1 0;min-height:170px;container-type:size}
+  .px .listen-player .band-stage-musicians{
+    --listen-track-icon:clamp(30px,14cqh,52px);
+    padding-block:calc(var(--listen-track-icon) / 2 + 3px) 6px
+  }
+  .px .listen-player .stage-note-track{--track-icon:var(--listen-track-icon)}
+  .px .listen-player .stage-musician.listen-member .stage-performer{max-height:min(180px,45cqh)}
+  @supports(grid-template-rows:subgrid){
+    .px .listen-player .band-stage-musicians{grid-template-rows:minmax(54px,1fr) auto auto}
+  }
+  @supports not (grid-template-rows:subgrid){
+    .px .listen-player .player-layout .stage-musician.listen-member{grid-template-rows:minmax(54px,1fr) auto minmax(2.15em,auto)}
+  }
+  .px .listen-player .band-stage .stage-musician.listen-member .stage-label{padding-inline:2px}
   .px .listen-player .listen-band .chip{min-height:44px}
   .px .listen-player .map-reading{padding-block:7px}
 }
-@media(min-width:1100px) and (max-height:830px) and (hover:hover) and (pointer:fine){
+@media(min-width:1100px) and (max-height:830px){
   .px .listen-player .pagehead .kicker{display:none}
   .px .listen-player .map-toolbar{row-gap:6px}
-  .px .listen-player #tour-frame .mapbox{max-height:clamp(112px,calc(100dvh - 620px),210px)}
-  .px .listen-player #tour-machine .mbox{max-height:clamp(120px,calc(100dvh - 620px),210px)}
   .px .listen-player .transport-position input{min-height:28px}
 }
-@media(min-width:1100px) and (max-height:760px) and (hover:hover) and (pointer:fine){
+@media(min-width:1100px) and (max-height:760px){
   .px .workspace > .in:has(.listen-player){padding-block:5px}
   .px .listen-player{gap:5px}
   .px .listen-player .player-layout{row-gap:5px}
   .px .listen-player .map-reading{padding-block:6px}
 }
 .px.main-edition .legend-swatch{min-height:44px}
+@media(min-width:1100px) and (max-height:700px){
+  .px .listen-player .map-toolbar :is(.speed-option,.engines button,.volume-control input),
+  .px.main-edition .listen-player .legend-swatch{min-height:36px}
+  .px .listen-player .transport-position input{min-height:24px}
+  .px .listen-player .player-layout #tour-frame .mapbox,
+  .px .listen-player .player-layout #tour-machine .mbox{min-height:88px}
+  .px .listen-player .player-layout #tour-machine{grid-template-rows:auto minmax(88px,1fr) auto}
+  .px .listen-player .legend-explanation{min-height:0;padding-block:6px}
+}
 .px .bar .side .btn,.px .bar .steps button{min-height:28px}
 .px.main-edition .language-toggle button[aria-pressed="true"]{background:#a6dbe9}
 .px.main-edition .language-toggle[data-language="es"] button[aria-pressed="true"]{background:#f3ce72}
