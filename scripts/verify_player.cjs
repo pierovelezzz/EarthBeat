@@ -130,11 +130,11 @@ async function main() {
         assert.equal(await page.getByRole('button',{name:'Escenario',exact:true}).count(),0);
         assert.equal(await page.locator('.listen-member').count(),5);
         const before = await page.evaluate(() => __app.playerPosition());
-        await page.getByRole('button',{name:'English',exact:true}).click();
+        await page.getByRole('button',{name:'EN English',exact:true}).click();
         assert.equal(await page.evaluate(() => __app.playerPosition()), before);
         assert.equal(await page.locator('html').getAttribute('lang'), 'en');
         assert.match(await page.locator('#playback-position').getAttribute('aria-valuetext'), /Map:/);
-        await page.getByRole('button',{name:'Español',exact:true}).click();
+        await page.getByRole('button',{name:'ES Español',exact:true}).click();
         report.audio.push({ set, mode, peak, afterPausePeak: silent, pausedPosition: +paused, chosenDate: date, errors: [...errors] });
         console.log('PASS playback', set, mode, 'pause/resume/seek/keyboard/language/audio silence');
       }

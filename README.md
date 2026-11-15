@@ -24,7 +24,17 @@ python -m http.server 8765 --bind 127.0.0.1 --directory _site
 
 Abrir [la aplicación local](http://127.0.0.1:8765/). Detener el servidor con Ctrl+C. La revisión utiliza Python 3.12.14 y Node 26.13.0. Node se necesita para las pruebas, no para servir el sitio.
 
-EarthRhythm inicia con las animaciones completas. La elección de movimiento reducido se controla desde Accesibilidad y se guarda para las próximas visitas. El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) permite volver al modo completo.
+EarthRhythm respeta la preferencia de movimiento reducido del sistema mientras no exista una elección manual. La elección desde Accesibilidad se guarda para las próximas visitas. El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) permite elegir explícitamente el modo completo.
+
+## Accesibilidad añadida en la copia de v4
+
+La rama `accesibilidad/v4-flujo-inclusivo` conserva la distribución original y amplía los controles existentes:
+
+- La vibración opcional aparece solo en teléfonos identificados por el navegador. Incluye prueba, parada y explicación de disponibilidad. Puede combinarse con audio silenciado y movimiento visual reducido; resume intensidad musical, no sustituye la lectura de datos.
+- El desplegable «Consultar datos sin usar el mapa» permite elegir cualquiera de las 28 columnas y leer sus 16 filas con teclado o lector de pantalla. Distingue niveles derivados, ausencia de datos y fondo del gráfico de lluvia.
+- El botón independiente «Formas de usar» (icono de interrogación en pantallas estrechas) abre instrucciones de teclado, lectura, alternativas al sonido y reducción de estímulos, en español e inglés. El texto ocupa todo el ancho y se reparte en páginas según el espacio disponible, sin desplazamiento interno.
+
+[Resultados y límites de la comprobación](docs/ACCESIBILIDAD_VERIFICACION.md). La identificación de teléfonos es aproximada y la vibración física depende del navegador y del dispositivo.
 
 ## Fuente de la aplicación
 
@@ -37,7 +47,9 @@ node scripts/test_guides.cjs _site/index.html
 python scripts/run_browser_checks.py --list
 ```
 
-La suite de lógica contiene 135 pruebas en esta rama. El recorrido del RETO 05 se puede ejecutar con el runner usando la opción --only reto05. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+La suite de lógica contiene 146 pruebas en esta rama. El recorrido del RETO 05 se puede ejecutar con el runner usando la opción --only reto05. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+
+El [tutorial práctico y la ayuda contextual](docs/TUTORIAL.md) tienen funciones distintas: el tutorial practica tres acciones y guarda el avance al cerrarlo o saltarlo; la ayuda de cada pantalla se consulta en una sola tarjeta. Brisa retoma un tutorial pendiente, incluso tras recargar, sin iniciar música automáticamente.
 
 ## Documentación
 

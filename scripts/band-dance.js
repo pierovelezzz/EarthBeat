@@ -256,3 +256,122 @@ class StageNoteTrack extends HTMLElement {
 }
 
 customElements.define('earthbeat-note-track', StageNoteTrack);
+
+const arrowKeys = ['ArrowLeft', 'ArrowDown', 'ArrowUp', 'ArrowRight'];
+
+class RhythmGame extends HTMLElement {
+  static observedAttributes = ['data-playing', 'data-ended'];
+  notes = [];
+  hits = 0;
+  missed = 0;
+
+  connectedCallback() {
+    this.lanes = [...this.querySelectorAll('.rhythm-runway')];
+    this.score = this.querySelector('[data-score]');
+    this.feedback = this.querySelector('[data-feedback]');
+    this.addEventListener('keydown', this.press);
+    window.addEventListener('earthrhythm-game-queue', this.queue);
+    document.addEventListener('visibilitychange', this.onVisibility);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('keydown', this.press);
+    window.removeEventListener('earthrhythm-game-queue', this.queue);
+    document.removeEventListener('visibilitychange', this.onVisibility);
+    this.clear();
+  }
+
+  say(es, en) {
+    if (this.feedback) this.feedback.textContent = document.documentElement.lang === 'es' ? es : en;
+  }
+
+  attributeChangedCallback(name, previous, value) {
+    if (previous === value || !this.isConnected) return;
+    if (name === 'data-playing' && value === 'false') this.clear();
+    if (name === 'data-ended' && value === 'true') {
+      const total = this.hits + this.missed;
+      this.say(`Fin · ${this.hits} de ${total}`, `Done · ${this.hits} of ${total}`);
+    }
+  }
+
+  resetScore() {
+    this.hits = this.missed = 0;
+    this.score.textContent = '0';
+    this.say('', '');
+  }
+
+  onVisibility = () => { if (document.hidden) this.clear(); };
+
+  clear() {
+    cancelAnimationFrame(this.frame);
+    this.frame = null;
+    for (const note of this.notes) note.flight.remove();
+    this.notes = [];
+    this.lanes?.forEach(lane => lane.removeAttribute('data-cue'));
+  }
+
+  queue = ({ detail: { clock, notes, lookahead } }) => {
+    if (this.dataset.playing !== 'true' || document.hidden) return;
+    this.clock = clock;
+    this.lookahead = lookahead;
+    for (const event of notes) {
+      if (event.patch.col % 4 !== 2 || !event.info.k) continue;
+      // w and c are the positive and negative means over the same valid pixels.
+      const mean = event.info.w - event.info.c;
+      const index = Math.abs(mean) >= 2 ? 3 : mean <= -.5 ? 0 : mean >= .5 ? 2 : 1;
+      const lane = this.lanes[index];
+      const flight = document.createElement('span');
+      flight.className = 'rhythm-flight';
+      flight.setAttribute('aria-hidden', 'true');
+      const arrow = document.createElement('span');
+      arrow.className = 'rhythm-note';
+      arrow.textContent = lane.firstElementChild.textContent;
+      flight.append(arrow);
+      lane.append(flight);
+      this.notes.push({ at: event.at, index, flight });
+    }
+    if (this.notes.length && this.frame == null) this.advance();
+  };
+
+  // The stationary version allows a longer response window.
+  windowSize() { return reduced() ? .34 : .22; }
+
+  advance = () => {
+    const now = this.clock.currentTime;
+    const still = reduced();
+    const margin = this.windowSize();
+    const active = new Set();
+    this.notes = this.notes.filter(note => {
+      const left = note.at - now;
+      if (left < -margin) {
+        note.flight.remove();
+        this.missed++;
+        this.say('Se escapó una nota', 'Missed a note');
+        return false;
+      }
+      note.flight.hidden = still;
+      if (Math.abs(left) <= margin) active.add(note.index);
+      if (!still) note.flight.style.transform = `translateY(${Math.max(0, left / this.lookahead * 100)}%)`;
+      return true;
+    });
+    this.lanes.forEach((lane, index) => lane.toggleAttribute('data-cue', active.has(index)));
+    this.frame = this.notes.length ? requestAnimationFrame(this.advance) : null;
+  };
+
+  press = (event) => {
+    const index = arrowKeys.indexOf(event.key);
+    if (index < 0 || event.altKey || event.ctrlKey || event.metaKey) return;
+    event.preventDefault();
+    if (event.repeat || this.dataset.playing !== 'true' || !this.clock) return;
+    const now = this.clock.currentTime;
+    const note = this.notes.filter(note => note.index === index && Math.abs(now - note.at) <= this.windowSize())
+      .sort((a, b) => Math.abs(now - a.at) - Math.abs(now - b.at))[0];
+    if (!note) return;
+    note.flight.remove();
+    this.notes.splice(this.notes.indexOf(note), 1);
+    this.score.textContent = String(++this.hits);
+    this.say('¡A tiempo!', 'On time!');
+  };
+}
+
+customElements.define('earthrhythm-game', RhythmGame);

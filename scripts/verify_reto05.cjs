@@ -108,7 +108,7 @@ async function main() {
 
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await player.evaluate(el => el.scrollWidth), await player.evaluate(el => el.clientWidth));
-    await page.getByRole('button', { name: 'English', exact: true }).press('Enter');
+    await page.getByRole('button', { name: 'EN English', exact: true }).press('Enter');
     assert.equal(await swatches.nth(1).textContent(), '+3.6');
     await page.getByRole('button', { name: 'Change disc', exact: true }).press('Enter');
     await page.locator('#tour-sets button').nth(1).press('Enter');
