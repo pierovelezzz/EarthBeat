@@ -1,6 +1,8 @@
 # Estado de main
 
-La introducción ilustrada del espacio al Pacífico se reproduce al abrir la portada. Puedes saltarla, pausarla o repetirla con «Ver presentación». Con movimiento reducido, la bienvenida ofrece «Entrar» o «Reproducir animación» para ver solo esa escena. La primera visita ofrece las preferencias y el acceso a la guía de Brisa al terminar la introducción.
+La introducción ilustrada del espacio al Pacífico se reproduce al abrir o recargar la portada. Los controles permiten saltarla o pausar el recorrido. Con movimiento reducido, la bienvenida entra y sale por fundido. La primera visita ofrece las preferencias y el acceso a la guía de Brisa al terminar la introducción.
+
+El cielo de V1 acompaña las secciones con el Sol, la Luna, planetas, estrellas fugaces y naves. El fondo pausa su movimiento mientras la pestaña está oculta. El ajuste «Movimiento reducido» de Accesibilidad mantiene los astros visibles en reposo.
 
 La portada explica cómo un mapa del Pacífico se convierte en música. «Escuchar una muestra» abre el mapa que se ve en pantalla y comienza la reproducción tras pulsar el botón. También puedes explorar los discos o abrir la guía de Brisa.
 

@@ -194,7 +194,7 @@ a{color:inherit}
 .px .tour .tdots i.on{background:#fff}
 .px .tour .tact{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .px .tour .tact .skip{margin-left:auto;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;min-height:36px;padding:0 6px;font-size:.8em}
-@media (prefers-reduced-motion: reduce){.px *{animation:none !important;transition:none !important}}
+@media (prefers-reduced-motion: reduce){.px:not([data-motion-mode="full"]) *{animation:none !important;transition:none !important}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .px .rise{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
 @keyframes fa{from{opacity:0}to{opacity:1}}
@@ -1549,8 +1549,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px.main-edition .home-map figcaption{font-size:.78em;padding:8px 12px;background:#111c2ce8}
 .px.main-edition .home-process{padding:12px 14px;gap:14px}
 .px.main-edition .homeflow{min-width:0}
-.px.main-edition .intro-link{display:block;margin:0 auto 10px;min-height:40px;padding:7px 14px;border:0;border-radius:6px;color:var(--muted);font-size:.78em;text-decoration:underline;text-underline-offset:4px}
-.px.main-edition .intro-link:hover{color:var(--fg);background:var(--surface)}
 .px.main-edition .legend-swatch-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 .px.main-edition .legend-swatch{display:grid;place-items:center;min-width:0;min-height:32px;padding:4px 0;background:var(--swatch);color:var(--swatch-ink);border:1px solid transparent;border-radius:4px;font:650 .72rem/1.2 var(--body);letter-spacing:0}
 .px.main-edition .legend-swatch:hover,.px.main-edition .legend-swatch[aria-pressed="true"]{background:var(--swatch);color:var(--swatch-ink);box-shadow:0 0 0 2px var(--fg)}
@@ -1582,6 +1580,130 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 
 
 /* Cinematic presentation: decorative illustration, never a NASA observation. */
+/* Observatorio del Pacífico: one decorative layer, no layout or pointer surface. */
+.px .space-sky{
+ --sky-solar:#ffc76b;--sky-lunar:#cfdeef;--sky-trail:#c4f2ff;
+ --sky-orbit-time:96s;--sky-meteor-time:12s;--sky-flight-time:38s;
+ isolation:isolate;contain:strict;opacity:1;
+}
+.px .space-sky .space-atmosphere{position:absolute;inset:0;background:radial-gradient(ellipse at 0 36%,#764f2b20,transparent 42%),radial-gradient(ellipse at 100% 15%,#5c7bc52b,transparent 42%),radial-gradient(ellipse at 55% 110%,#24446c55,transparent 60%)}
+.px .space-sky .stl{opacity:.32;animation:none;will-change:auto}
+.px .space-sky .s2{opacity:.26}
+.px .space-sky .s3{opacity:.4}
+.px .space-sun,.px .space-moon{position:absolute;pointer-events:none}
+.px .space-sun{left:clamp(-28px,1.3vw,28px);top:clamp(120px,28vh,250px);width:clamp(86px,10vw,154px);opacity:.8}
+.px .space-sun svg,.px .space-moon svg{display:block;width:100%;height:auto;overflow:visible}
+.px .solar-halo{position:absolute;inset:-45%;background:radial-gradient(circle,#ffc76b15,transparent 67%);border-radius:50%}
+.px .solar-corona{transform-origin:80px 80px;animation:space-orbit var(--sky-orbit-time,96s) linear infinite}
+.px .space-moon{right:clamp(-26px,.9vw,20px);top:clamp(108px,18vh,200px);width:clamp(72px,9vw,130px);opacity:.68}
+.px .space-reading-shade{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--bg) 24%,var(--bg) 76%,transparent);opacity:.52}
+.px .space-horizon{position:absolute;left:-25%;bottom:-46vh;width:150%;height:58vh;border:1px solid #8ecae52e;border-radius:50% 50% 0 0;background:radial-gradient(ellipse at 50% 0,#274d7440,transparent 62%)}
+.px .space-meteor{position:absolute;width:clamp(55px,9vw,140px);height:1px;background:linear-gradient(90deg,transparent,var(--sky-trail));opacity:0;transform-origin:right center;animation:space-meteor var(--sky-meteor-time) linear infinite}
+.px .space-meteor::after{content:"";position:absolute;right:0;top:-1px;width:3px;height:3px;border-radius:50%;background:#e7faff;box-shadow:0 0 8px #c4f2ff88}
+.px .meteor-one{left:8%;top:16%;animation-delay:-.3s}
+.px .meteor-two{left:38%;top:11%;--sky-meteor-time:17s;animation-delay:-12s}
+.px .meteor-three{left:4%;top:58%;--sky-meteor-time:23s;animation-delay:-16s}
+.px .space-flight{position:absolute;opacity:0;animation:space-flight var(--sky-flight-time) linear infinite}
+.px .space-rocket{display:block;width:25px;height:60px}
+.px .flight-one{left:-36px;top:90%;animation-delay:-24s}
+.px .flight-two{right:-40px;top:75%;--sky-flight-time:59s;animation-name:space-flight-return;animation-delay:-7s}
+.px .flight-two .space-rocket{width:18px;height:43px}
+@keyframes space-orbit{to{transform:rotate(360deg)}}
+@keyframes space-meteor{
+ 0%{opacity:0;transform:translate3d(0,0,0) rotate(30deg)}
+ 3%{opacity:.9}14%,100%{opacity:0;transform:translate3d(38vw,23vh,0) rotate(30deg)}
+}
+@keyframes space-flight{
+ 0%,68%{opacity:0;transform:translate3d(0,0,0) rotate(40deg)}
+ 70%{opacity:.72}85%{opacity:.72}
+ 88%,100%{opacity:0;transform:translate3d(112vw,-88vh,0) rotate(40deg)}
+}
+@keyframes space-flight-return{
+ 0%,74%{opacity:0;transform:translate3d(0,0,0) rotate(-50deg)}
+ 76%{opacity:.6}88%{opacity:.6}
+ 92%,100%{opacity:0;transform:translate3d(-112vw,-72vh,0) rotate(-50deg)}
+}
+.px.app[data-theme="light"] .space-sky{opacity:1;--sky-trail:#356887}
+.px.app[data-theme="light"] .space-sky .stl{opacity:.14;filter:invert(1)}
+.px.app[data-theme="light"] .space-atmosphere{opacity:.5}
+.px.app[data-theme="light"] .space-sun{opacity:.55}
+.px.app[data-theme="light"] .space-moon{opacity:.35}
+.px.app[data-theme="light"] .space-reading-shade{opacity:.75}
+.px.reduce-motion .space-meteor,.px.reduce-motion .space-flight{display:none}
+.px.reduce-motion .space-sky *{animation:none!important}
+html[data-ts-page-hidden] .px .space-sky *{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.px:not([data-motion-mode="full"]) .space-sky *{animation:none!important}.px:not([data-motion-mode="full"]) .space-meteor,.px:not([data-motion-mode="full"]) .space-flight{display:none}}
+@media(forced-colors:active){.px .space-sky{display:none}}
+@media(max-width:700px){
+ .px .space-sun{width:80px;left:-34px;top:38%;opacity:.5}
+ .px .space-moon{width:66px;right:-15px;top:24%;opacity:.38}
+ .px .space-reading-shade{background:linear-gradient(90deg,transparent,var(--bg) 20%,var(--bg) 80%,transparent);opacity:.75}
+ .px .space-rocket{width:18px;height:43px}
+ .px .space-flight{--sky-flight-time:46s}
+ .px .flight-two{display:none}
+ .px .meteor-three{display:none}
+}
+@media(max-height:400px){.px .space-sun{width:64px;top:28%}.px .space-moon{width:55px;top:30%}.px .space-horizon{bottom:-50vh}}
+
+/* The eclipse is a decorative cycle, not an astronomical ephemeris. */
+.px .space-sky .space-atmosphere{background:radial-gradient(ellipse at 0 36%,#ce8a3430,transparent 42%),radial-gradient(ellipse at 100% 15%,#397bb332,transparent 42%),radial-gradient(ellipse at 48% 110%,#268b9b3d,transparent 62%)}
+.px .space-sun{opacity:1}
+.px .solar-halo{background:radial-gradient(circle,#ffc76b40,#ffad451b 30%,transparent 68%);animation:space-sun-glow 12s ease-in-out infinite alternate}
+.px .solar-eclipse{transform:translateX(-130px);opacity:0;animation:space-eclipse 76s linear infinite;animation-delay:-54s}
+.px .solar-satellite{position:absolute;inset:0;animation:space-orbit var(--sky-orbit-time,96s) linear infinite reverse}
+.px .space-sun .solar-satellite svg{position:absolute;top:0;left:calc(50% - 12px);width:24px;height:16px}
+.px .space-sky .s2{opacity:.32;background-image:radial-gradient(1.5px 1.5px at 40px 70px,#8be7e9,transparent),radial-gradient(1.5px 1.5px at 210px 190px,#74a8ef,transparent),radial-gradient(1.5px 1.5px at 120px 260px,#c4f2ff,transparent);animation:space-glimmer 7s ease-in-out infinite alternate}
+.px .space-sky .s3{animation:space-glimmer 11s ease-in-out infinite alternate-reverse}
+.px .space-bright-stars{position:absolute;inset:0;width:100%;height:100%;color:#8ee8e2;opacity:.55}
+.px .space-planet{position:absolute;opacity:.65;pointer-events:none}
+.px .space-planet svg{display:block;width:100%;height:auto}
+.px .planet-ringed{width:clamp(72px,10vw,150px);right:4%;bottom:8%}
+.px .planet-distant{width:34px;left:20%;top:15%;opacity:.35}
+@keyframes space-sun-glow{from{opacity:.55;transform:scale(.94)}to{opacity:1;transform:scale(1.06)}}
+@keyframes space-glimmer{from{opacity:.2}to{opacity:.48}}
+@keyframes space-eclipse{
+ 0%,75%{opacity:0;transform:translateX(-130px)}
+ 76%{opacity:1}84%,86%{opacity:1;transform:translateX(0)}
+ 95%,100%{opacity:0;transform:translateX(130px)}
+}
+.px.reduce-motion .solar-eclipse{display:none}
+.px.app[data-theme="light"] .solar-halo{opacity:.5}
+.px.app[data-theme="light"] .space-bright-stars{color:#286d87;opacity:.4}
+.px.app[data-theme="light"] .space-planet{opacity:.4}
+@media(max-width:700px){.px .space-sun{opacity:.65}.px .planet-ringed{width:66px;bottom:14%;right:0;opacity:.38}.px .planet-distant{display:none}.px .space-bright-stars{opacity:.35}.px .space-sun .solar-satellite svg{width:16px;height:11px;left:calc(50% - 8px)}}
+@media(max-height:450px){.px .space-planet{display:none}}
+@media(prefers-reduced-motion:reduce){.px:not([data-motion-mode="full"]) .solar-eclipse{display:none}}
+.px .meteor-four{left:62%;top:45%;--sky-meteor-time:19s;animation-delay:-10s}
+.px .meteor-five{left:12%;top:72%;--sky-meteor-time:29s;animation-delay:-22s}
+.px .space-ocean-wave{position:absolute;inset:auto 15% 4%;width:70%;height:70px;color:#8be7e9;opacity:.16}
+.px .space-ocean-wave path{transform-origin:center;animation:none}
+.px .space-ocean-wave[data-playing="true"] path{animation:space-music-pulse 1.8s ease-in-out infinite alternate}
+@keyframes space-music-pulse{from{transform:scaleY(.55);opacity:.35}to{transform:scaleY(1);opacity:.8}}
+.px .space-probe{left:-5%;top:65%;animation:probe-cruise 61s linear infinite;animation-delay:-35s}
+.px .space-probe svg{width:36px;height:24px;filter:drop-shadow(-7px 0 5px #8be7e955)}
+@keyframes probe-cruise{0%,70%{opacity:0;transform:translate(0,0) rotate(-15deg)}73%{opacity:.6}78%{transform:translate(24vw,-16vh) rotate(-22deg)}84%{transform:translate(55vw,-22vh) rotate(0deg);opacity:.6}91%,100%{transform:translate(112vw,-6vh) rotate(18deg);opacity:0}}
+.px .space-dust{position:absolute;inset:0;opacity:.35;background-image:radial-gradient(1px 1px at 45px 30px,#c4f2ff,transparent),radial-gradient(1.5px 1.5px at 140px 120px,#8be7e9,transparent);background-size:243px 197px;animation:space-glimmer 13s ease-in-out infinite alternate}
+.px .shower-streak{position:absolute;width:clamp(45px,8vw,120px);height:1px;background:linear-gradient(90deg,transparent,#d7edff);opacity:0;animation:meteor-shower 64s linear infinite}
+.px .shower-streak:nth-child(1){left:2%;top:12%;animation-delay:-21s}
+.px .shower-streak:nth-child(2){left:25%;top:5%;animation-delay:-20.6s}
+.px .shower-streak:nth-child(3){left:48%;top:18%;animation-delay:-20.2s}
+.px .shower-streak:nth-child(4){left:9%;top:40%;animation-delay:-19.8s}
+.px .shower-streak:nth-child(5){left:36%;top:48%;animation-delay:-19.4s}
+.px .shower-streak:nth-child(6){left:63%;top:28%;animation-delay:-19s}
+@keyframes meteor-shower{0%,47%{opacity:0;transform:translate(0,0) rotate(34deg)}48%{opacity:.6}51%,100%{opacity:0;transform:translate(33vw,20vh) rotate(34deg)}}
+/* Keep V1's space layer behind the V2 layout. */
+.px .space-sky .flight-one { animation-delay: -25s; }
+.px .space-sky .space-moon { animation: moon-drift 18s ease-in-out infinite alternate; }
+@keyframes moon-drift { to { transform: translate3d(-9px, 13px, 0); } }
+.px.reduce-motion .space-sky .space-shower { display: none; }
+body:has(.ts-cinema, #preferences-dialog) .px .space-sky * { animation-play-state: paused !important; }
+@media (max-width:700px) {
+  .px .space-sky .space-sun { left: -17px; top: 20%; }
+  .px .space-sky .space-moon { top: 34%; }
+  .px .space-sky .flight-one { animation-delay: -31s; }
+  .px .space-sky .shower-streak:nth-child(n+5) { display: none; }
+}
+
 .ts-cinema{position:fixed;inset:0;z-index:2000;overflow:hidden;background:#101d30;color:#eef3fa;font:400 16px/1.45 "Inter",sans-serif;isolation:isolate}
 
 .ts-cinema *{box-sizing:border-box}
@@ -1626,8 +1748,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 
 .ts-cinema button{box-sizing:border-box;pointer-events:auto;min-height:44px;max-width:100%;padding:10px 16px;border:1px solid #b6c5d5;border-radius:8px;color:#eef3fa;background:#182332;font:600 .875rem/1.3 sans-serif;cursor:pointer}
 
-.ts-cinema .cinema-play{background:#f3ce72;color:#142638;border-color:#f3ce72}
-.ts-cinema .cinema-play:hover{background:#ffe3a0}
 
 .ts-cinema button:focus-visible{outline:3px solid #e8b969;outline-offset:4px}
 
@@ -1642,6 +1762,8 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .ts-cinema[data-contrast="true"] .cinema-description,.ts-cinema[data-contrast="true"] .cinema-toolbar{color:#fff}
 
 .ts-cinema[data-static="true"] .cinema-meteor{display:none}
+.ts-cinema[data-motion="gentle"]{animation:cinema-gentle 2180ms linear both}
+@keyframes cinema-gentle{0%,100%{opacity:0}8%,92%{opacity:1}}
 
 .ts-cinema .cinema-meteor:nth-of-type(4){left:28%;top:23%;width:90px}
 
@@ -1674,9 +1796,32 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 @media(max-height:450px){.ts-cinema .cinema-wave{display:none}}
 </style>
 </helmet>
-<div class="px app main-edition {{bandViewClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
+<div class="px app main-edition {{bandViewClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
 
-<div class="skyfix" aria-hidden="true"><div class="neb n1"></div><div class="neb n2"></div><div class="limb"></div><div class="stl s1"></div><div class="stl s2"></div><div class="stl s3"></div></div>
+<sc-if value="{{showBg}}">
+<div class="skyfix space-sky" aria-hidden="true" inert>
+<div class="space-atmosphere"></div><div class="space-dust"></div><div class="space-shower"><i class="shower-streak"></i><i class="shower-streak"></i><i class="shower-streak"></i><i class="shower-streak"></i><i class="shower-streak"></i><i class="shower-streak"></i></div>
+<svg class="space-ocean-wave" data-playing="{{musicActive}}" viewBox="0 0 900 100" aria-hidden="true"><path d="M0 50h240l20-10 20 20 20-36 20 52 20-70 20 88 20-74 20 50 20-34 20 24 20-20 20 24 20-30 20 32 20-22 20 12h220" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+<div class="stl s1"></div><div class="stl s2"></div><div class="stl s3"></div>
+<div class="space-flight space-probe"><svg viewBox="0 0 60 40" focusable="false"><path d="M4 20H0" stroke="#8be7e9" stroke-width="3"/><path d="M52 20L14 9l6 11-6 11z" fill="#d1e8ff"/><path d="M30 13L16 0l4 15m10 12L16 40l4-15" fill="#74a8c9"/></svg></div>
+<svg class="space-bright-stars" viewBox="0 0 1000 600" preserveAspectRatio="none" focusable="false"><g fill="none" stroke="currentColor" stroke-width=".8"><path d="M142 84v8m-4-4h8M914 340v10m-5-5h10M82 413v8m-4-4h8M832 93v6m-3-3h6"/></g><g fill="currentColor"><circle cx="205" cy="42" r="1.2"/><circle cx="957" cy="242" r="1.4"/><circle cx="35" cy="319" r="1.1"/><circle cx="758" cy="568" r="1.3"/></g></svg>
+<div class="space-sun"><span class="solar-halo"></span>
+<svg aria-hidden="true" viewBox="0 0 160 160" focusable="false"><defs><radialGradient id="ts-solar-disc" cx="35%" cy="30%" r="75%"><stop stop-color="#fff2b9"/><stop offset=".48" stop-color="#ffc76b"/><stop offset="1" stop-color="#e68839"/></radialGradient><clipPath id="ts-solar-edge"><circle cx="80" cy="80" r="48"/></clipPath></defs>
+<g class="solar-corona" fill="none" stroke="#ffd18c"><circle cx="80" cy="80" r="64" opacity=".2"/><circle cx="80" cy="80" r="71" stroke-dasharray="1 13" stroke-width="2" opacity=".48"/><path d="M80 3v10m0 134v10M3 80h10m134 0h10M26 26l7 7m94 94 7 7M26 134l7-7m94-94 7-7" opacity=".4"/></g>
+<circle cx="80" cy="80" r="48" fill="url(#ts-solar-disc)"/><path d="M48 65c15-21 44-25 64-5M53 93c10 11 21 15 34 13" fill="none" stroke="#fff0bc" stroke-width="2" opacity=".22"/><g clip-path="url(#ts-solar-edge)"><circle class="solar-eclipse" cx="80" cy="80" r="47" fill="#13233d" stroke="#ffdea5" stroke-width=".6"/></g></svg>
+<span class="solar-satellite"><svg aria-hidden="true" viewBox="0 0 36 24" focusable="false"><path d="M1 6h10v12H1zm24 0h10v12H25Z" fill="#578eaa" stroke="#acdce8" stroke-width=".6"/><path d="M6 6v12m-5-6h10M30 6v12m-5-6h10" stroke="#acdce8" stroke-width=".5"/><path d="M11 12h14M18 2v5" stroke="#d5eaf2"/><path d="m14 7 8 1-1 10-8-1Z" fill="#d5eaf2"/><circle cx="18" cy="12" r="2" fill="#d8b16f"/></svg></span></div>
+<div class="space-moon"><svg aria-hidden="true" viewBox="0 0 140 140" focusable="false"><defs><radialGradient id="ts-lunar-disc" cx="30%" cy="25%" r="82%"><stop stop-color="#e4eef6"/><stop offset=".6" stop-color="#aebfd4"/><stop offset="1" stop-color="#586c89"/></radialGradient><clipPath id="ts-lunar-edge"><circle cx="70" cy="70" r="52"/></clipPath></defs>
+<circle cx="70" cy="70" r="63" fill="none" stroke="#b8d5ef" stroke-width=".5" opacity=".2"/><circle cx="70" cy="70" r="52" fill="url(#ts-lunar-disc)"/>
+<g clip-path="url(#ts-lunar-edge)"><g fill="#6d829e" opacity=".38"><circle cx="49" cy="48" r="12"/><circle cx="83" cy="88" r="17"/><circle cx="39" cy="88" r="7"/><circle cx="93" cy="44" r="6"/><circle cx="67" cy="66" r="4"/></g><g fill="none" stroke="#eef5fa" opacity=".28"><path d="M39 49a12 12 0 0 1 20-8M69 88a17 17 0 0 1 26-14"/></g><circle cx="100" cy="57" r="61" fill="#13233d" opacity=".67"/></g>
+</svg></div>
+<div class="space-planet planet-ringed"><svg aria-hidden="true" viewBox="0 0 150 94" focusable="false"><defs><radialGradient id="ts-ringed-disc" cx="28%" cy="25%" r="78%"><stop stop-color="#8ce4dc"/><stop offset=".45" stop-color="#458fac"/><stop offset="1" stop-color="#263b68"/></radialGradient></defs><ellipse cx="75" cy="47" rx="66" ry="14" fill="none" stroke="#a4c9df" stroke-width="6" opacity=".3" transform="rotate(-22 75 47)"/><circle cx="75" cy="47" r="28" fill="url(#ts-ringed-disc)"/><path d="M52 37q21 7 46 3M49 48q24 8 52 3M53 60q21 7 43 2" fill="none" stroke="#b5ede4" opacity=".2" stroke-width="3"/><path d="M13 59c-7 17 121-11 125-35" fill="none" stroke="#9cdad8" stroke-width="4" opacity=".55"/></svg></div>
+<div class="space-planet planet-distant"><svg aria-hidden="true" viewBox="0 0 50 50" focusable="false"><circle cx="25" cy="25" r="20" fill="#426eac"/><path d="M10 14q11-7 25 1M6 24q19-6 37 1M10 35q14-5 29 0" fill="none" stroke="#82c8e3" opacity=".5" stroke-width="3"/><path d="M29 5a20 20 0 0 1 0 40c12-12 11-29 0-40" fill="#1d345b" opacity=".7"/></svg></div>
+<div class="space-reading-shade"></div><div class="space-horizon"></div>
+<i class="space-meteor meteor-one"></i><i class="space-meteor meteor-two"></i><i class="space-meteor meteor-three"></i><i class="space-meteor meteor-four"></i><i class="space-meteor meteor-five"></i>
+<div class="space-flight flight-one"><svg class="space-rocket" viewBox="0 0 40 96" focusable="false"><path d="M16 68 20 93 24 68" fill="#ffc76b"/><path d="M18 69 20 84 22 69" fill="#effaff"/><path d="M12 43 3 64l10-3m15-18 9 21-10-3" fill="#6e9bb8"/><path d="M20 3C9 15 9 39 13 66h14c4-27 4-51-7-63Z" fill="#dae6ee"/><path d="M20 3v63h7c4-27 4-51-7-63Z" fill="#8fa6bc"/><circle cx="20" cy="31" r="6" fill="#294d70" stroke="#f3f9fc" stroke-width="2"/><path d="M13 61h14v8H13Z" fill="#476682"/></svg></div>
+<div class="space-flight flight-two"><svg class="space-rocket" viewBox="0 0 40 96" focusable="false"><path d="M16 68 20 93 24 68" fill="#9cddeb"/><path d="M12 43 3 64l10-3m15-18 9 21-10-3" fill="#cc9a5d"/><path d="M20 3C9 15 9 39 13 66h14c4-27 4-51-7-63Z" fill="#cbdce8"/><path d="M20 3v63h7c4-27 4-51-7-63Z" fill="#879eb6"/><circle cx="20" cy="31" r="6" fill="#294d70" stroke="#f3f9fc" stroke-width="2"/><path d="M13 61h14v8H13Z" fill="#476682"/></svg></div>
+</div>
+</sc-if>
 <div role="status" aria-live="polite" class="sr">{{pageName}} · {{nav.label}}</div>
 
 <header class="top {{headerClass}}">
@@ -1749,7 +1894,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 </ol>
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{tx.guideOpen}}" title="{{tx.guideOpen}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button>
 </div>
-<button type="button" class="intro-link" onClick="{{intro.replay}}">{{intro.replayLabel}}</button>
 </div>
 </section>
 </sc-if>
@@ -3418,17 +3562,16 @@ class CinematicIntro {
   constructor(owner) { this.owner=owner; this.animations=[]; this.timers=[]; this.seen=false; }
   markSeen() { this.seen=true; }
   hasSeen() { return this.seen; }
-  start(replay=false,trigger=null) {
+  start() {
     var self=this, app=this.owner;
     if(typeof document.createElement!=='function'||!document.body?.append)return;
-    if(app.disposed||app.state.showPreferences||app.state.tab!=='home'||app.state.tour||document.hidden||(!replay&&this.hasSeen()))return;
-    if (!replay && ['#banda', '#escuchar', '#listen'].includes(document.location?.hash)) {
+    if(app.disposed||app.state.showPreferences||app.state.tab!=='home'||app.state.tour||document.hidden||this.hasSeen())return;
+    if (['#banda', '#escuchar', '#listen'].includes(document.location?.hash)) {
       this.markSeen();
       app.entryWelcomePending = false;
       return;
     }
-    this.finish(false); this.markSeen();
-    this.isReplay = replay;
+    this.markSeen();
     var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de EarthBeat','EarthBeat presentation'));
     root.innerHTML=`<div class="cinema-space" aria-hidden="true"><div class="cinema-stars"></div><div class="cinema-stars near"></div><div class="cinema-sun"></div><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i></div>
 <div class="cinema-world" aria-hidden="true"><svg viewBox="0 0 500 500"><defs>
@@ -3444,34 +3587,41 @@ class CinematicIntro {
 <g class="cinema-orbit" fill="none" stroke="#e8b969" stroke-opacity=".4"><ellipse cx="250" cy="250" rx="242" ry="93" transform="rotate(-24 250 250)"/><path d="M250 12v16m0 444v16M12 250h16m444 0h16"/></g></svg></div>
 <svg class="cinema-wave" viewBox="0 0 560 110" fill="none" aria-hidden="true"><path d="M0 55h80l16-9 16 18 16-29 16 46 16-65 16 81 16-66 16 42 16-28 16 20 16-17 16 13 16-18 16 25 16-36 16 43 16-36 16 25 16-16 16 9h80" stroke="currentColor" stroke-width="1.5"/></svg>
 <div class="cinema-copy"><p class="cinema-brand">EARTHBEAT</p><h2></h2><p class="cinema-description"></p></div>
-<div class="cinema-toolbar"><p></p><div class="cinema-actions"><button type="button" class="cinema-skip"></button><button type="button" class="cinema-play" hidden></button><button type="button" class="cinema-pause"></button></div></div>`;
-    this.paused=false;this.update();this.returnFocus=trigger||document.activeElement;document.body.append(root);
+<div class="cinema-toolbar"><p></p><div class="cinema-actions"><button type="button" class="cinema-skip"></button><button type="button" class="cinema-pause"></button></div></div>`;
+    this.paused=false;this.update();this.returnFocus=document.activeElement;document.body.append(root);
     root.style.fontFamily=getComputedStyle(document.querySelector('.px.app')).fontFamily;
     var appRoot=document.querySelector('.px.app');this.coveredApp={node:appRoot,inert:appRoot.inert};appRoot.inert=true;
     var skip=root.querySelector('.cinema-skip');skip.addEventListener('click',function(){self.finish(true);});root.querySelector('.cinema-pause').addEventListener('click',function(){self.togglePause();});skip.focus({preventScroll:true});
-    root.querySelector('.cinema-play').addEventListener('click', () => {
-      this.playMotion();
-      skip.focus({preventScroll:true});
-    });
     this.onKey=function(event){if(event.key==='Escape'){event.preventDefault();event.stopPropagation();self.finish(true);}else if(event.key==='Tab'){var buttons=Array.from(root.querySelectorAll('button:not([hidden])')),index=buttons.indexOf(document.activeElement);event.preventDefault();buttons[(index+(event.shiftKey?-1:1)+buttons.length)%buttons.length].focus();}};
 
     this.onHidden=function(){if(document.hidden)self.finish(false);};
     document.addEventListener('keydown',this.onKey,true);document.addEventListener('visibilitychange',this.onHidden);
     this.mobile = window.matchMedia('(max-width: 640px), (max-height: 450px)').matches;
-    this.duration = this.mobile ? 6800 : 5200;
-    root.dataset.duration = String(this.duration);
-    if (app.bandReduced()) this.showStatic(typeof root.querySelector('.cinema-world').animate === 'function');
+    if (app.bandReduced()) this.playGentle();
     else this.playMotion();
+  }
+  playGentle() {
+    const root = this.root;
+    if (!root) return;
+    this.resetAnimations();
+    this.paused = false;
+    root.dataset.static = 'true';
+    root.dataset.motion = 'gentle';
+    root.querySelector('.cinema-pause').hidden = true;
+    if (document.activeElement?.hidden) root.querySelector('.cinema-skip').focus({preventScroll:true});
+    this.update();
+    this.timers.push(setTimeout(() => this.finish(true), 2180));
   }
   playMotion() {
     const root = this.root;
     if (!root) return;
-    const self = this, mobile = this.mobile, duration = this.duration;
-    this.timers.forEach(clearTimeout);
-    this.timers = [];
+    const self = this, mobile = this.mobile, duration = mobile ? 6800 : 5200;
+    this.resetAnimations();
+    this.duration = duration;
+    root.dataset.duration = String(duration);
+    root.dataset.motion = 'full';
     this.paused = false;
     root.dataset.static = 'false';
-    root.querySelector('.cinema-play').hidden = true;
     root.querySelector('.cinema-pause').hidden = false;
     this.update();
     function animate(selector,frames,options={}){var el=selector==='root'?root:root.querySelector(selector);if(!el?.animate)throw Error('Animation unavailable');var animation=el.animate(frames,{duration:duration,fill:'both',easing:'linear',...options});self.animations.push(animation);return animation;}
@@ -3489,42 +3639,33 @@ class CinematicIntro {
       var targets=['.brand','.top','#main-content .hero h1','.hero .lede','.hero .cta','.home-demo'];
       targets.forEach(function(selector,i){var el=document.querySelector(selector);if(!el?.animate)return;var delay=duration*.7+i*55;self.animations.push(el.animate([{opacity:0,transform:selector==='.home-demo'?'translateX(14px) rotate(1deg)':'translateY(8px)'},{opacity:1,transform:'translate(0,0) rotate(0)'}],{duration:Math.min(380,duration-delay-20),delay:delay,fill:'backwards',easing:'cubic-bezier(.2,.7,.2,1)'}));});
       end.onfinish=function(){self.finish(true);};this.timers.push(setTimeout(function(){self.finish(true);},duration+250));
-    }catch(ignored){this.showStatic();}
+    }catch(ignored){this.playGentle();}
   }
-  showStatic(canPlay = false) {
+  resetAnimations() {
     this.timers.forEach(clearTimeout);
     this.timers = [];
     this.animations.forEach(animation => { animation.onfinish = null; animation.cancel(); });
     this.animations = [];
-    this.root.dataset.static = 'true';
-    this.root.querySelector('.cinema-play').hidden = !canPlay;
-    this.root.querySelector('.cinema-pause').hidden = true;
-    this.update();
-    if (!this.isReplay && !canPlay) this.timers.push(setTimeout(() => this.finish(true), this.duration));
   }
   togglePause(){if(!this.root||this.root.dataset.static==='true')return;this.paused=!this.paused;this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(a=>this.paused?a.pause():a.play());if(!this.paused){var self=this;this.timers.push(setTimeout(function(){self.finish(true);},Math.max(0,this.duration-Number(this.endAnimation?.currentTime||0))+500));}this.update();}
   update() {
     if (!this.root) return;
-    const play = this.root.querySelector('.cinema-play');
     this.root.querySelector('h2').textContent = T('Te damos la bienvenida a EarthBeat','Welcome to EarthBeat');
     this.root.querySelector('.cinema-description').textContent = T('Escucha cómo los colores del Pacífico se convierten en música.','Hear the colors of the Pacific turn into music.');
-    this.root.querySelector('.cinema-toolbar p').textContent = play.hidden
-      ? T('Ilustración asistida por IA · Pacífico','AI-assisted illustration · Pacific')
-      : T('Movimiento reducido activo. Puedes reproducir solo esta animación.','Reduced motion is on. You can play just this animation.');
-    this.root.querySelector('.cinema-skip').textContent = this.root.dataset.static === 'true' ? T('Entrar','Enter') : T('Saltar introducción','Skip intro');
+    this.root.querySelector('.cinema-toolbar p').textContent = T('Ilustración asistida por IA · Pacífico','AI-assisted illustration · Pacific');
+    this.root.querySelector('.cinema-skip').textContent = T('Saltar introducción','Skip intro');
     this.root.querySelector('.cinema-pause').textContent = this.paused ? T('Reanudar','Resume') : T('Pausar','Pause');
-    play.textContent = T('Reproducir animación','Play animation');
   }
   finish(restoreFocus=false){
     if(!this.root)return;
     var root=this.root,focused=root?.contains(document.activeElement);this.root=null;
-    this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(function(a){a.onfinish=null;a.cancel();});this.animations=[];
+    this.resetAnimations();
     root?.remove();document.removeEventListener('keydown',this.onKey,true);document.removeEventListener('visibilitychange',this.onHidden);
     if(this.coveredApp){this.coveredApp.node.inert=this.coveredApp.inert;this.coveredApp=null;}
     if(restoreFocus&&focused){var target=this.returnFocus?.isConnected&&this.returnFocus!==document.body?this.returnFocus:document.querySelector('.hero .btn.primary');target?.focus({preventScroll:true});}
     this.returnFocus=null;
     this.owner.completeWelcome();
-    if (restoreFocus && !this.isReplay) this.owner.showEntryPreferences();
+    if (restoreFocus) this.owner.showEntryPreferences();
   }
 }
 
@@ -3653,7 +3794,7 @@ class Component extends DCLogic {
     this.onRouteMotion = function () {
       self.syncPreferenceMotion();
       if (!self.bandReduced()) return;
-      if (self.cinema?.root) self.cinema.showStatic(true);
+      if (self.cinema?.root) self.cinema.playGentle();
       self.haptics.stop();
       if (self.routeFinish) self.routeFinish();
       if (self.state.tab === 'band') self.cancelBandClip();
@@ -5608,16 +5749,6 @@ class Component extends DCLogic {
       motionClass: reducedMotion ? 'reduce-motion' : '',
       motionMode: reducedMotion ? 'reduced' : 'full',
       musicActive: s.playing ? 'true' : 'false',
-      intro: {
-        bg: hc ? th.fg : '#a7efc7', fg: hc ? th.bg : '#08261b',
-        replayLabel: T('Ver presentación', 'Watch introduction'),
-        replay: function (e) { self.cinema?.start(true, e.currentTarget); },
-        paused: reducedMotion,
-        notice: T('Movimiento reducido activado.', 'Reduced motion is on.'),
-        toggleLabel: reducedMotion ? T('Reanudar animaciones', 'Resume animations') : T('Pausar animaciones', 'Pause animations'),
-        togglePath: reducedMotion ? 'M9 5l11 7-11 7z' : 'M9 5v14m6-14v14',
-        toggle: toggleMotion
-      },
       haptic: this.hapticVm(),
       positionAccessibilityMenu: function (event) { self.positionAccessibilityMenu(event); },
       languageCode: LANG,
@@ -5632,7 +5763,7 @@ class Component extends DCLogic {
           ['big', T('Texto grande', 'Large text'), T('Aumenta el tamaño de lectura.', 'Increase the reading size.')],
           ['contrast', T('Alto contraste', 'High contrast'), T('Bordes y texto con mayor contraste.', 'Stronger contrast for borders and text.')],
           ['reducedMotion', T('Movimiento reducido', 'Reduced motion'), T('Personajes y transiciones sin animación.', 'Characters and transitions without animation.')]
-        ].map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: !!s[option[0]], change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
+        ].map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: option[0] === 'reducedMotion' ? reducedMotion : !!s[option[0]], change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
         continueLabel: T('Continuar', 'Continue'), tutorialLabel: T('Ver guía · 3 pasos', 'Open guide · 3 steps'),
         continue: function () { self.finishPreferences(false); }, tutorial: function () { self.finishPreferences(true); }
       },
