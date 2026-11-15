@@ -262,6 +262,7 @@ const arrowKeys = ['ArrowLeft', 'ArrowDown', 'ArrowUp', 'ArrowRight'];
 class RhythmGame extends HTMLElement {
   static observedAttributes = ['data-playing', 'data-ended'];
   notes = [];
+  resultTimers = new Map();
   hits = 0;
   missed = 0;
 
@@ -269,7 +270,12 @@ class RhythmGame extends HTMLElement {
     this.lanes = [...this.querySelectorAll('.rhythm-runway')];
     this.score = this.querySelector('[data-score]');
     this.feedback = this.querySelector('[data-feedback]');
-    this.feedbackDisplay = this.querySelector('[data-feedback-display]');
+    this.summary = this.querySelector('[data-summary]');
+    this.resultSlots = this.lanes.map(lane => lane.querySelector('.rhythm-result'));
+    this.resultArt = {
+      hit: this.querySelector('[data-result-art="hit"]'),
+      miss: this.querySelector('[data-result-art="miss"]')
+    };
     this.addEventListener('keydown', this.press);
     window.addEventListener('earthrhythm-game-queue', this.queue);
     document.addEventListener('visibilitychange', this.onVisibility);
@@ -280,20 +286,23 @@ class RhythmGame extends HTMLElement {
     window.removeEventListener('earthrhythm-game-queue', this.queue);
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.clear();
-    clearTimeout(this.feedbackTimer);
   }
 
-  say(es, en, kind) {
-    clearTimeout(this.feedbackTimer);
+  announce(es, en) {
     const message = document.documentElement.lang === 'es' ? es : en;
     if (this.feedback) this.feedback.textContent = message;
-    if (this.feedbackDisplay) this.feedbackDisplay.textContent = kind === 'miss' ? '' : message;
-    if (kind === 'miss') {
-      this.dataset.feedbackKind = kind;
-      this.feedbackTimer = setTimeout(() => this.removeAttribute('data-feedback-kind'), 850);
-    } else {
-      this.removeAttribute('data-feedback-kind');
-    }
+    return message;
+  }
+
+  showResult(index, kind, es, en) {
+    const slot = this.resultSlots[index];
+    clearTimeout(this.resultTimers.get(slot));
+    slot.replaceChildren(this.resultArt[kind].cloneNode(true));
+    this.resultTimers.set(slot, setTimeout(() => {
+      slot.replaceChildren();
+      this.resultTimers.delete(slot);
+    }, 640));
+    this.announce(es, en);
   }
 
   attributeChangedCallback(name, previous, value) {
@@ -301,14 +310,15 @@ class RhythmGame extends HTMLElement {
     if (name === 'data-playing' && value === 'false') this.clear();
     if (name === 'data-ended' && value === 'true') {
       const total = this.hits + this.missed;
-      this.say(`Fin · ${this.hits} de ${total}`, `Done · ${this.hits} of ${total}`);
+      this.summary.textContent = this.announce(`Fin · ${this.hits} de ${total}`, `Done · ${this.hits} of ${total}`);
     }
   }
 
   resetScore() {
     this.hits = this.missed = 0;
     this.score.textContent = '0';
-    this.say('', '');
+    this.summary.textContent = '';
+    this.announce('', '');
   }
 
   onVisibility = () => { if (document.hidden) this.clear(); };
@@ -319,6 +329,11 @@ class RhythmGame extends HTMLElement {
     for (const note of this.notes) note.flight.remove();
     this.notes = [];
     this.lanes?.forEach(lane => lane.removeAttribute('data-cue'));
+    for (const [slot, timer] of this.resultTimers) {
+      clearTimeout(timer);
+      slot.replaceChildren();
+    }
+    this.resultTimers.clear();
   }
 
   queue = ({ detail: { clock, notes, lookahead } }) => {
@@ -357,7 +372,7 @@ class RhythmGame extends HTMLElement {
       if (left < -margin) {
         note.flight.remove();
         this.missed++;
-        this.say('Se escapó una nota', 'Missed a note', 'miss');
+        this.showResult(note.index, 'miss', 'Se escapó una nota', 'Missed a note');
         return false;
       }
       note.flight.hidden = still;
@@ -381,7 +396,7 @@ class RhythmGame extends HTMLElement {
     note.flight.remove();
     this.notes.splice(this.notes.indexOf(note), 1);
     this.score.textContent = String(++this.hits);
-    this.say('¡A tiempo!', 'On time!');
+    this.showResult(index, 'hit', '¡Acierto!', 'Hit!');
   };
 }
 

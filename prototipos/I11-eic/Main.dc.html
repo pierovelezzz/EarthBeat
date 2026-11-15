@@ -2002,10 +2002,14 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .listen-band[data-rhythm="true"] .stage-note-track{visibility:hidden}
   .px .listen-band[data-rhythm="true"] .band-stage{min-height:clamp(390px,56vh,550px)}
   .px .rhythm-map-key{display:grid;gap:8px;align-content:start;padding:8px 3px 2px}
-  .px .rhythm-map-key p{margin:0;color:var(--muted);font-size:.83em;line-height:1.5}
-  .px .rhythm-map-key ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0;padding:0;list-style:none}
-  .px .rhythm-map-key li{display:flex;align-items:center;gap:6px;padding:5px 7px;border:1px solid var(--line);border-radius:4px;font-size:.82em}
-  .px .rhythm-map-key kbd{font:700 1.18em/1 system-ui,sans-serif;color:var(--fg)}
+  .px .rhythm-map-key h3{margin:0;font:700 .86em/1.3 var(--head)}
+  .px .rhythm-map-key p{display:flex;align-items:center;gap:7px;margin:0;color:var(--muted);font-size:.82em}
+  .px .rhythm-map-key ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 10px;margin:0;padding:0;list-style:none}
+  .px .rhythm-map-key li{display:flex;align-items:center;gap:7px;font-size:.82em}
+  .px .rhythm-map-key kbd{
+    display:grid;place-items:center;flex:none;width:25px;min-height:24px;border:1px solid currentColor;border-radius:4px;
+    font:700 1.12em/1 system-ui,sans-serif;color:var(--rhythm-ink);background:#101c29
+  }
   .px earthrhythm-game{
     position:absolute;z-index:2;inset:8px 8px auto;display:grid;gap:5px;
     grid-template-rows:auto minmax(0,1fr);height:49%;
@@ -2013,21 +2017,37 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   }
   .px earthrhythm-game:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
   .px .rhythm-score{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px;font-size:.86em}
-  .px .rhythm-tally,.px .rhythm-miss{display:inline-flex;align-items:center;gap:8px;min-height:33px;padding:3px 9px;border:1px solid currentColor;border-radius:4px}
+  .px .rhythm-tally{display:inline-flex;align-items:center;gap:8px;min-height:33px;padding:3px 9px;border:1px solid currentColor;border-radius:4px}
   .px .rhythm-tally{color:#ffe198;background:#1b1b23;font-variant-numeric:tabular-nums}
   .px .rhythm-tally strong{font-size:1.24em}
-  .px .rhythm-miss{display:none;color:#ffd0e8;background:#281427}
-  .px .rhythm-feedback-text:not(:empty){color:#d6f4ff;background:#111c28;padding:4px 7px;border-radius:4px}
-  .px earthrhythm-game[data-feedback-kind="miss"] .rhythm-miss{display:inline-flex}
-  .px earthrhythm-game[data-feedback-kind="miss"] .rhythm-feedback-text{display:none}
+  .px .rhythm-summary:not(:empty){color:#d6f4ff;background:#111c28;padding:4px 7px;border-radius:4px}
+  .px .rhythm-result{
+    position:absolute;z-index:3;top:26px;left:50%;translate:-50% 0;
+    pointer-events:none;white-space:nowrap
+  }
+  .px .rhythm-result-badge{
+    position:relative;display:flex;align-items:center;gap:5px;min-height:27px;padding:2px 7px;
+    border:1px solid currentColor;border-radius:4px;font:700 .76em/1 var(--head)
+  }
+  .px .rhythm-result-badge::before{
+    content:"";position:absolute;left:50%;bottom:100%;height:7px;border-left:1px solid currentColor
+  }
+  .px .rhythm-hit{color:#c3ffe0;background:#102d28}
+  .px .rhythm-miss{color:#ffd0e8;background:#281427}
+  html:not([data-ts-reduced-motion="true"]) .px .rhythm-result-badge{animation:rhythm-result-in 160ms ease-out both}
+  @keyframes rhythm-result-in{
+    from{transform:translateY(-7px);opacity:.65}
+    to{transform:translateY(0);opacity:1}
+  }
   .px .rhythm-lanes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;min-height:0}
-  .px .rhythm-lane{display:grid;grid-template-rows:minmax(0,1fr);text-align:center;min-width:0;--rhythm-ink:#c1eaff}
-  .px .rhythm-lane:nth-child(2){--rhythm-ink:#efede7}
-  .px .rhythm-lane:nth-child(3){--rhythm-ink:#ffcf8d}
-  .px .rhythm-lane:nth-child(4){--rhythm-ink:#ffc3df}
-  .px .rhythm-lane[data-direction="left"] svg{transform:rotate(-90deg)}
-  .px .rhythm-lane[data-direction="down"] svg{transform:rotate(180deg)}
-  .px .rhythm-lane[data-direction="right"] svg{transform:rotate(90deg)}
+  .px .rhythm-lane{display:grid;grid-template-rows:minmax(0,1fr);text-align:center;min-width:0}
+  .px :is(.rhythm-lane,.rhythm-map-key li)[data-direction="left"]{--rhythm-ink:#c1eaff}
+  .px :is(.rhythm-lane,.rhythm-map-key li)[data-direction="down"]{--rhythm-ink:#efede7}
+  .px :is(.rhythm-lane,.rhythm-map-key li)[data-direction="up"]{--rhythm-ink:#ffcf8d}
+  .px :is(.rhythm-lane,.rhythm-map-key li)[data-direction="right"]{--rhythm-ink:#ffc3df}
+  .px .rhythm-lane[data-direction="left"] :is(.rhythm-receptor,.rhythm-note) svg{transform:rotate(-90deg)}
+  .px .rhythm-lane[data-direction="down"] :is(.rhythm-receptor,.rhythm-note) svg{transform:rotate(180deg)}
+  .px .rhythm-lane[data-direction="right"] :is(.rhythm-receptor,.rhythm-note) svg{transform:rotate(90deg)}
   .px .rhythm-runway{position:relative;margin:21px 0 14px;background:linear-gradient(var(--rhythm-ink),transparent) center/1px 100% no-repeat}
   .px .rhythm-receptor,.px .rhythm-note{
     position:absolute;top:0;left:50%;display:grid;place-items:center;transform:translate(-50%,-50%);
@@ -2040,7 +2060,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .rhythm-runway[data-cue] .rhythm-receptor{color:#070f18;background:var(--rhythm-ink);box-shadow:0 0 8px var(--rhythm-ink)}
   .px .rhythm-flight{position:absolute;inset:0;pointer-events:none}
   .px .rhythm-note{color:#081018;background:var(--rhythm-ink)}
-  .px.app[data-contrast="true"] .rhythm-lane{--rhythm-ink:#fff}
+  .px.app[data-contrast="true"] :is(.rhythm-lane,.rhythm-map-key li){--rhythm-ink:#fff}
 }
 .px.main-edition .legend-swatch{min-height:44px}
 .px .bar .side .btn,.px .bar .steps button{min-height:28px}
@@ -2327,8 +2347,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 <sc-if value="{{rhythmMode}}">
 <div class="rhythm-map-key" id="rhythm-help">
-<ul aria-label="{{rhythmKeyLabel}}"><sc-for list="{{rhythmLanes}}" as="lane"><li><kbd>{{lane.arrow}}</kbd><span>{{lane.label}}</span></li></sc-for></ul>
-<p>{{rhythmHelp}}</p>
+<h3 id="rhythm-key-title">{{rhythmKeyLabel}}</h3>
+<ul aria-labelledby="rhythm-key-title"><sc-for list="{{rhythmLanes}}" as="lane"><li data-direction="{{lane.direction}}"><kbd>{{lane.arrow}}</kbd><span>{{lane.label}}</span></li></sc-for></ul>
+<p><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><path d="M2 3h2V1h2v2h4V1h2v2h2v12H2zm2 5v5h8V8z"/><path d="M6 9h2v2H6z"/></svg>{{rhythmHelp}}</p>
 </div>
 </sc-if>
 <sc-if value="{{standardPlayer}}">
@@ -2389,12 +2410,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <earthrhythm-game role="group" tabindex="0" aria-label="{{rhythmLabel}}" aria-describedby="rhythm-help" data-playing="{{rhythmPlaying}}" data-ended="{{rhythmEnded}}">
 <div class="rhythm-score">
 <div class="rhythm-tally"><svg width="20" height="20" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h8v2h2v2h2v8h-2v2h-2v2H4v-2H2v-2H0V4h2V2h2z"/><path fill="#251809" d="M7 3h2v3h4v2h-2v2h-1v3H8v-2H7v2H5v-3H4V8H3V6h4z"/></svg><span class="sr">{{rhythmScoreLabel}}</span><strong data-score>0</strong></div>
-<span class="rhythm-feedback-text" data-feedback-display aria-hidden="true"></span>
-<span class="rhythm-miss" aria-hidden="true"><svg width="22" height="18" viewBox="0 0 22 18" shape-rendering="crispEdges"><path fill="currentColor" d="M8 0h6v2h3v2h2v6h-2v2H5v-2H3V4h2V2h3zM0 14h5v2h4v-2h4v2h4v-2h5v2h-4v2h-6v-2h-2v2H4v-2H0z"/><path fill="#281427" d="M6 5h2v2H6zm8 0h2v2h-2zm-5 3h4v2H9z"/></svg><strong>MISS</strong></span>
+<span class="rhythm-summary" data-summary aria-hidden="true"></span>
 <span class="sr" data-feedback role="status" aria-live="polite"></span>
 </div>
+<div hidden>
+<span class="rhythm-result-badge rhythm-hit" data-result-art="hit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><path d="M12 3h3v3h-2v2h-2v2H9v2H7v2H5v-2H3v-2H1V7h3v2h2v2h1V9h2V7h2V5h1z"/></svg><strong>{{rhythmHitLabel}}</strong></span>
+<span class="rhythm-result-badge rhythm-miss" data-result-art="miss"><svg width="22" height="18" viewBox="0 0 22 18" shape-rendering="crispEdges"><path fill="currentColor" d="M8 0h6v2h3v2h2v6h-2v2H5v-2H3V4h2V2h3zM0 14h5v2h4v-2h4v2h4v-2h5v2h-4v2h-6v-2h-2v2H4v-2H0z"/><path fill="#281427" d="M6 5h2v2H6zm8 0h2v2h-2zm-5 3h4v2H9z"/></svg><strong>MISS</strong></span>
+</div>
 <div class="rhythm-lanes">
-<sc-for list="{{rhythmLanes}}" as="lane"><div class="rhythm-lane" data-direction="{{lane.direction}}"><div class="rhythm-runway"><span class="rhythm-receptor" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v2h2v2h2v2h2v3h-4v5H5v-5H1V7h2V5h2V3h2z"/></svg></span></div></div></sc-for>
+<sc-for list="{{rhythmLanes}}" as="lane"><div class="rhythm-lane" data-direction="{{lane.direction}}"><div class="rhythm-runway"><span class="rhythm-receptor" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v2h2v2h2v2h2v3h-4v5H5v-5H1V7h2V5h2V3h2z"/></svg></span><span class="rhythm-result" aria-hidden="true"></span></div></div></sc-for>
 </div>
 </earthrhythm-game>
 </sc-if>
@@ -5057,7 +5081,7 @@ class Component extends DCLogic {
   }
   playerSteps() { return DISCS[this.state.disc].files.length * 28; }
   frameStepMs(frame) {
-    var factor = this.state.tab === 'game' ? 1.2 : this.speedFactor();
+    var factor = this.speedFactor();
     if (this.state.engine === 'raw') return Math.round(110 / factor);
     var analysis = frame === this.state.frame ? this.cur() : this.state.an[this.state.disc + '_' + frame];
     return Math.round(30000 / (this.profile(analysis, frame).bpm * factor));
@@ -5597,7 +5621,10 @@ class Component extends DCLogic {
     BAND.forEach(function (b) { if (fired[b.k]) h[b.k] = (h[b.k] || 0) + 1; });
     return { hits: h, flash: thunder ? state.flash + 1 : state.flash };
   }
-  speedFactor() { return { 180: 0.75, 110: 1, 70: 1.4 }[this.state.speed] || 1; }
+  speedFactor() {
+    var speed = this.state.tab === 'game' ? 70 : this.state.speed;
+    return { 180: 0.75, 110: 1, 70: 1.4 }[speed] || 1;
+  }
   stepMs() {
     return this.frameStepMs(this.state.frame);
   }
@@ -6324,14 +6351,14 @@ class Component extends DCLogic {
       rhythmToggleLabel: T('Jugar este disco', 'Play this disc'),
       rhythmExitLabel: T('Salir de la partida', 'Leave game'),
       rhythmMapTitle: T('Mapa de la NASA', 'NASA map'),
-      rhythmKeyLabel: T('Qué indica cada flecha', 'What each arrow means'),
+      rhythmKeyLabel: T('El mar respecto a lo habitual', 'Ocean temperature compared with usual'),
+      rhythmHitLabel: T('¡Acierto!', 'Hit!'),
       rhythmScoreLabel: T('Aciertos', 'Hits'),
       rhythmLanes: rhythmMode ? [
-        { arrow: '←', direction: 'left', label: T('Más frío', 'Cooler') }, { arrow: '↓', direction: 'down', label: T('Como de costumbre', 'Near usual') },
+        { arrow: '←', direction: 'left', label: T('Más frío', 'Cooler') }, { arrow: '↓', direction: 'down', label: T('Casi igual', 'Near usual') },
         { arrow: '↑', direction: 'up', label: T('Más cálido', 'Warmer') }, { arrow: '→', direction: 'right', label: T('Mucho más frío o cálido', 'Much colder or warmer') }
       ] : [],
-      rhythmHelp: T('Sigue el barrido del mapa mientras tocas. Cada flecha indica si esa parte del mar está más fría o más cálida de lo habitual. Al final del recorrido aparece el siguiente mes.',
-        'Follow the map scan as you play. Each arrow shows whether that part of the ocean is colder or warmer than usual. When the scan ends, the next month appears.'),
+      rhythmHelp: T('Un barrido del mapa por mes', 'One map scan per month'),
       playThisDisc: function () { self.openRhythmDisc(s.disc); },
       describeLabel: this.utterance ? T('Detener descripción', 'Stop description') : T('Describir en voz alta', 'Describe aloud'),
       describe: function () {
