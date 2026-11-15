@@ -38,12 +38,12 @@ async function main() {
     const imageInput = () => page.locator('#tour-drop input');
     assert.equal(await page.locator('input[type=file]').count(),1);
     await page.locator('#tour-sample button').click();
-    await page.waitForFunction(() => __app.state.custom?.kind === 'rain' && __app.cur()?.cells.length === 448);
+    await page.waitForFunction(() => __app.state.custom?.sample === true && __app.cur()?.cells.length === 448);
     assert.equal(await page.locator('#tour-machine canvas.heard').count(),1);
-    assert.match(await page.locator('#player-legend').textContent(),/Bajo el promedio/);
-    checks.push('NASA POWER rainfall opens a playable analysis with the right units');
+    assert.match(await page.locator('#player-legend').textContent(),/Escala de color/);
+    checks.push('The EarthRhythm logo opens a playable image analysis');
     await imageInput().setInputFiles(path.join(site, 'fotogramas/ver2025_2.webp'));
-    await page.waitForFunction(() => __app.state.custom?.name === 'ver2025_2.webp' && __app.state.sub === 1);
+    await page.waitForFunction(() => __app.state.custom?.name === 'ver2025_2.webp' && __app.state.sub === 0);
     assert.equal(await page.evaluate(() => __app.state.customMode), 'free');
     assert.equal(await page.locator('#tour-sample').count(),0);
     assert.match(await page.locator('.practice-example img').getAttribute('src'),/^blob:/);
@@ -51,7 +51,7 @@ async function main() {
     await page.evaluate(()=>window.__previousAnalysis=__app.cur());await page.locator('.file-settings select').selectOption('palette');
     await page.waitForFunction(()=>__app.cur()!==window.__previousAnalysis&&__app.state.customMode==='palette');
     assert(await page.evaluate(()=>Object.values(__app.state.mute).every(Boolean)),'changing image interpretation keeps the user’s instrument mix');
-    assert.match(await page.locator('.listen-band [role="status"]').textContent(),/silenciados/);
+    assert.match(await page.locator('.listen-band .stage-muted-status').textContent(),/silenciados/);
     checks.push('Local WebP analyzed in free-color mode');
     const accepted = await page.evaluate(() => __app.state.custom.url);
     for (const fixture of [

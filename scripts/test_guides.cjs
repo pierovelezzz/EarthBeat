@@ -184,7 +184,7 @@ test('contextual help is a single non-numbered card and never starts a second tu
   c.tourOpen();
   let help=c.renderVals().tour;
   assert.equal(help.count,'');assert.equal(help.dots.length,0);assert.equal(help.showBack,false);
-  assert.equal(help.showTutorialStart,false);assert.equal(help.nextLabel,'Entendido');
+  assert.equal(help.showTutorialStart,true);assert.equal(help.nextLabel,'Entendido');
   assert.match(help.title,/Ayuda de esta pantalla/);
   help.next();
   assert.equal(c.state.tour, 0);

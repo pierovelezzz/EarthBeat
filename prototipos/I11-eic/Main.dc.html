@@ -950,6 +950,7 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 .px .tour .tact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;min-width:0}
 .px .tour .tact button{min-width:0;min-height:44px;width:100%;padding:6px;font-size:max(12px,.75em);line-height:1.35;letter-spacing:.06em;white-space:normal;overflow-wrap:anywhere;margin:0}
 .px .tour .tact .primary{grid-column:2;grid-row:1}
+.px .tour .tact .tour-start{grid-column:1;grid-row:1}
 .px .tour .tact .skip{grid-column:1/-1;min-height:44px}
 .px .tour .tact .tour-extra~.skip{grid-column:2}
 .px .tour.narrow .gface{display:none}
@@ -1414,9 +1415,15 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px.app[data-theme="light"] .tbubble{background:var(--panel);border-left-color:#946600}
 .px.app[data-theme="light"] .scale-swatch{border-color:var(--line)}
 .px .practice-example{min-height:260px;align-content:center}
-.px .practice-example #tour-sample{display:grid;justify-items:start;gap:14px}
+.px .practice-example #tour-sample{display:grid;justify-items:start;gap:10px}
+.px .practice-example .logo-example{width:100%;height:clamp(92px,16vh,150px);object-fit:contain;padding:6px}
 .px .practice-example h2{font-size:clamp(1.3em,3vw,2em);overflow-wrap:anywhere}
 .px .practice-example .sample-preview{height:auto;max-height:280px;aspect-ratio:560/320}
+.px.app[data-theme="light"][data-contrast="false"] .bshow,
+.px.app[data-theme="light"][data-contrast="false"] .bsel{
+  --bg:#111a27;--fg:#f2f6fc;--muted:#c1cee0;--line:#788ca7;--accent:#b8e9f5
+}
+.px.app[data-theme="light"][data-contrast="false"] .bshow{--band:var(--band-light)!important}
 .px .bshow .avatar-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px}
 .px .bshow .avatar-actions>earthbeat-dance-button{justify-self:end;width:min(100%,190px);min-width:0}
 .px .bshow .avatar-actions>.btn{justify-self:start}
@@ -1580,7 +1587,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
   scroll-margin-block:4px;
 }
 .px #tour-a11y .opt:focus-visible,.px #tour-a11y .haptics-settings button:focus-visible,
-.px #tour-a11y .preferences-shortcut:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .px #tour-a11y .opt:disabled{color:var(--muted)}
 .px #tour-a11y .sw{width:31px;height:17px}
 .px #tour-a11y .sw::after{width:11px;height:11px}
@@ -1597,16 +1603,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px #tour-a11y .haptics-settings p{font-size:.85em;line-height:1.45;color:var(--muted)}
 .px #tour-a11y .haptics-settings .row{display:flex;flex-wrap:wrap;gap:7px}
 .px #tour-a11y .haptics-settings button{flex:1 1 7em;min-height:44px;padding:6px 8px;white-space:normal;letter-spacing:.04em}
-.px #tour-a11y .preferences-shortcut{
-  grid-column:1/-1;
-  justify-self:start;
-  min-height:44px;
-  padding:6px;
-  font-size:.85em;
-  text-align:start;
-  text-decoration:underline;
-  text-underline-offset:.2em;
-}
 .px.main-edition.reduce-motion .language-thumb,.px.main-edition.reduce-motion .language-toggle button{transition:none}
 @media(max-width:900px){.px.main-edition .top .brand{font-size:.86em;gap:7px}.px.main-edition .top .brandmark{width:26px}.px.main-edition .top .right{gap:6px}.px.main-edition .top .wordmark{letter-spacing:.035em}.px.main-edition .hero{grid-template-columns:minmax(0,1fr);max-width:640px;margin-inline:auto;gap:28px}.px.main-edition .herotx{width:100%;gap:14px}.px.main-edition .hero .display{max-width:15ch}.px.main-edition .home-demo{width:100%;max-width:560px}.px.main-edition .top .nav button{min-height:44px}}
 @media(max-width:480px){.px.main-edition .hero{gap:22px;padding-block:22px 12px}.px.main-edition .hero .display{font-size:clamp(2.35rem,10.3vw,3.1rem)}.px.main-edition .hero .lede{font-size:1em;line-height:1.55}.px.main-edition .hero .cta{display:grid;grid-template-columns:minmax(0,1fr)}.px.main-edition .hero .cta .btn{min-height:48px}.px.main-edition .hero-reassurance{font-size:.75em}.px.main-edition .home-process{padding:10px;gap:8px}.px.main-edition .homeflow strong{font-size:.73em}.px.main-edition .language-toggle{width:104px;flex-basis:104px}.px.main-edition .top .wrap{column-gap:5px}.px.main-edition .top .brandmark{width:23px}.px.main-edition .top .wordmark{font-size:.94em}}
@@ -1663,7 +1659,7 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px.app[data-theme="light"] .space-sky{opacity:1;--sky-trail:#356887}
 .px.app[data-theme="light"] .space-sky .stl{opacity:.14;filter:invert(1)}
 .px.app[data-theme="light"] .space-atmosphere{opacity:.5}
-.px.app[data-theme="light"] .space-sun{opacity:.55}
+.px.app[data-theme="light"] .space-sky .space-sun{opacity:.82}
 .px.app[data-theme="light"] .space-moon{opacity:.35}
 .px.app[data-theme="light"] .space-reading-shade{opacity:.75}
 .px.reduce-motion .space-meteor,.px.reduce-motion .space-flight{display:none}
@@ -1707,7 +1703,7 @@ html[data-ts-page-hidden] .px *::after{animation-play-state:paused!important}
  95%,100%{opacity:0;transform:translateX(130px)}
 }
 .px.reduce-motion .solar-eclipse{display:none}
-.px.app[data-theme="light"] .solar-halo{opacity:.5}
+.px.app[data-theme="light"] .space-sky .solar-halo{background:radial-gradient(circle,#ffd58f72,#ffce802e 40%,transparent 69%)}
 .px.app[data-theme="light"] .space-bright-stars{color:#286d87;opacity:.4}
 .px.app[data-theme="light"] .space-planet{opacity:.4}
 @media(max-width:700px){.px .space-sun{opacity:.65}.px .planet-ringed{width:66px;bottom:14%;right:0;opacity:.38}.px .planet-distant{display:none}.px .space-bright-stars{opacity:.35}.px .space-sun .solar-satellite svg{width:16px;height:11px;left:calc(50% - 8px)}}
@@ -1944,6 +1940,13 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   align-items:center;justify-content:center;width:44px;min-height:44px;padding:0;border-radius:4px
 }
 .px .uni .headtools .disc-action:not(.rhythm-toggle){display:inline-flex}
+.px.app[data-theme="light"] .uni .headtools :is(.disc-action,.mode-help summary){
+  color:var(--fg);background:var(--panel);border-color:var(--line)
+}
+.px.app[data-theme="light"] .uni .headtools :is(.disc-action,.mode-help summary):is(:hover,:focus-visible){
+  background:var(--surface);border-color:var(--fg)
+}
+.px.app[data-theme="light"] .mapbox .tagbox{color:#fff;background:#142234}
 .px .mode-help-panel{
   position:absolute;z-index:5;inset:100% 0 auto auto;width:min(410px,100%);max-height:62dvh;overflow-y:auto;
   display:grid;gap:10px;padding:12px;margin-top:4px;background:var(--surface);color:var(--fg);
@@ -1963,6 +1966,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   background:#101c2b;color:#f0f6ff;font:700 .78em/1.2 var(--head);pointer-events:none
 }
 .px .map-source svg{flex:none}
+.px .map-mode-label{padding-inline-start:6px;border-inline-start:1px solid #bacbdd;color:#c8effa}
+.px .map-fact{
+  display:grid;gap:3px;margin-top:4px;padding:7px 9px;border:1px solid var(--line);
+  border-inline-start:3px solid var(--accent);border-radius:5px;background:var(--surface);
+  font-size:.78em;line-height:1.35
+}
+.px .map-fact h3{margin:0;color:var(--accent);font:700 1.06em/1.3 var(--head)}
+.px .map-fact p{margin:0}
+.px .map-fact a{color:var(--accent);white-space:normal;text-underline-offset:2px}
 @media(forced-colors:active){
   .px .speed-options input:checked + .speed-option{border:2px solid Highlight}
 }
@@ -2224,6 +2236,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .listen-player .player-layout #tour-frame{grid-template-rows:auto auto auto}
 .px .listen-player .player-layout #tour-frame .mapbox{height:auto;min-height:0;max-height:none;aspect-ratio:auto}
 .px .listen-player #tour-frame .mapbox img.map{position:static;width:100%;height:auto;object-fit:contain}
+@media(min-width:1100px) and (max-height:940px){
+  .px .listen-player #tour-frame .mapbox img.map{max-height:clamp(112px,calc(100dvh - 652px),340px)}
+}
 @media(min-width:1100px) and (hover:hover) and (pointer:fine){
   .px .listen-player .player-layout{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr) minmax(0,1.04fr)}
 }
@@ -2322,7 +2337,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="btn sm" onClick="{{haptic.stop}}" disabled="{{haptic.stopOff}}">{{haptic.stopLabel}}</button></div>
 </section>
 </sc-if>
-<button type="button" class="preferences-shortcut" onClick="{{preferences.open}}">{{preferences.reopenLabel}}</button>
 </div>
 </details>
 <sc-if value="{{gameAvailable}}">
@@ -2424,10 +2438,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 <div class="convert-options">
 <section class="convert-card practice-example">
-<sc-if value="{{convert.showRain}}">
+<sc-if value="{{convert.showExample}}">
 <div id="tour-sample">
-<h2>{{convert.rainTitle}}</h2>
-<p class="muted">{{convert.rainBody}}</p>
+<h2>{{convert.exampleTitle}}</h2>
+<img class="sample-preview logo-example" src="./earthrhythm-sample.webp" width="600" height="500" alt="{{convert.exampleTitle}}">
+<p class="muted">{{convert.exampleBody}}</p>
 <button type="button" class="btn primary" onClick="{{useSample}}">{{tx.sample}}</button>
 </div>
 </sc-if>
@@ -2508,6 +2523,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <span class="playback-setting-values">
 <span class="playback-setting-value"><span class="sr">{{tx.speedLabel}} </span>{{playbackRate}}</span>
 <span class="playback-setting-value"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4zM15 9a4 4 0 0 1 0 6m3-8a7 7 0 0 1 0 10"/></svg><span class="sr">{{player.volumeLabel}} </span>{{player.volume}}%</span>
+<span class="playback-setting-value">{{listeningMode}}</span>
 </span></summary>
 <div class="map-toolbar">
 <div class="volume-control">
@@ -2536,7 +2552,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </sc-if>
 <div class="mapbox">
 <img decoding="async" fetchpriority="high" class="map {{frameAnim}}" src="{{frameUrl}}" alt="{{frameAlt}}">
-<sc-if value="{{standardPlayer}}"><span class="map-source"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="7" r="1"/><path d="m3 15 5-5 3 3 3-4 3 4"/></svg>{{mapSource}}</span></sc-if>
+<sc-if value="{{standardPlayer}}"><span class="map-source"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="7" r="1"/><path d="m3 15 5-5 3 3 3-4 3 4"/></svg><span>{{mapSource}}</span><span class="map-mode-label">{{listeningMode}}</span></span></sc-if>
 <div aria-hidden="true" class="scanline" style="--scan-x: {{scanLeft}}"></div>
 <span class="tagbox" aria-hidden="true">{{frameLabel}}</span>
 <sc-if value="{{showStrip}}" hint-placeholder-val="{{ true }}">
@@ -2565,6 +2581,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </sc-for>
 </div>
 </div>
+<aside class="map-fact" aria-labelledby="map-fact-title">
+<h3 id="map-fact-title">{{mapFact.title}}</h3>
+<p>{{mapFact.observation}}</p>
+<p>{{mapFact.note}} <a href="{{mapFact.source}}" target="_blank" rel="noopener noreferrer">{{mapFact.sourceLabel}} ↗</a></p>
+</aside>
 </sc-if>
 </div>
 </sc-if>
@@ -2865,6 +2886,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{tour.showBack}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn sm quiet" onClick="{{tour.back}}">{{tx.back}}</button></sc-if>
 <button type="button" class="btn sm primary" onClick="{{tour.next}}" disabled="{{tour.nextOff}}">{{tour.nextLabel}}</button>
 <sc-if value="{{tour.hasExtra}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn sm tour-extra" onClick="{{tour.extra}}">{{tour.extraLabel}}</button></sc-if>
+<sc-if value="{{tour.showTutorialStart}}"><button type="button" class="btn sm tour-start" onClick="{{tour.restart}}">{{tour.restartLabel}}</button></sc-if>
 <sc-if value="{{tour.isTutorial}}"><button type="button" class="skip" onClick="{{tour.skip}}">{{tx.skipGuide}}</button></sc-if>
 </div>
 </div>
@@ -3101,10 +3123,10 @@ var GUIDES = {
     {
       "id": "tour-steps",
       "t": "Del mapa a la música",
-      "b": "Sigue los pasos o abre la pestaña Prueba práctica para escuchar tu imagen o la lluvia de Chiclayo.",
+      "b": "Sigue los pasos o abre Prueba práctica para escuchar el logo de EarthRhythm o tu propia imagen.",
       "en": {
         "t": "From map to music",
-        "b": "Follow the steps or open Try it to hear your image or Chiclayo rainfall."
+        "b": "Follow the steps or open Try it to hear the EarthRhythm logo or your own image."
       }
     }
   ],
@@ -3350,7 +3372,7 @@ var TECH = [
   {
     "cat": "Interfaz y código",
     "name": "FileReader + Blob + localStorage",
-    "use": "Lectura local de imágenes y muestra de lluvia. Guarda idioma y preferencias; no guarda tus imágenes.",
+    "use": "Lectura local de imágenes y ejemplo con el logo. Guarda idioma y preferencias; no guarda tus imágenes.",
     "es": {
       "cat": "Interfaz y código",
       "name": "FileReader + Blob + localStorage",
@@ -3390,11 +3412,11 @@ var TECH = [
   {
     "cat": "Datos de la NASA",
     "name": "NASA POWER",
-    "use": "Archivo mensual 1981–2024. El ejemplo usa 48 valores de precipitación media diaria por mes de Chiclayo, 2015–2018.",
+    "use": "Archivo mensual 1981–2024. Incluye datos históricos de lluvia de Chiclayo, 2015–2018.",
     "es": {
       "cat": "Datos de la NASA",
       "name": "NASA POWER",
-      "use": "Archivo mensual 1981–2024. El ejemplo usa 48 valores de precipitación media diaria por mes de Chiclayo, 2015–2018."
+      "use": "Archivo mensual 1981–2024. Incluye datos históricos de lluvia de Chiclayo, 2015–2018."
     }
   },
   {
@@ -3485,7 +3507,7 @@ var STEPS = [
  {title:'De oeste a este',body:'Una línea recorre el mapa. Cada columna añade un paso a la música.'},
  {title:'Tu banda',body:'Enciende o silencia a los cinco músicos para decidir qué instrumentos escuchar.'},
  {title:'Dos formas de oír',body:'Melodía crea una canción. Datos convierte los niveles directamente en tonos.'},
- {title:'Prueba tu imagen',body:'Empieza con la lluvia de Chiclayo o elige una imagen. Se procesa en tu navegador.'},
+ {title:'Prueba tu imagen',body:'Empieza con el logo de EarthRhythm o elige una imagen. Se procesa en tu navegador.'},
  {title:'A tu manera',body:'Usa texto, teclado o la guía. Ajusta el tamaño, el contraste y el movimiento.'}
 ];
 var RAMP = [[-5,'#1B2A80'],[-4,'#2F4FD0'],[-3,'#38C6E8'],[-2,'#3FE0B5'],[-1,'#7BE38A'],[-0.5,'#B8F0A0'],[0,'#7E849E'],[0.5,'#F2E6A0'],[1,'#FFD447'],[2,'#FFA62B'],[3,'#FF6A2B'],[4,'#E8283A'],[4.5,'#C21F7A'],[5,'#7A0F1E']];
@@ -3615,7 +3637,7 @@ var TECH_EN = {
     "use": "Optional pulses when testing vibration, processing files and following the intensity of the music. Requests are limited and respect reduced motion."
   },
   "FileReader + Blob + localStorage": {
-    "use": "Local images and a rainfall sample. Stores language and preferences, not your images."
+    "use": "Local images and an example with the logo. Stores language and preferences, not your images."
   },
   "CSS + tipografías": {
     "use": "Responsive layout, focus and reduced motion. Local Barlow, Inter, IBM Plex Mono and Atkinson Hyperlegible; system fonts provide fallbacks."
@@ -3627,7 +3649,7 @@ var TECH_EN = {
     "use": "30 anomaly maps from five episodes between 2010 and 2023. Each date corresponds to the 15th of its month."
   },
   "NASA POWER": {
-    "use": "Monthly file for 1981–2024. The sample uses 48 monthly mean daily precipitation values for Chiclayo, 2015–2018."
+    "use": "Monthly file for 1981–2024. Includes historical rainfall data for Chiclayo, 2015–2018."
   },
   "Web Audio API": {
     "use": "Oscillators, filters and envelopes synthesize five instruments. Volume and reverb are cancelled on pause or seek."
@@ -3661,7 +3683,7 @@ var STEPS_EN = [
  {title:'West to east',body:'A line travels across the map. Each column adds a step to the music.'},
  {title:'Your band',body:'Switch the five musicians on or off to choose which instruments you hear.'},
  {title:'Two ways to listen',body:'Melody makes a song. Data turns the levels directly into tones.'},
- {title:'Try your image',body:'Start with Chiclayo rainfall or choose an image. It stays in your browser.'},
+ {title:'Try your image',body:'Start with the EarthRhythm logo or choose an image. It stays in your browser.'},
  {title:'Your way',body:'Use text, a keyboard or the guide. Adjust size, contrast and motion.'}
 ];
 var ROUTE_EN = { home: 'Home', juke: 'Listen', band: 'The band', how: 'How does it work?', tech: 'Technology', game: 'Play' };
@@ -3736,7 +3758,7 @@ var TX = {
     "visualProposal": "Propuesta visual",
     "ethicalPrinciples": "Principios éticos",
     "teamInspiration": "Inspiración original del equipo",
-    "sample": "Probar con la lluvia de Chiclayo",
+    "sample": "Escuchar el logo",
     "dataListenKicker": "Prueba práctica",
     "colorsHow": "Cómo leer los colores",
     "modePalette": "Mapa de anomalía (escala NASA)",
@@ -3857,7 +3879,7 @@ var TX = {
     "visualProposal": "Visual proposal",
     "ethicalPrinciples": "Ethical principles",
     "teamInspiration": "The team’s original inspiration",
-    "sample": "Try Chiclayo rainfall",
+    "sample": "Hear the logo",
     "dataListenKicker": "Try it",
     "colorsHow": "How to read the colors",
     "modePalette": "Anomaly map (NASA scale)",
@@ -4737,14 +4759,14 @@ class Component extends DCLogic {
   contextHelpStep() {
     var s = this.state, player = s.tab === 'juke' && s.sub === 1 || s.tab === 'how' && s.sub === 0 && s.custom;
     var bodies = {
-      home: T('Explora los mapas en Escuchar, conoce a los músicos en La banda y consulta Cómo funciona o Tecnología. Accesibilidad permite combinar tus preferencias. Formas de usar ofrece instrucciones y acceso al tutorial opcional.', 'Explore maps in Listen, meet the musicians in The band and visit How it works or Technology. Accessibility combines your preferences. Ways to use provides instructions and access to the optional tutorial.'),
+      home: T('Explora los mapas en Escuchar, conoce a los músicos en La banda y consulta Cómo funciona o Tecnología. Accesibilidad permite combinar tus preferencias. El tutorial opcional está en la ayuda de Brisa.', 'Explore maps in Listen, meet the musicians in The band and visit How it works or Technology. Accessibility combines your preferences. Brisa’s help gives you access to the optional tutorial.'),
       juke: T('Elige EIC o NASA GIBS y selecciona un disco. Su portada abre el reproductor sin iniciar el sonido. Puedes consultar las fechas de cada mapa y cambiar de colección.', 'Choose EIC or NASA GIBS and select a disc. Its cover opens the player without starting sound. You can inspect each map date and switch collections.'),
       band: T('Selecciona un músico para conocer su historia. Bailar o Pausar baile controla la animación; Escuchar instrumento reproduce una muestra independiente. La voz de Brisa es opcional.', 'Select a musician to learn their story. Dance or Pause dance controls the animation; Hear instrument plays an independent sample. Brisa’s voice is optional.'),
-      how: T('En la prueba práctica puedes elegir una imagen o la muestra de lluvia. La explicación del método distingue los niveles derivados de las mediciones físicas. Puedes leer los resultados sin escuchar.', 'In the practical example, choose an image or the rainfall sample. The method explanation distinguishes derived levels from physical measurements. You can read the results without listening.'),
+      how: T('En la prueba práctica puedes elegir una imagen o el logo de EarthRhythm. La explicación del método distingue los niveles derivados de las mediciones físicas. Puedes leer los resultados sin escuchar.', 'In the practical example, choose an image or the EarthRhythm logo. The method explanation distinguishes derived levels from physical measurements. You can read the results without listening.'),
       tech: T('Elige un tema para consultar las herramientas, las fuentes y los créditos. La información se conserva por escrito y puedes activar la narración opcional.', 'Choose a topic to inspect tools, sources and credits. Written information remains available and narration is optional.'),
       game: T('El juego es opcional. Usa las flechas indicadas cuando llegan al recuadro. Puedes volver a Escuchar para explorar los mismos mapas sin una tarea cronometrada.', 'The game is optional. Use the indicated arrow keys when they reach the target. Return to Listen to explore the same maps without a timed task.')
     };
-    return { t: T('Ayuda de esta pantalla', 'Help for this screen'), b: player ? T('En Escuchar, abre Ajustes de reproducción para cambiar el volumen, la velocidad o el modo. Usa la barra de tiempo para elegir qué parte oír. «Qué muestra» y la leyenda explican el mapa.', 'In Listen, open Playback settings to change volume, speed or mode. Use the timeline to choose a position. The map description and legend explain the map.') : bodies[s.tab] || bodies.home };
+    return { t: T('Ayuda de esta pantalla', 'Help for this screen'), b: player ? T('En Escuchar, abre Configuración para cambiar el volumen, la velocidad o el modo. Usa la barra de tiempo para elegir qué parte oír. «Qué muestra» y la leyenda explican el mapa.', 'In Listen, open Settings to change volume, speed or mode. Use the timeline to choose a position. The map description and legend explain the map.') : bodies[s.tab] || bodies.home };
   }
   tutorialEntryLabel() {
     if (this.tutorialProgress && !this.tutorialProgress.completed) return T('Retomar tutorial · paso ', 'Resume tutorial · step ') + this.tutorialProgress.step + T(' de 3', ' of 3');
@@ -5655,6 +5677,15 @@ class Component extends DCLogic {
     if (c && c.kind === 'image') operation.previousCustom = c;
     this.setState({ customMode: m, custom: c ? Object.assign({}, c, { mode: m }) : c, col: -1 }, function () { if (self.state.custom && self.state.custom.kind === 'image') self.analyze(5, 0, true, operation); });
   }
+  loadLogoSample() {
+    if (this.disposed) return;
+    var operation = this.startFileLoad();
+    var name = uiMessage('Logo de EarthRhythm', 'EarthRhythm logo');
+    var example = { nameText: name, kind: 'image', url: './earthrhythm-sample.webp', mode: 'free', sample: true };
+    this.stop();
+    this.setState({ upMsg: uiMessage('Analizando el logo…', 'Analyzing the logo…') },
+      () => this.analyze(5, 0, true, operation, example));
+  }
   loadSample() {
     if (this.disposed || this.state.custom?.kind === 'image') return;
     var self = this, operation = this.startFileLoad();
@@ -6197,6 +6228,67 @@ class Component extends DCLogic {
     var bp = this.bump(fired, fired.illapa === 'thunder', s);
     this.emitStep({ hits: bp.hits, flash: bp.flash, col: col, levels: lv, chord: ch.label, caption: '[' + tag + ' · ' + pos + '] ' + T('acorde ', 'chord ') + ch.label + (notes.length ? ' · ' + notes.join(' · ') : '') }, fired, ch.label, scheduled);
   }
+  mapFactVm(analysis) {
+    var s = this.state;
+    var cached = this.mapFactCache;
+    if (cached && cached.analysis === analysis && cached.frame === s.frame && cached.disc === s.disc &&
+        cached.set === s.set && cached.lang === LANG) return cached.value;
+
+    var svs = 'https://svs.gsfc.nasa.gov/5176/';
+    var dataset = 'https://podaac.jpl.nasa.gov/dataset/MUR-JPL-L4-GLOB-v4.1';
+    var worldview = 'https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR25_Sea_Surface_Temperature_Anomalies';
+    var palette = 'https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html';
+    var facts = [
+      [T('Una anomalía compara la temperatura con lo habitual para ese lugar.', 'An anomaly compares temperature with what is usual for that area.'), worldview],
+      [T('La NASA publica mapas centrados en el Pacífico para observar sus cambios.', 'NASA publishes maps centered on the Pacific to show how it changes.'), svs],
+      [T('El análisis MUR de la NASA reúne observaciones de varios satélites.', 'NASA’s MUR analysis combines observations from several satellites.'), dataset],
+      [T('En NASA Worldview puedes alternar entre la temperatura y su diferencia con lo habitual.', 'NASA Worldview lets you switch between temperature and its difference from usual.'), worldview],
+      [T('Sensores como MODIS, en los satélites Aqua y Terra, aportan datos al análisis MUR.', 'Sensors such as MODIS, on the Aqua and Terra satellites, contribute data to the MUR analysis.'), dataset],
+      s.set === 'prev'
+        ? [T('La escala histórica de NASA agrupa en un color los aumentos de 3 °C o más.', 'The historical NASA color scale groups warming of 3 °C or more into one color.'), palette]
+        : [T('La NASA también ofrece el mapa como animación para seguir cambios entre fechas.', 'NASA also provides an animation to follow changes across dates.'), svs]
+    ];
+    var index = (s.frame + s.disc) % facts.length, fact = facts[index];
+    var observation = T('Estamos leyendo los colores de esta imagen.', 'We’re reading the colors in this image.');
+    if (analysis?.cells) {
+      var warm = 0, cool = 0, neutral = 0, strong = 0, rows = 0, mixed = 0;
+      for (var row = 0; row < 16; row++) {
+        var hasWarm = false, hasCool = false, hasData = false;
+        for (var col = 0; col < 28; col++) {
+          var level = analysis.cells[row * 28 + col];
+          if (!Number.isFinite(level)) continue;
+          hasData = true;
+          if (level > .25) { warm++; hasWarm = true; }
+          else if (level <= -.25) { cool++; hasCool = true; }
+          else neutral++;
+          if (Math.abs(level) >= 2) strong++;
+        }
+        if (hasData) rows++;
+        if (hasWarm && hasCool) mixed++;
+      }
+      var total = warm + cool + neutral;
+      if (total) observation = [
+        uiText(uiMessage('{n} de {total} cuadros con datos muestran agua más cálida de lo habitual.',
+          '{n} of {total} squares with data show warmer-than-usual water.', { n: warm, total: total })),
+        uiText(uiMessage('{n} de {total} cuadros con datos muestran agua más fría de lo habitual.',
+          '{n} of {total} squares with data show cooler-than-usual water.', { n: cool, total: total })),
+        uiText(uiMessage('{n} de {total} cuadros con datos quedan cerca de la temperatura habitual.',
+          '{n} of {total} squares with data are close to the usual temperature.', { n: neutral, total: total })),
+        uiText(uiMessage('En {n} de {total} filas con datos aparecen zonas cálidas y frías a la vez.',
+          'In {n} of {total} rows with data, warm and cool areas appear together.', { n: mixed, total: rows })),
+        uiText(uiMessage('{n} de {total} cuadros con datos se alejan bastante de lo habitual, hacia frío o calor.',
+          '{n} of {total} squares with data show a marked shift toward warmer or cooler water.', { n: strong, total: total })),
+        uiText(uiMessage('La cuadrícula distingue {warm} cuadros más cálidos y {cool} más fríos de lo habitual.',
+          'The grid shows {warm} warmer and {cool} cooler squares than usual.', { warm: warm, cool: cool }))
+      ][index];
+    }
+    var value = {
+      title: T('Dato del mapa · ', 'Map fact · ') + this.frameTag(s.disc, s.frame),
+      observation: observation, note: fact[0], source: fact[1], sourceLabel: T('Más en NASA', 'More from NASA')
+    };
+    this.mapFactCache = { analysis: analysis, frame: s.frame, disc: s.disc, set: s.set, lang: LANG, value: value };
+    return value;
+  }
   describeText() {
     var a = this.cur(), s = this.state;
     if (!a) return T('Preparando la imagen para convertirla en música.', 'Preparing the image to turn it into music.');
@@ -6445,7 +6537,7 @@ class Component extends DCLogic {
       nextOff: false,
       feedback: uiText(s.tutorialFeedback), speechNotice: uiText(s.speechNotice),
       stateLabel: s.speaking ? T('Brisa está explicando.', 'Brisa is explaining.') : !s.tutorial ? T('Puedes consultar esta ayuda y cerrarla sin cambiar tus selecciones.', 'Read this help and close it without changing your selections.') : tutorialBlocked ? T('Tu turno. Sin límite de tiempo.', 'Your turn. No time limit.') : T('Puedes continuar o volver atrás.', 'You can continue or go back.'),
-      isTutorial: s.tutorial, showTutorialStart: false, restartLabel: T('Reiniciar tutorial', 'Restart tutorial'), restart: function () { self.startTutorial(true); },
+      isTutorial: s.tutorial, showTutorialStart: !s.tutorial, restartLabel: this.tutorialProgress?.completed ? T('Reiniciar tutorial', 'Restart tutorial') : T('Iniciar tutorial', 'Start tutorial'), restart: function () { self.startTutorial(true); },
       closeLabel: s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen'),
       canUseText: s.tutorial && s.tour === 2,
       useTextLabel: T('Continuar con la versión escrita', 'Continue with the written version'), useText: function () { self.tutorialAction('play'); },
@@ -6525,6 +6617,8 @@ class Component extends DCLogic {
       playbackSettingsLabel: T('Configuración', 'Settings'),
       playbackSettingsMenuClass: isJuke ? 'menu' : '',
       playbackRate: playbackRateLabel(s.speed),
+      listeningMode: melody ? T('Melodía', 'Melody') : T('Datos', 'Data'),
+      mapFact: isJuke && sub === 1 && s.disc < 5 ? this.mapFactVm(a) : null,
       playbackSettingsOpen: !isJuke || !!s.playbackSettingsOpen,
       syncPlaybackSettings: function (event) {
         if (!isJuke) return;
@@ -6541,7 +6635,6 @@ class Component extends DCLogic {
       languageKeys: function(event) { self.onLanguageKey(event); },
       sample: { pending: !!s.sampleStarting, label: s.sampleStarting ? T('Preparando muestra…', 'Preparing sample…') : typeof(window.AudioContext || window.webkitAudioContext) === 'function' ? tx.heroCta : T('Explorar una muestra', 'Explore a sample'), start: function() { self.startSample(); } },
       preferences: {
-        reopenLabel: T('Mis preferencias', 'My preferences'), open: function() { self.openPreferences(); },
         on: s.showPreferences, title: T('¿Cómo prefieres usarlo?', 'How would you like to use it?'),
         body: T('Puedes cambiarlo luego en Accesibilidad.', 'You can change it later in Accessibility.'),
         choices: [
@@ -6567,16 +6660,15 @@ class Component extends DCLogic {
       heroStats: [{ k: '10', l: T('discos', 'discs') }, { k: '60', l: T('fotogramas NASA', 'NASA frames') }, { k: '5', l: T('músicos', 'musicians') }],
       tx: tx,
       convert: {
-        rainBody: T('Una serie mensual de NASA POWER, convertida en música en tu navegador.', 'A monthly NASA POWER series, turned into music in your browser.'),
+        exampleTitle: T('Logo de EarthRhythm', 'EarthRhythm logo'),
+        exampleBody: T('Escucha cómo los colores del logo se convierten en notas. Después prueba con cualquier imagen compatible.',
+          'Hear how the logo colors turn into notes. Then try it with any supported image.'),
         practiceTitle: T('Prueba práctica', 'Try it'),
         ownTitle: T('Sube tu imagen', 'Upload your image'), chooseImage: T('Elegir imagen', 'Choose image'),
         imageLimits: T('PNG, JPG, WebP o GIF. Máx. 8 MB y 32 millones de píxeles. También puedes arrastrar tu imagen aquí.', 'PNG, JPG, WebP or GIF. Up to 8 MB and 32 million pixels. You can also drop your image here.'),
         imagePrivacy: T('Tu imagen se procesa en tu navegador.', 'Your image is processed in your browser.'),
-        showRain: !hasCustom || s.custom.kind === 'rain',
-        rainTitle: T('Lluvia de Chiclayo', 'Chiclayo rainfall'),
-        rainAlt: T('Gráfico de lluvia mensual en Chiclayo entre 2015 y 2018, NASA POWER.', 'NASA POWER chart of monthly rainfall in Chiclayo from 2015 to 2018.'),
-        rainListen: T('Escuchar la lluvia', 'Listen to the rainfall'),
-        hasImage: hasCustom && s.custom.kind === 'image', imageTitle: uiLabel(s.custom), imageUrl: hasCustom ? s.custom.url : '',
+        showExample: !hasCustom || s.custom.sample || s.custom.kind === 'rain',
+        hasImage: hasCustom && s.custom.kind === 'image' && !s.custom.sample, imageTitle: uiLabel(s.custom), imageUrl: hasCustom ? s.custom.url : '',
         listenImage: T('Escuchar esta imagen', 'Hear this image')
       },
       langs: [{ code: 'en', short: 'EN', name: 'English' }, { code: 'es', short: 'ES', name: 'Español' }].map(function (l) { return { code: l.code, short: l.short, name: l.name, on: LANG === l.code, pick: function () { self.setLang(l.code); } }; }),
@@ -6763,7 +6855,7 @@ class Component extends DCLogic {
       onDragOver: function (e) { e.preventDefault(); if (!s.over) self.setState({ over: true }); },
       onDragLeave: function () { self.setState({ over: false }); },
       onDrop: function (e) { e.preventDefault(); self.setState({ over: false }); var fl = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (fl) self.handleFile(fl); },
-      useSample: function () { self.loadSample(); },
+      useSample: function () { self.loadLogoSample(); },
       onUpMode: function (e) { self.setMode(e.target.value); },
       teamLabel: T('Creadores de EarthRhythm', 'EarthRhythm creators'),
       steps: STEPS

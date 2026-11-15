@@ -23,17 +23,16 @@ async function main(){
     console.log('AUDIT',width,lang,label,result.violations.length);
    };
    const step=async number=>{await page.waitForFunction(number=>__app.state.tutorial&&__app.state.tour===number,number);assert.equal(await page.locator('#tour-card').count(),1);};
-   const startFromPreferences=async()=>{
-     await page.locator('#tour-a11y > summary').click();
-     await page.locator('#tour-a11y .preferences-shortcut').click();
-     await page.locator('.preferences-actions button').nth(1).click();
+   const startFromHelp=async()=>{
+     await page.locator('#tour-guide').click();
+     await page.locator('#tour-card .tour-start').click();
    };
    const pick=async()=>{await page.locator('.dcard').nth(2).focus();await page.keyboard.press('Enter');await step(2);};
    await page.locator('#tour-guide').click();
    assert.equal(await page.locator('#tour-card .tdots').count(),0);assert.equal((await page.locator('#tour-card .tn.dim').textContent()).trim(),'');
    assert.equal(await page.locator('#tour-card .tbubble button').count(),0);await audit('context-help');
    await page.locator('#tour-card .tact .primary').click();assert.equal(await page.locator('#tour-card').count(),0);
-   await startFromPreferences();await step(1);await audit('tutorial-step-1');await pick();await audit('tutorial-step-2');
+   await startFromHelp();await step(1);await audit('tutorial-step-1');await pick();await audit('tutorial-step-2');
    await page.locator('#tour-card .skip').click();assert.equal(await page.locator('#tour-card').count(),0);
    let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('ts_tutorial')));assert.equal(saved.step,2);assert.equal(saved.done.disc,true);
    await page.locator('#tour-guide').click();await step(2);assert.equal(await page.evaluate(()=>__app.state.disc),2);assert.equal(await page.evaluate(()=>__app.state.playing),false);
@@ -50,7 +49,7 @@ async function main(){
    await page.locator('#tour-card .tact .primary').click();assert.equal(await page.locator('#tour-card').count(),0);
    saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('ts_tutorial')));assert.equal(saved.completed,true);
    await page.locator('#tour-guide').click();assert.equal(await page.evaluate(()=>__app.state.tutorial),false);await page.keyboard.press('Escape');
-   await startFromPreferences();await step(1);await pick();await page.locator('#tour-card .tbubble button').first().click();await step(1);
+   await startFromHelp();await step(1);await pick();await page.locator('#tour-card .tbubble button').first().click();await step(1);
    assert.equal(await page.evaluate(()=>__app.state.tutorialDone.disc),false);
    await page.keyboard.press('Escape');
    // First-visit entry is optional and launches the same tutorial, not a second flow.

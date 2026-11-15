@@ -60,6 +60,7 @@ def build(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_bytes(html.encode("utf-8"))
     copy2(prototype / "earthrhythm-icon.svg", destination)
+    copy2(prototype / "earthrhythm-sample.webp", destination)
     copy2(support_runtime, destination / "support.js")
     (destination / "runtime").mkdir(exist_ok=True)
     copy2(dance_runtime, destination / "runtime")

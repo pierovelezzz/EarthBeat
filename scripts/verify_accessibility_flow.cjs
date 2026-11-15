@@ -73,7 +73,8 @@ async function main() {
         await page.evaluate(()=>{__app.state.vibe=true;__app.haptics.activate();__app.vibrateSafely('test','desktop');});
         assert.deepEqual(await page.evaluate(()=>__vibrations),[]);
       }
-      await page.locator('.preferences-shortcut').click();
+      assert.equal(await page.locator('.preferences-shortcut').count(),0);
+      await page.evaluate(()=>__app.openPreferences());
       assert.equal(await page.locator('#preferences-vibe').count(),scenario.phone?1:0);
       if(scenario.phone) assert.equal(await page.locator('#preferences-vibe').isDisabled(),!scenario.api);
       await audit('preferences');
