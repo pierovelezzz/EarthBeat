@@ -1,0 +1,8 @@
+__pycache__/
+.DS_Store
+*.log
+node_modules/
+data/eic/*.mp4
+/_site/
+/_work/
+*.blend1

@@ -1,0 +1,49 @@
+# Continuación artística solicitada por el usuario
+
+
+> Edición documental de esta copia: **14/11/2026 19:03:12 (UTC-05:00)** · EarthBeat `V2`.
+> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+
+En el registro del origen, el usuario rechazó los personajes volumétricos del checkpoint anterior y pidió trasladar fielmente las ilustraciones originales a 3D, trabajando mediante la interfaz de Blender, además de movimientos y temas claro/oscuro con un oscuro menos negro. La entrega anterior queda como checkpoint técnico; no acredita aceptación visual ni cierre de este encargo ampliado. El objetivo sigue activo.
+
+Se revisaron las cinco referencias `assets/avatares/*/banda/pose-epica.png`. La nueva dirección conserva tocado curvo, prendas/adornos y quena de Silbo; sombrero escalonado, chaqueta y marimba de Inti; cabello ondulado, vestido amplio y arpa de Mamacocha; cabeza/proporciones infantiles, capucha/capa y percusión de Yaku; sombrero/gafas, poncho y tambor de Illapa. El color de las ilustraciones es monocromático de acento: no acredita materiales o vestuario históricos nuevos.
+
+Blender 5.2.2 se abrió con Computer Use. La escena se guardó por su interfaz como `assets/avatares/terrasonic-banda-estudio.blend`, separada de la versión anterior. Se trabaja en edición de malla, con la referencia examinada; no se usa consola Python ni scripts para construir los nuevos cambios. La copia previa y sus GLB permanecen recuperables en Git y en los ZIP técnicos. Se restauró el .blend canónico exactamente al blob del checkpoint, conservando aparte el guardado GUI inicial; el trabajo nuevo solo vive en la copia de estudio.
+
+Trabajo en curso: Yaku aislado en vista frontal, selección de cabeza/capucha y ajuste de proporción 1,25. Falta desarrollar silueta, rostro, prendas y detalles, revisar perfil/reverso, materiales y animación antes de exportar o reemplazar los modelos publicados. Una escala parcial no es la entrega artística solicitada. Se añadirá tema claro y se suavizará el oscuro con contraste verificable. No se publica esta revisión de personajes como terminada.
+
+La copia de estudio ya conserva el ajuste de cabeza/capucha de Yaku y dos puntas laterales creadas/colocadas con las herramientas de edición de Blender. Se trabaja en la revisión de perfil y las demás formas: no se exportaron como modelo aprobado. Los prompts confirman que Yaku toca tres botellas con dos baquetas; no deben sustituirse por maracas por inferirlo de la silueta de las baquetas en la ilustración.
+
+Tema nuevo local: pizarra azul oscuro (#171E2B), superficies separadas y modo claro, guardado de elección independiente y combinación con alto contraste. Control «Modo claro» dentro de Accesibilidad. 142 pruebas de producto pasan. La matriz ampliada de temas recorre secciones y cinco fichas; las pasadas iniciales detectaron texto heredado claro en fondos claros y se corrigió. La pasada de 244 estados quedó interrumpida por error de escritura del fixture y no cuenta como completa. Se conserva su evidencia separada de la repetición corregida.
+
+La repetición corregida completó **256 estados por motor** en Chromium, Firefox y WebKit: dos ventanas CSS (390×844 y 1342×605), español/inglés, claro/oscuro, alto contraste y las secciones/fichas. Cero errores JS, desbordamientos o infracciones detectadas por axe en esas pasadas; no es certificación ni zoom nativo. El control de tema se accionó con teclado y su persistencia se comprobó recargando. La elección no cambia archivo, fecha, posición, reproducción, mezcla ni ayuda. El menú de nueve controles pasó además los recorridos con texto ampliado. Evidencia: `_work/themes/readable-chromium/results.json`, `_work/themes/firefox/themes/results.json`, `_work/themes/webkit/themes/results.json` y sus `preferences`/`run.json`. Capturas claras de portada y ficha de Silbo revisadas visualmente.
+
+El tema ya está publicado y comprobado en la misma vista independiente, fuente `REVISION_PREVIA`, estático `REVISION_PREVIA`; [procedencia](PUBLICACION.md). Los modelos publicados siguen siendo el checkpoint rechazado por el usuario: las pruebas técnicas anteriores no validan su calidad artística. La nueva escena de estudio todavía no se exporta a GLB.
+
+La escena de estudio se guardó por Ctrl+S según el registro del origen de Bogotá. Además de cabeza y puntas, contiene una primera capa obtenida por edición de la pieza dorsal: hombros más estrechos, borde separado de la espalda y color verde mediante UV en el atlas existente. Se revisaron frente y reverso en el viewport. Sigue siendo una forma preliminar sin pliegues o confección suficientes. No hay nuevos clips, rig revisado ni exportación aprobada.
+
+El usuario confirmó que está utilizando Blender para inspeccionar los diseños. Computer Use detectó actividad concurrente y selecciones/contextos cambiantes; se dejó de enviar entradas para no interferir. Para retomar hace falta disponibilidad de la ventana, no autorización nueva para el encargo. El próximo trabajo es reconstruir las formas con las referencias visibles, no seguir dando por suficiente el volumen anterior.
+
+## Referencias originales comprobadas
+
+El enlace repetido por el usuario se revisó en GitHub y en el historial local. Las cinco `pose-epica.png` se incorporaron en `REVISION_PREVIA`. Sus imágenes y los veinte keyframes coinciden por SHA-256 con `main` `REVISION_PREVIA`: **25 imágenes intactas**. También se examinaron las hojas de sprites anteriores de `REVISION_PREVIA` y el árbol completo de la rama `mejoras/pagina`: no apareció una referencia de modelado adicional. Los `*/imagegen/modelo-referencia.png` citados por los prompts no están en esos árboles; las cinco ilustraciones disponibles sí permiten trabajar su identidad. Evidencia de integridad: `_work/original-art-audit/results.json`.
+
+| Personaje | Rasgos que deben conservarse | Diferencia que aún debe resolverse |
+| --- | --- | --- |
+| Silbo | Tocado curvo amplio, rostro anciano amable, trenzas, túnica ornamentada y quena diagonal | Túnica demasiado rígida/corta, cabeza y tocado simplificados, postura poco expresiva |
+| Inti | Sombrero de ala muy ancha con corona escalonada y sol, cabello en mechones, chaqueta, marimba y dos baquetas | Sombrero y cabello con poca semejanza, cara genérica, indumentaria simplificada |
+| Mamacocha | Cabello ondulado abundante, trenzas, pendientes de pez, chal de red, vestido amplio y arpa | Silueta del vestido y cabello insuficiente, ornamentos y expresión ausentes |
+| Yaku | Cara infantil con ojos amplios, cabello ondulado, capucha amplia con tres puntas/gafas, abrigo con bolsillos, botas palmeadas, tres botellas y dos baquetas | Ojos saltones pequeños, pelo casi ausente, piernas largas, prenda rígida, botellas en una barra y falta de las baquetas visibles de la pose |
+| Illapa | Sombrero con gafas, cabello rizado, poncho con cenefa y flecos, sash, tambor y baqueta | Poncho y accesorios simplificados, cara/pelo genéricos y silueta poco fiel |
+
+La comparación debe hacerse primero frente a frente y después en perfil/reverso; rig y animación se revisan sobre una geometría reconocible. Estas observaciones no son aprobación cultural ni una promesa de calidad cinematográfica.
+
+## Preparación de una base anatómica para la reconstrucción
+
+Mientras la ventana de Blender estaba en uso por el usuario se preparó **Human Base Meshes v1.4.1**, recurso oficial de Blender Studio/comunidad, CC0. Se descargó desde `download.blender.org` a D, sin instalar programas ni ejecutar scripts de Blender. ZIP: 50.643.039 bytes, SHA-256 `811f43accbb31a88266d932f8f5563b2d13586fca0ba2693aad1f5fe582b3515`; CRC correcto. El archivo completo se extrajo conservando catálogo y miniaturas, sin sobrescribir otra carpeta. Su procedencia queda en `assets/avatares/recursos-base/human-base-meshes-v1.4.1.json` y el caché está en `_work/assets/human-base-meshes-v1.4.1/`.
+
+Se examinaron las miniaturas originales de cabeza, cuerpo masculino y femenino estilizados. La cabeza ofrece bucles continuos alrededor de ojos/boca; puede servir como punto de partida para esculpir párpados y mejillas, evitando conservar la cara formada por esferas separadas. La idoneidad real, deformación y semejanza siguen sin verificar en Blender. No se ha incorporado ninguna malla a TerraSonic ni se cambió el producto publicado. La base no aporta la identidad de los músicos ni sustituye sus ilustraciones, prendas o instrumentos.
+
+Fuentes: [descarga oficial](https://www.blender.org/download/demo-files/), [registro oficial que identifica el paquete como CC0](https://projects.blender.org/blender/blender/commit/4c4293010c2e21122b54681cd22556b727efbb11) y [dedicación CC0](https://creativecommons.org/publicdomain/zero/1.0/). Las aperturas de algunas páginas Blender devolvieron 402/403 al buscador; se contrastó la información indexada del sitio oficial con el registro oficial de desarrollo y la descarga HTTPS directa. No se usó un sitio de terceros para acreditar la licencia ni se eludió una barrera de navegador.
+
+Para continuar cuando la ventana quede libre: conservar los cambios de inspección del usuario; abrir una copia nueva o añadir la malla escogida mediante la interfaz de Blender; trabajar primero la cabeza reconocible de Yaku con la ilustración visible; ajustar ropa, cabello, botas y percusión; después revisar rig, expresiones y clips. La copia previa y sus GLB siguen recuperables. La próxima acción no es ejecutar `modelar_banda.py` ni exportar el estudio preliminar como final. C conservaba 16.677 millones de bytes libres al preparar el recurso; no hubo limpieza ni cambios de sistema.
