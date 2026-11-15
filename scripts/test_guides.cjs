@@ -152,6 +152,7 @@ test('guides are optional on startup and when changing section', () => {
   c.componentDidMount();
   assert.equal(timers.size, 0, 'startup must not schedule an unsolicited guide');
   c.goTab('how');
+  c.routeFinish();
   assert.equal(timers.size, 0, 'navigation must not schedule an unsolicited guide');
   assert.equal(c.state.tour, 0);
 });
@@ -355,8 +356,18 @@ test('sample labels translate without replacing the rainfall analysis', async ()
   assert.match(c.renderVals().playTitle,/rainfall/);
 });
 
+test('full motion is the default even if the browser requests reduced motion', () => {
+  const { component: c, context, storage } = setup({ firstVisit: true });
+  assert.equal(context.window.matchMedia('(prefers-reduced-motion: reduce)').matches, true);
+  assert.equal(c.renderVals().motionMode, 'full');
+  c.setPreference('reducedMotion', true);
+  const reloaded = setup({ storage: Object.fromEntries(storage) });
+  assert.equal(reloaded.component.renderVals().motionMode, 'reduced');
+});
+
 test('reduced motion keeps all five portraits static at mobile and desktop widths', () => {
   const { component: c, context, timers } = setup();
+  c.setPreference('reducedMotion', true);
   c.state.tab = 'band';
   for (const width of [320, 390, 1200]) {
     context.window.innerWidth = width;
@@ -428,19 +439,16 @@ test('all section transitions settle on mobile and desktop without stacking rapi
 });
 
 test('enabling reduced motion during a transition commits once and clears the overlay', () => {
-  const { component: c, context, events, timers } = setup();
-  const media = { matches: false, addEventListener: (type, fn) => events.set('motion', fn), removeEventListener: () => events.delete('motion') };
-  context.window.matchMedia = () => media;
+  const { component: c, timers } = setup();
   c.componentDidMount(); c.goTab('how');
   const stale = [...timers.values()];
-  media.matches = true; events.get('motion')?.();
+  c.setPreference('reducedMotion', true);
   assert.equal(c.state.tab, 'how');
   assert.equal(c.state.trans, false);
   assert.equal(c.routeTimers.length, 0);
   c.goTab('tech'); stale.forEach(fn => fn());
   assert.equal(c.state.tab, 'tech', 'late callbacks must not revert the selected screen');
   c.componentWillUnmount();
-  assert.equal(events.has('motion'), false);
 });
 
 test('late transition callbacks cannot update an unmounted component', () => {
@@ -842,6 +850,7 @@ test('late completion of a timed-out resume cannot finish a newer activation', a
 test('stop, navigation, file operations and unmount settle a pending activation immediately', async () => {
   for (const cancel of [c => c.stop(), c => c.goTab('tech'), c => c.handleFile({name:'new.csv',type:'text/csv',size:1}), c => c.componentWillUnmount()]) {
     const { component: c, context, timers, intervals, AudioContextStub } = audioHarness();
+    c.setPreference('reducedMotion', true);
     c.state.tab = 'how'; c.state.sub = 0;
     let rejectLate;
     context.window.AudioContext = class extends AudioContextStub {
@@ -874,6 +883,7 @@ test('successful and rejected audio activations release their deadline timers', 
 
 test('Technology has four unfiltered tool lists and one credits page in both languages', () => {
   const {component:c,context}=setup();
+  c.setPreference('reducedMotion', true);
   c.state.tab='tech';
   for(const lang of ['es','en']) {
     c.setLang(lang);c.state.sub=0;
@@ -909,6 +919,7 @@ function sectionNavHarness() {
 
 test('section changes and language changes bring the active tab into view without moving focus', () => {
   const { component: c, context, buttons, scrolled } = sectionNavHarness();
+  c.setPreference('reducedMotion', true);
   context.document.activeElement = buttons[0];
   c.goTab('tech');
   assert.equal(scrolled.at(-1).key, 'tech'); assert.equal(scrolled.at(-1).options.block, 'nearest');
@@ -994,6 +1005,7 @@ test('leaving a playback screen stops immediately, clears activity and preserves
 
 test('opening a disc reaches the player at its first frame and preserves the configured band', async () => {
   const {component:c,intervals}=audioHarness(); c.state.tab='juke';c.state.sub=2;
+  c.setPreference('reducedMotion', true);
   c.setBandMute({silbo:false,inti:false,mama:true,yaku:false,illapa:true});
   const mute=JSON.stringify(c.state.mute); await c.play();
   c.goSub(0);
@@ -1111,11 +1123,11 @@ test('playing cannot restart on an outgoing screen while its navigation transiti
 
 
 test('enabling reduced motion cancels an in-flight cut without restarting it or stopping music', () => {
-  const {component:c,context,timers}=setup();const media={matches:false};context.window.matchMedia=()=>media;
+  const {component:c,timers}=setup();
   c.componentDidMount();c.state.tab='band';c.state.playing=true;c.preloadBandClip=()=>Promise.resolve(null);
-  c.pickBand(1);assert.equal(c.state.bphase,'entry');media.matches=true;c.onRouteMotion();
+  c.pickBand(1);assert.equal(c.state.bphase,'entry');c.setPreference('reducedMotion', true);
   assert.equal(c.state.bphase,'idle');assert.equal(c.bandTimer,null);assert.equal(timers.size,0);assert.equal(c.state.playing,true);
-  media.matches=false;assert.equal(c.renderVals().bandCur.entering,false);assert.equal(c.renderVals().bandCur.hasOutgoing,false);
+  c.setPreference('reducedMotion', false);assert.equal(c.renderVals().bandCur.entering,false);assert.equal(c.renderVals().bandCur.hasOutgoing,false);
 });
 
 
@@ -1750,7 +1762,7 @@ test('a heard step commits map position and its textual event in one render',asy
 });
 
 test('the complete band is active by default and an explicitly edited mix is preserved',()=>{
-  const {component:c}=setup();c.state.tab='juke';c.state.sub=0;c.renderVals().discs[0].pick();
+  const {component:c}=setup();c.setPreference('reducedMotion', true);c.state.tab='juke';c.state.sub=0;c.renderVals().discs[0].pick();
   assert.equal(c.leadChar(),'mama');assert.equal(Object.values(c.state.mute).filter(Boolean).length,0);
   c.goSub(0);const manual=c.allMute(false);manual.yaku=true;c.setBandMute(manual);c.renderVals().discs[4].pick();
   assert.deepEqual(c.state.mute,manual);assert.equal(c.leadChar(),'illapa');

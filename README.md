@@ -24,7 +24,7 @@ python -m http.server 8765 --bind 127.0.0.1 --directory _site
 
 Abrir [la aplicación local](http://127.0.0.1:8765/). Detener el servidor con Ctrl+C. La revisión utiliza Python 3.12.14 y Node 26.13.0. Node se necesita para las pruebas, no para servir el sitio.
 
-El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) guarda esa elección en EarthBeat para las próximas visitas. Se puede volver a activar el movimiento reducido desde Accesibilidad.
+EarthBeat inicia con las animaciones completas. La elección de movimiento reducido se controla desde Accesibilidad y se guarda para las próximas visitas. El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) permite volver al modo completo.
 
 ## Fuente de la aplicación
 

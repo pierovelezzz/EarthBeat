@@ -3637,13 +3637,16 @@ class CinematicIntro {
       // Reveal the home page as the introduction fades out.
       var targets=['.brand','.top','#main-content .hero h1','.hero .lede','.hero .cta','.home-demo','.hero-reassurance'];
       targets.forEach(function(selector,i){var el=document.querySelector(selector);if(!el?.animate)return;var delay=duration*.7+i*55;self.animations.push(el.animate([{opacity:0,transform:selector==='.home-demo'?'translateX(14px) rotate(1deg)':'translateY(8px)'},{opacity:1,transform:'translate(0,0) rotate(0)'}],{duration:Math.min(380,duration-delay-20),delay:delay,fill:'backwards',easing:'cubic-bezier(.2,.7,.2,1)'}));});
-      end.onfinish=function(){self.finish(true);};this.timers.push(setTimeout(function(){self.finish(true);},duration+250));
+      var finish = function () { if (self.endAnimation === end) self.finish(true); };
+      end.finished.then(finish, finish);
+      this.timers.push(setTimeout(finish, duration + 250));
     }catch(ignored){this.playGentle();}
   }
   resetAnimations() {
     this.timers.forEach(clearTimeout);
     this.timers = [];
-    this.animations.forEach(animation => { animation.onfinish = null; animation.cancel(); });
+    this.endAnimation = null;
+    this.animations.forEach(animation => animation.cancel());
     this.animations = [];
   }
   togglePause(){if(!this.root||this.root.dataset.static==='true')return;this.paused=!this.paused;this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(a=>this.paused?a.pause():a.play());if(!this.paused){var self=this;this.timers.push(setTimeout(function(){self.finish(true);},Math.max(0,this.duration-Number(this.endAnimation?.currentTime||0))+500));}this.update();}
@@ -3717,11 +3720,15 @@ class SpaceJourney {
       root.querySelector('svg').style.transformOrigin='50% 50%';this.animations.push(root.querySelector('svg').animate([{transform:'scale(1)'},{transform:'scale(1.035)'}],{duration:duration,fill:'both'}));
       this.animations.push(root.querySelector('.voyage-glow').animate([{opacity:0,offset:0},{opacity:.14,offset:.04},{opacity:0,offset:.12},{opacity:0,offset:.84},{opacity:.12,offset:.92},{opacity:0,offset:1}],{duration:duration,fill:'both'}));
       this.phaseTimers=[setTimeout(function(){if(self.root)phase.textContent=T('En vuelo','In flight');},1400),setTimeout(function(){if(self.root)phase.textContent=landing?T('Aproximación al destino','Approaching the destination'):T('Órbita de observación','Observation orbit');},3800)];
-      ship.onfinish=function(){self.finish(true);};this.timer=setTimeout(function(){self.finish(true);},duration+300);
+      this.shipAnimation = ship;
+      var finish = function () { if (self.shipAnimation === ship) self.finish(true); };
+      ship.finished.then(finish, finish);
+      this.timer = setTimeout(finish, duration + 300);
     }catch(ignored){this.finish(true);}
   }
   finish(arrived){
-    clearTimeout(this.timer);this.timer=null;this.phaseTimers.forEach(clearTimeout);this.phaseTimers=[];this.animations.forEach(function(a){a.onfinish=null;a.cancel();});this.animations=[];
+    this.shipAnimation = null;
+    clearTimeout(this.timer);this.timer=null;this.phaseTimers.forEach(clearTimeout);this.phaseTimers=[];this.animations.forEach(function(a){a.cancel();});this.animations=[];
     if(this.root){this.root.remove();this.root=null;this.appRoot.inert=this.wasInert;document.removeEventListener('keydown',this.onKey,true);document.removeEventListener('visibilitychange',this.onHidden);}
     var done=this.arrive;this.arrive=null;if(arrived&&done){this.owner.vibrateSafely('notice','arrival:'+ (++this.owner.hapticRequestSerial));done();}else if(this.trigger?.isConnected)this.trigger.focus({preventScroll:true});this.trigger=null;
   }
@@ -3754,13 +3761,11 @@ class Component extends DCLogic {
     this.state.colorScheme = 'dark';
     try { if (localStorage.getItem('ts_theme') === 'light') this.state.colorScheme = 'light'; } catch (ignored) {}
     var preferences = readPreferences(), self = this;
+    this.state.reducedMotion = false;
     if (preferences) PREFERENCE_KEYS.forEach(function (key) { if (typeof preferences.values[key] === 'boolean') self.state[key] = preferences.values[key]; });
     this.preferencesConfigured = !!(preferences && preferences.configured);
     this.state.showPreferences = false; this.state.sampleStarting = false;
     this.entryWelcomePending = !this.preferencesConfigured;
-    // Older saves wrote false by default even when the visitor never changed motion.
-    this.state.reducedMotion = preferences?.values.motionOverride === true || preferences?.values.reducedMotion === true
-      ? !!this.state.reducedMotion : null;
     if (window.location?.href) {
       var entryUrl = new URL(window.location.href);
       if (entryUrl.searchParams.get('movimiento') === 'completo') {
@@ -3861,17 +3866,6 @@ class Component extends DCLogic {
     window.addEventListener('focus', this.onTourVisible);
     if (window.visualViewport) { window.visualViewport.addEventListener('resize', this.onTourResize); window.visualViewport.addEventListener('scroll', this.onTourLayout); }
     if (window.ResizeObserver) { this.tourObserver = new ResizeObserver(this.onTourLayout); this.tourObserver.observe(document.body); }
-    this.routeMedia = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
-    this.onRouteMotion = function () {
-      self.syncPreferenceMotion();
-      if (!self.bandReduced()) return;
-      if (self.cinema?.root) self.cinema.playGentle();
-      if (self.journey.root) self.journey.finish(true);
-      self.haptics.stop();
-      if (self.routeFinish) self.routeFinish();
-      if (self.state.tab === 'band') self.cancelBandClip();
-    };
-    if (this.routeMedia && this.routeMedia.addEventListener) this.routeMedia.addEventListener('change', this.onRouteMotion);
     this.ensureNavVisible();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!self.disposed) self.ensureNavVisible(); });
     this.syncPreferenceMotion();
@@ -3891,7 +3885,6 @@ class Component extends DCLogic {
   savePreferences() {
     var self = this, values = {};
     PREFERENCE_KEYS.forEach(function (key) { values[key] = !!self.state[key]; });
-    values.motionOverride = typeof this.state.reducedMotion === 'boolean';
     try {
       localStorage.setItem('ts_prefs', JSON.stringify({ version: 1, configured: this.preferencesConfigured, values: values }));
       return true;
@@ -3910,7 +3903,12 @@ class Component extends DCLogic {
     if (key === 'sfx') this.syncVolume();
     if (key === 'reducedMotion') {
       if (value && this.routeFinish) this.routeFinish();
-      if (value) { this.cinema?.finish(true); this.cancelBandClip(); this.haptics.stop(); }
+      if (value) {
+        this.cinema?.finish(true);
+        if (this.journey.root) this.journey.finish(true);
+        this.cancelBandClip();
+        this.haptics.stop();
+      }
       this.syncPreferenceMotion();
     }
     if (key === 'vibe') {
@@ -4348,7 +4346,6 @@ class Component extends DCLogic {
     window.removeEventListener('focus', this.onTourVisible);
     if (window.visualViewport) { window.visualViewport.removeEventListener('resize', this.onTourResize); window.visualViewport.removeEventListener('scroll', this.onTourLayout); }
     if (this.tourObserver) this.tourObserver.disconnect();
-    if (this.routeMedia && this.routeMedia.removeEventListener) this.routeMedia.removeEventListener('change', this.onRouteMotion);
     ++this.routeRun;
     this.routeFinish = null;
     this.routeTimers.forEach(clearTimeout);
@@ -4359,7 +4356,7 @@ class Component extends DCLogic {
     if (this.ac) this.ac.close();
   }
   bandReduced() {
-    return this.state.reducedMotion ?? !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    return this.state.reducedMotion;
   }
   cancelBandClip() {
     clearTimeout(this.bandTimer);
@@ -6028,9 +6025,7 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageMotionNotice: s.reducedMotion
-        ? T('Movimiento reducido activado en Accesibilidad.', 'Reduced motion is on in Accessibility.')
-        : reducedMotion ? T('Movimiento reducido activado en tu dispositivo.', 'Reduced motion is on in your device settings.') : '',
+      stageMotionNotice: reducedMotion ? T('Movimiento reducido activado en Accesibilidad.', 'Reduced motion is on in Accessibility.') : '',
       stageMusicians: band.map(function (member) {
         var level = member.on ? s.levels[member.key] || 0 : 0;
         var note = member.on && s.playing && !s.masterMuted && s.volume > 0 ? s.stageNotes[member.key] : null;
