@@ -32,7 +32,7 @@ La rama `accesibilidad/v4-flujo-inclusivo` conserva la distribución original y 
 
 - La vibración opcional aparece solo en teléfonos identificados por el navegador. Incluye prueba, parada y explicación de disponibilidad. Puede combinarse con audio silenciado y movimiento visual reducido; resume intensidad musical, no sustituye la lectura de datos.
 - El desplegable «Consultar datos sin usar el mapa» permite elegir cualquiera de las 28 columnas y leer sus 16 filas con teclado o lector de pantalla. Distingue niveles derivados, ausencia de datos y fondo del gráfico de lluvia.
-- El menú Accesibilidad incluye instrucciones de teclado, lectura, alternativas al sonido y reducción de estímulos, en español e inglés.
+- El botón independiente «Formas de usar» (icono de interrogación en pantallas estrechas) abre instrucciones de teclado, lectura, alternativas al sonido y reducción de estímulos, en español e inglés. El texto ocupa todo el ancho y se reparte en páginas según el espacio disponible, sin desplazamiento interno.
 
 [Resultados y límites de la comprobación](docs/ACCESIBILIDAD_VERIFICACION.md). La identificación de teléfonos es aproximada y la vibración física depende del navegador y del dispositivo.
 
@@ -47,7 +47,7 @@ node scripts/test_guides.cjs _site/index.html
 python scripts/run_browser_checks.py --list
 ```
 
-La suite de lógica contiene 139 pruebas en esta rama. El recorrido del RETO 05 se puede ejecutar con el runner usando la opción --only reto05. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
+La suite de lógica contiene 142 pruebas en esta rama. El recorrido del RETO 05 se puede ejecutar con el runner usando la opción --only reto05. Los resultados y el alcance de la comprobación de navegador están en [VERIFICACION.md](docs/VERIFICACION.md). La lista del runner enumera guiones disponibles; no prueba que todos los selectores heredados sigan correspondiendo a esta interfaz.
 
 ## Documentación
 

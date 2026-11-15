@@ -1728,6 +1728,51 @@ test('written data describes unavailable analysis, local images and rainfall wit
   assert.match(c.renderVals().accessHelp.withoutSound,/datos/i);
 });
 
+test('standalone usage help preserves playback, traps focus and restores its own opener', () => {
+  const {component:c,context,element}=setup();
+  const trigger=element('ways-trigger',0,0,80,44),close=element('ways-close',0,0,44,44),next=element('ways-next',0,0,80,44);
+  const dialog=element('ways-dialog',0,0,600,440);
+  dialog.contains=el=>[close,next,dialog].includes(el);
+  dialog.querySelectorAll=()=>[close,next];
+  c.state.playing=true;c.state.tab='juke';c.state.sub=1;c.state.col=9;c.state.frame=2;
+  const before=JSON.stringify([c.state.playing,c.state.col,c.state.frame,c.state.mute]);
+  c.openWays({currentTarget:trigger});
+  assert.equal(c.state.showWays,true);assert.equal(context.document.activeElement,close);
+  const pages=c.waysVm().pages;
+  assert.equal(pages.length,5);
+  c.goWays(1);assert.equal(c.state.waysPage,1);
+  next.focus();let prevented=0;
+  c.waysKey({key:'Tab',preventDefault(){prevented++;}});
+  assert.equal(context.document.activeElement,close);assert.equal(prevented,1);
+  c.waysKey({key:'Escape',preventDefault(){prevented++;}});
+  assert.equal(c.state.showWays,false);assert.equal(context.document.activeElement,trigger);
+  assert.equal(JSON.stringify([c.state.playing,c.state.col,c.state.frame,c.state.mute]),before);
+  c.openWays({currentTarget:trigger});c.setLang('en');
+  assert.match(c.waysVm().title,/Ways to use/);
+  c.closeWays();assert.equal(context.document.activeElement,trigger);
+});
+
+test('usage text pagination fills available width without losing or reordering words', () => {
+  const {context}=setup();
+  const topics=[{title:'A',text:'one two three four five six seven eight nine ten'},{title:'B',text:'another paragraph with enough words to wrap'}];
+  for(const limit of [1,12,24,1000]) {
+    const pages=context.paginateUsage(topics,text=>text.length<=limit);
+    for(let i=0;i<topics.length;i++) assert.equal(pages.filter(p=>p.topic===i).map(p=>p.text).join(' '),topics[i].text);
+    assert(pages.every(p=>p.text.length<=limit||!p.text.includes(' ')));
+    assert.equal(pages[0].start,0);
+  }
+});
+
+test('usage help remeasures when delayed fonts finish loading', async () => {
+  const {component:c,context,element}=setup();let finishFonts,layouts=0;
+  context.document.fonts={ready:new Promise(resolve=>{finishFonts=resolve;})};
+  c.scheduleWaysLayout=()=>{layouts++;};
+  c.componentDidMount();c.openWays({currentTarget:element('ways-trigger',0,0,44,44)});
+  assert.equal(layouts,1);
+  finishFonts();await Promise.resolve();
+  assert.equal(layouts,2,'The loaded font metrics must trigger repagination');
+});
+
 test('a delayed UI callback retains exact planned spacing within the lookahead', async()=>{
   const {component:c,scheduled}=clockHarness();c.state.engine='raw';await c.play();c.scheduleAudio();
   c.ac.currentTime=.3;c.scheduleAudio();

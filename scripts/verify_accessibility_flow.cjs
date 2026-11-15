@@ -52,11 +52,16 @@ async function main() {
         console.log('AUDIT',scenario.name,label,result.violations.length);
       };
       await audit('home');
+      await page.locator('#ways-trigger').click();
+      await page.waitForFunction(()=>__app.waysChunks?.length);
+      await audit('standalone-usage-help');
+      await page.keyboard.press('Escape');
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'ways-trigger');
       await page.locator('#tour-a11y > summary').click();
       assert.equal(await page.locator('.haptics-settings').count(),scenario.phone?1:0);
       assert.equal(await page.getByRole('button',{name:'Vibración',exact:true}).count(),scenario.phone?1:0);
-      await page.locator('.access-help > summary').click();
-      await audit('settings-and-help');
+      assert.equal(await page.locator('#tour-a11y .access-help').count(),0);
+      await audit('settings');
       if(scenario.phone) {
         const vibration=page.getByRole('button',{name:'Vibración',exact:true});
         assert.equal(await vibration.isDisabled(),!scenario.api);

@@ -1374,11 +1374,27 @@ a{color:inherit}
 .px .preferences-actions{display:flex;flex-wrap:wrap;gap:8px}
 .px .preferences-actions button{flex:1 1 180px;white-space:normal;min-height:44px}
 .px .preferences-dialog .btn[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-.px .access-help,.px .accessible-data{font-size:.9em;line-height:1.55}
-.px .access-help summary,.px .accessible-data summary{cursor:pointer;min-height:44px;align-content:center;font-weight:600}
-.px .access-help p,.px .accessible-data p{margin:8px 0}
-.px .access-help ul{padding-inline-start:20px}
-.px .access-help li{margin:8px 0}
+.px .accessible-data{font-size:.9em;line-height:1.55}
+.px .accessible-data summary{cursor:pointer;min-height:44px;align-content:center;font-weight:600}
+.px .accessible-data p{margin:8px 0}
+.px .ways-trigger{min-height:44px;padding-inline:12px;gap:7px;letter-spacing:.04em;white-space:nowrap}
+.px .ways-trigger svg{width:18px;height:18px;flex-shrink:0}
+.px .ways-dim{position:fixed;inset:0;z-index:1120;background:#000b}
+.px .ways-dialog{position:fixed;inset:0;z-index:1121;margin:auto;width:min(780px,calc(100% - 24px));height:min(500px,calc(100dvh - 24px));padding:24px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:18px;background:var(--surface);color:var(--fg);border:1px solid var(--fg);border-radius:8px;box-shadow:0 12px 80px #000}
+.px .ways-header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.px .ways-header h2{font:700 clamp(18px,2.4vw,26px)/1.2 var(--head);margin:0;min-width:0}
+.px .ways-header .btn{flex-shrink:0}
+.px .ways-content{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;min-width:0;min-height:0;align-items:start}
+.px .ways-content h3{font-size:1.1em;line-height:1.25;margin:0}
+.px .ways-copy{position:relative;width:100%;height:100%;min-width:0;min-height:0}
+.px .ways-copy p{width:100%;max-width:none;margin:0;font-size:1em;line-height:1.6;overflow-wrap:anywhere}
+.px .ways-footer{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
+.px .ways-footer p{margin:0;width:8ch;text-align:center;font-size:clamp(12px,.8em,16px);font-variant-numeric:tabular-nums;white-space:nowrap}
+.px .ways-dialog .btn.sm{min-height:44px;font-size:clamp(12px,.75em,16px);letter-spacing:.02em;padding-inline:10px}
+.px .ways-footer .btn.sm{font-size:clamp(12px,.7em,14px);padding-inline:6px;white-space:nowrap}
+@media(max-width:1279px){.px .ways-trigger .ways-label{display:none}.px .ways-trigger{width:44px;min-width:44px;padding:0}}
+@media(min-width:1280px) and (max-width:1600px){.px .readable-nav .ways-trigger .ways-label{display:none}.px .readable-nav .ways-trigger{width:44px;min-width:44px;padding:0}}
+@media(max-width:620px),(max-height:450px){.px .ways-dialog{padding:12px;gap:10px}.px .ways-content{gap:6px}}
 .px .accessible-data label{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
 .px .accessible-data select{min-height:44px;max-width:100%;font:inherit}
 .px .accessible-data table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
@@ -2119,6 +2135,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <span class="language-thumb" aria-hidden="true"></span>
 <sc-for list="{{langs}}" as="l" hint-placeholder-count="2"><button type="button" onClick="{{l.pick}}" aria-pressed="{{l.on}}" lang="{{l.code}}" aria-label="{{l.short}} {{l.name}}" title="{{l.name}}">{{l.short}}</button></sc-for>
 </div>
+<button id="ways-trigger" type="button" class="btn sm ways-trigger" onClick="{{accessHelp.open}}" aria-label="{{accessHelp.triggerLabel}}" title="{{accessHelp.triggerLabel}}" aria-haspopup="dialog" aria-expanded="{{accessHelp.on}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9 8.5a3 3 0 0 1 6 0c0 2-3 2-3 4.5m0 3v1"/></svg><span class="ways-label">{{accessHelp.triggerLabel}}</span></button>
 <details id="tour-a11y" class="menu" onToggle="{{positionAccessibilityMenu}}">
 <summary aria-label="{{tx.a11yAria}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="7.2" r="1.5" fill="currentColor" stroke="none"></circle><path d="M7 10h10M12 10v4m0 0-3 4.5m3-4.5 3 4.5"></path></svg><span class="mlabel">{{tx.a11y}}</span></summary>
 <div class="pop" role="group" aria-label="{{tx.a11y}}">
@@ -2135,9 +2152,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </section>
 </sc-if>
 <button type="button" class="preferences-shortcut" onClick="{{preferences.open}}">{{preferences.reopenLabel}}</button>
-<details class="access-help"><summary>{{accessHelp.title}}</summary>
-<ul><li>{{accessHelp.keyboard}}</li><li>{{accessHelp.screenReader}}</li><li>{{accessHelp.withoutSound}}</li><li>{{accessHelp.reading}}</li><li>{{accessHelp.motion}}</li></ul>
-</details>
 </div>
 </details>
 </div>
@@ -2598,6 +2612,15 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="glabel">{{tx.guide}}</span>
 </button>
 </div>
+</sc-if>
+
+<sc-if value="{{accessHelp.on}}">
+<div class="ways-dim" aria-hidden="true"></div>
+<section id="ways-dialog" class="ways-dialog" role="dialog" aria-modal="true" aria-labelledby="ways-title" tabindex="-1">
+<div class="ways-header"><h2 id="ways-title">{{accessHelp.title}}</h2><button id="ways-close" type="button" class="btn sm" onClick="{{accessHelp.close}}">{{accessHelp.closeLabel}}</button></div>
+<div class="ways-content"><h3 id="ways-topic" tabindex="-1" aria-describedby="ways-text">{{accessHelp.topic}}</h3><div id="ways-copy" class="ways-copy"><p id="ways-text">{{accessHelp.text}}</p></div></div>
+<div class="ways-footer"><button id="ways-prev" type="button" class="btn sm" onClick="{{accessHelp.prev}}" disabled="{{accessHelp.prevOff}}">{{accessHelp.prevLabel}}</button><p role="status" aria-live="polite" aria-atomic="true">{{accessHelp.progress}}</p><button id="ways-next" type="button" class="btn sm" onClick="{{accessHelp.next}}" disabled="{{accessHelp.nextOff}}">{{accessHelp.nextLabel}}</button></div>
+</section>
 </sc-if>
 
 <sc-if value="{{preferences.on}}">
@@ -3836,6 +3859,33 @@ function isPhoneDevice(nav) {
   if (typeof nav.userAgentData?.mobile === 'boolean') return nav.userAgentData.mobile;
   return /iPhone|iPod|Android.*Mobile|Windows Phone/i.test(nav.userAgent || '');
 }
+function paginateUsage(topics, fits) {
+  var pages = [];
+  topics.forEach(function (topic, index) {
+    var words = topic.text.trim().split(/\s+/), start = 0;
+    while (start < words.length) {
+      var low = start + 1, high = words.length, end = low;
+      while (low <= high) {
+        var middle = Math.floor((low + high) / 2);
+        if (fits(words.slice(start, middle).join(' '))) { end = middle; low = middle + 1; }
+        else high = middle - 1;
+      }
+      pages.push({ topic: index, title: topic.title, text: words.slice(start, end).join(' '), start: start });
+      start = end;
+    }
+  });
+  return pages;
+}
+function usageHelp() {
+  return {
+        title: T('Formas de usar EarthRhythm', 'Ways to use EarthRhythm'),
+        keyboard: T('Teclado: Tab y Mayús+Tab recorren los controles; Enter o Espacio activan botones. Las flechas ajustan volumen y posición. Escape cierra la guía y los ajustes.', 'Keyboard: Tab and Shift+Tab move between controls; Enter or Space activate buttons. Arrow keys adjust volume and position. Escape closes the guide and settings.'),
+        screenReader: T('Lector de pantalla: usa Saltar al contenido, los encabezados y los nombres de los controles. La voz de Brisa es opcional y puedes apagarla para escuchar tu lector.', 'Screen reader: use Skip to content, headings and named controls. Brisa’s voice is optional and can be turned off while using your reader.'),
+        withoutSound: T('Sin escuchar: elige un disco y una fecha con sus botones. Lee la explicación, la leyenda y Consultar datos sin usar el mapa. En celulares compatibles puedes activar y probar pulsos de vibración; son un complemento.', 'Without sound: choose a disc and date using their buttons. Read the explanation, legend and Read data without using the map. On compatible phones you can enable and test vibration pulses as a complement.'),
+        reading: T('Lectura: combina Texto grande, Fuente legible y Alto contraste. Puedes ampliar con el navegador. No necesitas activar estas preferencias para consultar los textos o datos.', 'Reading: combine Large text, Readable font and High contrast. You can zoom with your browser. Written information and data are available without enabling these preferences.'),
+        motion: T('Menos estímulos: Movimiento reducido respeta tu sistema hasta que elijas otra opción. Puedes detener la introducción, saltar la guía y apagar la voz o los efectos sin perder tus selecciones.', 'Fewer distractions: Reduced motion follows your system until you choose otherwise. Pause the introduction, skip the guide and turn off voice or sound effects without losing your selections.')
+  };
+}
 class HapticFeedback {
   constructor(env) {
     this.env = env; this.activated = false; this.active = false; this.failed = false;
@@ -4107,6 +4157,7 @@ class Component extends DCLogic {
     this.state.legendSelection = null;
     this.state.stageNotes = {};
     this.state.dataColumn = 0;
+    this.state.showWays = false; this.state.waysPage = 0; this.waysChunks = null;
     this.state.homePreview = 0;
     this.homePreviewDue = 0;
     this.homePreviewImages = new Map();
@@ -4171,13 +4222,14 @@ class Component extends DCLogic {
     this.motionQuery?.addEventListener?.('change', this.onSystemMotion);
     this.onTourResize = function () {
       self.positionAccessibilityMenu();
+      self.scheduleWaysLayout();
       self.onTourLayout();
       clearTimeout(self.navResizeTimer);
       self.navResizeTimer = setTimeout(function () { if (!self.disposed) self.ensureNavVisible(); }, 100);
       clearTimeout(self.tourResizeTimer);
       if (self.state.tour) self.tourResizeTimer = setTimeout(function () { self.focusTourTarget(); }, 160);
     };
-    this.onTourKey = function (e) { if (e.isTrusted) self.haptics.activate(); if (self.state.showPreferences) { self.preferencesKey(e); return; } if (self.state.more) { self.moreKey(e); return; } if (e.key === 'Escape') { if (self.state.tour) { e.preventDefault(); self.tourClose(); } else self.closeMenus(true); } };
+    this.onTourKey = function (e) { if (e.isTrusted) self.haptics.activate(); if (self.state.showWays) { self.waysKey(e); return; } if (self.state.showPreferences) { self.preferencesKey(e); return; } if (self.state.more) { self.moreKey(e); return; } if (e.key === 'Escape') { if (self.state.tour) { e.preventDefault(); self.tourClose(); } else self.closeMenus(true); } };
     this.onMenuPointer = function (event) { if (event.isTrusted) self.haptics.activate(); document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; }); };
     document.addEventListener('pointerdown', this.onMenuPointer, true);
     this.onMoreFocus = function (e) {
@@ -4186,6 +4238,8 @@ class Component extends DCLogic {
         else if (e.target.classList && e.target.classList.contains('opt')) e.target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
       });
       if (self.cinema?.root) return;
+      var ways = document.getElementById('ways-dialog');
+      if (self.state.showWays && ways && !ways.contains(e.target)) { self.focusWays(); return; }
       var preferences = document.getElementById('preferences-dialog');
       if (self.state.showPreferences && preferences && !preferences.contains(e.target)) { self.focusPreferences(); return; }
       var dialog = document.getElementById('more-dialog');
@@ -4200,7 +4254,9 @@ class Component extends DCLogic {
     if (window.visualViewport) { window.visualViewport.addEventListener('resize', this.onTourResize); window.visualViewport.addEventListener('scroll', this.onTourLayout); }
     if (window.ResizeObserver) { this.tourObserver = new ResizeObserver(this.onTourLayout); this.tourObserver.observe(document.body); }
     this.ensureNavVisible();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!self.disposed) self.ensureNavVisible(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!self.disposed) { self.ensureNavVisible(); self.scheduleWaysLayout(); } });
+    this.onWaysFonts = function () { self.scheduleWaysLayout(); };
+    document.fonts?.addEventListener?.('loadingdone', this.onWaysFonts);
     this.syncPreferenceMotion();
     var viewport = window.visualViewport;
     this.setState({ vw: viewport ? viewport.width : window.innerWidth, vh: viewport ? viewport.height : window.innerHeight });
@@ -4237,6 +4293,7 @@ class Component extends DCLogic {
     if (key === 'big' || key === 'legible') {
       this.ensureNavVisible();
       this.positionAccessibilityMenu();
+      this.scheduleWaysLayout();
     }
     if (key === 'sfx') this.syncVolume();
     if (key === 'reducedMotion') {
@@ -4345,6 +4402,86 @@ class Component extends DCLogic {
     var viewportBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
     menu.style.setProperty('--a11y-available', Math.max(0, Math.floor(viewportBottom - panelTop - 8)) + 'px');
   }
+  waysTopics() {
+    var copy = usageHelp();
+    return [
+      { title: T('Teclado', 'Keyboard'), text: copy.keyboard },
+      { title: T('Lector de pantalla', 'Screen reader'), text: copy.screenReader },
+      { title: T('Sin escuchar', 'Without sound'), text: copy.withoutSound },
+      { title: T('Lectura', 'Reading'), text: copy.reading },
+      { title: T('Movimiento', 'Motion'), text: copy.motion }
+    ];
+  }
+  waysVm() {
+    var self = this, pages = this.waysChunks || paginateUsage(this.waysTopics(), function () { return true; });
+    var index = Math.max(0, Math.min(pages.length - 1, this.state.waysPage || 0)), page = pages[index];
+    return Object.assign(usageHelp(), {
+      on: !!this.state.showWays, triggerLabel: T('Formas de usar', 'Ways to use'),
+      pages: pages, topic: page.title, text: page.text,
+      closeLabel: T('Cerrar', 'Close'), prevLabel: T('Anterior', 'Previous'), nextLabel: T('Siguiente', 'Next'),
+      progress: (index + 1) + T(' de ', ' of ') + pages.length, prevOff: index === 0, nextOff: index === pages.length - 1,
+      open: function (event) { self.openWays(event); }, close: function () { self.closeWays(); },
+      prev: function () { self.goWays(-1); }, next: function () { self.goWays(1); }
+    });
+  }
+  setWaysInert(on) {
+    if (on) {
+      if (this.waysInert) return;
+      this.waysInert = Array.from(document.querySelectorAll('.px > header, .px > main, .px > .bottomnav, #tour-card')).map(function (node) {
+        var previous = node.inert; node.inert = true; return { node: node, previous: previous };
+      });
+    } else {
+      (this.waysInert || []).forEach(function (entry) { entry.node.inert = entry.previous; });
+      this.waysInert = null;
+    }
+  }
+  focusWays() { document.getElementById('ways-close')?.focus({ preventScroll: true }); }
+  openWays(event) {
+    if (this.disposed || this.state.showWays || this.state.showPreferences || this.state.more || this.state.trans) return;
+    this.waysReturnFocus = event?.currentTarget || document.activeElement;
+    this.closeMenus(false); this.waysChunks = null;
+    this.setState({ showWays: true, waysPage: 0 }, () => { this.setWaysInert(true); this.focusWays(); this.scheduleWaysLayout(); });
+  }
+  closeWays(restoreFocus) {
+    if (!this.state.showWays) return;
+    cancelAnimationFrame(this.waysRaf); this.setWaysInert(false);
+    var target = this.waysReturnFocus; this.waysReturnFocus = null;
+    this.setState({ showWays: false });
+    if (restoreFocus !== false && !this.disposed) (target?.isConnected === false ? document.getElementById('ways-trigger') : target)?.focus({ preventScroll: true });
+  }
+  goWays(direction) {
+    var pages = this.waysVm().pages, next = (this.state.waysPage || 0) + direction;
+    if (!this.state.showWays || next < 0 || next >= pages.length) return;
+    this.setState({ waysPage: next }, function () { document.getElementById('ways-topic')?.focus({ preventScroll: true }); });
+    this.scheduleWaysLayout();
+  }
+  waysKey(event) {
+    if (event.key === 'Escape') { event.preventDefault(); this.closeWays(); return; }
+    if (event.key !== 'Tab') return;
+    var dialog = document.getElementById('ways-dialog'); if (!dialog) return;
+    var controls = Array.from(dialog.querySelectorAll('button:not(:disabled)')), first = controls[0], last = controls[controls.length - 1], active = document.activeElement;
+    if (!controls.length) { event.preventDefault(); dialog.focus(); }
+    else if (!dialog.contains(active) || (event.shiftKey ? active === first : active === last)) { event.preventDefault(); (event.shiftKey ? last : first).focus(); }
+  }
+  scheduleWaysLayout() {
+    if (!this.state.showWays || this.disposed) return;
+    cancelAnimationFrame(this.waysRaf);
+    this.waysRaf = requestAnimationFrame(() => { if (!this.disposed && this.state.showWays) this.layoutWays(); });
+  }
+  layoutWays() {
+    var box = document.getElementById('ways-copy'), text = document.getElementById('ways-text');
+    if (!box || !text || box.clientWidth <= 0 || box.clientHeight <= 0) return;
+    var previous = this.waysVm().pages[this.state.waysPage || 0];
+    var probe = text.cloneNode(false); probe.removeAttribute('id'); probe.setAttribute('aria-hidden', 'true');
+    Object.assign(probe.style, { position: 'absolute', visibility: 'hidden', width: box.clientWidth + 'px', height: 'auto', maxHeight: 'none', margin: '0', pointerEvents: 'none' });
+    box.appendChild(probe);
+    try {
+      this.waysChunks = paginateUsage(this.waysTopics(), function (value) { probe.textContent = value; return probe.getBoundingClientRect().height <= box.clientHeight - 1; });
+    } finally { probe.remove(); }
+    var page = 0;
+    this.waysChunks.forEach(function (chunk, index) { if (chunk.topic === previous.topic && chunk.start <= previous.start) page = index; });
+    this.setState({ waysPage: page });
+  }
   setPreferencesInert(on) {
     if (on) {
       if (this.preferencesInert) return;
@@ -4432,6 +4569,7 @@ class Component extends DCLogic {
     var self = this, s = this.state, profile = this.profile();
     var chordIndex = profile.prog.map(function (ch) { return chordOf(profile, ch).label; }).indexOf(s.chord);
     LANG = code;
+    if (s.showWays) { this.state.waysPage = this.waysVm().pages[this.state.waysPage || 0]?.topic || 0; this.waysChunks = null; }
     try { localStorage.setItem('ts_lang', code); } catch (e) {}
     applyLang();
     this.cinema?.update();
@@ -4441,6 +4579,7 @@ class Component extends DCLogic {
       caption: T('Idioma: español.', 'Language: English.') }, function () {
         if (s.tour) self.focusTourTarget();
         self.ensureNavVisible();
+        self.scheduleWaysLayout();
         if (s.voice && !s.showPreferences) self.narrateBrisa(self.guideStep() || self.sectionNarration());
       });
   }
@@ -4708,6 +4847,8 @@ class Component extends DCLogic {
     this.homePreviewImages.clear();
     this.cinema?.finish(false);
     this.setPreferencesInert(false);
+    this.setWaysInert(false); cancelAnimationFrame(this.waysRaf);
+    document.fonts?.removeEventListener?.('loadingdone', this.onWaysFonts);
     this.disposed = true;
     if (this.discPointerRoot) {
       this.discPointerRoot.removeEventListener('mousedown', this.onDiscPointer, true);
@@ -6236,14 +6377,7 @@ class Component extends DCLogic {
       musicActive: s.playing ? 'true' : 'false',
       haptic: this.hapticVm(),
       accessibleData: this.accessibleDataVm(),
-      accessHelp: {
-        title: T('Formas de usar EarthRhythm', 'Ways to use EarthRhythm'),
-        keyboard: T('Teclado: Tab y Mayús+Tab recorren los controles; Enter o Espacio activan botones. Las flechas ajustan volumen y posición. Escape cierra la guía y los ajustes.', 'Keyboard: Tab and Shift+Tab move between controls; Enter or Space activate buttons. Arrow keys adjust volume and position. Escape closes the guide and settings.'),
-        screenReader: T('Lector de pantalla: usa Saltar al contenido, los encabezados y los nombres de los controles. La voz de Brisa es opcional y puedes apagarla para escuchar tu lector.', 'Screen reader: use Skip to content, headings and named controls. Brisa’s voice is optional and can be turned off while using your reader.'),
-        withoutSound: T('Sin escuchar: elige un disco y una fecha con sus botones. Lee la explicación, la leyenda y Consultar datos sin usar el mapa. En celulares compatibles puedes activar y probar pulsos de vibración; son un complemento.', 'Without sound: choose a disc and date using their buttons. Read the explanation, legend and Read data without using the map. On compatible phones you can enable and test vibration pulses as a complement.'),
-        reading: T('Lectura: combina Texto grande, Fuente legible y Alto contraste. Puedes ampliar con el navegador. No necesitas activar estas preferencias para consultar los textos o datos.', 'Reading: combine Large text, Readable font and High contrast. You can zoom with your browser. Written information and data are available without enabling these preferences.'),
-        motion: T('Menos estímulos: Movimiento reducido respeta tu sistema hasta que elijas otra opción. Puedes detener la introducción, saltar la guía y apagar la voz o los efectos sin perder tus selecciones.', 'Fewer distractions: Reduced motion follows your system until you choose otherwise. Pause the introduction, skip the guide and turn off voice or sound effects without losing your selections.')
-      },
+      accessHelp: this.waysVm(),
       positionAccessibilityMenu: function (event) { self.positionAccessibilityMenu(event); },
       languageCode: LANG,
       languageKeys: function(event) { self.onLanguageKey(event); },

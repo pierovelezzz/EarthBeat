@@ -10,7 +10,17 @@ Fecha: 15 de noviembre de 2026. Trabajo local en `accesibilidad/v4-flujo-inclusi
 4. El reproductor añade un desplegable junto a su explicación actual. Un selector nativo permite consultar 28 columnas de 16 filas sin usar el mapa. La selección de consulta es independiente de la posición musical.
 5. Los valores se identifican como niveles derivados, no como temperaturas calibradas. Las celdas ausentes no se convierten en cero. En la muestra de lluvia, un cero puede ser fondo del gráfico, no una observación igual al promedio.
 6. En un teléfono con API, los pulsos resumen intensidad musical aunque el volumen general sea cero o se reduzcan las animaciones. Se mantienen activación voluntaria, prueba, parada, límites de frecuencia y cancelación al pausar, cambiar de pantalla u ocultar la página.
-7. El menú Accesibilidad incluye instrucciones de teclado, lectores de pantalla, lectura sin sonido, ajustes de lectura y reducción de estímulos. Los nombres accesibles incluyen las etiquetas visibles para facilitar el control por voz.
+7. El botón independiente «Formas de usar» incluye instrucciones de teclado, lectores de pantalla, lectura sin sonido, ajustes de lectura y reducción de estímulos. En pantallas estrechas se muestra como icono de interrogación y mantiene su nombre accesible. Los nombres accesibles incluyen las etiquetas visibles para facilitar el control por voz.
+
+## Corrección de la ayuda tras revisión visual
+
+El usuario observó que la ayuda dentro del menú ocupaba una sola columna y añadía desplazamiento vertical. El menú de preferencias usa una cuadrícula de dos columnas; por ello se retiró de allí el contenido de ayuda.
+
+La ayuda ahora tiene su propio botón y un diálogo de lectura de ancho completo con Anterior, Siguiente y Cerrar. El contenido se pagina midiendo el espacio y la fuente reales; no se oculta texto para quitar la barra. La paginación se recalcula al cambiar el tamaño de pantalla o cargar fuentes. Abrirla conserva la reproducción y las selecciones; Tab permanece en el diálogo y Escape devuelve el foco a su botón.
+
+La corrección tiene 142 pruebas de lógica aprobadas y una comprobación del flujo de 28 estados con axe, sin infracciones automáticas. `scripts/verify_ways_layout.cjs` pasó 11 escenarios: español/inglés, 1366 × 768, 390 × 844, 667 × 375, 320 × 256 y texto grande, incluyendo conservación de todas las palabras, ancho completo, ausencia de desplazamiento interno, contador de páginas estable y foco. También reproduce una carga demorada de fuentes. Los resultados se guardan en `_work/ways-layout-final/`.
+
+Una revisión independiente detectó el caso de fuentes demoradas, corregido con repaginación al terminar la carga inicial y las cargas posteriores. Se corrigió también el ajuste de los botones del pie en pantallas pequeñas para mantener constante el espacio de lectura al cambiar el número de página.
 
 ## Necesidades atendidas y límites
 
@@ -22,7 +32,7 @@ Fecha: 15 de noviembre de 2026. Trabajo local en `accesibilidad/v4-flujo-inclusi
 | Movilidad reducida | Botones y selectores nativos, navegación con teclado, sin arrastre obligatorio en la consulta | Control por voz y tecnologías de conmutación reales |
 | Sensibilidad al movimiento o dificultades cognitivas | Preferencia del sistema, ayuda breve y guía opcional; canales configurables por separado | Evaluación de comodidad y comprensión con personas usuarias |
 
-## Comprobaciones realizadas
+## Comprobaciones de la primera ampliación en c43035e
 
 | Comprobación | Evidencia |
 |---|---|
