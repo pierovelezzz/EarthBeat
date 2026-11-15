@@ -1411,19 +1411,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .practice-example #tour-sample{display:grid;justify-items:start;gap:14px}
 .px .practice-example h2{font-size:clamp(1.3em,3vw,2em);overflow-wrap:anywhere}
 .px .practice-example .sample-preview{height:auto;max-height:280px;aspect-ratio:560/320}
-.px ts-avatar{position:relative;display:block;contain:layout paint;touch-action:pan-y pinch-zoom}
-.px ts-avatar::before{content:"";position:absolute;inset:0;background:var(--avatar-image) center/contain no-repeat;pointer-events:none}
-.px ts-avatar[data-rendered]::before{display:none}
-.px ts-avatar>.sprite-frame{display:block;width:100%;height:100%;object-fit:contain;position:absolute;inset:0;transform-origin:50% 85%;pointer-events:none}
-.px ts-avatar[data-character="silbo"]{--avatar-image:url("./sprites/silbo/pose-banda.webp")}
-.px ts-avatar[data-character="inti"]{--avatar-image:url("./sprites/inti/pose-banda.webp")}
-.px ts-avatar[data-character="mama"]{--avatar-image:url("./sprites/mama/pose-banda.webp")}
-.px ts-avatar[data-character="yaku"]{--avatar-image:url("./sprites/yaku/pose-banda.webp")}
-.px ts-avatar[data-character="illapa"]{--avatar-image:url("./sprites/illapa/pose-banda.webp")}
-.px .listen-member>ts-avatar{grid-row:1/3;width:24px;height:30px}
-.px .listen-member[aria-pressed="false"] ts-avatar{filter:grayscale(.85);opacity:.65}
-.px ts-sprite-controls{display:grid;gap:4px}
-.px .sprite-readout{font-size:.8em;line-height:1.5;color:var(--muted)}
 .px .bentering .bportrait-live{animation:bcut-reveal var(--band-entry) var(--cut-ease) both}
 .px .bresetting .bportrait-live{opacity:0}
 .px .bsel img{object-fit:contain;flex-shrink:0}
@@ -1671,6 +1658,9 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px.reduce-motion .space-meteor,.px.reduce-motion .space-flight{display:none}
 .px.reduce-motion .space-sky *{animation:none!important}
 html[data-ts-page-hidden] .px .space-sky *{animation-play-state:paused!important}
+.px[data-playing="true"] .space-sky *,
+.px[data-playing="true"] .band-stage::before{animation-play-state:paused!important}
+.px[data-playing="true"] :is(.top,.bar){-webkit-backdrop-filter:none;backdrop-filter:none}
 @media(prefers-reduced-motion:reduce){.px:not([data-motion-mode="full"]) .space-sky *{animation:none!important}.px:not([data-motion-mode="full"]) .space-meteor,.px:not([data-motion-mode="full"]) .space-flight{display:none}}
 @media(forced-colors:active){.px .space-sky{display:none}}
 @media(max-width:700px){
@@ -2182,6 +2172,8 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 }
 .px.main-edition .legend-swatch{min-height:44px}
 @media(min-width:1100px) and (max-height:700px){
+  .px .workspace > .in:has(.listen-player){height:auto}
+  .px .listen-player,.px .listen-player .player-layout{flex:none}
   .px .listen-player .map-toolbar :is(.speed-option,.engines button,.volume-control input),
   .px.main-edition .listen-player .legend-swatch{min-height:36px}
   .px .listen-player .transport-position input{min-height:24px}
@@ -2223,7 +2215,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 @media(forced-colors:active){.ts-cinema .cinema-copy h2{color:CanvasText}}
 </style>
 </helmet>
-<div class="px app main-edition {{bandViewClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
+<div class="px app main-edition {{bandViewClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" data-playing="{{pagePlaying}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
 
 <sc-if value="{{showBg}}">
 <div class="skyfix space-sky" aria-hidden="true" inert>
@@ -3481,7 +3473,6 @@ var ICONS = {
   arrow: ['........', '...X....', '...XX...', 'XXXXXXX.', '...XX...', '...X....', '........', '........'],
   clock: ['..XXXX..', '.X.XX.X.', 'X..XX..X', 'X..XXX.X', 'X......X', 'X......X', '.X....X.', '..XXXX..']
 };
-var INS_ICON = { silbo: 'flute', inti: 'marimba', mama: 'harp', yaku: 'drop', illapa: 'drum' };
 var NOTE_ES = ['Do','Do♯','Re','Re♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
 var QUAL = { maj: [0, 4, 7], min: [0, 3, 7], m7: [0, 3, 7, 10], maj7: [0, 4, 7, 11], dim: [0, 3, 6], sus4: [0, 5, 7] };
 var SUF = { maj: '', min: 'm', m7: 'm7', maj7: 'maj7', dim: '°', sus4: 'sus4' };
@@ -4967,11 +4958,6 @@ class Component extends DCLogic {
     return DISC_CHAR[disc] || (analysis && analysis.cold > analysis.warm ? 'mama' : 'inti');
   }
   leadChar() { return this.state.leadOverride || this.discLead(this.state.disc, this.cur()); }
-  cycleLead(direction) {
-    var key = this.leadChar();
-    var current = BAND.findIndex(function (b) { return b.k === key; });
-    this.selectLead(BAND[(current + direction + BAND.length) % BAND.length].k);
-  }
   selectLead(value) {
     var lead = BAND.find(function (b) { return b.k === value; });
     if (value !== 'auto' && !lead) return;
@@ -5415,11 +5401,6 @@ class Component extends DCLogic {
     canvas.toBlob(function (blob) { done(canvas, blob); }, 'image/png');
   }
   cur() { return this.state.an[this.state.disc + '_' + this.state.frame]; }
-  glowColor(a) {
-    if (!a) return '#38C6E8';
-    if (a.calido > a.frio) return a.extremo > 0.15 ? '#E8283A' : '#FF8A2B';
-    return '#38C6E8';
-  }
   glowFor(a) {
     if (!a) return '#38C6E8';
     if (a.warm > a.cold) return a.hot > 0.15 ? '#E8283A' : '#FF8A2B';
@@ -5760,7 +5741,7 @@ class Component extends DCLogic {
   }
   step(col, scheduled) {
     var a = scheduled ? scheduled.analysis : this.cur(); if (!a) return;
-    var s = scheduled ? scheduled.state : this.state, m = s.mute, t = scheduled ? scheduled.at : this.ac.currentTime + 0.02, sp = this.frameStepMs(s.frame) / 1000, info = this.colInfo(a, col), pan = (col / 27) * 1.6 - 0.8;
+    var s = scheduled ? scheduled.state : this.state, m = s.mute, t = scheduled ? scheduled.at : this.ac.currentTime + 0.02, sp = (scheduled ? scheduled.stepMs : this.frameStepMs(s.frame)) / 1000, info = this.colInfo(a, col), pan = (col / 27) * 1.6 - 0.8;
     var lv = { silbo: 0, inti: 0, mama: 0, yaku: 0, illapa: 0 }, notes = [];
     if (col % 4 === 0) {
       var w = 0, c = 0, k = 0; for (var j = col; j < Math.min(28, col + 4); j++) { var ci = this.colInfo(a, j); if (!ci.k) continue; w += ci.w; c += ci.c; k++; }
@@ -5845,9 +5826,9 @@ class Component extends DCLogic {
       this.setState(patch); return;
     }
     scheduled.patch = patch;
-    var profile = this.profile(scheduled.analysis, scheduled.state.frame);
+    var profile = chord ? this.profile(scheduled.analysis, scheduled.state.frame) : null;
     this.playbackQueue.push({ at: scheduled.at, frame: scheduled.state.frame, patch: patch,
-      fired: fired, chord: chord, chordIndex: chord ? profile.prog.findIndex(function (item) { return chordOf(profile, item).label === chord; }) : -1,
+      fired: fired, chord: chord, chordIndex: profile ? profile.prog.findIndex(function (item) { return chordOf(profile, item).label === chord; }) : -1,
       info: this.colInfo(scheduled.analysis, patch.col), thunder: this.lastThunder,
       voiceEpoch: Object.assign({}, this.voiceEpoch) });
   }
@@ -5862,8 +5843,11 @@ class Component extends DCLogic {
       var patch = Object.assign({ frame: event.frame }, event.patch), fired = Object.assign({}, event.fired);
       patch.levels = Object.assign({}, patch.levels); patch.hits = Object.assign({}, patch.hits);
       BAND.forEach(function (member) { if (self.state.mute[member.k] || (self.voiceEpoch[member.k] || 0) !== (event.voiceEpoch[member.k] || 0)) { patch.levels[member.k] = 0; patch.hits[member.k] = 0; fired[member.k] = false; } });
-      var profile = this.profile(this.state.an[this.state.disc + '_' + event.frame], event.frame);
-      var chord = event.chordIndex < 0 ? '' : chordOf(profile, profile.prog[event.chordIndex]).label;
+      var chord = '';
+      if (event.chordIndex >= 0) {
+        var profile = this.profile(this.state.an[this.state.disc + '_' + event.frame], event.frame);
+        chord = chordOf(profile, profile.prog[event.chordIndex]).label;
+      }
       var names = BAND.filter(function (member) { return fired[member.k]; }).map(function (member) { return member.name; });
       patch.chord = chord;
       patch.caption = '[' + this.frameTag(this.state.disc, event.frame) + ' · ' + T('columna ', 'column ') + (patch.col + 1) + '/28] ' +
@@ -5906,8 +5890,8 @@ class Component extends DCLogic {
       if (cursor.at < now + .03) cursor.at = now + .075;
       var snapshot = Object.assign({}, this.state, { frame: cursor.frame, col: cursor.column - 1,
         levels: cursor.levels, hits: cursor.hits, flash: cursor.flash });
-      var scheduled = { at: cursor.at, state: snapshot, analysis: analysis };
       this.sequencerMs = this.frameStepMs(cursor.frame);
+      var scheduled = { at: cursor.at, state: snapshot, analysis: analysis, stepMs: this.sequencerMs };
       if (snapshot.engine === 'melody') this.stepMelody(cursor.column, scheduled); else this.step(cursor.column, scheduled);
       if (scheduled.patch) { cursor.levels = scheduled.patch.levels; cursor.hits = scheduled.patch.hits; cursor.flash = scheduled.patch.flash; }
       cursor.at += this.sequencerMs / 1000; cursor.column++;
@@ -5998,7 +5982,7 @@ class Component extends DCLogic {
   }
   stepMelody(col, scheduled) {
     var a = scheduled ? scheduled.analysis : this.cur(); if (!a) return;
-    var self = this, s = scheduled ? scheduled.state : this.state, m = s.mute, t = scheduled ? scheduled.at : this.ac.currentTime + 0.03, sp = this.frameStepMs(s.frame) / 1000;
+    var self = this, s = scheduled ? scheduled.state : this.state, m = s.mute, t = scheduled ? scheduled.at : this.ac.currentTime + 0.03, sp = (scheduled ? scheduled.stepMs : this.frameStepMs(s.frame)) / 1000;
     var prof = this.profile(a, s.frame), cIdx = col >= 24 ? 0 : Math.floor(col / 4) % prof.prog.length;
     var ch = chordOf(prof, prof.prog[cIdx]), info = this.colInfo(a, col), onBeat = col % 4 === 0, pan = (col / 27) * 1.2 - 0.6;
     var lv = { silbo: s.levels.silbo * 0.8, inti: s.levels.inti * 0.8, mama: s.levels.mama * 0.85, yaku: s.levels.yaku * 0.7, illapa: s.levels.illapa * 0.85 }, notes = [];
@@ -6250,7 +6234,6 @@ class Component extends DCLogic {
     var isBand = s.tab === 'band';
     var showCells = s.tab === 'juke' && s.sub === 1 || s.tab === 'how' && s.sub === 0 && !!s.custom;
     var gridColors = showCells ? this.gridColors(a, hc) : null;
-    var meterOf = function (lvl, col) { var out = []; for (var q = 0; q < 10; q++) out.push({ c: q < Math.round(lvl * 10) ? col : th.line }); return out; };
     var toggleBand = function (k) { return function () { var mm = Object.assign({}, s.mute); mm[k] = !mm[k]; self.setBandMute(mm); }; };
     var reducedMotion = this.bandReduced();
     var toggleMotion = function () { self.setPreference('reducedMotion', !self.bandReduced()); };
@@ -6261,15 +6244,10 @@ class Component extends DCLogic {
     var activeN = BAND.filter(function (b) { return !s.mute[b.k]; }).length;
     var isJuke = s.tab === 'juke', isData = s.tab === 'how' && s.sub === 0, hasCustom = !!s.custom;
     var gl = this.glowFor(a);
-    var band = BAND.map(function (b, bi) {
-        var lvl = s.levels[b.k] || 0, off = s.mute[b.k];
-        return { key: b.k, thumbUrl: 'sprites/' + b.k + '/miniatura-banda.webp',
-          spriteActive: s.playing && !off && !s.masterMuted && s.volume > 0, spriteMuted: off,
-          ic: self.icons[INS_ICON[b.k]], lvlW: Math.round((off ? 0 : lvl) * 100) + '%', rowBg: off ? 'transparent' : th.bg, rowOp: off ? '0.55' : '1', pwColor: off ? th.muted : b.color, clips: b.clips, ins: b.ins, delay: (bi * 0.08).toFixed(2) + 's', name: b.name, color: b.color, disc: DISCS[DISC_CHAR.indexOf(b.k)].title, origin: b.origin, listens: b.listens, plays: b.plays, persona: b.persona, quote: b.quote, brief: b.brief,
-          on: !off, mixLabel: off ? T('Silenciado', 'Muted') : T('Activado', 'Enabled'),
-          muteLabel: off ? 'OFF' : 'ON', muteAria: (off ? T('Activar a ', 'Switch on ') : T('Desactivar a ', 'Switch off ')) + b.name,
-          btnBg: off ? 'transparent' : b.color, btnFg: off ? th.fg : '#0A0D1A', btnBorder: off ? th.line : b.color,
-          border: !off && lvl > 0.15 && s.playing ? b.color : th.line, anim: !off && lvl > 0.15 && s.playing ? 'bob' : '', meter: meterOf(off ? 0 : lvl, b.color), toggle: toggleBand(b.k) };
+    var band = BAND.map(function (b) {
+      return { key: b.k, thumbUrl: 'sprites/' + b.k + '/miniatura-banda.webp',
+        name: b.name, color: b.color, persona: b.persona, quote: b.quote,
+        on: !s.mute[b.k], toggle: toggleBand(b.k) };
     });
     var bandIndex = Math.min(s.bsel, BAND.length - 1);
     var bandKey = BAND[bandIndex].k;
@@ -6537,6 +6515,7 @@ class Component extends DCLogic {
       heroListen: function () { self.goSub(1); if (!s.playing) self.play(); },
       strip: d.files.map(function (id, f) { var fd = self.frameDate(s.disc, f), on = f === s.frame; return { url: s.disc < 5 ? self.thumbnail(s.disc, f) : '', label: MESC[fd.m] + ' ' + String(fd.y).slice(2), aria: MESC[fd.m] + ' ' + String(fd.y).slice(2) + ' · ' + T('Ver ', 'View ') + MES[fd.m] + T(' de ', ' ') + fd.y, on: on, border: on ? th.accent : th.line, pick: function () { self.gotoFrame(f); } }; }),
       playPending: s.audioPending || s.sampleStarting, audioError: uiText(s.audioError),
+      pagePlaying: s.playing,
       playLabel: s.audioPending ? T('Preparando audio…', 'Preparing audio…') : s.playing ? T('Pausar', 'Pause')
         : s.ended ? rhythmMode ? T('Jugar de nuevo', 'Play again') : T('Volver a reproducir', 'Play again')
         : s.col >= 0 ? T('Reanudar', 'Resume') : rhythmMode ? T('Empezar partida', 'Start game') : T('Reproducir', 'Play'),

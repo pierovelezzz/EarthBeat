@@ -268,6 +268,7 @@ const rhythmChart = [
 class RhythmGame extends HTMLElement {
   static observedAttributes = ['data-playing', 'data-ended'];
   notes = [];
+  activeLanes = 0;
   resultTimers = new Map();
   hits = 0;
   missed = 0;
@@ -335,14 +336,37 @@ class RhythmGame extends HTMLElement {
   clear() {
     cancelAnimationFrame(this.frame);
     this.frame = null;
-    for (const note of this.notes) note.flight.remove();
+    for (const note of this.notes) note.flight?.remove();
     this.notes = [];
-    this.lanes?.forEach(lane => lane.removeAttribute('data-cue'));
+    this.showLanes(0);
     for (const [slot, timer] of this.resultTimers) {
       clearTimeout(timer);
       slot.replaceChildren();
     }
     this.resultTimers.clear();
+  }
+
+  showLanes(active) {
+    const changed = active ^ this.activeLanes;
+    if (!changed) return;
+    this.activeLanes = active;
+    this.lanes.forEach((lane, index) => {
+      const flag = 1 << index;
+      if (changed & flag) lane.toggleAttribute('data-cue', Boolean(active & flag));
+    });
+  }
+
+  mountFlight(index) {
+    const lane = this.lanes[index];
+    const flight = document.createElement('span');
+    flight.className = 'rhythm-flight';
+    flight.setAttribute('aria-hidden', 'true');
+    const arrow = document.createElement('span');
+    arrow.className = 'rhythm-note';
+    arrow.append(lane.querySelector('.rhythm-receptor svg').cloneNode(true));
+    flight.append(arrow);
+    lane.append(flight);
+    return flight;
   }
 
   queue = ({ detail: { clock, notes, lookahead, raw } }) => {
@@ -357,43 +381,39 @@ class RhythmGame extends HTMLElement {
       if (raw && (step % 2 || step === rhythmChart.length - 1)) continue;
       for (const direction of rhythmChart[step]) {
         const index = (direction + event.frame) % arrowKeys.length;
-        const lane = this.lanes[index];
-        const flight = document.createElement('span');
-        flight.className = 'rhythm-flight';
-        flight.setAttribute('aria-hidden', 'true');
-        const arrow = document.createElement('span');
-        arrow.className = 'rhythm-note';
-        arrow.append(lane.querySelector('.rhythm-receptor svg').cloneNode(true));
-        flight.append(arrow);
-        lane.append(flight);
-        this.notes.push({ at: event.at, index, flight });
+        this.notes.push({ at: event.at, index, flight: null });
       }
     }
     if (this.notes.length && this.frame == null) this.advance();
   };
 
   // The stationary version allows a longer response window.
-  windowSize() { return reduced() ? .34 : .22; }
+  windowSize(still = reduced()) { return still ? .34 : .22; }
 
   advance = () => {
     const now = this.clock.currentTime;
     const still = reduced();
-    const margin = this.windowSize();
-    const active = new Set();
+    const margin = this.windowSize(still);
+    let active = 0;
     this.notes = this.notes.filter(note => {
       const left = note.at - now;
       if (left < -margin) {
-        note.flight.remove();
+        note.flight?.remove();
         this.missed++;
         this.showResult(note.index, 'miss', 'Se escapó una nota', 'Missed a note');
         return false;
       }
-      note.flight.hidden = still;
-      if (Math.abs(left) <= margin) active.add(note.index);
-      if (!still) note.flight.style.transform = `translateY(${Math.max(0, left / this.lookahead * 100)}%)`;
+      if (still) {
+        note.flight?.remove();
+        note.flight = null;
+      } else {
+        note.flight ??= this.mountFlight(note.index);
+        note.flight.style.transform = `translateY(${Math.max(0, left / this.lookahead * 100)}%)`;
+      }
+      if (Math.abs(left) <= margin) active |= 1 << note.index;
       return true;
     });
-    this.lanes.forEach((lane, index) => lane.toggleAttribute('data-cue', active.has(index)));
+    this.showLanes(active);
     this.frame = this.notes.length ? requestAnimationFrame(this.advance) : null;
   };
 
@@ -403,11 +423,20 @@ class RhythmGame extends HTMLElement {
     event.preventDefault();
     if (event.repeat || this.dataset.playing !== 'true' || !this.clock) return;
     const now = this.clock.currentTime;
-    const note = this.notes.filter(note => note.index === index && Math.abs(now - note.at) <= this.windowSize())
-      .sort((a, b) => Math.abs(now - a.at) - Math.abs(now - b.at))[0];
-    if (!note) return;
-    note.flight.remove();
-    this.notes.splice(this.notes.indexOf(note), 1);
+    const margin = this.windowSize();
+    let nearest = -1;
+    let distance = Infinity;
+    this.notes.forEach((note, position) => {
+      if (note.index !== index) return;
+      const elapsed = Math.abs(now - note.at);
+      if (elapsed <= margin && elapsed < distance) {
+        nearest = position;
+        distance = elapsed;
+      }
+    });
+    if (nearest < 0) return;
+    const [note] = this.notes.splice(nearest, 1);
+    note.flight?.remove();
     this.score.textContent = String(++this.hits);
     this.showResult(index, 'hit', '¡Acierto!', 'Hit!');
   };

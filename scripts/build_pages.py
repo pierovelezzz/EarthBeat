@@ -16,20 +16,9 @@ def build(destination: Path) -> None:
     root = Path(__file__).resolve().parents[1]
     prototype = root / "prototipos" / "I11-eic"
     support_runtime = root / "scripts" / "pages-support.js"
-    avatar_runtime = root / "scripts" / "avatar2d.js"
     dance_runtime = root / "scripts" / "band-dance.js"
     musicians = {"silbo", "inti", "mama", "yaku", "illapa"}
     support_version = sha256(lf_bytes(support_runtime)).hexdigest()[:12]
-    avatar_version = sha256(lf_bytes(avatar_runtime))
-    avatar_assets = {}
-    for musician in sorted(musicians):
-        pose = Path("sprites") / musician / "pose-banda.webp"
-        avatar_assets[pose] = prototype / pose
-        for frame in range(4):
-            name = f"{frame:02}.png"
-            avatar_assets[pose.parent / "keyframes" / name] = root / "assets" / "avatares" / musician / "banda" / "keyframes" / name
-    for asset in avatar_assets.values():
-        avatar_version.update(asset.read_bytes())
     dance_version = sha256(lf_bytes(dance_runtime))
     for frame in sorted((prototype / "sprites").glob("*/baile/*.webp")):
         dance_version.update(frame.read_bytes())
@@ -62,7 +51,6 @@ def build(destination: Path) -> None:
     html = html.replace(support_marker, f'src="./support.js?v={support_version}"', 1)
     html = html.replace(
         "</head>",
-        f'<script type="module" src="./runtime/avatar2d.js?v={avatar_version.hexdigest()[:12]}"></script>\n'
         f'<script type="module" src="./runtime/band-dance.js?v={dance_version.hexdigest()[:12]}"></script>\n</head>',
         1,
     )
@@ -74,22 +62,18 @@ def build(destination: Path) -> None:
     copy2(prototype / "earthrhythm-icon.svg", destination)
     copy2(support_runtime, destination / "support.js")
     (destination / "runtime").mkdir(exist_ok=True)
-    copy2(avatar_runtime, destination / "runtime")
     copy2(dance_runtime, destination / "runtime")
     copy2(prototype / "stage.webp", destination)
     copytree(root / "assets" / "fonts", destination / "fonts", dirs_exist_ok=True)
     for folder in ("fotogramas", "fotogramas-anteriores", "brisa", "miniaturas"):
         copytree(prototype / folder, destination / folder, dirs_exist_ok=True)
     for musician in sorted(musicians):
-        for filename in ("miniatura-banda.webp", "escenario.webp"):
+        for filename in ("miniatura-banda.webp", "escenario.webp", "pose-banda.webp"):
             sprite = Path("sprites") / musician / filename
             (destination / sprite).parent.mkdir(parents=True, exist_ok=True)
             copy2(prototype / sprite, destination / sprite)
         frames = Path("sprites") / musician / "baile"
         copytree(prototype / frames, destination / frames, dirs_exist_ok=True)
-    for relative, asset in avatar_assets.items():
-        (destination / relative).parent.mkdir(parents=True, exist_ok=True)
-        copy2(asset, destination / relative)
     (destination / "data").mkdir(exist_ok=True)
     copy2(root / "data" / "nasa_power_monthly.json", destination / "data")
     copy2(root / "data" / "impacts.v1.json", destination / "data")
