@@ -2,7 +2,7 @@
 
 > Las notas de este directorio nacieron en V2. Para el funcionamiento de la rama principal, consulta el [estado de main](ESTADO_ACTUAL.md).
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 Esta rama se evalúa a partir de su propio build; no se atribuyen tiempos de otra versión a este código. El peso estático de la generación comprobada se registra después de reconstruir.

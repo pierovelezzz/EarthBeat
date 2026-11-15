@@ -1,6 +1,6 @@
-# EarthBeat · Pacific Ocean Sonification
+# EarthRhythm · Pacific Ocean Sonification
 
-Esta es la rama **main** de EarthBeat. La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
+Esta es la rama **main** de EarthRhythm. La aplicación convierte patrones de imágenes del Pacífico y una muestra local de lluvia en música con cinco personajes. Funciona en español e inglés, con HTML, CSS, JavaScript, Canvas y Web Audio; no necesita backend ni servicios de IA durante el uso.
 
 ## Qué incluye esta versión
 
@@ -24,7 +24,7 @@ python -m http.server 8765 --bind 127.0.0.1 --directory _site
 
 Abrir [la aplicación local](http://127.0.0.1:8765/). Detener el servidor con Ctrl+C. La revisión utiliza Python 3.12.14 y Node 26.13.0. Node se necesita para las pruebas, no para servir el sitio.
 
-EarthBeat inicia con las animaciones completas. La elección de movimiento reducido se controla desde Accesibilidad y se guarda para las próximas visitas. El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) permite volver al modo completo.
+EarthRhythm inicia con las animaciones completas. La elección de movimiento reducido se controla desde Accesibilidad y se guarda para las próximas visitas. El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) permite volver al modo completo.
 
 ## Fuente de la aplicación
 

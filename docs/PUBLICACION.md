@@ -1,6 +1,6 @@
 # Publicación de main
 
-El código de esta versión está en [EarthBeat, rama main](https://github.com/pierovelezzz/EarthBeat/tree/main). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
+El código de esta versión está en [EarthRhythm, rama main](https://github.com/pierovelezzz/EarthRhythm/tree/main). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
 
 ## Preparar y revisar el sitio
 

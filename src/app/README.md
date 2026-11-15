@@ -1,6 +1,6 @@
 # Módulo heredado: app
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V2`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 Este directorio pertenece al prototipo modular que arranca desde el `index.html` de la raíz; no es una dependencia importada por el build de I11.

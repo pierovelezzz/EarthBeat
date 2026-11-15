@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>EarthBeat · Mapas del Pacífico hechos música</title>
+<title>EarthRhythm · Mapas del Pacífico hechos música</title>
 <meta name="description" content="Escucha los colores del Pacífico: mapas de la NASA convertidos en música con cinco personajes. Explora, mezcla instrumentos o prueba tu imagen.">
 <meta name="theme-color" content="#171e2b">
 <style>html,body{margin:0;background:#171e2b;color:#eff3f8}</style>
@@ -1016,7 +1016,7 @@ a{color:inherit}
 .px .nav-short{display:none}
 .px .nav button:focus-visible{outline:2px solid #fff;outline-offset:-4px}
 .px .top .wrap{max-width:1560px;padding-inline:max(var(--gutter),env(safe-area-inset-left,0px)) max(var(--gutter),env(safe-area-inset-right,0px))}
-.px .top{container:EarthBeat-header / inline-size}
+.px .top{container:EarthRhythm-header / inline-size}
 .px .top .brand{min-height:44px;min-width:0}
 .px .top .brandmark{flex-shrink:0}
 .px .top .nav button{flex:0 1 auto;min-width:0;white-space:normal;text-wrap:balance}
@@ -1070,7 +1070,7 @@ a{color:inherit}
   .px .top .nav button{padding-inline:3px;font-size:max(.6em,.6875rem);letter-spacing:0}
 }
 /* Font-relative space also responds to enlarged text without splitting the name. */
-@container EarthBeat-header (max-width:18em){
+@container EarthRhythm-header (max-width:18em){
   .px .top .wrap,.px .top:has(details.menu[open]) .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto}
   .px .top .brand,.px .top:has(details.menu[open]) .brand{grid-row:1;grid-column:1/-1}
   .px .top .wordmark{white-space:nowrap;overflow-wrap:normal}
@@ -1820,7 +1820,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="wrap">
 <button type="button" class="brand" onClick="{{goHome}}" aria-label="{{tx.brandAria}}">
 <svg class="brandmark" width="38" height="24" viewBox="0 0 25 16" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><path d="M4 0h8v1h-8zM20 0h1v1h-1zM2 1h3v1h-3zM11 1h3v1h-3zM18 1h6v1h-6zM1 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM1 3h1v1h-1zM14 3h1v1h-1zM0 4h2v1h-2zM14 4h2v1h-2zM0 5h1v1h-1zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h1v1h-1zM15 9h1v1h-1zM0 10h1v1h-1zM15 10h1v1h-1zM0 11h2v1h-2zM14 11h2v1h-2zM1 12h1v1h-1zM14 12h1v1h-1zM1 13h2v1h-2zM13 13h2v1h-2zM2 14h3v1h-3zM11 14h3v1h-3zM4 15h8v1h-8z"></path><path d="M19 4h1v1h-1zM3 5h2v1h-2zM9 5h2v1h-2zM18 5h1v1h-1zM21 5h1v1h-1zM2 6h1v1h-1zM5 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM17 6h1v1h-1zM20 6h1v1h-1zM6 7h2v1h-2zM12 7h2v1h-2zM19 7h1v1h-1zM3 9h2v1h-2zM9 9h2v1h-2zM2 10h1v1h-1zM5 10h1v1h-1zM8 10h1v1h-1zM11 10h1v1h-1zM6 11h2v1h-2zM12 11h2v1h-2z" fill="#FFD447"></path></svg>
-<span class="wordmark">EarthBeat</span>
+<span class="wordmark">EarthRhythm</span>
 </button>
 <nav id="tour-nav" class="nav" aria-label="{{tx.sections}}" onKeyDown="{{onNavKey}}">
 <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
@@ -2286,7 +2286,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{preferences.on}}">
 <div class="preferences-dim" aria-hidden="true"></div>
 <section id="preferences-dialog" class="preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="preferences-title" aria-describedby="preferences-body" tabindex="-1">
-<p class="kicker">EarthBeat · Brisa</p>
+<p class="kicker">EarthRhythm · Brisa</p>
 <h2 id="preferences-title">{{preferences.title}}</h2><p id="preferences-body">{{preferences.body}}</p>
 <div class="preferences-choices"><sc-for list="{{preferences.choices}}" as="p"><label for="{{p.id}}"><input id="{{p.id}}" type="checkbox" checked="{{p.on}}" onChange="{{p.change}}"><span><strong>{{p.label}}</strong><span class="small muted">{{p.hint}}</span></span></label></sc-for></div>
 <div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-pressed="{{l.on}}" onClick="{{l.pick}}" lang="{{l.code}}">{{l.short}}</button></sc-for></div>
@@ -2396,10 +2396,10 @@ var GUIDES = {
     {
       "id": "tour-cta",
       "t": "Hola, soy Brisa",
-      "b": "Te ayudo a explorar EarthBeat. Puedes leer esta ayuda, escucharla si quieres o cerrarla en cualquier momento.",
+      "b": "Te ayudo a explorar EarthRhythm. Puedes leer esta ayuda, escucharla si quieres o cerrarla en cualquier momento.",
       "en": {
         "t": "Hi, I’m Brisa",
-        "b": "I help you explore EarthBeat. Read this help, listen if you want, or close it at any time."
+        "b": "I help you explore EarthRhythm. Read this help, listen if you want, or close it at any time."
       }
     },
     {
@@ -2530,10 +2530,10 @@ var GUIDES = {
     {
       "id": "tour-drop",
       "t": "Elige tu imagen",
-      "b": "Elige o arrastra una imagen. EarthBeat muestra cómo se convierte en música.",
+      "b": "Elige o arrastra una imagen. EarthRhythm muestra cómo se convierte en música.",
       "en": {
         "t": "Choose your image",
-        "b": "Choose or drop an image. EarthBeat shows how it becomes music."
+        "b": "Choose or drop an image. EarthRhythm shows how it becomes music."
       }
     }
   ],
@@ -2581,19 +2581,19 @@ var GUIDES = {
     {
       "id": "credit-science-title",
       "t": "Fuentes NASA",
-      "b": "Estos enlaces identifican los productos y datos utilizados. EarthBeat es un proyecto independiente.",
+      "b": "Estos enlaces identifican los productos y datos utilizados. EarthRhythm es un proyecto independiente.",
       "en": {
         "t": "NASA sources",
-        "b": "These links identify the products and data used. EarthBeat is an independent project."
+        "b": "These links identify the products and data used. EarthRhythm is an independent project."
       }
     },
     {
       "id": "credit-ai-title",
       "t": "Créditos de producción",
-      "b": "Aquí se explica qué herramientas se usaron para producir EarthBeat y cómo se utilizó la inteligencia artificial.",
+      "b": "Aquí se explica qué herramientas se usaron para producir EarthRhythm y cómo se utilizó la inteligencia artificial.",
       "en": {
         "t": "Production credits",
-        "b": "Find out which tools were used to make EarthBeat and how artificial intelligence was used."
+        "b": "Find out which tools were used to make EarthRhythm and how artificial intelligence was used."
       }
     },
     {
@@ -2891,11 +2891,11 @@ var TECH = [
   {
     "cat": "Producción y revisión",
     "name": "Git + GitHub",
-    "use": "Control de versiones del proyecto y publicación de la versión estática de EarthBeat.",
+    "use": "Control de versiones del proyecto y publicación de la versión estática de EarthRhythm.",
     "es": {
       "cat": "Producción y revisión",
       "name": "Git + GitHub",
-      "use": "Control de versiones del proyecto y publicación de la versión estática de EarthBeat."
+      "use": "Control de versiones del proyecto y publicación de la versión estática de EarthRhythm."
     }
   },
   {
@@ -2929,7 +2929,7 @@ var LEGEND_INTENSITY = {
   3: ['marcada', 'pronounced'], 4: ['muy marcada', 'very pronounced'], 4.5: ['casi extrema', 'near-extreme'], 5: ['extrema', 'extreme']
 };
 var LEGEND_LEVELS = {
-  [-5]: [uiMessage('Frío extremo', 'Extreme cooling'), uiMessage('El mar está en el extremo frío de la escala de EarthBeat.', 'The sea is at the coldest end of the EarthBeat scale.')],
+  [-5]: [uiMessage('Frío extremo', 'Extreme cooling'), uiMessage('El mar está en el extremo frío de la escala de EarthRhythm.', 'The sea is at the coldest end of the EarthRhythm scale.')],
   [-4]: [uiMessage('Frío muy intenso', 'Very strong cooling'), uiMessage('El agua está mucho más fría que lo habitual en esa zona.', 'The water is much cooler than usual for that area.')],
   [-3]: [uiMessage('Frío marcado', 'Pronounced cooling'), uiMessage('El descenso respecto a la temperatura habitual es marcado.', 'The drop below the usual temperature is pronounced.')],
   [-2]: [uiMessage('Frío moderado', 'Moderate cooling'), uiMessage('El agua está claramente más fría de lo habitual, con una diferencia moderada.', 'The water is clearly cooler than usual, with a moderate difference.')],
@@ -2942,7 +2942,7 @@ var LEGEND_LEVELS = {
   3: [uiMessage('Calor marcado', 'Pronounced warming'), uiMessage('El aumento sobre la temperatura habitual es marcado.', 'The rise above the usual temperature is pronounced.')],
   4: [uiMessage('Calor muy intenso', 'Very strong warming'), uiMessage('El agua está mucho más cálida que lo habitual en esa zona.', 'The water is much warmer than usual for that area.')],
   4.5: [uiMessage('Cerca del extremo cálido', 'Near the warm extreme'), uiMessage('El agua se acerca a los niveles de mayor calor de la escala.', 'The water is near the highest warmth levels on the scale.')],
-  5: [uiMessage('Calor extremo', 'Extreme warming'), uiMessage('El mar está en el extremo cálido de la escala de EarthBeat.', 'The sea is at the warmest end of the EarthBeat scale.')]
+  5: [uiMessage('Calor extremo', 'Extreme warming'), uiMessage('El mar está en el extremo cálido de la escala de EarthRhythm.', 'The sea is at the warmest end of the EarthRhythm scale.')]
 };
 var CHORDS = { Am: [[220,261.63,329.63],110], C: [[261.63,329.63,392],130.81], F: [[174.61,220,261.63],87.31], G: [[196,246.94,293.66],98], E: [[164.81,207.65,246.94],82.41] };
 var PENTA = [0,3,5,7,10];
@@ -3080,7 +3080,7 @@ var TECH_EN = {
     "use": "Regression checks for controls, audio, languages, guides, errors and layout in Chromium. They do not replace user testing."
   },
   "Git + GitHub": {
-    "use": "Version control and publication of the static EarthBeat site."
+    "use": "Version control and publication of the static EarthRhythm site."
   },
   "Asistencia de IA documentada": {
     "use": "The log preserves Claude Design/Code and Whisper as historical uses. Codex assists this interface revision and testing."
@@ -3101,7 +3101,7 @@ var ROUTE_EN = { home: 'Home', juke: 'Listen', band: 'The band', how: 'How does 
 /* Textos fijos de la interfaz */
 var TX = {
   "es": {
-    "brandAria": "EarthBeat, ir al inicio",
+    "brandAria": "EarthRhythm, ir al inicio",
     "sections": "Secciones",
     "langAria": "Idioma",
     "a11y": "Accesibilidad",
@@ -3161,7 +3161,7 @@ var TX = {
     "bandGo": "Armar la banda y escuchar",
     "teamCharacter": "Personaje de ficción del equipo",
     "storyTitle": "Historia",
-    "howItPlays": "Cómo suena en EarthBeat",
+    "howItPlays": "Cómo suena en EarthRhythm",
     "factsAndReferences": "Hechos, cultura y fuentes",
     "documentedEpisode": "Episodio documentado",
     "culturalReference": "Referencia cultural",
@@ -3223,7 +3223,7 @@ var TX = {
     "credAiReview": "El registro docs/USO_DE_IA.md aún contiene entradas pendientes de revisión y detalle. La declaración debe contrastarse con ese registro antes de presentar el proyecto."
   },
   "en": {
-    "brandAria": "EarthBeat, go home",
+    "brandAria": "EarthRhythm, go home",
     "sections": "Sections",
     "langAria": "Language",
     "a11y": "Accessibility",
@@ -3283,7 +3283,7 @@ var TX = {
     "bandGo": "Assemble the band and listen",
     "teamCharacter": "Fictional character by the team",
     "storyTitle": "Story",
-    "howItPlays": "How it sounds in EarthBeat",
+    "howItPlays": "How it sounds in EarthRhythm",
     "factsAndReferences": "Facts, culture and sources",
     "documentedEpisode": "Documented episode",
     "culturalReference": "Cultural reference",
@@ -3571,7 +3571,7 @@ class CinematicIntro {
       return;
     }
     this.markSeen();
-    var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de EarthBeat','EarthBeat presentation'));
+    var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de EarthRhythm','EarthRhythm presentation'));
     root.innerHTML=`<div class="cinema-space" aria-hidden="true"><div class="cinema-stars"></div><div class="cinema-stars near"></div><div class="cinema-sun"></div><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i></div>
 <div class="cinema-world" aria-hidden="true"><svg viewBox="0 0 500 500"><defs>
 <radialGradient id="intro-ocean" cx="30%" cy="28%" r="77%"><stop stop-color="#3f9bb5"/><stop offset=".45" stop-color="#1e6088"/><stop offset=".8" stop-color="#14324e"/><stop offset="1" stop-color="#0d192b"/></radialGradient>
@@ -3585,7 +3585,7 @@ class CinematicIntro {
 <g fill="none" stroke="#e8f9ff" stroke-opacity=".3" stroke-linecap="round" stroke-width="5"><path d="M119 141q63-26 103-8m75 34q43-12 65 3M163 264q38-18 69-4m46 71q39-17 78-3M136 378q55 19 106 5"/></g><circle cx="250" cy="250" r="210" fill="url(#intro-night)"/></g>
 <g class="cinema-orbit" fill="none" stroke="#e8b969" stroke-opacity=".4"><ellipse cx="250" cy="250" rx="242" ry="93" transform="rotate(-24 250 250)"/><path d="M250 12v16m0 444v16M12 250h16m444 0h16"/></g></svg></div>
 <svg class="cinema-wave" viewBox="0 0 560 110" fill="none" aria-hidden="true"><path d="M0 55h80l16-9 16 18 16-29 16 46 16-65 16 81 16-66 16 42 16-28 16 20 16-17 16 13 16-18 16 25 16-36 16 43 16-36 16 25 16-16 16 9h80" stroke="currentColor" stroke-width="1.5"/></svg>
-<div class="cinema-copy"><p class="cinema-brand">EARTHBEAT</p><h2></h2><p class="cinema-description"></p></div>
+<div class="cinema-copy"><p class="cinema-brand">EARTHRHYTHM</p><h2></h2><p class="cinema-description"></p></div>
 <div class="cinema-toolbar"><p></p><div class="cinema-actions"><button type="button" class="cinema-skip"></button><button type="button" class="cinema-pause"></button></div></div>`;
     this.paused=false;this.update();this.returnFocus=document.activeElement;document.body.append(root);
     root.style.fontFamily=getComputedStyle(document.querySelector('.px.app')).fontFamily;
@@ -6047,7 +6047,7 @@ class Component extends DCLogic {
       onDrop: function (e) { e.preventDefault(); self.setState({ over: false }); var fl = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (fl) self.handleFile(fl); },
       useSample: function () { self.loadSample(); },
       onUpMode: function (e) { self.setMode(e.target.value); },
-      teamLabel: T('Creadores de EarthBeat', 'EarthBeat creators'),
+      teamLabel: T('Creadores de EarthRhythm', 'EarthRhythm creators'),
       steps: STEPS
     };
   }
