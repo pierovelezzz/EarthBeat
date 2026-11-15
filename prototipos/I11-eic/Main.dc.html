@@ -1427,7 +1427,6 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px ts-avatar[data-character="mama"]{--avatar-image:url("./sprites/mama/pose-banda.webp")}
 .px ts-avatar[data-character="yaku"]{--avatar-image:url("./sprites/yaku/pose-banda.webp")}
 .px ts-avatar[data-character="illapa"]{--avatar-image:url("./sprites/illapa/pose-banda.webp")}
-.px .bscene>.bportrait-live{position:absolute}
 .px .listen-member>ts-avatar{grid-row:1/3;width:24px;height:30px}
 .px .listen-member[aria-pressed="false"] ts-avatar{filter:grayscale(.85);opacity:.65}
 .px ts-sprite-controls{display:grid;gap:4px}
@@ -1809,6 +1808,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px earthbeat-dance[data-dancing] .dance-frame{display:block}
 .px earthbeat-dance[data-dancing] .dance-pose{visibility:hidden}
 .px .stage-musician earthbeat-dance{position:relative;display:block;width:100%;height:100%;min-height:0}
+.px earthbeat-dance-button{display:inline-flex}
 .px .player-layout{grid-template-columns:minmax(0,1.18fr) minmax(0,1fr) minmax(0,1.04fr);gap:10px;align-items:stretch}
 .px .player-layout>.player-sidebar,.px .player-layout>.file-settings{grid-column:1/-1}
 .px .player-layout>.vpanel,.px .player-layout>.listen-band{grid-column:auto;grid-row:auto;min-width:0}
@@ -2489,7 +2489,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   <path fill="currentColor" d="M76 120l2 6 6 2-6 2-2 6-2-6-6-2 6-2z M402 163l2 5 5 2-5 2-2 5-2-5-5-2 5-2z M107 387l1 4 4 1-4 1-1 4-1-4-4-1 4-1z M396 405l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"></path>
 </svg>
 <sc-if value="{{bandCur.hasOutgoing}}"><img class="bportrait bportrait-outgoing" src="{{bandCur.previousPoseUrl}}" alt=""></sc-if>
-<ts-avatar class="bportrait bportrait-live" data-view="portrait" data-character="{{bandCur.key}}" aria-hidden="true"></ts-avatar>
+<earthbeat-dance data-character="{{bandCur.key}}">
+<img class="bportrait bportrait-live dance-pose" data-character="{{bandCur.key}}" src="{{bandCur.poseUrl}}" alt="">
+</earthbeat-dance>
 <sc-if value="{{bandCur.silboNotes}}">
 <svg class="bsilbo-note" viewBox="0 0 360 540" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.15">
   <path d="M24 31q3-11 15-13"></path>
@@ -2521,13 +2523,13 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   <span>{{tx.constellation}} · {{bandCur.instrumentName}}</span>
   <strong>{{bandCur.number}} / 05</strong>
   <div class="avatar-actions">
-    <ts-sprite-controls></ts-sprite-controls>
     <button type="button" class="btn sm" aria-pressed="{{bandCur.previewOn}}" onClick="{{bandCur.preview}}">{{bandCur.previewLabel}}</button>
+    <earthbeat-dance-button></earthbeat-dance-button>
   </div>
 </figcaption>
 </figure>
 <div id="tour-binfo" class="binfo">
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
+<sc-if value="{{voiceModeOn}}"><button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}">{{sectionVoiceLabel}}</button></sc-if>
 <sc-if value="{{audioError}}"><p role="alert" class="small">{{audioError}}</p></sc-if>
 <p role="status" class="small">{{bandCur.previewStatus}}</p>
 <sc-if value="{{bandCur.previewMuted}}"><button type="button" class="btn sm" onClick="{{bandCur.previewUnmute}}">{{bandCur.previewUnmuteLabel}}</button></sc-if>
