@@ -1,6 +1,6 @@
 # Material de presentación de V3
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V3`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V3`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 Esta carpeta contiene este índice; no incluye diapositivas o un video final. Para redactar una presentación debe usarse el alcance actual de V3, sus datos y sus créditos.

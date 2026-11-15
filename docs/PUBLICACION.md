@@ -1,9 +1,9 @@
 # Publicación de V3
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V3`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V3`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-El código de esta versión está en [EarthBeat, rama V3](https://github.com/pierovelezzz/EarthBeat/tree/V3). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
+El código de esta versión está en [EarthRhythm, rama V3](https://github.com/pierovelezzz/EarthRhythm/tree/V3). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
 
 ## Preparar y revisar el sitio
 

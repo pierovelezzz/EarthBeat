@@ -1,6 +1,6 @@
 # Lectura de la interfaz de V3
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V3`.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V3`.
 > El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
 Cuatro apartados principales: Escuchar, La banda, ¿Cómo funciona? y Tecnología. ¿Cómo funciona? abre Prueba práctica y después Del mapa al sonido. Incluye introducción del Pacífico, leyenda interactiva y baile 2D por fotogramas cargados al necesitarse.

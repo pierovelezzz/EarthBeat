@@ -32,7 +32,7 @@ async function main() {
   const url = 'http://127.0.0.1:' + server.address().port;
   const browser = await launchBrowser({ executablePath: process.env.TERRASONIC_CHROMIUM });
   const report = { timing: [], animation: [], errors: [], responses: [], profile: 'Chromium, 4× CPU slowdown, 150 ms latency, 200 KiB/s download, gzip; fresh mobile contexts. Section timing is click to the section heading being visible.', physicalVibrationVerified: false };
-  const releaseUrl = process.env.EARTHBEAT_PREVIEW_URL || url;
+  const releaseUrl = process.env.EARTHRHYTHM_PREVIEW_URL || url;
   function observe(page) {
     page.on('pageerror', error => report.errors.push(error.message));
     page.on('response', response => { if (response.status() >= 400) report.responses.push(response.url()); });
@@ -70,7 +70,7 @@ async function main() {
       await intro.waitFor();
       assert.equal(await page.locator('#tour-card').count(), 0, 'Guide waits for the introduction to finish');
       assert.equal(await intro.getAttribute('data-duration'), viewport === mobile ? '6800' : '5200');
-      assert.match(await intro.textContent(), /EARTHBEAT/);
+      assert.match(await intro.textContent(), /EARTHRHYTHM/);
       await assertMoving(page, '.cinema-world');
       await assertMoving(page, '.cinema-meteor');
       await intro.getByRole('button', { name: 'Pausar', exact: true }).click();
@@ -228,7 +228,7 @@ async function main() {
       await page.locator('#tour-a11y summary').click();
       assert.deepEqual(await page.locator('header.top').boundingBox(), header);
       assert.deepEqual(await page.locator('.player-layout').boundingBox(), layout);
-      assert.equal(await page.getByRole('button', { name: 'Cómo prefiero usar EarthBeat', exact: true }).count(), 0);
+      assert.equal(await page.getByRole('button', { name: 'Cómo prefiero usar EarthRhythm', exact: true }).count(), 0);
       await page.getByRole('button', { name: 'Vibración', exact: true }).click();
       assert.deepEqual(await page.evaluate(() => vibrations), [15]);
       await page.waitForTimeout(725);
@@ -253,7 +253,7 @@ async function main() {
       assert.equal(await page.locator('.method-notes a:visible').count(), 5);
       assert.equal(await page.locator('.team-names li').count(), 6);
       assert.doesNotMatch(await page.locator('.team-names').textContent(), /@/);
-      assert(await page.getByRole('heading', { name: 'Creadores de EarthBeat' }).isVisible());
+      assert(await page.getByRole('heading', { name: 'Creadores de EarthRhythm' }).isVisible());
       assert.equal(await page.getByText('Alvaro Mendoza Marín', { exact: true }).count(), 1);
       await page.screenshot({ path: path.join(output, `method-${viewport.width}.png`) });
       report.animation.push({ viewport, characters, patterns: [15, [25, 50, 25], 0] });
@@ -268,7 +268,7 @@ async function main() {
     const accessiblePage = await accessible.newPage();
     observe(accessiblePage);
     await accessiblePage.goto(releaseUrl);
-    const staticIntro = accessiblePage.getByRole('dialog', { name: 'EarthBeat presentation' });
+    const staticIntro = accessiblePage.getByRole('dialog', { name: 'EarthRhythm presentation' });
     assert.equal(await staticIntro.getAttribute('data-static'), 'true');
     assert.equal(await staticIntro.evaluate(element => element.getAnimations({ subtree: true }).length), 0);
     await staticIntro.getByRole('button', { name: 'Enter', exact: true }).click();
@@ -299,7 +299,7 @@ async function main() {
       await new Promise(resolve => setTimeout(resolve, 120));
       return note.getBoundingClientRect().top - before;
     });
-    assert(drop > 5, 'Falling markers resume after reduced motion is turned off in EarthBeat');
+    assert(drop > 5, 'Falling markers resume after reduced motion is turned off in EarthRhythm');
     await accessiblePage.reload();
     const animatedIntro = accessiblePage.locator('.ts-cinema');
     await animatedIntro.waitFor();

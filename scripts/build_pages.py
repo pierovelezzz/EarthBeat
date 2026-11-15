@@ -1,4 +1,4 @@
-"""Build the static EarthBeat site for deployment."""
+"""Build the static EarthRhythm site for deployment."""
 
 from hashlib import sha256
 import json
