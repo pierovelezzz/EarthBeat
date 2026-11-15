@@ -1611,12 +1611,12 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .space-meteor{position:absolute;width:clamp(55px,9vw,140px);height:1px;background:linear-gradient(90deg,transparent,var(--sky-trail));opacity:0;transform-origin:right center;animation:space-meteor var(--sky-meteor-time) linear infinite}
 .px .space-meteor::after{content:"";position:absolute;right:0;top:-1px;width:3px;height:3px;border-radius:50%;background:#e7faff;box-shadow:0 0 8px #c4f2ff88}
 .px .meteor-one{left:8%;top:16%;animation-delay:-.3s}
-.px .meteor-two{left:38%;top:11%;--sky-meteor-time:17s;animation-delay:-12s}
-.px .meteor-three{left:4%;top:58%;--sky-meteor-time:23s;animation-delay:-16s}
+.px .meteor-two{left:38%;top:11%;--sky-meteor-time:13s;animation-delay:-10s}
+.px .meteor-three{left:4%;top:58%;--sky-meteor-time:17s;animation-delay:-11s}
 .px .space-flight{position:absolute;opacity:0;animation:space-flight var(--sky-flight-time) linear infinite}
 .px .space-rocket{display:block;width:25px;height:60px}
 .px .flight-one{left:-36px;top:90%;animation-delay:-24s}
-.px .flight-two{right:-40px;top:75%;--sky-flight-time:59s;animation-name:space-flight-return;animation-delay:-7s}
+.px .flight-two{right:-40px;top:75%;--sky-flight-time:43s;animation-name:space-flight-return;animation-delay:-25s}
 .px .flight-two .space-rocket{width:18px;height:43px}
 @keyframes space-orbit{to{transform:rotate(360deg)}}
 @keyframes space-meteor{
@@ -1649,8 +1649,6 @@ html[data-ts-page-hidden] .px .space-sky *{animation-play-state:paused!important
  .px .space-moon{width:66px;right:-15px;top:24%;opacity:.38}
  .px .space-reading-shade{background:linear-gradient(90deg,transparent,var(--bg) 20%,var(--bg) 80%,transparent);opacity:.75}
  .px .space-rocket{width:18px;height:43px}
- .px .space-flight{--sky-flight-time:46s}
- .px .flight-two{display:none}
  .px .meteor-three{display:none}
 }
 @media(max-height:400px){.px .space-sun{width:64px;top:28%}.px .space-moon{width:55px;top:30%}.px .space-horizon{bottom:-50vh}}
@@ -1683,7 +1681,7 @@ html[data-ts-page-hidden] .px .space-sky *{animation-play-state:paused!important
 @media(max-width:700px){.px .space-sun{opacity:.65}.px .planet-ringed{width:66px;bottom:14%;right:0;opacity:.38}.px .planet-distant{display:none}.px .space-bright-stars{opacity:.35}.px .space-sun .solar-satellite svg{width:16px;height:11px;left:calc(50% - 8px)}}
 @media(max-height:450px){.px .space-planet{display:none}}
 @media(prefers-reduced-motion:reduce){.px:not([data-motion-mode="full"]) .solar-eclipse{display:none}}
-.px .meteor-four{left:62%;top:45%;--sky-meteor-time:19s;animation-delay:-10s}
+.px .meteor-four{left:62%;top:45%;--sky-meteor-time:19s;animation-delay:-9s}
 .px .meteor-five{left:12%;top:72%;--sky-meteor-time:29s;animation-delay:-22s}
 .px .space-ocean-wave{position:absolute;inset:auto 15% 4%;width:70%;height:70px;color:#8be7e9;opacity:.16}
 .px .space-ocean-wave path{transform-origin:center;animation:none}
@@ -1702,7 +1700,7 @@ html[data-ts-page-hidden] .px .space-sky *{animation-play-state:paused!important
 .px .shower-streak:nth-child(6){left:63%;top:28%;animation-delay:-19s}
 @keyframes meteor-shower{0%,47%{opacity:0;transform:translate(0,0) rotate(34deg)}48%{opacity:.6}51%,100%{opacity:0;transform:translate(33vw,20vh) rotate(34deg)}}
 /* Keep V1's space layer behind the V2 layout. */
-.px .space-sky .flight-one { animation-delay: -25s; }
+.px .space-sky .flight-one { animation-delay: -27.2s; }
 .px .space-sky .space-moon { animation: moon-drift 18s ease-in-out infinite alternate; }
 @keyframes moon-drift { to { transform: translate3d(-9px, 13px, 0); } }
 .px.reduce-motion .space-sky .space-shower { display: none; }
@@ -1710,7 +1708,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .space-sky * { animati
 @media (max-width:700px) {
   .px .space-sky .space-sun { left: -17px; top: 20%; }
   .px .space-sky .space-moon { top: 34%; }
-  .px .space-sky .flight-one { animation-delay: -31s; }
   .px .space-sky .shower-streak:nth-child(n+5) { display: none; }
 }
 
@@ -3559,7 +3556,7 @@ class HapticFeedback {
   retry() { this.failed = false; this.lastStatus = 'ready'; }
 }
 
-// Starts once per document after first-visit preferences, and can be replayed.
+// Starts on each new home document before first-visit preferences.
 class CinematicIntro {
   constructor(owner) { this.owner=owner; this.animations=[]; this.timers=[]; this.seen=false; }
   markSeen() { this.seen=true; }
@@ -3654,7 +3651,9 @@ class CinematicIntro {
     if (!this.root) return;
     this.root.querySelector('h2').textContent = T('Mapas NASA hechos música.','NASA maps, made musical.');
     this.root.querySelector('.cinema-description').textContent = T('Explora cambios de temperatura del Pacífico con la vista y el oído.','Explore Pacific temperature patterns through sight and sound.');
-    this.root.querySelector('.cinema-toolbar p').textContent = T('Ilustración asistida por IA · Pacífico','AI-assisted illustration · Pacific');
+    this.root.querySelector('.cinema-toolbar p').textContent = this.root.dataset.motion === 'gentle' && this.owner.bandReduced()
+      ? T('Movimiento reducido · Pacífico', 'Reduced motion · Pacific')
+      : T('Ilustración asistida por IA · Pacífico', 'AI-assisted illustration · Pacific');
     this.root.querySelector('.cinema-skip').textContent = T('Saltar introducción','Skip intro');
     this.root.querySelector('.cinema-pause').textContent = this.paused ? T('Reanudar','Resume') : T('Pausar','Pause');
   }
@@ -3762,6 +3761,16 @@ class Component extends DCLogic {
     // Older saves wrote false by default even when the visitor never changed motion.
     this.state.reducedMotion = preferences?.values.motionOverride === true || preferences?.values.reducedMotion === true
       ? !!this.state.reducedMotion : null;
+    if (window.location?.href) {
+      var entryUrl = new URL(window.location.href);
+      if (entryUrl.searchParams.get('movimiento') === 'completo') {
+        this.state.reducedMotion = false;
+        if (this.savePreferences()) {
+          entryUrl.searchParams.delete('movimiento');
+          window.history?.replaceState(window.history.state, '', entryUrl);
+        }
+      }
+    }
     this.state.tutorial = false;
     this.state.tutorialDone = { disc: false, play: false, legend: false };
     this.state.tutorialSkipped = {};
@@ -3883,7 +3892,10 @@ class Component extends DCLogic {
     var self = this, values = {};
     PREFERENCE_KEYS.forEach(function (key) { values[key] = !!self.state[key]; });
     values.motionOverride = typeof this.state.reducedMotion === 'boolean';
-    try { localStorage.setItem('ts_prefs', JSON.stringify({ version: 1, configured: this.preferencesConfigured, values: values })); } catch (ignored) {}
+    try {
+      localStorage.setItem('ts_prefs', JSON.stringify({ version: 1, configured: this.preferencesConfigured, values: values }));
+      return true;
+    } catch (ignored) { return false; }
   }
   setPreference(key, value) {
     if (PREFERENCE_KEYS.indexOf(key) < 0) return;
@@ -3944,7 +3956,11 @@ class Component extends DCLogic {
     };
   }
   syncPreferenceMotion() {
-    if (document.documentElement.dataset) document.documentElement.dataset.tsReducedMotion = String(this.bandReduced());
+    if (document.documentElement.dataset) {
+      var reduced = this.bandReduced();
+      document.documentElement.dataset.tsReducedMotion = String(reduced);
+      document.documentElement.dataset.tsMotionMode = reduced ? 'reduced' : 'full';
+    }
     if (typeof window.dispatchEvent === 'function' && typeof window.CustomEvent === 'function') window.dispatchEvent(new window.CustomEvent('terrasonic:motion'));
   }
   positionAccessibilityMenu(event) {

@@ -24,6 +24,8 @@ python -m http.server 8765 --bind 127.0.0.1 --directory _site
 
 Abrir [la aplicación local](http://127.0.0.1:8765/). Detener el servidor con Ctrl+C. La revisión utiliza Python 3.12.14 y Node 26.13.0. Node se necesita para las pruebas, no para servir el sitio.
 
+El enlace [abrir con animaciones completas](http://127.0.0.1:8765/?movimiento=completo) guarda esa elección en EarthBeat para las próximas visitas. Se puede volver a activar el movimiento reducido desde Accesibilidad.
+
 ## Fuente de la aplicación
 
 Editar **`prototipos/I11-eic/Main.dc.html`** y reconstruir. `scripts/build_pages.py` genera `_site/index.html` y copia los recursos de esta rama. `scripts/pages-support.js` resuelve las plantillas y sus enlaces de estado. El `index.html` de la raíz y `src/` forman un prototipo modular heredado: no son la entrada del build publicado.
