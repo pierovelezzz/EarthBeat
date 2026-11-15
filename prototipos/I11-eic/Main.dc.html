@@ -1908,10 +1908,23 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .mode-help summary span{display:grid;place-items:center;width:19px;height:19px;border:1px solid currentColor;border-radius:50%;color:var(--muted)}
 .px .mode-help summary::-webkit-details-marker{display:none}
 .px .mode-help[open] summary span,.px .mode-help summary:hover span{color:var(--bg);background:var(--fg)}
-.px .mode-help dl{position:absolute;z-index:5;inset:100% 0 auto auto;width:min(245px,100%);padding:10px;margin:4px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:5px;box-shadow:0 5px 12px #0006}
-.px .mode-help dt{font-weight:700}
-.px .mode-help dd{margin:0;color:var(--fg);line-height:1.4}
-.px .mode-help dd+dt{margin-top:6px}
+.px .uni .headtools .disc-action{
+  align-items:center;justify-content:center;width:44px;min-height:44px;padding:0;border-radius:4px
+}
+.px .uni .headtools .disc-action:not(.rhythm-toggle){display:inline-flex}
+.px .mode-help-panel{
+  position:absolute;z-index:5;inset:100% 0 auto auto;width:min(410px,100%);max-height:62dvh;overflow-y:auto;
+  display:grid;gap:10px;padding:12px;margin-top:4px;background:var(--surface);color:var(--fg);
+  border:1px solid var(--line);border-radius:7px;box-shadow:0 5px 12px #0006
+}
+.px .mode-help:not([open]) .mode-help-panel{display:none}
+.px .mode-help-purpose{display:grid;gap:3px;padding-inline-start:9px;border-inline-start:3px solid var(--accent)}
+.px .mode-help-purpose h2{margin:0;color:var(--accent);font:700 1.05em/1.25 var(--head)}
+.px .mode-help-purpose p,.px .mode-help-panel dd{margin:0;font-size:.86em;line-height:1.35}
+.px .mode-help-panel dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0}
+.px .mode-help-panel dl > div{display:grid;align-content:start;gap:3px;padding:7px;border:1px solid var(--line);border-radius:4px}
+.px .mode-help-panel dt{display:flex;align-items:center;gap:5px;font:700 .92em/1.25 var(--head)}
+.px .mode-help-panel dt svg{flex:none;color:var(--accent)}
 .px .map-source{
   position:absolute;z-index:1;inset:7px auto auto 7px;max-width:calc(100% - 14px);
   display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #bacbdd;border-radius:4px;
@@ -2405,12 +2418,21 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="pagehead slim">
 <div><p class="kicker">{{playKicker}}</p><h1 id="player-title" class="display md" tabindex="-1">{{playTitle}}</h1></div>
 <div class="row headtools">
-<sc-if value="{{canPlayRhythm}}"><button type="button" class="btn sm rhythm-toggle" onClick="{{playThisDisc}}">{{rhythmToggleLabel}}</button></sc-if>
-<sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{tx.changeDisc}}</button></sc-if>
+<sc-if value="{{canPlayRhythm}}"><button type="button" class="btn sm disc-action rhythm-toggle" onClick="{{playThisDisc}}" aria-label="{{rhythmToggleLabel}}" title="{{rhythmToggleLabel}}"><svg width="24" height="18" viewBox="0 0 28 20" fill="currentColor" fill-rule="evenodd" shape-rendering="crispEdges" aria-hidden="true"><path d="M7 2h14v2h3v2h2v4h2v6h-2v2h-5v-2h-2v-2H9v2H7v2H2v-2H0v-6h2V6h2V4h3zM8 5h2v3h3v2h-3v3H8v-3H5V8h3zM19 6h3v3h-3zM16 10h3v3h-3z"/></svg></button></sc-if>
+<sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet disc-action" onClick="{{goDiscs}}" aria-label="{{tx.changeDisc}}" title="{{tx.changeDisc}}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.3"/><path d="M9 4H4l2-2m-2 2 2 2M15 20h5l-2-2m2 2-2 2"/></svg></button></sc-if>
 <sc-if value="{{rhythmMode}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{rhythmExitLabel}}</button></sc-if>
 <sc-if value="{{standardPlayer}}">
-<details class="mode-help"><summary aria-label="{{tx.modesHelp}}" title="{{tx.modesHelp}}"><span aria-hidden="true">?</span></summary>
-<dl><sc-for list="{{engines}}" as="e"><dt>{{e.short}}</dt><dd>{{e.summary}}</dd></sc-for></dl></details>
+<details class="mode-help" onKeyDown="{{listenHelpKeys}}">
+<summary aria-label="{{tx.modesHelp}}" title="{{tx.modesHelp}}"><span aria-hidden="true">?</span></summary>
+<div class="mode-help-panel">
+<div class="mode-help-purpose"><h2>{{listenHelp.title}}</h2><p>{{listenHelp.purpose}}</p></div>
+<dl>
+<div><dt><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="7" r="1"/><path d="m3 15 5-5 3 3 3-4 3 4"/></svg>{{mapSource}}</dt><dd>{{listenHelp.image}}</dd></div>
+<div><dt><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="2" width="16" height="16" rx="1"/><path d="M2 8h16M2 13h16M8 2v16M13 2v16"/></svg>{{tx.machineSub}}</dt><dd>{{listenHelp.grid}}</dd></div>
+<sc-for list="{{engines}}" as="e"><div><dt>{{e.short}}</dt><dd>{{e.summary}}</dd></div></sc-for>
+</dl>
+</div>
+</details>
 </sc-if>
 </div>
 </div>
@@ -3685,7 +3707,7 @@ var TX = {
     "sound": "Sonido",
     "engineAria": "Motor de sonido",
     "speedLabel": "Velocidad",
-    "modesHelp": "¿En qué se diferencian Melodía y Datos?",
+    "modesHelp": "Cómo funciona este reproductor",
     "slow": "Lenta",
     "normal": "Normal",
     "fast": "Rápida",
@@ -3806,7 +3828,7 @@ var TX = {
     "sound": "Sound",
     "engineAria": "Sound engine",
     "speedLabel": "Speed",
-    "modesHelp": "What is the difference between Melody and Data?",
+    "modesHelp": "How this player works",
     "slow": "Slow",
     "normal": "Normal",
     "fast": "Fast",
@@ -6349,7 +6371,7 @@ class Component extends DCLogic {
       { tag: T('USO', 'USE'), title: T('Explorar patrones', 'Explore patterns'), body: T('Permite contrastar patrones dentro de una misma fuente. Los niveles no son magnitudes físicas comparables entre productos.', 'Explore patterns within the same source. Levels are not physical quantities comparable across products.') }
     ];
     var engines = [
-      { key: 'melody', short: T('Melodía', 'Melody'), summary: T('Mapa con acordes y ritmo.', 'Map sounds with chords and rhythm.'), description: T('Combina las notas del mapa con acordes y un ritmo. Illapa marca el pulso con timbal.', 'Combines notes from the map with chords and a rhythm. Illapa keeps the beat on timpani.') },
+      { key: 'melody', short: T('Melodía', 'Melody'), summary: T('Los colores se oyen con acordes y ritmo.', 'Hear the colors with chords and rhythm.'), description: T('Combina las notas del mapa con acordes y un ritmo. Illapa marca el pulso con timbal.', 'Combines notes from the map with chords and a rhythm. Illapa keeps the beat on timpani.') },
       { key: 'raw', short: T('Datos', 'Data'), summary: T('Cada color genera un tono.', 'Each color makes a tone.'), description: T('Convierte los niveles de color en tonos directos, sin acordes. Illapa solo entra con un trueno por calor extremo.', 'Turns color levels directly into tones, without chords. Illapa only plays a thunder hit triggered by extreme warmth.') }
     ].map(function (e) {
       return { short: e.short, summary: e.summary, description: e.description, descriptionId: 'mode-description-' + e.key, on: e.key === s.engine,
@@ -6422,6 +6444,29 @@ class Component extends DCLogic {
       playKicker: rhythmMode ? T('Jugar', 'Play') : isData ? tx.dataListenKicker : tx.listenKicker,
       playTitle: isData ? uiLabel(s.custom) : d.title,
       mapSource: isJuke ? tx.youSeeSub : s.custom?.kind === 'rain' ? 'NASA POWER' : T('Tu imagen', 'Your image'),
+      listenHelp: isJuke ? {
+        title: T('Escucha cómo cambia el mar', 'Listen to how the ocean changes'),
+        purpose: T('EarthRhythm convierte los mapas de la NASA en música para que puedas ver y oír cómo cambia el Pacífico mes a mes.',
+          'EarthRhythm turns NASA maps into music so you can see and hear how the Pacific changes from month to month.'),
+        image: T('Muestra dónde el mar está más frío o más cálido de lo habitual.',
+          'Shows where the ocean is cooler or warmer than usual.'),
+        grid: T('Resume la imagen en cuadros de color. Cada columna añade un paso a la música.',
+          'Summarizes the image in colored squares. Each column adds a step to the music.')
+      } : {
+        title: T('Escucha lo que ves', 'Listen to what you see'),
+        purpose: T('EarthRhythm convierte una imagen en música para que puedas ver y oír sus patrones.',
+          'EarthRhythm turns an image into music so you can see and hear its patterns.'),
+        image: s.custom?.kind === 'rain' ? T('Lluvia por mes en Chiclayo.', 'Monthly rainfall in Chiclayo.')
+          : T('La imagen que elegiste para crear música.', 'The image you chose to make music.'),
+        grid: T('Resume los colores de la imagen. Cada columna añade un paso a la música.',
+          'Summarizes the image colors. Each column adds a step to the music.')
+      },
+      listenHelpKeys: function (event) {
+        if (event.key !== 'Escape' || !event.currentTarget.open) return;
+        event.preventDefault();
+        event.currentTarget.open = false;
+        event.currentTarget.querySelector('summary').focus();
+      },
       showFooter: s.tab !== 'home' && !isGame,
       bottomNavClass: (navVm.show ? 'with-pages' : '') + (topics ? ' with-topics' : ''),
       onNavKey: function (event) { self.navKey(event); },
