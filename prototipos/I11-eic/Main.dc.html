@@ -3419,11 +3419,13 @@ class CinematicIntro {
     var self=this, app=this.owner;
     if(typeof document.createElement!=='function'||!document.body?.append)return;
     if(app.disposed||app.state.showPreferences||app.state.tab!=='home'||app.state.tour||document.hidden||(!replay&&this.hasSeen()))return;
-    if (!replay && (app.bandReduced() || ['#banda', '#escuchar', '#listen'].includes(document.location?.hash))) {
+    if (!replay && ['#banda', '#escuchar', '#listen'].includes(document.location?.hash)) {
       this.markSeen();
+      app.entryWelcomePending = false;
       return;
     }
     this.finish(false); this.markSeen();
+    this.isReplay = replay;
     var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de EarthBeat','EarthBeat presentation'));
     root.innerHTML=`<div class="cinema-space" aria-hidden="true"><div class="cinema-stars"></div><div class="cinema-stars near"></div><div class="cinema-sun"></div><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i></div>
 <div class="cinema-world" aria-hidden="true"><svg viewBox="0 0 500 500"><defs>
@@ -3465,11 +3467,20 @@ class CinematicIntro {
       var targets=['.brand','.top','#main-content .hero h1','.hero .lede','.hero .cta','.home-demo'];
       targets.forEach(function(selector,i){var el=document.querySelector(selector);if(!el?.animate)return;var delay=duration*.7+i*55;self.animations.push(el.animate([{opacity:0,transform:selector==='.home-demo'?'translateX(14px) rotate(1deg)':'translateY(8px)'},{opacity:1,transform:'translate(0,0) rotate(0)'}],{duration:Math.min(380,duration-delay-20),delay:delay,fill:'backwards',easing:'cubic-bezier(.2,.7,.2,1)'}));});
       end.onfinish=function(){self.finish(true);};this.timers.push(setTimeout(function(){self.finish(true);},duration+250));
-    }catch(ignored){if(replay)this.showStatic();else this.finish(true);}
+    }catch(ignored){this.showStatic();}
   }
-  showStatic(){this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(function(a){a.onfinish=null;a.cancel();});this.animations=[];this.root.dataset.static='true';this.root.querySelector('.cinema-pause').hidden=true;this.update();}
+  showStatic() {
+    this.timers.forEach(clearTimeout);
+    this.timers = [];
+    this.animations.forEach(animation => { animation.onfinish = null; animation.cancel(); });
+    this.animations = [];
+    this.root.dataset.static = 'true';
+    this.root.querySelector('.cinema-pause').hidden = true;
+    this.update();
+    if (!this.isReplay) this.timers.push(setTimeout(() => this.finish(true), this.duration));
+  }
   togglePause(){if(!this.root||this.root.dataset.static==='true')return;this.paused=!this.paused;this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(a=>this.paused?a.pause():a.play());if(!this.paused){var self=this;this.timers.push(setTimeout(function(){self.finish(true);},Math.max(0,this.duration-Number(this.endAnimation?.currentTime||0))+500));}this.update();}
-  update(){if(!this.root)return;this.root.querySelector('h2').textContent=T('Mapas NASA hechos música.','NASA maps, made musical.');this.root.querySelector('.cinema-description').textContent=T('Explora cambios de temperatura del Pacífico con la vista y el oído.','Explore Pacific temperature patterns through sight and sound.');this.root.querySelector('.cinema-toolbar p').textContent=T('Ilustración asistida por IA · Pacífico','AI-assisted illustration · Pacific');this.root.querySelector('.cinema-skip').textContent=this.root.dataset.static==='true'?T('Entrar','Enter'):T('Saltar introducción','Skip intro');this.root.querySelector('.cinema-pause').textContent=this.paused?T('Reanudar','Resume'):T('Pausar','Pause');}
+  update(){if(!this.root)return;this.root.querySelector('h2').textContent=T('Te damos la bienvenida a EarthBeat','Welcome to EarthBeat');this.root.querySelector('.cinema-description').textContent=T('Escucha cómo los colores del Pacífico se convierten en música.','Hear the colors of the Pacific turn into music.');this.root.querySelector('.cinema-toolbar p').textContent=T('Ilustración asistida por IA · Pacífico','AI-assisted illustration · Pacific');this.root.querySelector('.cinema-skip').textContent=this.root.dataset.static==='true'?T('Entrar','Enter'):T('Saltar introducción','Skip intro');this.root.querySelector('.cinema-pause').textContent=this.paused?T('Reanudar','Resume'):T('Pausar','Pause');}
   finish(restoreFocus=false){
     if(!this.root)return;
     var root=this.root,focused=root?.contains(document.activeElement);this.root=null;
@@ -3479,6 +3490,7 @@ class CinematicIntro {
     if(restoreFocus&&focused){var target=this.returnFocus?.isConnected&&this.returnFocus!==document.body?this.returnFocus:document.querySelector('.hero .btn.primary');target?.focus({preventScroll:true});}
     this.returnFocus=null;
     this.owner.completeWelcome();
+    if (restoreFocus && !this.isReplay) this.owner.showEntryPreferences();
   }
 }
 
@@ -3512,6 +3524,7 @@ class Component extends DCLogic {
     if (preferences) PREFERENCE_KEYS.forEach(function (key) { if (typeof preferences.values[key] === 'boolean') self.state[key] = preferences.values[key]; });
     this.preferencesConfigured = !!(preferences && preferences.configured);
     this.state.showPreferences = false; this.state.sampleStarting = false;
+    this.entryWelcomePending = !this.preferencesConfigured;
     // Older saves wrote false by default even when the visitor never changed motion.
     this.state.reducedMotion = preferences?.values.motionOverride === true || preferences?.values.reducedMotion === true
       ? !!this.state.reducedMotion : null;
@@ -3569,6 +3582,7 @@ class Component extends DCLogic {
       } else {
         self.cinema?.start();
         self.completeWelcome();
+        self.showEntryPreferences();
         if (self.state.tour) self.focusTourTarget();
       }
     };
@@ -3605,7 +3619,7 @@ class Component extends DCLogic {
     this.onRouteMotion = function () {
       self.syncPreferenceMotion();
       if (!self.bandReduced()) return;
-      self.cinema?.finish(true);
+      if (self.cinema?.root) self.cinema.showStatic();
       self.haptics.stop();
       if (self.routeFinish) self.routeFinish();
       if (self.state.tab === 'band') self.cancelBandClip();
@@ -3710,6 +3724,11 @@ class Component extends DCLogic {
     }
   }
   focusPreferences() { var target = document.getElementById('preferences-voice') || document.getElementById('preferences-dialog'); if (target) target.focus({ preventScroll: true }); }
+  showEntryPreferences() {
+    if (!this.entryWelcomePending || !this.cinema?.hasSeen() || this.cinema.root || document.hidden || this.disposed) return;
+    this.entryWelcomePending = false;
+    if (this.state.tab === 'home' && !this.state.tour) this.openPreferences();
+  }
   openPreferences() {
     const menu = document.getElementById('tour-a11y');
     this.preferencesReturnFocus = menu?.querySelector('summary');
