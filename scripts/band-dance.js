@@ -318,7 +318,7 @@ class RhythmGame extends HTMLElement {
       if (event.patch.col % 4 !== 2 || !event.info.k) continue;
       // w and c are the positive and negative means over the same valid pixels.
       const mean = event.info.w - event.info.c;
-      const index = event.lane ?? (Math.abs(mean) >= 2 ? 3 : mean <= -.5 ? 0 : mean >= .5 ? 2 : 1);
+      const index = Math.abs(mean) >= 2 ? 3 : mean <= -.5 ? 0 : mean >= .5 ? 2 : 1;
       const lane = this.lanes[index];
       const flight = document.createElement('span');
       flight.className = 'rhythm-flight';
