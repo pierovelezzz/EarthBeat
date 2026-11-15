@@ -72,7 +72,7 @@ async function main() {
       await page.evaluate(() => { __app.setState({ mute: __app.allMute(false), leadOverride: 'mama' }); });
       for (const mode of ['melody', 'raw']) {
         await page.locator('.player-modes button').nth(mode === 'melody' ? 0 : 1).click();
-        assert.equal(await page.locator('.player-detail .chips').count(),mode==='melody'?1:0);
+        assert.equal(await page.locator('.listen-band .chips').count(),mode==='melody'?1:0);
         assert.equal(await page.locator('.band-stage .stage-musician').count(),5);
         const slider = page.locator('#playback-position');
         await slider.focus(); await slider.press('Home'); await slider.press('ArrowRight');
@@ -96,20 +96,19 @@ async function main() {
         assert.deepEqual(await page.evaluate(() => [__app.state.frame, __app.state.col, __app.state.playing]), [1, 6, false]);
         assert.equal(await slider.inputValue(), '35');
         const date = await page.locator('.when b').textContent();
-        assert(await page.evaluate(() => __app.state.events.length > 0));
         assert.equal(await page.locator('.event-history, #tour-more, .current-event').count(),0);
-        assert.equal(await page.locator('.map-legend .legend-choice').count(),3);
+        assert.equal(await page.locator('.map-legend .legend-choice').count(),14);
         assert.equal(await page.locator('#tour-machine canvas.heard').count(),1);
         assert.equal(await page.getByRole('button',{name:'Escenario',exact:true}).count(),0);
         assert.equal(await page.locator('.listen-member').count(),5);
         const before = await page.evaluate(() => __app.playerPosition());
-        await page.locator('#tour-lang button').nth(1).click();
+        await page.getByRole('button',{name:'English',exact:true}).click();
         assert.equal(await page.evaluate(() => __app.playerPosition()), before);
         assert.equal(await page.locator('html').getAttribute('lang'), 'en');
         assert.match(await page.locator('#playback-position').getAttribute('aria-valuetext'), /Map:/);
-        await page.locator('#tour-lang button').first().click();
+        await page.getByRole('button',{name:'Español',exact:true}).click();
         report.audio.push({ set, mode, peak, afterPausePeak: silent, pausedPosition: +paused, chosenDate: date, errors: [...errors] });
-        console.log('PASS playback', set, mode, 'pause/resume/seek/keyboard/history/language/audio silence');
+        console.log('PASS playback', set, mode, 'pause/resume/seek/keyboard/language/audio silence');
       }
       if (setIndex === 0) await page.evaluate(() => __app.goSub(0));
     }
@@ -121,13 +120,13 @@ async function main() {
       await page.waitForFunction(() => __app.state.col === 1 && __audioPeak() > .00001);
       const mama = page.locator('.listen-member').nth(2);
       await mama.click();
-      assert.equal(await page.locator('.band-stage .stage-musician').count(),0);
+      assert.equal(await page.locator('.stage-musician[aria-pressed="true"]').count(),0);
       await page.waitForTimeout(150);
       assert.equal(await page.evaluate(() => __app.state.playing), true);
       assert((await page.evaluate(() => __audioPeak())) < .00001, 'Individual mute also cuts reverb');
       assert.equal(await page.evaluate(() => !!__app.voiceGroups.mama), false);
       await mama.click();
-      assert.equal(await page.locator('.band-stage .stage-musician').count(),1);
+      assert.equal(await page.locator('.stage-musician[aria-pressed="true"]').count(),1);
       await page.waitForTimeout(30);
       assert((await page.evaluate(() => __audioPeak())) < .00001, 'Unmuting must not revive an earlier tail');
       await page.locator('#tour-play button').click();
@@ -150,6 +149,7 @@ async function main() {
       }
       await page.locator('#tour-nav button').first().click();
       await page.locator('.discgrid .dcard').first().click();
+      await page.waitForFunction(() => __app.cur() && !__app.state.trans);
     }
     if(!process.argv.includes('--layout-only')){
       await page.evaluate(()=>{__app.stop();__app.setBandMute(__app.allMute(true));__app.seekPosition(0);});

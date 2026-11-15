@@ -10,13 +10,22 @@ async function main(){
    const context=await browser.newContext({viewport:{width,height:width===320?256:width===390?844:width===1342?605:768},reducedMotion:'reduce'});
    await context.route('**/*',async route=>{if(/^(blob:|data:)/.test(route.request().url()))return route.continue();if(!route.request().url().startsWith(base))return route.abort();const file=path.resolve(site,new URL(route.request().url()).pathname.slice(1)||'index.html');return file.startsWith(site+path.sep)&&fs.existsSync(file)?route.fulfill({path:file}):route.fulfill({status:404});});
    await context.addInitScript(language=>{
-    localStorage.setItem('ts_lang',language);localStorage.setItem('ts_prefs',JSON.stringify({version:1,configured:true,values:{sfx:false}}));
+    localStorage.setItem('ts_lang',language);localStorage.setItem('ts_prefs',JSON.stringify({version:1,configured:true,values:{sfx:false,reducedMotion:true}}));
     Object.defineProperty(window,'DCLogic',{configurable:true,set(value){Object.defineProperty(window,'DCLogic',{value,writable:true,configurable:true});const original=value.prototype.setState;value.prototype.setState=function(...args){window.__app=this;return original.apply(this,args);};}});
     const Native=window.AudioContext;window.AudioContext=class extends Native{createDynamicsCompressor(){const compressor=super.createDynamicsCompressor(),connect=compressor.connect.bind(compressor);compressor.connect=(destination,...args)=>{if(destination===this.destination){const silent=this.createGain();silent.gain.value=0;connect(silent);silent.connect(destination);return destination;}return connect(destination,...args);};return compressor;}};
     window.__vibrations=[];Object.defineProperty(navigator,'vibrate',{configurable:true,value:pattern=>{__vibrations.push(pattern);return true;}});
    },language);
    const page=await context.newPage();page.on('pageerror',error=>report.errors.push(error.message));await page.goto(base);await page.waitForFunction(()=>window.__app);
-   await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.className),'skip-content');
+   const intro=page.locator('.ts-cinema');
+   if (await intro.isVisible()) {
+    assert.equal(await intro.getAttribute('data-static'),'true');
+    assert.equal(await page.evaluate(()=>document.activeElement.className),'cinema-skip');
+    await page.keyboard.press('Enter');
+    await intro.waitFor({state:'detached'});
+   }
+   await page.locator('.brand').focus();
+   await page.keyboard.press('Shift+Tab');
+   assert.equal(await page.evaluate(()=>document.activeElement.className),'skip-content');
    await page.keyboard.press('Enter');assert.equal(await page.evaluate(()=>document.activeElement.id),'main-content');
    const nav=page.locator('#tour-nav button');await nav.first().focus();await page.keyboard.press('ArrowRight');
    assert.equal(await nav.nth(1).evaluate(el=>el===document.activeElement),true);
@@ -38,9 +47,12 @@ async function main(){
    await page.screenshot({path:path.join(output,`${width}-${language}-preferences.png`)});
    await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.className),'opt');
    await page.keyboard.press('Escape');assert.equal(await page.locator('#tour-a11y').getAttribute('open'),null);assert.equal(await page.locator('#tour-a11y>summary').evaluate(el=>el===document.activeElement),true);
-   const explanation=page.getByRole('button',{name:language==='es'?'Explícamelo fácil':'Explain it simply',exact:true});
-   await explanation.focus();await page.keyboard.press('Enter');assert(await page.locator('#easy-explanation .easy-panel').isVisible());
-   await page.keyboard.press('Enter');assert.equal(await page.locator('#easy-explanation .easy-panel').count(),0);
+   const swatch=page.locator('.legend-choice').first();
+   await swatch.focus();
+   await page.keyboard.press('Enter');
+   assert.equal(await swatch.getAttribute('aria-pressed'),'true');
+   assert.match(await page.locator('.legend-reading').textContent(),/\+4 \u00b0C/);
+   assert.equal(await page.locator('.event-history, #easy-explanation').count(),0);
    await page.locator('.scr').evaluate(el=>{el.scrollTop=0;window.scrollTo(0,0);});
    await page.screenshot({path:path.join(output,`${width}-${language}-player.png`)});
    await page.locator('.skip-content').focus();
