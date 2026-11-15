@@ -97,7 +97,8 @@ async function main() {
             return false;
           });
           assert(rose, 'The matching instrument icon climbs before the note plays');
-          await page.locator('.stage-note-track[data-strike]').first().waitFor();
+          await page.waitForFunction(() => [...document.querySelectorAll('.stage-note-track[data-strike]')]
+            .some(track => getComputedStyle(track.nextElementSibling, '::before').backgroundImage !== 'none'));
           await page.locator('.band-stage').screenshot({ path: path.join(output, 'stage-instruments.png') });
         }
         await page.waitForFunction(() => __app.state.playing && __app.state.col >= 4);
@@ -189,7 +190,16 @@ async function main() {
       await page.locator('#tour-play button').click();
       await page.locator('.stage-note-track[data-strike]').first().waitFor();
       assert.equal(await page.locator('.stage-note').count(), 0, 'Reduced motion uses stationary receptors');
+      assert(await page.locator('.stage-performer').evaluateAll(performers => performers.every(performer =>
+        getComputedStyle(performer, '::before').backgroundImage !== 'none')), 'Reduced motion keeps the floor lighting steady while playing');
       await page.locator('#tour-play button').click();
+      assert(await page.locator('.stage-performer').evaluateAll(performers => performers.every(performer =>
+        getComputedStyle(performer, '::before').backgroundImage === 'none')), 'Pausing clears the floor lighting');
+      const firstMusician = page.locator('.stage-musician').first();
+      await page.keyboard.press('Tab');
+      await firstMusician.focus();
+      assert(await firstMusician.evaluate(musician => musician.matches(':focus-visible') &&
+        getComputedStyle(musician.querySelector('.stage-performer'), '::before').borderTopColor !== 'rgba(0, 0, 0, 0)'));
       await page.evaluate(() => __app.setPreference('reducedMotion', false));
     }
     if(process.argv.includes('--all-muted'))await page.evaluate(()=>__app.setBandMute(__app.allMute(true)));
@@ -219,11 +229,13 @@ async function main() {
       assert.deepEqual(geometry.clipped, [], 'Controls and legend must stay within the viewport');
       assert(geometry.screenWidth <= geometry.screenClientWidth + 1, 'No horizontal player overflow');
       assert(await page.locator('.stage-musician').evaluateAll(musicians => musicians.every(musician => {
+        const stage = musician.closest('.band-stage').getBoundingClientRect();
         const lane = musician.querySelector('.stage-note-track').getBoundingClientRect();
         const icon = musician.querySelector('.stage-receptor').getBoundingClientRect();
         const portrait = musician.querySelector('earthbeat-dance').getBoundingClientRect();
-        return icon.width >= 24 && icon.left >= lane.left && icon.right <= lane.right &&
-          portrait.width >= 32 && portrait.height >= 90 && lane.bottom <= portrait.top;
+        return icon.width >= 24 && icon.left >= lane.left && icon.right <= lane.right && icon.top >= stage.top + 3 &&
+          portrait.width >= 32 && portrait.height >= 60 && portrait.top - lane.bottom >= 0 &&
+          portrait.top - lane.bottom <= 5;
       })), 'Each lane must stay above a visible portrait');
       if (viewport.width >= 1280 && !process.argv.includes('--all-muted')) assert(geometry.bandBottom <= Math.min(geometry.footerTop,viewport.height),
         'Desktop must show the map, controls, legend and five complete musicians together: ' + JSON.stringify(geometry));

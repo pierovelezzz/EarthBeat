@@ -1830,9 +1830,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 /* Each instrument has its own lane, with the receptor above the portrait. */
 .px .stage-note-track{
   --track-icon:clamp(24px,2.25vw,32px);
-  position:relative;display:block;width:100%;margin:16px 0 8px;
+  position:relative;display:block;width:100%;height:clamp(56px,7.5vh,72px);align-self:end;
+  z-index:1;
   pointer-events:none;
-  background:linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat;
+  background:linear-gradient(color-mix(in srgb,var(--member-color) 62%,#788496),transparent) center/1px 100% no-repeat;
 }
 .px .stage-receptor,.px .stage-note{
   position:absolute;top:0;left:50%;display:block;width:var(--track-icon);height:var(--track-icon);
@@ -1887,18 +1888,39 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   background-size:100% 100%;
   grid-template-rows:minmax(0,1fr);
 }
-.px .band-stage-musicians{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:5px}
+.px .band-stage-musicians{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px 2px;padding:5px}
 .px .player-layout .stage-musician.listen-member{
   max-width:none;padding:2px;grid-template-columns:minmax(0,1fr);
-  grid-template-rows:minmax(55px,.85fr) minmax(92px,1.15fr) minmax(2em,auto);
-  gap:2px;justify-items:center;align-items:stretch;min-height:44px;background:transparent;
+  grid-template-rows:minmax(78px,1fr) auto minmax(2.15em,auto);
+  gap:3px;justify-items:center;align-items:stretch;min-height:44px;background:transparent;
 }
+@supports(grid-template-rows:subgrid){
+  .px .band-stage-musicians{grid-template-rows:minmax(78px,1fr) auto auto}
+  .px .player-layout .stage-musician.listen-member{grid-row:1 / span 3;grid-template-rows:subgrid}
+}
+.px .stage-musician.listen-member .stage-performer{position:relative;isolation:isolate;grid-column:auto;display:block;width:100%;aspect-ratio:2/3;max-height:145px}
+.px .stage-performer::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;inset:auto 7% -3px;height:16px;
+  border:1px solid transparent;border-radius:50%;
+}
+.px .stage-musician:is(:hover,:focus-visible) .stage-performer::before{border-color:var(--stage-light,#f2f4f6)}
+.px:not(.reduce-motion) .stage-note-track[data-strike] + .stage-performer::before,
+.px.reduce-motion .stage-note-track[data-audible="true"] + .stage-performer::before{
+  border-color:var(--stage-light,var(--member-color));
+  background:radial-gradient(ellipse,color-mix(in srgb,var(--stage-light,var(--member-color)) 35%,transparent),transparent 72%);
+}
+.px.app[data-contrast="true"] .stage-performer{--stage-light:var(--fg)}
+@media(forced-colors:active){.px .stage-performer{--stage-light:ButtonText}}
 .px .stage-musician.listen-member img{width:100%;height:100%;object-position:center bottom}
 .px .stage-musician earthbeat-dance[data-character="inti"] img{filter:brightness(1.35)}
-.px .stage-musician.listen-member[aria-pressed="false"]{filter:saturate(.3);opacity:.65}
 .px .stage-musician.listen-member:hover,.px .stage-musician.listen-member:focus-visible{border-color:var(--line)}
-.px .stage-musician.listen-member strong{grid-column:1;align-self:center;padding:2px 0;font-size:clamp(.625rem,.8vw,.75rem);text-align:center;letter-spacing:0;text-transform:none;white-space:normal;overflow-wrap:anywhere;color:#fff;text-shadow:0 1px 4px #000}
-.px.app[data-contrast="true"] .stage-musician.listen-member strong{color:var(--fg)}
+.px .stage-musician.listen-member .stage-label{
+  display:grid;grid-column:auto;align-content:center;justify-items:center;gap:2px;width:100%;
+  font:400 .72em/1.15 var(--body);text-align:center;overflow-wrap:anywhere;color:#f2f4f6;text-shadow:0 1px 4px #000;
+}
+.px .stage-musician.listen-member .stage-label strong{grid-column:auto;font:700 1em/1.15 var(--body);letter-spacing:0;text-transform:none;white-space:normal;color:inherit}
+.px .stage-musician.listen-member .stage-label span{grid-column:auto;font-size:inherit;color:inherit}
+.px.app[data-contrast="true"] .stage-musician.listen-member .stage-label{color:var(--fg);text-shadow:none}
 .px .listen-band .chips{display:flex;flex-wrap:wrap;gap:5px}
 @media(min-width:1001px) and (max-height:850px){
  .px .player-layout .mapbox,.px .player-layout .mbox{max-height:clamp(136px,22vh,220px)}
@@ -2209,9 +2231,8 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-for list="{{stageMusicians}}" as="musician">
 <button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-describedby="stage-instrument-{{musician.key}}" aria-pressed="{{musician.on}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
 <earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"><svg class="stage-receptor" viewBox="120 141 240 240" focusable="false"><path d="{{musician.instrumentLine}}" fill="none" stroke="currentColor" stroke-width="1.4" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"></path></svg></earthbeat-note-track>
-<earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}" aria-hidden="true"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance>
-<strong>{{musician.displayName}}</strong>
-<span class="sr" id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span>
+<span class="stage-performer" aria-hidden="true"><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance></span>
+<span class="stage-label"><strong>{{musician.displayName}}</strong><span id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span></span>
 </button>
 </sc-for>
 </div>
@@ -6114,15 +6135,15 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageCueHelp: T('Cada icono sube cuando va a sonar su instrumento.', 'Each instrument icon rises just before it sounds.'),
-      stageMotionNotice: reducedMotion ? T('Con movimiento reducido, se ilumina el icono fijo.', 'With reduced motion, the stationary instrument icon lights up.') : '',
+      stageCueHelp: T('El icono sube antes de la nota. Al sonar, se ilumina el piso.', 'The icon rises before the note. The floor lights up when it plays.'),
+      stageMotionNotice: reducedMotion ? T('Con movimiento reducido, los iconos quedan fijos y el piso marca qué músicos están activos.', 'With reduced motion, the icons stay still and the floor shows which musicians are active.') : '',
       stageMusicians: band.map(function (member) {
         var level = member.on ? s.levels[member.key] || 0 : 0;
         var audible = member.on && s.playing && !s.masterMuted && s.volume > 0;
         var note = audible ? s.stageNotes[member.key] : null;
         var instrument = BAND_INSTRUMENTS[member.key];
         return { audible: audible, noteId: note?.id || '', noteKind: note?.kind || '',
-          instrumentName: instrument.name, instrumentLine: instrument.line,
+          instrumentName: instrument.name.charAt(0) + instrument.name.slice(1).toLowerCase(), instrumentLine: instrument.line,
           displayName: member.name.charAt(0) + member.name.slice(1).toLowerCase(),
           name: member.name, on: member.on, toggle: member.toggle, key: member.key, playing: String(member.on && s.playing && level > .04), poseUrl: 'sprites/' + member.key + '/escenario.webp', color: member.color, intensity: level };
       }),
