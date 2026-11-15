@@ -1,6 +1,8 @@
 # Estado de main
 
-La portada explica cómo un mapa del Pacífico se convierte en música. «Escuchar una muestra» abre el mapa que se ve en pantalla y comienza la reproducción tras pulsar el botón. También puedes explorar los discos, abrir la guía de Brisa o ver la presentación ilustrada.
+La introducción ilustrada del espacio al Pacífico se reproduce al abrir la portada. Puedes saltarla, pausarla o repetirla con «Ver presentación». Con movimiento reducido, la portada abre directamente.
+
+La portada explica cómo un mapa del Pacífico se convierte en música. «Escuchar una muestra» abre el mapa que se ve en pantalla y comienza la reproducción tras pulsar el botón. También puedes explorar los discos o abrir la guía de Brisa.
 
 | Aporte | Integración en main |
 |---|---|

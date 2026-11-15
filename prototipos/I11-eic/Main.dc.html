@@ -3416,10 +3416,13 @@ class CinematicIntro {
   markSeen() { this.seen=true; }
   hasSeen() { return this.seen; }
   start(replay=false,trigger=null) {
-    if (!replay) { this.markSeen(); return; }
     var self=this, app=this.owner;
     if(typeof document.createElement!=='function'||!document.body?.append)return;
-    if(app.disposed||app.state.showPreferences||(!app.pendingWelcome&&app.state.tab!=='home')||app.state.tour||document.hidden||(!replay&&this.hasSeen()))return;
+    if(app.disposed||app.state.showPreferences||app.state.tab!=='home'||app.state.tour||document.hidden||(!replay&&this.hasSeen()))return;
+    if (!replay && (app.bandReduced() || ['#banda', '#escuchar', '#listen'].includes(document.location?.hash))) {
+      this.markSeen();
+      return;
+    }
     this.finish(false); this.markSeen();
     var root=document.createElement('section');this.root=root;root.className='ts-cinema';root.dataset.static='false';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',T('Presentación de EarthBeat','EarthBeat presentation'));
     root.innerHTML=`<div class="cinema-space" aria-hidden="true"><div class="cinema-stars"></div><div class="cinema-stars near"></div><div class="cinema-sun"></div><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i><i class="cinema-meteor"></i></div>
@@ -3458,11 +3461,11 @@ class CinematicIntro {
       animate('.cinema-wave',[{opacity:0,transform:'scaleX(.3)',offset:0},{opacity:0,transform:'scaleX(.3)',offset:.46},{opacity:.85,transform:'scaleX(1)',offset:.7},{opacity:0,transform:'scaleX(1.1)',offset:1}]);
       animate('.cinema-copy',[{opacity:1,transform:'translateY(0)',offset:0},{opacity:1,transform:'translateY(0)',offset:.88},{opacity:0,transform:'translateY(-4px)',offset:1}]);
       var end=animate('root',[{opacity:1,offset:0},{opacity:1,offset:.88},{opacity:0,offset:1}]);this.endAnimation=end;
-      // Real UI stays visible by default; only this optional run adds keyframes.
-      var targets=['.brand','.top','#main-content .hero h1','.hero .lede','.hero .cta','.home-demo','.hero .facts'];
+      // Reveal the home page as the introduction fades out.
+      var targets=['.brand','.top','#main-content .hero h1','.hero .lede','.hero .cta','.home-demo'];
       targets.forEach(function(selector,i){var el=document.querySelector(selector);if(!el?.animate)return;var delay=duration*.7+i*55;self.animations.push(el.animate([{opacity:0,transform:selector==='.home-demo'?'translateX(14px) rotate(1deg)':'translateY(8px)'},{opacity:1,transform:'translate(0,0) rotate(0)'}],{duration:Math.min(380,duration-delay-20),delay:delay,fill:'backwards',easing:'cubic-bezier(.2,.7,.2,1)'}));});
       end.onfinish=function(){self.finish(true);};this.timers.push(setTimeout(function(){self.finish(true);},duration+250));
-    }catch(ignored){this.showStatic();}
+    }catch(ignored){if(replay)this.showStatic();else this.finish(true);}
   }
   showStatic(){this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(function(a){a.onfinish=null;a.cancel();});this.animations=[];this.root.dataset.static='true';this.root.querySelector('.cinema-pause').hidden=true;this.update();}
   togglePause(){if(!this.root||this.root.dataset.static==='true')return;this.paused=!this.paused;this.timers.forEach(clearTimeout);this.timers=[];this.animations.forEach(a=>this.paused?a.pause():a.play());if(!this.paused){var self=this;this.timers.push(setTimeout(function(){self.finish(true);},Math.max(0,this.duration-Number(this.endAnimation?.currentTime||0))+500));}this.update();}
