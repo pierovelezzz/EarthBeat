@@ -2700,9 +2700,7 @@ function expansionColor(disc, value) {
   for (var i = 1; i < disc.levels.length && value >= disc.levels[i][0]; i++) level = disc.levels[i];
   return level[1];
 }
-function expansionThresholds(disc) {
-  return disc.kind === 'rain' ? [20, 100, 300] : [.2, .35, .75];
-}
+var RAIN_GAME_THRESHOLDS = [20, 100, 300];
 // Brisa ofrece ayuda contextual y un tutorial opcional. No es integrante de la banda.
 // id: elemento que se señala ('' = sin elemento); sub: pantalla de la sección donde está.
 var GUIDES = {
@@ -5123,30 +5121,22 @@ class Component extends DCLogic {
     this.legendCache = { key: key, items: items };
     return items;
   }
-  expansionName(disc) {
-    if (disc.kind === 'rain') return T('Lluvia acumulada', 'Total rainfall');
-    if (disc.kind === 'currents') return T('Velocidad superficial', 'Surface current speed');
-    return T('Anomalía del mar', 'Sea temperature anomaly');
+  expansionName() {
+    return T('Lluvia acumulada', 'Total rainfall');
   }
-  expansionHelp(disc) {
-    if (disc.kind === 'rain') return T('Lluvia estimada por mes en el norte del Perú y alrededores. Cuanta más lluvia, más gotas toca Yaku.',
+  expansionHelp() {
+    return T('Lluvia estimada por mes en el norte del Perú y alrededores. Cuanta más lluvia, más gotas toca Yaku.',
       'Estimated monthly rainfall in and around northern Peru. More rainfall makes Yaku play more drops.');
-    if (disc.kind === 'currents') return T('Velocidad estimada en la superficie del mar el día 15 de cada mes. Cuanto más rápida la corriente, más notas toca Mamacocha.',
-      'Estimated speed at the ocean surface on the 15th of each month. The faster the current, the more notes Mamacocha plays.');
-    return T('Diferencia respecto a la temperatura habitual de ese mes en el registro ERSST v5. Los valores positivos indican agua más cálida.',
-      'Difference from the usual temperature for that month in ERSST v5. Positive values indicate warmer water.');
   }
   expansionLegend(disc) {
     var self = this;
     return disc.levels.map(function (level, index) {
       var next = disc.levels[index + 1], value = level[0];
       var format = function (number) { return number.toLocaleString(LANG, { maximumFractionDigits: 2 }); };
-      var number = index === 0 && disc.kind === 'sst' ? '<' + format(next[0])
-        : next ? format(value) : '≥' + format(value);
-      var range = index === 0 && disc.kind === 'sst' ? number : next
-        ? format(value) + '–<' + format(next[0]) : number;
+      var number = next ? format(value) : '≥' + format(value);
+      var range = next ? format(value) + '–<' + format(next[0]) : number;
       return { number: number, color: level[1], ink: legendInk(level[1]),
-        label: range + ' ' + disc.unit, description: self.expansionName(disc), on: self.state.legendSelection === value,
+        label: range + ' ' + disc.unit, description: self.expansionName(), on: self.state.legendSelection === value,
         choose: function () { self.setState({ legendSelection: value }); } };
     });
   }
@@ -5164,9 +5154,9 @@ class Component extends DCLogic {
       seek: function (e) { self.seekPosition(Number(e.target.value)); },
       volumeLabel: T('Volumen', 'Volume'), volume: s.volume,
       changeVolume: function (e) { self.setVolume(Number(e.target.value)); },
-      legendTitle: disc ? this.expansionName(disc) + ' (' + disc.unit + ')' : rain ? T('Lluvia mensual', 'Monthly rainfall') : s.disc === 5 ? T('Escala de color', 'Color scale')
+      legendTitle: disc ? this.expansionName() + ' (' + disc.unit + ')' : rain ? T('Lluvia mensual', 'Monthly rainfall') : s.disc === 5 ? T('Escala de color', 'Color scale')
         : T('Anomalía estimada (°C)', 'Estimated anomaly (°C)'),
-      legend: legend, legendReading: selected?.label || '', legendDescription: selected?.description || (disc ? this.expansionHelp(disc) : rain
+      legend: legend, legendReading: selected?.label || '', legendDescription: selected?.description || (disc ? this.expansionHelp() : rain
         ? T('Los colores muestran más o menos lluvia que el promedio de la serie.', 'Colors show more or less rainfall than the series average.')
         : s.disc === 5 ? T('Elige un recuadro para explorar la escala de la imagen.', 'Choose a swatch to explore the image scale.')
         : T('Diferencia aproximada respecto a lo habitual. Elige un color para ver su significado.',
@@ -5620,7 +5610,7 @@ class Component extends DCLogic {
   }
   step(col, scheduled) {
     var a = scheduled ? scheduled.analysis : this.cur(); if (!a) return;
-    if (a.disc && a.disc.kind !== 'sst') return this.stepExpansion(col, a, scheduled);
+    if (a.disc) return this.stepExpansion(col, a, scheduled);
     var s = scheduled ? scheduled.state : this.state, m = s.mute, t = scheduled ? scheduled.at : this.ac.currentTime + 0.02, sp = this.frameStepMs(s.frame) / 1000, info = this.colInfo(a, col), pan = (col / 27) * 1.6 - 0.8;
     var lv = { silbo: 0, inti: 0, mama: 0, yaku: 0, illapa: 0 }, notes = [];
     if (col % 4 === 0) {
@@ -5652,15 +5642,14 @@ class Component extends DCLogic {
   stepExpansion(col, analysis, scheduled) {
     var s = scheduled ? scheduled.state : this.state, disc = analysis.disc, info = this.colInfo(analysis, col);
     var time = scheduled ? scheduled.at : this.ac.currentTime + .03, duration = this.frameStepMs(s.frame) / 1000;
-    var rain = disc.kind === 'rain', key = disc.lead, strength = info.w / 5;
+    var key = disc.lead, strength = info.w / 5;
     var levels = { silbo: 0, inti: 0, mama: 0, yaku: 0, illapa: 0 }, fired = {};
     if (!s.mute[key] && info.k && strength > 0) {
       var count = s.engine === 'raw' ? 1 : 1 + Math.floor(strength * 3);
-      var pitch = (rain ? 65 : 48) + Math.round(strength * 12);
+      var pitch = 65 + Math.round(strength * 12);
       for (var i = 0; i < count; i++) {
         var at = time + i * duration / count, pan = col / 27 - .5;
-        if (rain) this.droplet(pitch, at, .09, pan);
-        else this.tone('sine', mtof(pitch), at, .13, duration / count * .85, pan, null, key);
+        this.droplet(pitch, at, .09, pan);
       }
       levels[key] = .2 + strength * .8;
       fired[key] = true;
@@ -5671,7 +5660,7 @@ class Component extends DCLogic {
   }
   expansionReading(disc, info) {
     return info.value === null ? T('Franja sin datos', 'Strip with no data')
-      : this.expansionName(disc) + ' · ' + info.value.toLocaleString(LANG, { maximumFractionDigits: disc.kind === 'rain' ? 0 : 2 }) + ' ' + disc.unit;
+      : this.expansionName() + ' · ' + info.value.toLocaleString(LANG, { maximumFractionDigits: 0 }) + ' ' + disc.unit;
   }
   bump(fired, thunder, state) {
     state = state || this.state;
@@ -5723,7 +5712,7 @@ class Component extends DCLogic {
     scheduled.patch = patch;
     var profile = this.profile(scheduled.analysis, scheduled.state.frame);
     var info = this.colInfo(scheduled.analysis, patch.col), disc = scheduled.analysis.disc;
-    var lane = disc && disc.kind !== 'sst' ? expansionThresholds(disc).filter(function (threshold) { return info.value >= threshold; }).length : null;
+    var lane = disc ? RAIN_GAME_THRESHOLDS.filter(function (threshold) { return info.value >= threshold; }).length : null;
     this.playbackQueue.push({ at: scheduled.at, frame: scheduled.state.frame, patch: patch, lane: lane,
       fired: fired, chord: chord, chordIndex: chord ? profile.prog.findIndex(function (item) { return chordOf(profile, item).label === chord; }) : -1,
       info: info, thunder: this.lastThunder,
@@ -5748,7 +5737,7 @@ class Component extends DCLogic {
         (chord ? T('acorde ', 'chord ') + chord : T('cálido +', 'warm +') + event.info.w.toFixed(1) + T(' · frío −', ' · cold −') + event.info.c.toFixed(1)) +
         (names.length ? ' · ' + names.join(' · ') : T(' · sin ataque nuevo', ' · no new attack'));
       var disc = dataDisc(this.state.disc);
-      if (disc && disc.kind !== 'sst') patch.caption = this.expansionReading(disc, event.info);
+      if (disc) patch.caption = this.expansionReading(disc, event.info);
       if (frameChanged) announcement = T('Mapa de ', 'Map for ') + this.frameTag(this.state.disc, event.frame) + '.';
       this.heardThunder = event.thunder;
       Object.keys(fired).forEach(function (key) { if (fired[key]) stageHits[key] = fired[key]; });
@@ -5878,7 +5867,7 @@ class Component extends DCLogic {
   }
   stepMelody(col, scheduled) {
     var a = scheduled ? scheduled.analysis : this.cur(); if (!a) return;
-    if (a.disc && a.disc.kind !== 'sst') return this.stepExpansion(col, a, scheduled);
+    if (a.disc) return this.stepExpansion(col, a, scheduled);
     var self = this, s = scheduled ? scheduled.state : this.state, m = s.mute, t = scheduled ? scheduled.at : this.ac.currentTime + 0.03, sp = this.frameStepMs(s.frame) / 1000;
     var prof = this.profile(a, s.frame), cIdx = col >= 24 ? 0 : Math.floor(col / 4) % prof.prog.length;
     var ch = chordOf(prof, prof.prog[cIdx]), info = this.colInfo(a, col), onBeat = col % 4 === 0, pan = (col / 27) * 1.2 - 0.6;
@@ -5941,7 +5930,7 @@ class Component extends DCLogic {
   describeText() {
     var a = this.cur(), s = this.state;
     if (!a) return T('Preparando la imagen para convertirla en música.', 'Preparing the image to turn it into music.');
-    if (a.disc) return this.expansionHelp(a.disc);
+    if (a.disc) return this.expansionHelp();
     if (s.disc === 5 && s.custom?.kind === 'rain') {
       if (a.cold > a.warm) return T('Destacan los meses con menos lluvia que el promedio de la serie.', 'Months with below-average rainfall stand out in this series.');
       if (a.warm > a.cold) return T('Destacan los meses con más lluvia que el promedio de la serie.', 'Months with above-average rainfall stand out in this series.');
@@ -6128,7 +6117,6 @@ class Component extends DCLogic {
     var tx = TX[LANG];
     th.bodyFont = s.legible ? "'Atkinson Hyperlegible', sans-serif" : "'Inter', system-ui, sans-serif";
     var a = this.cur(), d = DISCS[s.disc], dt = this.frameDate(s.disc, s.frame), extra = dataDisc(s.disc);
-    var positiveOnly = extra && extra.kind !== 'sst';
     var referenceCoast = s.disc !== 5 && !extra;
     var isBand = s.tab === 'band';
     var showCells = s.tab === 'juke' && s.sub === 1 || s.tab === 'how' && s.sub === 0 && !!s.custom;
@@ -6262,7 +6250,7 @@ class Component extends DCLogic {
     return {
       th: th, highContrast: hc, ic: this.icons, showBg: !hc, showDecorativePlanets: s.tab !== 'home', planetContrast: hc ? 'true' : 'false', universe: this.universeVm(), stars: this.stars, logoPx: this.logo, glow: gl, glowA: gl + '55', glowSoft: gl + '99',
       engineDesc: (melody ? T('Melodía compuesta: escalas, acordes y ritmo por disco; la melodía sale de los datos.', 'Composed melody: scales, chords and rhythm per disc; the melody comes from the data.') : T('Datos: niveles derivados convertidos en tonos, sin progresión de acordes.', 'Data: derived levels converted into tones, without a chord progression.')),
-      engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody && !rhythmMode && !positiveOnly,
+      engines: engines, whyTiles: whyTiles, seeText: seeText, progItems: progItems, showHarmony: melody && !rhythmMode && !extra,
       extraReading: extra && a?.disc && s.col >= 0 ? this.expansionReading(extra, this.colInfo(a, s.col)) : '',
       player: showCells ? this.playerVm() : null,
       motionClass: reducedMotion ? 'reduce-motion' : '',
@@ -6353,7 +6341,7 @@ class Component extends DCLogic {
       extraDiscs: (isJuke || isGame) && sub === 0 ? EXPANSION_DISCS.map(function (disc) {
         var index = DISCS.indexOf(disc);
         return { thumb: disc.files[0], title: T(disc.title, disc.english),
-          period: self.frameTag(index, 0) + ' – ' + self.frameTag(index, disc.files.length - 1) + ' · ' + self.expansionName(disc),
+          period: self.frameTag(index, 0) + ' – ' + self.frameTag(index, disc.files.length - 1) + ' · ' + self.expansionName(),
           pick: function (event) {
             if (!self.settleArrivedRoute() || self.state.sub !== 0) return;
             self.discPointerOpening = !!event?.detail;
@@ -6362,7 +6350,7 @@ class Component extends DCLogic {
           } };
       }) : [],
       disc: d, frameLabel: this.frameTag(s.disc, s.frame), frameUrl: this.url(s.disc, s.frame),
-      frameAlt: (extra ? this.expansionName(extra) + ', ' + MES[dt.m] + T(' de ', ' ') + dt.y + '. '
+      frameAlt: (extra ? this.expansionName() + ', ' + MES[dt.m] + T(' de ', ' ') + dt.y + '. '
         : s.disc === 5 ? T('Tu archivo: ', 'Your file: ') + (s.custom ? uiLabel(s.custom) : '') + '. '
         : T('Mapa de anomalía de temperatura del mar del Pacífico oriental, ', 'Sea surface temperature anomaly map of the eastern Pacific, ') + MES[dt.m] + T(' de ', ' ') + dt.y + '. ') + (a ? this.describeText() : ''),
       frameAnim: this.frameAnimClass(),
@@ -6427,18 +6415,18 @@ class Component extends DCLogic {
       rhythmLabel: T('Juego del mapa con flechas', 'Arrow-key map game'),
       rhythmToggleLabel: T('Jugar este disco', 'Play this disc'),
       rhythmExitLabel: T('Salir de la partida', 'Leave game'),
-      rhythmMapTitle: extra ? this.expansionName(extra) : T('Mapa de la NASA', 'NASA map'),
+      rhythmMapTitle: extra ? this.expansionName() : T('Mapa de la NASA', 'NASA map'),
       rhythmKeyLabel: T('Qué indica cada flecha', 'What each arrow means'),
       rhythmScoreLabel: T('Aciertos', 'Hits'),
-      rhythmLanes: rhythmMode ? positiveOnly ? (function () {
-        var cuts = expansionThresholds(extra).map(function (edge) { return edge.toLocaleString(LANG); });
+      rhythmLanes: rhythmMode ? extra ? (function () {
+        var cuts = RAIN_GAME_THRESHOLDS.map(function (edge) { return edge.toLocaleString(LANG); });
         return ['<' + cuts[0], cuts[0] + '–<' + cuts[1], cuts[1] + '–<' + cuts[2], '≥' + cuts[2]]
           .map(function (range, i) { return { arrow: ['←', '↓', '↑', '→'][i], label: range + ' ' + extra.unit }; });
       })() : [
         { arrow: '←', label: T('Más frío', 'Cooler') }, { arrow: '↓', label: T('Cerca de lo habitual', 'Near usual') },
         { arrow: '↑', label: T('Más cálido', 'Warmer') }, { arrow: '→', label: T('Cambio fuerte', 'Large change') }
       ] : [],
-      rhythmHelp: positiveOnly ? this.expansionHelp(extra) + ' ' + T('Cada flecha representa el promedio de una franja del mapa.', 'Each arrow represents the average of a strip of the map.')
+      rhythmHelp: extra ? this.expansionHelp() + ' ' + T('Cada flecha representa el promedio de una franja del mapa.', 'Each arrow represents the average of a strip of the map.')
         : T('Cada flecha resume qué tan fría o cálida está una franja del mapa respecto a lo habitual. Un cambio fuerte puede ir en cualquiera de las dos direcciones. Tras cada recorrido, el mapa pasa al siguiente mes.',
         'Each arrow shows how cool or warm a strip of the map is compared with usual. A large change can go in either direction. After each sweep, the map moves to the next month.'),
       playThisDisc: function () { self.openRhythmDisc(s.disc); },

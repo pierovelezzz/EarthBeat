@@ -1,4 +1,4 @@
-"""Generate the V4 expansion grids and maps with NumPy, netCDF4 and Pillow."""
+"""Generate the NASA POWER rainfall grids and maps with NumPy and Pillow."""
 
 from calendar import monthrange
 import csv
@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 from urllib.request import urlopen
 
-import netCDF4
 import numpy as np
 from PIL import Image, ImageDraw
 
@@ -17,12 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "_work" / "expansion"
 MAPS = ROOT / "prototipos" / "I11-eic" / "discos-extra"
 SIZE = (28, 16)
-OCEAN = (-140, -16, -70, 16)
 PERU = (-82, -10, -74, -3)
 POWER = ("https://power.larc.nasa.gov/api/temporal/monthly/regional?"
          "latitude-min=-10&latitude-max=-3&longitude-min=-82&longitude-max=-74"
          "&parameters=PRECTOTCORR&community=AG&start=2017&end=2017&format=CSV")
-HYCOM = "https://ncss.hycom.org/thredds/ncss/grid/GLBy0.08/expt_93.0/uv3z/2023"
 
 
 def cached(name, url):
@@ -51,23 +48,6 @@ def regrid(values, longitude, latitude, bounds):
             valid = sample[np.isfinite(sample)]
             cells.append(round(float(valid.mean()), 3) if len(valid) else None)
     return cells
-
-
-def sst(stamp):
-    ym = stamp.strftime("%Y%m")
-    url = f"https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/netcdf/ersst.v5.{ym}.nc"
-    with netCDF4.Dataset(cached(f"ersst-{ym}.nc", url)) as source:
-        return regrid(source["ssta"][0, 0].filled(np.nan), source["lon"][:] - 360, source["lat"][:], OCEAN)
-
-
-def currents(stamp):
-    ym = stamp.strftime("%Y%m")
-    url = (f"{HYCOM}?var=water_u&var=water_v&north=16&south=-16&west=-140&east=-70"
-           f"&horizStride=8&time={stamp.isoformat()}T12%3A00%3A00Z&vertCoord=0&accept=netcdf")
-    with netCDF4.Dataset(cached(f"currents-{ym}.nc", url)) as source:
-        u = source["water_u"][0, 0].filled(np.nan)
-        v = source["water_v"][0, 0].filled(np.nan)
-        return regrid(np.hypot(u, v), source["lon"][:] - 360, source["lat"][:], OCEAN)
 
 
 def rain_grids():
@@ -114,22 +94,12 @@ def main():
     CACHE.mkdir(parents=True, exist_ok=True)
     MAPS.mkdir(parents=True, exist_ok=True)
     borders = json.loads(cached("borders.geojson", "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson").read_text(encoding="utf-8"))
-    sst_dates = [date(1997, m, 1) for m in range(9, 13)] + [date(1998, m, 1) for m in range(1, 3)]
     rain_dates = [date(2017, m, 1) for m in range(1, 7)]
-    current_dates = [date(2023, m, 15) for m in range(1, 7)]
     discs = [
-        dict(id="nino1997", kind="sst", title="El Niño 1997–98", english="El Niño 1997–98", lead="inti", unit="°C",
-             source="NOAA NCEI · ERSST v5", sourceUrl="https://www.ncei.noaa.gov/products/extended-reconstructed-sst",
-             levels=list(zip([-4,-3,-2,-1,0,1,2,3,4], ["#243c91","#335fc0","#438ed1","#7cbcd9","#cbd9d8","#efd276","#f29a51","#d6553c","#9a3043"])),
-             dates=sst_dates, grids=map(sst,sst_dates), bounds=OCEAN),
         dict(id="lluvias2017", kind="rain", title="Lluvias del norte del Perú", english="Rainfall in northern Peru", lead="yaku", unit="mm",
              source="NASA POWER · MERRA-2 PRECTOTCORR", sourceUrl="https://power.larc.nasa.gov/docs/services/api/temporal/monthly/",
              levels=list(zip([0,20,50,100,200,300,450], ["#e5ede0","#bacfb1","#80bbae","#4eaaa5","#387c9b","#416bb9","#574390"])),
              dates=rain_dates, grids=rain_grids(), bounds=PERU),
-        dict(id="corrientes2023", kind="currents", title="Corrientes del Pacífico", english="Pacific Ocean currents", lead="mama", unit="m/s",
-             source="HYCOM + NCODA · GOFS 3.1", sourceUrl="https://ncss.hycom.org/thredds/catalogs/GLBy0.08/expt_93.0_uv3z.html",
-             levels=list(zip([0,.1,.2,.35,.5,.75,1], ["#263857","#305781","#347d99","#3b9b9d","#57b69b","#9ac879","#e4cc76"])),
-             dates=current_dates, grids=map(currents,current_dates), bounds=OCEAN),
     ]
     for disc in discs:
         disc["files"], disc["frames"] = [], []

@@ -10,11 +10,9 @@ La banda usa los cuatro fotogramas originales de cada personaje y permite pausar
 
 ### Discos de expansión
 
-Los tres discos están disponibles en Escuchar y Jugar. Los mapas y el sonido comparten la misma cuadrícula de 28 × 16, generada por `scripts/build_expansion_discs.py` a partir de los siguientes datos. Los bordes de referencia proceden de Natural Earth.
+**Lluvias del norte del Perú** complementa los mapas de temperatura del EIC con estimaciones de lluvia de [NASA POWER](https://power.larc.nasa.gov/docs/services/api/temporal/monthly/). Está disponible en Escuchar y Jugar.
 
-- **El Niño 1997–98.** NOAA ERSST v5, de septiembre de 1997 a febrero de 1998. La variable `ssta` es una diferencia de temperatura en °C.
-- **Lluvias del norte del Perú.** NASA POWER, precipitación corregida MERRA-2 `PRECTOTCORR`, de enero a junio de 2017. El promedio mensual en mm/día se multiplica por los días del mes para estimar el total en mm.
-- **Corrientes del Pacífico.** HYCOM + NCODA GOFS 3.1. Para cada mes de enero a junio de 2023 se toma el día 15 a las 12:00 UTC en el nivel superficial del modelo. Se calcula la rapidez en m/s a partir de las componentes este y norte.
+El disco usa la precipitación corregida MERRA-2 `PRECTOTCORR` de enero a junio de 2017. El promedio mensual en mm/día se multiplica por los días del mes para estimar el total en mm. Los mapas y el sonido comparten la cuadrícula de 28 × 16 generada por `scripts/build_expansion_discs.py`. Los bordes de referencia proceden de Natural Earth.
 
 Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz se activa desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
 
