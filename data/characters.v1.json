@@ -29,12 +29,12 @@
         "en": "A quena is represented in 3D; the browser synthesizes a flute with vibrato. The team's whistling-vessel reference is a separate inspiration, not an acoustic reconstruction of an archaeological object."
       },
       "listens": {
-        "es": "En Melodía toma la celda más intensa de la columna y su fila. En los mapas NASA añade un motivo cuando el recuadro costero tiene nivel medio ≥ +2; ese nivel es derivado, no una predicción.",
-        "en": "In Melody it uses the strongest cell in the column and its row. NASA maps add a motif when the coastal box has a mean derived level ≥ +2; this is not a prediction."
+        "es": "En Melodía toma la celda más intensa de la columna y su fila. En los mapas de la NASA añade un motivo cuando la zona costera analizada tiene un nivel medio de +2 o más. Ese nivel se estima a partir del mapa.",
+        "en": "In Melody it uses the strongest cell in the column and its row. For NASA maps, it adds a motif when the analyzed coastal area has a mean level of +2 or higher. That level is estimated from the map."
       },
       "plays": {
-        "es": "La melodía sigue la escala del protagonista y se aproxima al acorde en tiempos fuertes. En Datos, Silbo emite un silbido cuando el recuadro costero alcanza el umbral.",
-        "en": "The melody follows the lead's scale and moves toward the chord on strong beats. In Data, Silbo emits a whistle when the coastal box reaches the threshold."
+        "es": "La melodía sigue la escala del protagonista y se aproxima al acorde en tiempos fuertes. En Datos, Silbo emite un silbido cuando la zona costera analizada alcanza el umbral.",
+        "en": "The melody follows the lead's scale and moves toward the chord on strong beats. In Data, Silbo emits a whistle when the analyzed coastal area reaches the threshold."
       },
       "culture": [
         {

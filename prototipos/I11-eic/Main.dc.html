@@ -2481,9 +2481,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <img decoding="async" fetchpriority="high" class="map {{frameAnim}}" src="{{frameUrl}}" alt="{{frameAlt}}">
 <sc-if value="{{standardPlayer}}"><span class="map-source"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="7" r="1"/><path d="m3 15 5-5 3 3 3-4 3 4"/></svg>{{mapSource}}</span></sc-if>
 <div aria-hidden="true" class="scanline" style="--scan-x: {{scanLeft}}"></div>
-<sc-if value="{{showSilbo}}" hint-placeholder-val="{{ true }}">
-<div aria-hidden="true" style="position: absolute; left: 82.8%; top: 45%; width: 9.3%; height: 37.5%; border: 1px dashed {{silboBox}}; transition: border-color .4s"></div>
-</sc-if>
 <span class="tagbox" aria-hidden="true">{{frameLabel}}</span>
 <sc-if value="{{showStrip}}" hint-placeholder-val="{{ true }}">
 <button type="button" class="arrow" onClick="{{prevFrame}}" disabled="{{prevOff}}" aria-label="{{tx.prevFrame}}" style="left: 8px"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11.5 3.5L6 9l5.5 5.5"></path></svg></button>
@@ -3203,7 +3200,7 @@ var BAND_EFFECTS = {
   illapa: 'M61 178q15-24 42-13 16-26 49-17 M346 137q20-19 42-7 25-13 45 7 M99 182l-26 39 24-6-14 33 42-49-26 7 16-24 M400 206l-24 36 21-5-16 31 41-45-24 5 13-22 M339 404q32-26 65-13m-54 30q25-20 52-13'
 };
 var BAND = [
-  { k: 'silbo', name: 'SILBO', color: '#FFD447', disc: 'Invierno 2025', glyph: '♪', ins: 'FLAUTA', clip: 'tocar_flauta', clips: 'idle · tocar_flauta · nota · motivo_silbo · aparecer / salir', origin: 'Huaco silbador moche, 1500 años', listens: 'Solo el recuadro de la costa norte del Perú (82°–76°O, 3°–18°S).', plays: 'Un silbido de vasija con vibrato. Aparece cuando la costa supera el nivel +2.', persona: 'Viejo, sabio, de pocas palabras. Es el narrador y el que da la alarma.', quote: 'Cuando yo silbo, en Chiclayo va a llover.', brief: 'botella silbadora moche de barro ocre con asa puente, ojos pequeños, gotas de agua saliendo de su pico; 3 frames de reposo y 2 de silbido.' },
+  { k: 'silbo', name: 'SILBO', color: '#FFD447', disc: 'Invierno 2025', glyph: '♪', ins: 'FLAUTA', clip: 'tocar_flauta', clips: 'idle · tocar_flauta · nota · motivo_silbo · aparecer / salir', origin: 'Huaco silbador moche, 1500 años', listens: 'La zona analizada cerca de la costa peruana (82°–76°O, 3°–18°S).', plays: 'Un silbido de vasija con vibrato. Aparece cuando la costa supera el nivel +2.', persona: 'Viejo, sabio, de pocas palabras. Es el narrador y el que da la alarma.', quote: 'Cuando yo silbo, en Chiclayo va a llover.', brief: 'botella silbadora moche de barro ocre con asa puente, ojos pequeños, gotas de agua saliendo de su pico; 3 frames de reposo y 2 de silbido.' },
   { k: 'inti', name: 'INTI', color: '#FF5A36', disc: 'Verano 2024–25', glyph: '♫', ins: 'MARIMBA', clip: 'tocar_marimba', clips: 'idle · tocar_marimba · golpe_izq / golpe_der · acento · aparecer / salir', origin: 'El sol, en quechua', listens: 'El promedio de los píxeles cálidos (amarillo → rojo) de cada grupo de 4 columnas.', plays: 'Acordes lentos de marimba en Mi menor: Mim7, Domaj7, Sol y Re. Cuanto más calor, más grave.', persona: 'Cálido y nostálgico. Antes festejaba el sol; ahora canta lo que el calor se lleva.', quote: '¿Cuánto calor puede aguantar el mar?', brief: 'sol pixelado con rayos escalonados y cara expresiva, paleta amarillo-naranja-rojo; brilla más con la intensidad.' },
   { k: 'mama', name: 'MAMACOCHA', color: '#38C6E8', disc: 'Invierno 2024', glyph: '♩', ins: 'BAJO + COLCHÓN', clip: 'tocar_pad', clips: 'idle · tocar_pad · acorde · apagarse · aparecer / salir', origin: 'Madre del mar en la cosmovisión andina', listens: 'El promedio de los píxeles fríos (verde → azul) del fotograma.', plays: 'Un bajo profundo y calmado. En La Niña domina; en El Niño casi desaparece.', persona: 'Tranquila y protectora. Cuando ella calla, algo anda mal.', quote: 'Mientras yo cante, el mar está en calma.', brief: 'figura femenina hecha de olas en azul y turquesa, cabello de espuma; se encoge cuando el agua se calienta.' },
   { k: 'yaku', name: 'YAKU', color: '#7BE38A', disc: 'Verano 2025–26', glyph: '▾', ins: 'GOTERO', clip: 'saltar', clips: 'idle · saltar · gota · salpicadura · aparecer / salir', origin: 'El agua, en quechua', listens: 'Cuántas celdas de cada columna tienen anomalía fuerte (±2 o más) y en qué latitud.', plays: 'Gotas en escala pentatónica andina: más al norte, más agudas. Si el mar está muy cálido, pasa a tono menor.', persona: 'Inquieto y travieso. Nunca se queda quieto.', quote: '¡Plic, plic! Te digo dónde está pasando algo.', brief: 'gotita de agua con patas, ojos grandes y brillo pixelado; salta al ritmo.' },
@@ -6057,10 +6054,10 @@ class Component extends DCLogic {
     var main = a.cold > a.warm ? T('Resaltan las zonas donde el mar estuvo más frío de lo habitual.', 'In this map, cooler-than-usual water stands out.')
       : a.warm > a.cold ? T('Resaltan las zonas donde el mar estuvo más cálido de lo habitual.', 'In this map, warmer-than-usual water stands out.')
       : T('El mapa muestra zonas más frías y más cálidas de lo habitual por igual.', 'Cooler and warmer areas stand out equally on this map.');
-    var coast = !a.coastPixels ? T('En la zona de la costa marcada faltan datos útiles.', 'There is not enough usable data in the marked coastal area.')
-      : Math.abs(a.coast) < .5 ? T('En el recuadro costero, el mar estuvo casi a su temperatura habitual.', 'Water near the marked coast was close to its usual temperature.')
-      : a.coast < 0 ? T('En el recuadro costero, el mar estuvo más frío de lo habitual.', 'Water near the marked coast was cooler than usual.')
-      : T('En el recuadro costero, el mar estuvo más cálido de lo habitual.', 'Water near the marked coast was warmer than usual.');
+    var coast = !a.coastPixels ? T('Cerca de la costa peruana faltan datos útiles.', 'There is not enough usable data near the Peruvian coast.')
+      : Math.abs(a.coast) < .5 ? T('Cerca de la costa peruana, el mar estuvo casi a su temperatura habitual.', 'Water near the Peruvian coast was close to its usual temperature.')
+      : a.coast < 0 ? T('Cerca de la costa peruana, el mar estuvo más frío de lo habitual.', 'Water near the Peruvian coast was cooler than usual.')
+      : T('Cerca de la costa peruana, el mar estuvo más cálido de lo habitual.', 'Water near the Peruvian coast was warmer than usual.');
     return main + ' ' + coast;
   }
   stopSpeech() {
@@ -6391,7 +6388,7 @@ class Component extends DCLogic {
       signalLabel: s.audioPending ? T('Preparando audio', 'Preparing audio') : s.playing ? (a ? T('Reproduciendo', 'Playing') : T('Preparando mapa', 'Preparing map')) : s.ended ? T('Fin del disco', 'End of disc') : T('En pausa', 'Paused'),
       isJuke: isJuke, isData: isData, isBand: s.tab === 'band', isHow: s.tab === 'how', isTech: s.tab === 'tech',
       showPlayer: isJuke || isGame || (isData && hasCustom),
-      showStrip: s.disc !== 5 && !rhythmMode, showSilbo: s.disc !== 5 && !rhythmMode,
+      showStrip: s.disc !== 5 && !rhythmMode,
       heroStats: [{ k: '10', l: T('discos', 'discs') }, { k: '60', l: T('fotogramas NASA', 'NASA frames') }, { k: '5', l: T('músicos', 'musicians') }],
       tx: tx,
       convert: {
@@ -6470,7 +6467,6 @@ class Component extends DCLogic {
       frameAlt: (s.disc === 5 ? T('Tu archivo: ', 'Your file: ') + (s.custom ? uiLabel(s.custom) : '') + '. ' : T('Mapa de anomalía de temperatura del mar del Pacífico oriental, ', 'Sea surface temperature anomaly map of the eastern Pacific, ') + MES[dt.m] + T(' de ', ' ') + dt.y + '. ') + (a ? this.describeText() : ''),
       frameAnim: this.frameAnimClass(),
       scanLeft: (s.col < 0 ? -3 : s.col) * 100 + '%',
-      silboBox: a && a.coast >= 2 ? th.accent : th.muted,
       gridColors: gridColors,
       gridBefore: Math.max(0, s.col) / 28,
       gridAfter: s.col < 0 ? 0 : (27 - s.col) / 28,
