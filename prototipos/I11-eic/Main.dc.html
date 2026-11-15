@@ -1318,11 +1318,11 @@ a{color:inherit}
 .px .uni .views>.vpanel{display:grid;grid-row:auto;grid-template-rows:auto auto auto;min-width:0;align-content:start}
 .px .uni .views .mapbox,.px .uni .views .mbox{aspect-ratio:560/320;min-height:0;height:auto;width:100%}
 .px .uni .views .mbox .heard{position:absolute;inset:0;display:block;width:100%;height:100%;image-rendering:pixelated}
-.px .grid-dim{position:absolute;inset-block:0;left:0;background:#070b1470;pointer-events:none}
+.px .grid-dim{position:absolute;inset:0;background:#070b1470;pointer-events:none;transform-origin:left;transform:scaleX(var(--grid-shade))}
 .px .uni .scanline{left:0;width:calc(100% / 28);transform:translateX(var(--scan-x));transition:transform 110ms linear}
 .px.reduce-motion .uni .scanline{transition:none}
 @media(prefers-reduced-motion:reduce){.px .uni .scanline{transition:none}}
-.px .grid-dim-after{right:0}
+.px .grid-dim-after{transform-origin:right}
 .px .map-legend{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:center;min-width:0}
 .px .map-legend h2{grid-column:1/-1;font:600 .88em/1.3 var(--head)}
 .px .legend-scale,.px .legend-labels{display:grid;grid-column:1}
@@ -1844,7 +1844,8 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .stage-note-track[data-strike] .stage-receptor{
   color:var(--member-color);border-color:currentColor;box-shadow:0 0 0 2px currentColor;
 }
-.px .stage-note{top:100%;z-index:1;color:var(--member-color);border-color:currentColor}
+.px .stage-note-motion{position:absolute;inset:0;z-index:1;transform:translateY(100%)}
+.px .stage-note{color:var(--member-color);border-color:currentColor}
 .px .stage-note[data-note="thunder"]{border-style:double;border-width:3px}
 .px.app[data-contrast="true"] .stage-receptor,.px.app[data-contrast="true"] .stage-note{background:var(--surface);color:var(--fg)}
 .px.app[data-contrast="true"] .stage-note-track[data-strike] .stage-receptor{color:var(--accent)}
@@ -2265,8 +2266,8 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <figcaption class="vcap"><h2>{{tx.machineSub}}</h2></figcaption>
 <div class="mbox" aria-hidden="true">
 <canvas class="heard" width="280" height="160" data-grid="{{gridColors}}"></canvas>
-<div class="grid-dim" style="width:{{gridBefore}}"></div>
-<div class="grid-dim grid-dim-after" style="left:{{gridAfter}}"></div>
+<div class="grid-dim" style="--grid-shade:{{gridBefore}}"></div>
+<div class="grid-dim grid-dim-after" style="--grid-shade:{{gridAfter}}"></div>
 <div class="scanline" style="--scan-x: {{scanLeft}}"></div>
 </div>
 <aside id="player-legend" class="map-legend" aria-labelledby="map-legend-title">
@@ -6135,8 +6136,8 @@ class Component extends DCLogic {
       scanLeft: (s.col < 0 ? -3 : s.col) * 100 + '%',
       silboBox: a && a.coast >= 2 ? th.accent : th.muted,
       gridColors: gridColors,
-      gridBefore: Math.max(0, s.col) / 28 * 100 + '%',
-      gridAfter: (s.col < 0 ? 100 : (s.col + 1) / 28 * 100) + '%',
+      gridBefore: Math.max(0, s.col) / 28,
+      gridAfter: s.col < 0 ? 0 : (27 - s.col) / 28,
       stats: a ? { warm: a.warm.toFixed(2), cold: a.cold.toFixed(2), hot: Math.round(a.hot * 100) + '%', coast: referenceCoast && a.coastPixels > 0 ? (a.coast >= 0 ? '+' : '') + a.coast.toFixed(1) : '—' } : { warm: '…', cold: '…', hot: '…', coast: referenceCoast ? '…' : '—' },
       tour: tourVm, nav: navVm, scr: scrVm, scrCls: scrCls,
       techCur: { title: techCur.title, items: techCur.items, nasa: !!techCur.nasa, num: ('0' + (sub + 1)).slice(-2) },

@@ -229,23 +229,26 @@ class StageNoteTrack extends HTMLElement {
     for (const event of notes) {
       const kind = event.fired[key];
       if (!kind || event.at <= clock.currentTime) continue;
+      const motion = document.createElement('span');
+      motion.className = 'stage-note-motion';
       const note = receptor.cloneNode(true);
       note.setAttribute('class', 'stage-note');
       note.dataset.note = kind === true ? 'note' : kind;
-      this.cues.set(event.at, note);
-      this.append(note);
+      motion.append(note);
+      this.cues.set(event.at, motion);
+      this.append(motion);
     }
     if (this.cues.size && this.frame == null) this.advance();
   };
 
   advance = () => {
     const now = this.clock.currentTime;
-    this.cues.forEach((note, at) => {
+    this.cues.forEach((motion, at) => {
       if (at <= now) {
-        note.remove();
+        motion.remove();
         this.cues.delete(at);
       } else {
-        note.style.top = Math.min(100, 100 * (at - now) / this.lookahead) + '%';
+        motion.style.transform = 'translateY(' + Math.min(100, 100 * (at - now) / this.lookahead) + '%)';
       }
     });
     this.frame = this.cues.size ? requestAnimationFrame(this.advance) : null;
