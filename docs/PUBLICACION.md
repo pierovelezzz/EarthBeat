@@ -1,13 +1,11 @@
-# Publicación de EarthBeat
+# Publicación de V1
 
-> Edición documental de esta copia: **14/11/2026 19:03:11 (UTC-05:00)** · EarthBeat `V1`.
-> Los resultados históricos describen el material recibido y no se presentan como pruebas realizadas hoy. Las fechas de observaciones y licencias conservan su significado original.
+> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthBeat `V1`.
+> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
 
-La fuente vigente de esta edición es la rama [V1](https://github.com/pierovelezzz/EarthBeat/tree/V1). Cada versión conserva su propio código y recursos.
+El código de esta versión está en [EarthBeat, rama V1](https://github.com/pierovelezzz/EarthBeat/tree/V1). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
 
-## Preparar el sitio
-
-Desde la raíz de esta rama, con Python instalado:
+## Preparar y revisar el sitio
 
 ```bash
 python scripts/verify_fonts.py
@@ -15,10 +13,14 @@ python scripts/build_pages.py _site
 python -m http.server 8765 --bind 127.0.0.1 --directory _site
 ```
 
-Abrir [la copia local](http://127.0.0.1:8765/). La fuente principal es `prototipos/I11-eic/Main.dc.html`; `_site` es una salida generada.
+Editar la fuente I11 y reconstruir; no tratar `_site` como fuente canónica. Identificar el commit seleccionado con `git rev-parse HEAD`.
 
-## Identificar una entrega
+## Workflow incluido
 
-`git rev-parse HEAD` identifica el commit de esta rama. Los identificadores y recibos de publicaciones anteriores se han retirado de esta edición documental. No deben atribuirse a esta copia los resultados de una URL o un paquete anterior. La publicación de las ramas en GitHub no acredita por sí sola un despliegue web.
+`.github/workflows/pages.yml` se ejecuta automáticamente en pushes a `main` y también define `workflow_dispatch`. Un push a V1 no activa por sí mismo la condición de push de ese workflow. El despliegue requiere la configuración y permisos de GitHub Pages del repositorio, o alojar los archivos estáticos generados en otro servicio.
 
-Los metadatos de tipografías y paleta registran la verificación local de sus hashes. Los catálogos y prototipos registran la edición actual. Las fechas de las observaciones científicas y las licencias corresponden a sus fuentes.
+No se acredita aquí una URL pública de la aplicación ni un despliegue nuevo. Las copias de código y los paquetes deben referirse a la rama y al commit realmente seleccionados.
+
+---
+
+[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)
