@@ -1880,7 +1880,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   align-items:start;gap:8px 12px;padding:4px 2px 8px
 }
 .px .playback-settings{width:100%;min-width:0}
-.px .listen-player .playback-settings{position:relative;margin-bottom:8px}
+.px .listen-player .playback-settings{position:relative;container-type:inline-size;margin-bottom:8px}
 .px .playback-settings > summary:not([hidden]){
   display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;
   min-height:44px;border:1px solid var(--line);border-radius:4px;background:var(--surface);
@@ -1903,6 +1903,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   position:absolute;z-index:12;inset:calc(100% + 5px) 0 auto;padding:10px;
   max-height:55dvh;overflow:auto;overscroll-behavior:contain;
   background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:0 6px 16px #0007
+}
+@media(max-width:420px){
+  .px .listen-player .playback-settings .map-toolbar{max-height:min(55dvh,calc(52cqw - 8px))}
 }
 .px .map-toolbar .volume-control,.px .map-toolbar .speed-control{display:grid;gap:4px;min-width:0}
 .px .map-toolbar .volume-control label,.px .speed-control legend{font:700 1.05em/1.35 var(--head);color:var(--fg)}
@@ -4426,11 +4429,11 @@ class Component extends DCLogic {
       if (self.state.tour) self.tourResizeTimer = setTimeout(function () { self.focusTourTarget(); }, 160);
     };
     this.onTourKey = function (e) { if (e.isTrusted) self.haptics.activate(); if (self.state.showPreferences) { self.preferencesKey(e); return; } if (self.state.more) { self.moreKey(e); return; } if (e.key === 'Escape') { if (self.state.tour) { e.preventDefault(); self.tourClose(); } else self.closeMenus(true); } };
-    this.onMenuPointer = function (event) { if (event.isTrusted) self.haptics.activate(); document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; }); };
+    this.onMenuPointer = function (event) { if (event.isTrusted) self.haptics.activate(); document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) self.closeMenu(menu); }); };
     document.addEventListener('pointerdown', this.onMenuPointer, true);
     this.onMoreFocus = function (e) {
       document.querySelectorAll('details.menu[open]').forEach(function (menu) {
-        if (!menu.contains(e.target)) menu.open = false;
+        if (!menu.contains(e.target)) self.closeMenu(menu);
         else if (e.target.classList && e.target.classList.contains('opt')) e.target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
       });
       if (self.cinema?.root) return;
@@ -4457,9 +4460,13 @@ class Component extends DCLogic {
     this.cinema.start();
     this.homePreviewTimer = setInterval(function () { self.syncHomePreview(); }, 200);
   }
+  closeMenu(menu) {
+    menu.open = false;
+    if (menu.id === 'tour-modes' && this.state.playbackSettingsOpen) this.setState({ playbackSettingsOpen: false });
+  }
   closeMenus(restoreFocus) {
-    document.querySelectorAll('details.menu[open]').forEach(function (menu) {
-      var focused = menu.contains(document.activeElement); menu.open = false;
+    document.querySelectorAll('details.menu[open]').forEach(menu => {
+      var focused = menu.contains(document.activeElement); this.closeMenu(menu);
       if (restoreFocus && focused) { var summary = menu.querySelector('summary'); summary?.focus(); summary?.scrollIntoView?.({ block: 'nearest', inline: 'nearest', behavior: 'instant' }); }
     });
   }
