@@ -1829,29 +1829,27 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .player-layout .stage-musician:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
 /* Each instrument has its own lane, with the receptor above the portrait. */
 .px .stage-note-track{
-  --arrow-shape:polygon(50% 0,100% 46%,74% 46%,74% 100%,26% 100%,26% 46%,0 46%);
-  --track-arrow:clamp(12px,1.5vw,19px);
-  position:relative;display:block;width:100%;margin:12px 0 8px;
+  --track-icon:clamp(24px,2.25vw,32px);
+  position:relative;display:block;width:100%;margin:16px 0 8px;
   pointer-events:none;
   background:linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat;
 }
-.px .stage-note-track::before,.px .stage-note-track::after,.px .stage-note{
-  position:absolute;top:0;left:50%;display:block;width:var(--track-arrow);height:var(--track-arrow);
-  transform:translate(-50%,-50%);clip-path:var(--arrow-shape);
+.px .stage-receptor,.px .stage-note{
+  position:absolute;top:0;left:50%;display:block;width:var(--track-icon);height:var(--track-icon);
+  transform:translate(-50%,-50%);color:#f2f4f6;
+  background:#191b20;border:1px solid #788496;border-radius:50%;
 }
-.px .stage-note-track::before,.px .stage-note-track::after{content:"";z-index:2}
-.px .stage-note-track::before{background:var(--muted)}
-.px .stage-note-track::after{background:var(--surface);transform:translate(-50%,-50%) scale(.66)}
-.px .stage-note-track[data-strike]::before{background:var(--member-color);transform:translate(-50%,-50%) scale(1.15)}
-.px .stage-note-track[data-strike]::after{display:none}
-.px .stage-note{top:100%;z-index:1;background:var(--member-color)}
-.px .stage-note[data-note="thunder"]{clip-path:polygon(54% 0,100% 46%,75% 46%,75% 75%,60% 68%,60% 100%,27% 70%,27% 46%,0 46%)}
-.px.app[data-contrast="true"] .stage-note,.px.app[data-contrast="true"] .stage-note-track[data-strike]::before{background:var(--fg)}
+.px .stage-receptor{z-index:2}
+.px .stage-note-track[data-strike] .stage-receptor{
+  color:var(--member-color);border-color:currentColor;box-shadow:0 0 0 2px currentColor;
+}
+.px .stage-note{top:100%;z-index:1;color:var(--member-color);border-color:currentColor}
+.px .stage-note[data-note="thunder"]{border-style:double;border-width:3px}
+.px.app[data-contrast="true"] .stage-receptor,.px.app[data-contrast="true"] .stage-note{background:var(--surface);color:var(--fg)}
+.px.app[data-contrast="true"] .stage-note-track[data-strike] .stage-receptor{color:var(--accent)}
 @media(forced-colors:active){
- .px .stage-note-track::before,.px .stage-note-track::after,.px .stage-note{forced-color-adjust:none}
- .px .stage-note-track::before,.px .stage-note{background:ButtonText}
- .px .stage-note-track::after{background:ButtonFace}
- .px .stage-note-track[data-strike]::before{background:Highlight}
+ .px .stage-receptor,.px .stage-note{forced-color-adjust:none;background:ButtonFace;color:ButtonText;border-color:ButtonText}
+ .px .stage-note-track[data-strike] .stage-receptor{color:Highlight;border-color:Highlight}
 }
 @media(max-width:1000px){
  .px .player-layout{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1883,10 +1881,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .map-transport{display:grid;gap:6px;width:100%;padding:6px}
 .px .map-transport .timeline img{display:block}
 .px .band-stage{
-  background-color:#101926;
-  background-image:linear-gradient(#182334 0 32%,#10192650 53%,#10192605 100%),url('./stage.webp');
-  background-position:center,center bottom;
-  background-size:100% 100%,100% 100%;
+  background-color:#171718;
+  background-image:url('./stage.webp?v=grafito');
+  background-position:center bottom;
+  background-size:100% 100%;
   grid-template-rows:minmax(0,1fr);
 }
 .px .band-stage-musicians{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:5px}
@@ -1895,12 +1893,8 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   grid-template-rows:minmax(55px,.85fr) minmax(92px,1.15fr) minmax(2em,auto);
   gap:2px;justify-items:center;align-items:stretch;min-height:44px;background:transparent;
 }
-.px .stage-musician earthbeat-dance{
-  isolation:isolate;
-  background:radial-gradient(ellipse at 50% 65%,color-mix(in srgb,var(--member-color) 19%,transparent),transparent 70%);
-}
-.px.app[data-contrast="true"] .stage-musician earthbeat-dance{background:none}
 .px .stage-musician.listen-member img{width:100%;height:100%;object-position:center bottom}
+.px .stage-musician earthbeat-dance[data-character="inti"] img{filter:brightness(1.35)}
 .px .stage-musician.listen-member[aria-pressed="false"]{filter:saturate(.3);opacity:.65}
 .px .stage-musician.listen-member:hover,.px .stage-musician.listen-member:focus-visible{border-color:var(--line)}
 .px .stage-musician.listen-member strong{grid-column:1;align-self:center;padding:2px 0;font-size:clamp(.625rem,.8vw,.75rem);text-align:center;letter-spacing:0;text-transform:none;white-space:normal;overflow-wrap:anywhere;color:#fff;text-shadow:0 1px 4px #000}
@@ -2213,9 +2207,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="band-stage" role="group" aria-label="{{tx.bandAria}}">
 <div class="band-stage-musicians">
 <sc-for list="{{stageMusicians}}" as="musician">
-<button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-pressed="{{musician.on}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
-<earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"></earthbeat-note-track><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}" aria-hidden="true"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance>
+<button type="button" class="listen-member stage-musician" aria-label="{{musician.name}}" aria-describedby="stage-instrument-{{musician.key}}" aria-pressed="{{musician.on}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
+<earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"><svg class="stage-receptor" viewBox="120 141 240 240" focusable="false"><path d="{{musician.instrumentLine}}" fill="none" stroke="currentColor" stroke-width="1.4" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"></path></svg></earthbeat-note-track>
+<earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}" aria-hidden="true"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance>
 <strong>{{musician.displayName}}</strong>
+<span class="sr" id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span>
 </button>
 </sc-for>
 </div>
@@ -6118,13 +6114,15 @@ class Component extends DCLogic {
       bandStatus: activeN === 0 ? T('Todos los instrumentos están silenciados. Activa un músico para escucharlo.', 'All instruments are muted. Switch a musician on to hear them.') : activeN === 5 ? T('Banda completa: los cinco instrumentos están activados.', 'Full band: all five instruments are switched on.') : activeN + T(' de 5 personajes activos.', ' of 5 musicians on.'),
       bandGo: function () { self.setBandMute(self.allMute(false)); self.setState({ caption: T('Banda completa activada. Pulsa Reproducir.', 'Full band switched on. Press Play.') }); self.goTab('juke'); },
       band: band,
-      stageCueHelp: T('Cada flecha marca la entrada de un instrumento.', 'Each arrow marks when an instrument plays.'),
-      stageMotionNotice: reducedMotion ? T('Con movimiento reducido, la marca se ilumina sin desplazar flechas.', 'With reduced motion, the receptor lights up without scrolling arrows.') : '',
+      stageCueHelp: T('Cada icono sube cuando va a sonar su instrumento.', 'Each instrument icon rises just before it sounds.'),
+      stageMotionNotice: reducedMotion ? T('Con movimiento reducido, se ilumina el icono fijo.', 'With reduced motion, the stationary instrument icon lights up.') : '',
       stageMusicians: band.map(function (member) {
         var level = member.on ? s.levels[member.key] || 0 : 0;
         var audible = member.on && s.playing && !s.masterMuted && s.volume > 0;
         var note = audible ? s.stageNotes[member.key] : null;
+        var instrument = BAND_INSTRUMENTS[member.key];
         return { audible: audible, noteId: note?.id || '', noteKind: note?.kind || '',
+          instrumentName: instrument.name, instrumentLine: instrument.line,
           displayName: member.name.charAt(0) + member.name.slice(1).toLowerCase(),
           name: member.name, on: member.on, toggle: member.toggle, key: member.key, playing: String(member.on && s.playing && level > .04), poseUrl: 'sprites/' + member.key + '/escenario.webp', color: member.color, intensity: level };
       }),

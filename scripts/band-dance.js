@@ -221,14 +221,16 @@ class StageNoteTrack extends HTMLElement {
 
   queue = ({ detail: { clock, notes, lookahead } }) => {
     if (this.dataset.audible !== 'true' || reduced() || document.hidden) return;
+    const receptor = this.querySelector('.stage-receptor');
+    if (!receptor) return;
     const key = this.dataset.character;
     this.clock = clock;
     this.lookahead = lookahead;
     for (const event of notes) {
       const kind = event.fired[key];
       if (!kind || event.at <= clock.currentTime) continue;
-      const note = document.createElement('span');
-      note.className = 'stage-note';
+      const note = receptor.cloneNode(true);
+      note.setAttribute('class', 'stage-note');
       note.dataset.note = kind === true ? 'note' : kind;
       this.cues.set(event.at, note);
       this.append(note);

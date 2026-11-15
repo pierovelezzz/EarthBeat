@@ -81,9 +81,14 @@ async function main() {
         assert.equal(await page.evaluate(() => document.activeElement.id), 'playback-position');
         await page.locator('#tour-play button').click();
         if (set === 'eic' && mode === 'melody') {
+          const instruments = await page.locator('.stage-receptor path').evaluateAll(paths =>
+            paths.map(instrument => instrument.getAttribute('d')));
+          assert.equal(new Set(instruments).size, 5, 'Every musician has a distinct instrument icon');
           const pending = await page.waitForFunction(() => [...document.querySelectorAll('.stage-note')]
             .find(note => parseFloat(note.style.top) > 50));
           const rose = await pending.evaluate(async note => {
+            const instrument = note.parentElement.querySelector('.stage-receptor path');
+            if (note.localName !== 'svg' || note.querySelector('path')?.getAttribute('d') !== instrument.getAttribute('d')) return false;
             const start = parseFloat(note.style.top);
             for (let frame = 0; frame < 8; frame++) {
               await new Promise(requestAnimationFrame);
@@ -91,9 +96,9 @@ async function main() {
             }
             return false;
           });
-          assert(rose, 'A scheduled arrow climbs toward the receptor before the note plays');
+          assert(rose, 'The matching instrument icon climbs before the note plays');
           await page.locator('.stage-note-track[data-strike]').first().waitFor();
-          await page.screenshot({ path: path.join(output, 'stage-arrows.png') });
+          await page.locator('.band-stage').screenshot({ path: path.join(output, 'stage-instruments.png') });
         }
         await page.waitForFunction(() => __app.state.playing && __app.state.col >= 4);
         await page.waitForFunction(() => __audioPeak() > .00001);
@@ -205,13 +210,20 @@ async function main() {
           footerTop: document.querySelector('footer.bar').getBoundingClientRect().top };
       });
       await page.screenshot({ path: path.join(output, 'player-' + viewport.width + '.png') });
+      if (viewport.width === 390 && !process.argv.includes('--all-muted')) {
+        await page.evaluate(() => __app.setBandMute(__app.allMute(false)));
+        await page.locator('.band-stage').screenshot({ path: path.join(output, 'stage-instruments-mobile.png') });
+        await page.evaluate(() => __app.setBandMute(__app.only('mama')));
+      }
       report.layouts.push({ viewport, geometry });
       assert.deepEqual(geometry.clipped, [], 'Controls and legend must stay within the viewport');
       assert(geometry.screenWidth <= geometry.screenClientWidth + 1, 'No horizontal player overflow');
       assert(await page.locator('.stage-musician').evaluateAll(musicians => musicians.every(musician => {
         const lane = musician.querySelector('.stage-note-track').getBoundingClientRect();
+        const icon = musician.querySelector('.stage-receptor').getBoundingClientRect();
         const portrait = musician.querySelector('earthbeat-dance').getBoundingClientRect();
-        return portrait.width >= 32 && portrait.height >= 90 && lane.bottom <= portrait.top;
+        return icon.width >= 24 && icon.left >= lane.left && icon.right <= lane.right &&
+          portrait.width >= 32 && portrait.height >= 90 && lane.bottom <= portrait.top;
       })), 'Each lane must stay above a visible portrait');
       if (viewport.width >= 1280 && !process.argv.includes('--all-muted')) assert(geometry.bandBottom <= Math.min(geometry.footerTop,viewport.height),
         'Desktop must show the map, controls, legend and five complete musicians together: ' + JSON.stringify(geometry));
