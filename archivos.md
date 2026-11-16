@@ -1,6 +1,6 @@
 # Inventario de archivos de main
 
-Esta lista enumera los 641 archivos versionados de esta edición.
+Esta lista enumera los 643 archivos versionados de esta edición.
 
 | Área | Función |
 |---|---|
@@ -164,6 +164,8 @@ Esta lista enumera los 641 archivos versionados de esta edición.
 | [docs/METODO.md](docs/METODO.md) |
 | [docs/MODELOS_3D.md](docs/MODELOS_3D.md) |
 | [docs/PERSONAJES.md](docs/PERSONAJES.md) |
+| [docs/pitch/demo/earthrhythm-demo.mp4](docs/pitch/demo/earthrhythm-demo.mp4) |
+| [docs/pitch/demo/index.html](docs/pitch/demo/index.html) |
 | [docs/pitch/README.md](docs/pitch/README.md) |
 | [docs/PLAN.md](docs/PLAN.md) |
 | [docs/PUBLICACION.md](docs/PUBLICACION.md) |

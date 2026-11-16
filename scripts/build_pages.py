@@ -69,6 +69,7 @@ def build(destination: Path) -> None:
     copy2(dance_runtime, destination / "runtime")
     copy2(brisa_chat, destination / "runtime")
     copy2(prototype / "stage.webp", destination)
+    copytree(root / "docs" / "pitch" / "demo", destination / "demo", dirs_exist_ok=True)
     copytree(root / "assets" / "fonts", destination / "fonts", dirs_exist_ok=True)
     for folder in ("fotogramas", "fotogramas-anteriores", "brisa", "miniaturas"):
         copytree(prototype / folder, destination / folder, dirs_exist_ok=True)

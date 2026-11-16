@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EarthRhythm | Project Demonstration</title>
+<style>
+  :root { color-scheme: dark; background: #0b1522; color: #f2f6fa; font: 1rem/1.55 system-ui, sans-serif; }
+  body { margin: 0; }
+  main { max-width: 70rem; margin: 0 auto; padding: clamp(1rem, 4vw, 2.5rem); }
+  header p { margin: 0 0 .25rem; color: #bad4e2; }
+  h1 { margin: 0 0 .75rem; font-size: clamp(1.75rem, 5vw, 3rem); line-height: 1.12; }
+  video { display: block; width: 100%; max-height: 73vh; background: #03070d; border: 1px solid #628397; border-radius: .45rem; }
+  a { color: #b5e9fb; text-underline-offset: .19em; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid #ffd447; outline-offset: 4px; }
+  footer { display: flex; flex-wrap: wrap; gap: .8rem 1.5rem; margin: 1rem 0; }
+  details { margin-block-start: 1rem; }
+</style>
+<main>
+  <header>
+    <p>NASA Space Apps Challenge 2026 · The Earth Information Jukebox</p>
+    <h1>EarthRhythm</h1>
+  </header>
+  <video controls playsinline preload="metadata" aria-label="EarthRhythm project demonstration">
+    <source src="earthrhythm-demo.mp4" type="video/mp4">
+  </video>
+  <footer>
+    <a href="earthrhythm-demo.mp4" download>Download MP4</a>
+    <a href="https://earthrhythm-nasa.vercel.app/">Open EarthRhythm</a>
+    <a href="https://svs.gsfc.nasa.gov/5176/">NASA map source</a>
+  </footer>
+  <details>
+    <summary>Transcript and credits</summary>
+    <p>EarthRhythm turns NASA Pacific Ocean maps into music in real time. A line scans the color grid. Each column changes what the band plays. Choose another month to hear a different pattern. The legend explains estimated temperature differences. EarthRhythm includes 10 albums and 60 NASA maps in English and Spanish.</p>
+    <p>This recording shows the EarthRhythm player and its live musical output. The app synthesizes that music in the browser. The demonstration contains illustrations generated with SI assistance. The maps come from NASA Scientific Visualization Studio, visualization 5176.</p>
+  </details>
+</main>
+</html>
