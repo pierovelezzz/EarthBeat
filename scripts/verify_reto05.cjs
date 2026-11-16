@@ -59,7 +59,7 @@ async function main() {
     await notice.getByText(/Pulsa el botón de bocina/).waitFor();
     assert.equal(await page.evaluate(() => window.spokenFallback), undefined);
 
-    const speaker = page.getByRole('button', { name: 'Escuchar voz', exact: true });
+    const speaker = page.getByRole('button', { name: 'Escuchar a Brisa', exact: true });
     assert.equal(await speaker.textContent(), '');
     assert.equal(await speaker.locator('svg').getAttribute('aria-hidden'), 'true');
     await page.evaluate(() => { window.narrationError = 'NotSupportedError'; });

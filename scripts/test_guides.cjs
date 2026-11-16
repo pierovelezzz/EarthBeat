@@ -183,7 +183,7 @@ test('contextual help is a single non-numbered card and never starts a second tu
   const original = JSON.stringify({ disc: c.state.disc, frame: c.state.frame, mute: c.state.mute, playing: c.state.playing });
   c.tourOpen();
   let help=c.renderVals().tour;
-  assert.equal(help.count,'');assert.equal(help.dots.length,0);assert.equal(help.showBack,false);
+  assert.equal(help.count,'');assert.equal(help.spot,false);assert.equal(help.showBack,false);
   assert.equal(help.showTutorialStart,true);assert.equal(help.nextLabel,'Entendido');
   assert.match(help.title,/Ayuda de esta pantalla/);
   help.next();
@@ -270,7 +270,7 @@ test('guide targeting scrolls only the screen, never hidden app or document ance
   Object.assign(clip, { scrollTop: 100, scrollHeight: 1800, clientHeight: 600, scrollTo(options) { this.scrollTop = options.top; } });
   const target = element('tour-discs', 20, 1000, 400, 300, clip);
   target.scrollIntoView = () => assert.fail('scrollIntoView can move hidden ancestors');
-  c.tourGo(1);
+  c.startTutorial();
   assert.equal(clip.scrollTop, 850);
 });
 
@@ -1448,25 +1448,23 @@ test('light and slate themes combine with high contrast without changing the sel
   c.setPreference('contrast',false);assert.equal(c.renderVals().th.bg,'#171E2B');
 });
 
-test('first-visit recommendations combine, preserve declined settings, and stay optional', () => {
+test('first-visit settings apply and persist immediately without dismissing the welcome', () => {
   const { component:c, storage } = setup({ firstVisit:true, language:'es-PE' });
   assert.equal(c.state.showWelcome,true);
   c.openPreferences();
   const choices=c.renderVals().preferences.choices;
-  assert.equal(choices.length,5);
-  for (const id of ['visual','sensory']) choices.find(choice=>choice.id==='preferences-'+id).change({target:{checked:true}});
-  c.recommendations();
-  assert.equal(c.state.big,false);
-  const options=c.renderVals().preferences.choices;
-  assert(options.some(option=>option.id==='preferences-contrast'));
-  options.find(option=>option.id==='preferences-big').change({target:{checked:false}});
-  c.applyRecommendations();
-  assert.equal(c.state.big,false);
+  assert.deepEqual(Array.from(choices.filter(choice=>choice.on),choice=>choice.id), ['preferences-reducedMotion']);
+  choices.find(choice=>choice.id==='preferences-contrast').change({target:{checked:true}});
+  choices.find(choice=>choice.id==='preferences-reducedMotion').change({target:{checked:false}});
   assert.equal(c.state.contrast,true);
   assert.equal(c.state.reducedMotion,true);
-  assert.equal(c.state.voice,false);
-  assert.equal(c.state.showPreferences,false);
-  assert.equal(c.state.showWelcome,true);
+  assert.equal(c.renderVals().welcome.motionOn,false);
+  assert.equal(c.state.showPreferences,true);
+  const reload=setup({firstVisit:true,language:'es-PE',storage:Object.fromEntries(storage)}).component;
+  assert.equal(reload.state.showWelcome,true);
+  assert.equal(reload.state.contrast,true);
+  assert.equal(reload.state.reducedMotion,true);
+  c.closePreferences();
   c.startWelcome();
   assert.equal(c.state.showWelcome,false);
   assert.equal(c.state.tour,0);
@@ -1474,7 +1472,6 @@ test('first-visit recommendations combine, preserve declined settings, and stay 
   assert.equal(next.state.showWelcome,false);
   assert.equal(next.state.contrast,true);
   assert.equal(next.state.reducedMotion,true);
-  assert(!storage.get('ts_prefs').includes('visual'));
 });
 
 test('stored preferences only accept known boolean values and recover from invalid JSON', () => {

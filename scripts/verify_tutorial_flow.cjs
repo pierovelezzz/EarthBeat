@@ -27,7 +27,7 @@ async function main(){
      await page.locator('#tour-guide').click();
      await page.locator('#tour-card .tour-start').click();
    };
-   const pick=async()=>{await page.locator('.dcard').nth(2).focus();await page.keyboard.press('Enter');await step(2);};
+   const pick=async()=>{await page.locator('#tour-card .guide-control').click();assert(await page.locator('.dcard').first().evaluate(el=>document.activeElement===el));await page.locator('.dcard').nth(2).focus();await page.keyboard.press('Enter');await step(2);};
    await page.locator('#tour-guide').click();
    assert.equal(await page.locator('#tour-card .tdots').count(),0);assert.equal((await page.locator('#tour-card .tn.dim').textContent()).trim(),'');
    assert.equal(await page.locator('#tour-card .tbubble button').count(),0);await audit('context-help');
@@ -49,7 +49,7 @@ async function main(){
    await page.locator('#tour-card .tact .primary').click();assert.equal(await page.locator('#tour-card').count(),0);
    saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('ts_tutorial')));assert.equal(saved.completed,true);
    await page.locator('#tour-guide').click();assert.equal(await page.evaluate(()=>__app.state.tutorial),false);await page.keyboard.press('Escape');
-   await startFromHelp();await step(1);await pick();await page.locator('#tour-card .tbubble button').first().click();await step(1);
+   await startFromHelp();await step(1);
    assert.equal(await page.evaluate(()=>__app.state.tutorialDone.disc),false);
    await page.keyboard.press('Escape');
    // First visit keeps the tutorial available after the optional introduction.
