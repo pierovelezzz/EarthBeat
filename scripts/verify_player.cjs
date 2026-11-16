@@ -242,8 +242,7 @@ async function main() {
       assert.equal(await page.locator('.listen-band .chips').evaluate(chords => getComputedStyle(chords).display),
         desktop ? 'grid' : 'flex', 'Large chord tiles stay in the desktop layout');
       const instrumentLabel = page.locator('.stage-label span').first();
-      assert.equal(await instrumentLabel.evaluate(label => getComputedStyle(label).clipPath === 'inset(50%)'),
-        viewport.width >= 1100, 'Instrument names are visually hidden on desktop only');
+      assert.equal(await instrumentLabel.isVisible(), false, 'Instrument names are hidden at every width');
       assert(await page.locator('.stage-musician').first().evaluate(musician =>
         !!document.getElementById(musician.getAttribute('aria-describedby'))?.textContent),
         'The musician control still describes its instrument');

@@ -1045,7 +1045,7 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
   .px .top .nav button[aria-current="page"]{background:color-mix(in srgb,var(--section) 9%,transparent);border-bottom-color:var(--section)}
 }
 @media(max-width:460px){
-  .px .top .nav{grid-template-columns:auto auto minmax(0,1fr) auto;gap:0}
+  .px .top .nav{grid-template-columns:minmax(56px,auto) minmax(52px,auto) minmax(0,1fr) auto;column-gap:8px}
   .px .top .nav button{padding-inline:4px;font-size:.75rem;letter-spacing:0}
 }
 @media(max-width:280px){
@@ -1053,7 +1053,7 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 }
 @media(min-width:620px) and (max-width:900px) and (max-height:500px){
   .px .top .wrap{grid-template-columns:auto minmax(0,1fr) auto}
-  .px .top .nav{order:0;grid-column:auto;display:flex;gap:0}
+  .px .top .nav{order:0;grid-column:auto;display:flex;gap:6px}
   .px .top .nav button{padding-inline:3px;font-size:max(.6em,.6875rem);letter-spacing:0}
 }
 /* Font-relative space also responds to enlarged text without splitting the name. */
@@ -2094,7 +2094,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 }
 .px .stage-musician.listen-member .stage-label{container-type:inline-size}
 .px .stage-musician.listen-member .stage-label strong{grid-column:auto;font:700 min(1em,16cqw)/1.15 var(--body);letter-spacing:0;text-transform:none;white-space:nowrap;overflow-wrap:normal;color:inherit}
-.px .stage-musician.listen-member .stage-label span{grid-column:auto;font-size:inherit;color:inherit}
 .px.app[data-contrast="true"] .stage-musician.listen-member .stage-label{color:var(--fg);text-shadow:none}
 .px .listen-band .chips{display:flex;flex-wrap:wrap;gap:5px}
 @media(min-width:1001px) and (max-height:850px){
@@ -2144,9 +2143,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
     color:var(--plaque-ink);background:#101822;
     border-color:color-mix(in srgb,var(--member-color) 60%,#202a36);
     box-shadow:inset 0 -2px color-mix(in srgb,var(--member-color) 38%,#101822);
-  }
-  .px .stage-musician.listen-member .stage-label span{
-    position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
   }
   .px .stage-musician.listen-member[aria-pressed="true"] earthbeat-dance{filter:brightness(1.12)}
   .px .player-layout .stage-musician.listen-member[aria-pressed="false"] earthbeat-dance{opacity:.75;filter:saturate(.68)}
@@ -2738,10 +2734,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="band-stage" role="group" aria-label="{{tx.bandAria}}">
 <div class="band-stage-musicians">
 <sc-for list="{{stageMusicians}}" as="musician">
-<button type="button" class="listen-member stage-musician" aria-pressed="{{musician.on}}" disabled="{{rhythmMode}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
+<button type="button" class="listen-member stage-musician" aria-pressed="{{musician.on}}" aria-describedby="stage-instrument-{{musician.key}}" disabled="{{rhythmMode}}" onClick="{{musician.toggle}}" style="--member-color:{{musician.color}};--intensity:{{musician.intensity}}">
 <earthbeat-note-track class="stage-note-track" data-character="{{musician.key}}" data-audible="{{musician.audible}}" data-hit="{{musician.noteId}}" data-kind="{{musician.noteKind}}" aria-hidden="true"><svg class="stage-receptor" viewBox="120 141 240 240" focusable="false"><path d="{{musician.instrumentLine}}" fill="none" stroke="currentColor" stroke-width="1.4" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"></path></svg></earthbeat-note-track>
 <span class="stage-performer" aria-hidden="true"><earthbeat-dance data-character="{{musician.key}}" data-playing="{{musician.playing}}"><img class="dance-pose" src="{{musician.poseUrl}}" alt=""></earthbeat-dance></span>
-<span class="stage-label"><strong>{{musician.displayName}}</strong> <span id="stage-instrument-{{musician.key}}">{{musician.instrumentName}}</span></span>
+<span class="stage-label"><strong>{{musician.displayName}}</strong> <span id="stage-instrument-{{musician.key}}" hidden>{{musician.instrumentName}}</span></span>
 </button>
 </sc-for>
 </div>
