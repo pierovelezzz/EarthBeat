@@ -416,16 +416,17 @@ test('sample labels translate without replacing the rainfall analysis', async ()
   assert.match(c.renderVals().playTitle,/rainfall/);
 });
 
-test('system motion is adopted on first visit and manual choices take precedence', () => {
+test('animations start enabled on the welcome screen and saved choices take precedence', () => {
   const { component: c, context, storage } = setup({ firstVisit: true, reducedMotion: true });
   assert.equal(context.window.matchMedia('(prefers-reduced-motion: reduce)').matches, true);
-  assert.equal(c.renderVals().motionMode, 'reduced');
-  c.setPreference('reducedMotion', false);
+  assert.equal(c.renderVals().welcome.motionOn, true);
   assert.equal(c.renderVals().motionMode, 'full');
-  assert.equal(setup({ reducedMotion: true, storage: Object.fromEntries(storage) }).component.bandReduced(), false);
-  c.setPreference('reducedMotion', true);
-  const reloaded = setup({ reducedMotion: true, storage: Object.fromEntries(storage) });
-  assert.equal(reloaded.component.renderVals().motionMode, 'reduced');
+  c.syncSystemMotion();
+  assert.equal(c.renderVals().welcome.motionOn, true);
+  c.renderVals().welcome.changeMotion({ target: { checked: false } });
+  const reloaded = setup({ firstVisit: true, reducedMotion: false, storage: Object.fromEntries(storage) }).component;
+  assert.equal(reloaded.renderVals().welcome.motionOn, false);
+  assert.equal(reloaded.renderVals().motionMode, 'reduced');
 });
 
 test('reduced motion keeps all five portraits static at mobile and desktop widths', () => {
@@ -1453,7 +1454,7 @@ test('first-visit settings apply and persist immediately without dismissing the 
   assert.equal(c.state.showWelcome,true);
   c.openPreferences();
   const choices=c.renderVals().preferences.choices;
-  assert.deepEqual(Array.from(choices.filter(choice=>choice.on),choice=>choice.id), ['preferences-reducedMotion']);
+  assert.deepEqual(Array.from(choices.filter(choice=>choice.on),choice=>choice.id), ['preferences-reducedMotion', 'preferences-voice']);
   choices.find(choice=>choice.id==='preferences-contrast').change({target:{checked:true}});
   choices.find(choice=>choice.id==='preferences-reducedMotion').change({target:{checked:false}});
   assert.equal(c.state.contrast,true);
@@ -1467,8 +1468,12 @@ test('first-visit settings apply and persist immediately without dismissing the 
   c.closePreferences();
   c.startWelcome();
   assert.equal(c.state.showWelcome,false);
-  assert.equal(c.state.tour,0);
+  assert.equal(c.state.tour,1);
+  assert.equal(c.state.tutorial,true);
+  assert.equal(c.state.voice,true);
+  c.tourEnd();
   const next=setup({language:'es-PE',storage:Object.fromEntries(storage)}).component;
+  assert.equal(next.state.tour,0);
   assert.equal(next.state.showWelcome,false);
   assert.equal(next.state.contrast,true);
   assert.equal(next.state.reducedMotion,true);
@@ -1477,7 +1482,7 @@ test('first-visit settings apply and persist immediately without dismissing the 
 test('stored preferences only accept known boolean values and recover from invalid JSON', () => {
   let c=setup({firstVisit:true,storage:{ts_prefs:'not JSON'}}).component;
   assert.equal(c.state.showPreferences,false);
-  assert.equal(c.state.voice,false);
+  assert.equal(c.state.voice,true);
   c=setup({storage:{ts_prefs:JSON.stringify({version:1,configured:true,values:{big:'yes',contrast:true,unknown:true}})}}).component;
   assert.equal(c.state.big,false); assert.equal(c.state.contrast,true); assert.equal(c.state.unknown,undefined);
 });
@@ -1734,7 +1739,7 @@ test('vibration controls and engine are phone-only even when desktop exposes the
 });
 
 test('automatic motion changes remain automatic after saving other preferences', () => {
-  const {component:c,context,storage}=setup({firstVisit:true,reducedMotion:true});
+  const {component:c,storage}=setup({reducedMotion:true});
   c.setPreference('big',true);
   assert.equal('reducedMotion' in JSON.parse(storage.get('ts_prefs')).values,false);
   c.motionQuery.matches=false;

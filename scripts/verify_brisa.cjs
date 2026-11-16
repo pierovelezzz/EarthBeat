@@ -148,7 +148,7 @@ async function main() {
     await page.locator('.bpick button').nth(1).click();
     await page.locator('.bportrait-live[data-character="inti"][data-rendered]').waitFor();
     await page.locator('#tour-a11y summary').click();
-    await page.getByRole('button',{name:'Movimiento reducido'}).click();
+    await page.getByRole('button',{name:'Usar animaciones'}).click();
     await page.waitForFunction(() => __app.bandReduced());
     const portrait = page.locator('.bportrait-live[data-character="inti"] .sprite-frame');
     assert.match(await portrait.getAttribute('src'),/inti\/(?:pose-banda\.webp|keyframes\/0[0-3]\.png)(?:\?.*)?$/);

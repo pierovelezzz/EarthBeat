@@ -1132,13 +1132,21 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 .px .workspace .cardx.compact{min-width:0;min-height:0;gap:5px;padding:10px 12px;border:1px solid var(--line);border-radius:7px;background:var(--panel);white-space:normal;overflow-wrap:anywhere}
 .px .workspace .cardx.compact strong{letter-spacing:0;text-transform:none}
 .px .workspace button.cardx:hover,.px .workspace button.cardx:focus-visible{border-color:var(--accent)}
-.px .tech-list{display:grid;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
-.px .tech-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:4px 12px;padding:9px 12px;min-width:0;overflow-wrap:anywhere}
-.px .tech-item + .tech-item{border-top:1px solid var(--line)}
-.px .tech-item h2{font:700 1em/1.25 var(--head)}
-.px .tech-item p,.px .tech-item details{grid-column:1/-1}
-.px .tech-item details summary{min-height:28px;align-content:center;cursor:pointer}
-.px .tech-item details p{padding:4px 0}
+.px .tech-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.px .tech-heading,.px .tech-list{--tech-accent:var(--accent)}
+.px [data-kind="nasa"]{--tech-accent:var(--cold)}
+.px [data-kind="music"]{--tech-accent:var(--hot)}
+.px [data-kind="production"]{--tech-accent:var(--mag)}
+.px.app[data-contrast="true"] .tech-heading,.px.app[data-contrast="true"] .tech-list{--tech-accent:var(--fg)}
+.px .tech-heading{border-block-end:1px solid var(--line);padding-bottom:10px}
+.px .tech-heading .lede{margin:4px 0 0}
+.px .tech-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.px .tech-actions .tech-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;white-space:normal;text-decoration:none}
+.px .tech-item{display:grid;align-content:start;gap:5px;padding:12px 14px;min-width:0;overflow-wrap:anywhere;background:var(--panel);border:1px solid var(--line);border-inline-start:3px solid var(--tech-accent);border-radius:7px}
+.px .tech-item h2{font:700 1.1em/1.2 var(--head)}
+.px .tech-item p{margin:0;line-height:1.38}
+.px .tech-tool{font-size:.84em;font-weight:700;color:var(--fg)}
+@media(max-width:540px){.px .tech-list{grid-template-columns:minmax(0,1fr)}}
 .px .color-method{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
 .px .scale-source{max-width:72ch}
 .px .scale-reading{border-block:1px solid var(--line);color:var(--muted);font-size:.9em}
@@ -1373,7 +1381,16 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 .px .welcome-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;text-align:start}
 .px .welcome-top .btn{color:inherit;border-color:#94aacc;min-height:44px}
 .px .welcome-top .btn[aria-pressed="true"]{background:#ffda4b;color:#142039;border-color:#ffda4b}
-.px .welcome-brand{display:flex;align-items:center;gap:8px;font-weight:800}
+.px .welcome-brand{display:inline-flex;align-items:center;gap:9px;font-weight:800}
+.px .welcome-brand-mark{display:inline-flex;align-items:center;justify-content:center;gap:2px;width:28px;height:28px;border:1px solid currentColor;border-radius:7px;color:#ffda4b}
+.px.app[data-contrast="true"] .welcome-brand-mark{color:inherit}
+.px .welcome-brand-mark i{width:2px;height:9px;border-radius:1px;background:currentColor}
+.px .welcome-brand-mark i:nth-child(2){height:15px}
+.px .welcome-brand-mark i:nth-child(3){height:11px}
+.px[data-motion-mode="full"] .welcome-brand-mark i{animation:welcome-brand-beat .65s ease-in-out both}
+.px[data-motion-mode="full"] .welcome-brand-mark i:nth-child(2){animation-delay:70ms}
+.px[data-motion-mode="full"] .welcome-brand-mark i:nth-child(3){animation-delay:140ms}
+@keyframes welcome-brand-beat{0%,100%{transform:scaleY(1)}35%{transform:scaleY(1.35)}65%{transform:scaleY(.55)}}
 .px .welcome-logo{width:clamp(38px,8vh,82px);height:auto;justify-self:center}
 .px .welcome-card h1{margin:0;font:800 italic clamp(1.2em,3.4vw,2.3em)/1.15 var(--head);text-wrap:balance}
 .px .welcome-card p{margin:0;font-size:.9em;line-height:1.35}
@@ -1389,8 +1406,6 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 .px .welcome-motion input.animation-switch:checked{background:#ffda4b;color:#142039}
 .px input.animation-switch:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 .px .welcome-motion input.animation-switch:focus-visible{outline-color:#ffe77d}
-.px .welcome-card .welcome-note{font-size:.88em;font-weight:700}
-.px .entry-settings-link{grid-column:1/-1;justify-self:start;min-height:44px}
 .px .preferences-choices.entry-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .px .preferences-choices.entry-choices label{min-height:44px;padding:7px;gap:7px}
 .px .preferences-choices.entry-choices small{font-size:.78em}
@@ -2304,18 +2319,25 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .stage-musician.listen-member[aria-pressed="false"]{opacity:1;filter:none}
 .px .stage-musician.listen-member[aria-pressed="false"] earthbeat-dance{opacity:.45;filter:saturate(.3)}
 .px .credits-layout,.px .nasa-source-layout{display:grid;align-items:stretch;gap:8px}
-.px .credits-layout{grid-template-columns:repeat(3,minmax(0,1fr))}
-.px .nasa-source-layout{grid-template-columns:minmax(0,3fr) minmax(0,2fr);margin-top:8px}
-.px .nasa-source-layout .method-sources{display:grid;gap:8px;padding-inline-start:1.2em}
-@media(min-width:1000px){
-  .px .tech-screen .pagehead{margin-bottom:8px}
-  .px .tech-screen .tech-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line)}
-  .px .tech-screen .tech-list[data-nasa="true"]{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .px .tech-screen .tech-item,.px .tech-screen .tech-item + .tech-item{padding:10px 14px;border:0;background:var(--panel);align-content:start}
-  .px .tech-screen .nasa-source-layout{grid-template-columns:minmax(0,3fr) minmax(0,1.2fr)}
-  .px .tech-screen .nasa-source-layout .credit-section{padding:10px 14px}
-  .px .tech-screen .nasa-source-layout p{max-width:78ch;line-height:1.55}
+.px .credits-layout{grid-template-columns:repeat(2,minmax(0,1fr))}
+.px .credits-layout .credit-section:not(.credit-notice){border-block-start:3px solid var(--accent)}
+.px .credits-layout .credit-notice{grid-column:1/-1}
+@media(min-width:901px){
+  .px .credits-layout .credit-notice{display:grid;grid-template-columns:minmax(11em,1fr) minmax(0,3fr);align-items:center;gap:12px}
+  .px .credits-layout .credit-notice .credit-heading{margin:0}
 }
+.px .nasa-source-layout{grid-template-columns:minmax(0,3fr) minmax(0,2fr);margin-top:8px}
+.px .nasa-source-layout .method-sources{display:grid;gap:6px;padding:0;list-style:none}
+.px .tech-screen .nasa-source-layout .method-sources a{display:flex;align-items:center;min-height:44px;padding:5px 10px;border:1px solid var(--line);border-radius:5px}
+.px .tech-screen .credit-section{padding:12px 14px}
+.px .tech-screen .credit-section p{max-width:78ch;line-height:1.45}
+.px .tech-screen .credit-section p+p{margin-top:7px}
+@media(min-width:1050px){
+  .px .tech-screen > .in{max-width:1240px;gap:12px}
+  .px .tech-list[data-kind="interface"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .px .tech-list[data-kind="nasa"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(min-width:901px) and (max-height:800px){.px .tech-screen > .in{padding-block:10px}}
 .px .section-voice{display:inline-grid;place-items:center;width:44px;min-height:44px;padding:0;flex:none}
 .px .section-voice svg{width:20px;height:20px}
 .px .section-voice[data-speaking="true"] .speaker-waves{display:none}
@@ -2361,7 +2383,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <a class="skip-content" href="#welcome-content">{{tx.skipContent}}</a>
 <main class="welcome-entry" id="welcome-content" tabindex="-1">
 <section class="welcome-card" aria-labelledby="welcome-title">
-<div class="welcome-top"><span class="welcome-brand">EarthRhythm</span><div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-label="{{l.name}}" aria-pressed="{{l.on}}" onClick="{{l.pick}}">{{l.short}}</button></sc-for></div></div>
+<div class="welcome-top"><span class="welcome-brand"><span class="welcome-brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>EarthRhythm</span><div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-label="{{l.name}}" aria-pressed="{{l.on}}" onClick="{{l.pick}}">{{l.short}}</button></sc-for></div></div>
 <img class="welcome-logo" src="./earthrhythm-sample.webp" width="600" height="500" alt="">
 <h1 id="welcome-title">{{welcome.title}}</h1>
 <p>{{welcome.body}}</p>
@@ -2370,7 +2392,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="btn welcome-preferences" onClick="{{preferences.open}}">{{preferences.title}}</button>
 </div>
 <label class="welcome-motion"><input type="checkbox" class="animation-switch" role="switch" checked="{{welcome.motionOn}}" onChange="{{welcome.changeMotion}}">{{welcome.motionLabel}}</label>
-<p class="welcome-note">{{welcome.note}}</p>
 </section>
 </main>
 </sc-if>
@@ -2409,7 +2430,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="btn sm" onClick="{{haptic.stop}}" disabled="{{haptic.stopOff}}">{{haptic.stopLabel}}</button></div>
 </section>
 </sc-if>
-<button type="button" class="btn sm entry-settings-link" onClick="{{preferences.open}}">{{preferences.settingsLabel}}</button>
 </div>
 </details>
 <sc-if value="{{gameAvailable}}">
@@ -2840,17 +2860,23 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </sc-if>
 
 <!-- TECNOLOGÍA -->
-<sc-if value="{{scr.tPage}}" hint-placeholder-val="{{ false }}">
-<div class="pagehead">
-<div><p class="kicker">{{tx.techKicker}} · {{techCur.num}}</p><h1 class="display">{{techCur.title}}</h1></div>
+<sc-if value="{{isTech}}">
+<div class="pagehead tech-heading" data-kind="{{techCur.kind}}">
+<div><h1 class="display">{{techCur.title}}</h1><p class="lede">{{techCur.intro}}</p></div>
+<div class="tech-actions">
+<sc-if value="{{techCur.internal}}"><button type="button" class="btn sm tech-link" onClick="{{techCur.open}}">{{techCur.action}} <span aria-hidden="true">→</span></button></sc-if>
+<sc-if value="{{techCur.external}}"><a class="btn sm tech-link" href="{{techCur.url}}" target="_blank" rel="noopener noreferrer">{{techCur.action}} <span aria-hidden="true">↗</span></a></sc-if>
 <button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
 </div>
-<div id="tour-techcards" class="tech-list" data-nasa="{{techCur.nasa}}">
-<sc-for list="{{techCur.items}}" as="t" hint-placeholder-count="6">
+</div>
+</sc-if>
+<sc-if value="{{scr.tPage}}" hint-placeholder-val="{{ false }}">
+<div id="tour-techcards" class="tech-list" data-kind="{{techCur.kind}}">
+<sc-for list="{{techCur.items}}" as="t" hint-placeholder-count="4">
 <article class="tech-item">
-<h2>{{t.name}}</h2>
-<p class="muted small">{{t.use}}</p>
-<sc-if value="{{t.hasNote}}" hint-placeholder-val="{{ false }}"><details><summary class="small" aria-label="{{tx.techNote}} · {{t.name}}">{{tx.techNote}}</summary><p class="muted small">{{t.note}}</p></details></sc-if>
+<h2>{{t.label}}</h2>
+<p class="tech-tool">{{t.name}}</p>
+<p class="muted">{{t.use}}</p>
 </article>
 </sc-for>
 </div>
@@ -2872,10 +2898,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </sc-if>
 </sc-if>
 <sc-if value="{{scr.tCred}}" hint-placeholder-val="{{ false }}">
-<div class="pagehead">
-<div><p class="kicker">{{tx.techKicker}} · {{techCur.num}}</p><h1 class="display">{{tx.credTitle}}</h1></div>
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
-</div>
 <div class="credits-layout">
 <section class="credit-section" aria-labelledby="credit-dev-title">
 <div class="credit-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></svg><h2 id="credit-dev-title">{{tx.credDev}}</h2></div>
@@ -3409,196 +3431,44 @@ var BAND = [
   { k: 'illapa', name: 'ILLAPA', color: '#E0459B', disc: 'Invierno 2026', glyph: '✦', ins: 'TIMBAL', clip: 'latido', clips: 'idle · latido · trueno · aparecer / salir', origin: 'Rayo y trueno en la cosmovisión andina', listens: 'Los píxeles de anomalía extrema (rojo oscuro y magenta) de cada columna.', plays: 'Truenos graves. Lanza un trueno si al menos una de cada cuatro celdas válidas tiene calor extremo. En Melodía también marca el ritmo con timbal.', persona: 'Aparece poco, pero cuando llega todos callan.', quote: 'No me llames. Si vengo, es en serio.', brief: 'guerrero de tormenta con honda y rayo zigzag magenta; nube oscura detrás; frame de destello.' }
 ];
 var TECH = [
-  {
-    "cat": "Interfaz y código",
-    "name": "SVG + Web Animations API",
-    "use": "Presentación opcional y transiciones. La banda conserva las animaciones WebP y los gestos 2D de V2.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "SVG + Web Animations API",
-      "use": "Introducción saltable, fondo espacial y bailes 2D. Los cuatro dibujos de cada músico se cargan al abrir su ficha."
-    }
-  },
-  {
-    "cat": "Interfaz y código",
-    "name": "MP3 + Web Speech API",
-    "use": "Brisa narra en español o inglés con grabaciones ligeras y una voz del navegador como respaldo.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "MP3 + Web Speech API",
-      "use": "Brisa narra en español o inglés con grabaciones ligeras y una voz del navegador como respaldo."
-    }
-  },
-  {
-    "cat": "Interfaz y código",
-    "name": "HTML + CSS + JavaScript",
-    "use": "Interfaz estática con enlaces de estado y controles nativos. No requiere servidor de aplicación.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "HTML + CSS + JavaScript",
-      "use": "Interfaz estática con enlaces de estado y controles nativos. No requiere servidor de aplicación."
-    }
-  },
-  {
-    "cat": "Interfaz y código",
-    "name": "Canvas 2D",
-    "use": "Reduce imágenes a 28×16 celdas y dibuja series numéricas. Los archivos se procesan localmente.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "Canvas 2D",
-      "use": "Reduce imágenes a 28×16 celdas y dibuja series numéricas. Los archivos se procesan localmente."
-    }
-  },
-  {
-    "cat": "Interfaz y código",
-    "name": "Web Speech API",
-    "use": "Lectura opcional con voces disponibles del idioma. El texto permanece cuando no hay voz compatible.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "Web Speech API",
-      "use": "Lectura opcional con voces disponibles del idioma. El texto permanece cuando no hay voz compatible."
-    }
-  },
-  {
-    "cat": "Interfaz y código",
-    "name": "Vibration API",
-    "use": "Pulsos opcionales al probar la vibración, procesar archivos y seguir la intensidad de la música. Se limitan las repeticiones y se respeta el movimiento reducido.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "Vibration API",
-      "use": "Pulsos opcionales al probar la vibración, procesar archivos y seguir la intensidad de la música. Se limitan las repeticiones y se respeta el movimiento reducido."
-    }
-  },
-  {
-    "cat": "Interfaz y código",
-    "name": "FileReader + Blob + localStorage",
-    "use": "Lectura local de imágenes y ejemplo con el logo. Guarda idioma y preferencias; no guarda tus imágenes.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "FileReader + Blob + localStorage",
-      "use": "Lectura local de imágenes; guarda idioma y preferencias. Los archivos no se guardan en localStorage."
-    }
-  },
-  {
-    "cat": "Interfaz y código",
-    "name": "CSS + tipografías",
-    "use": "Diseño adaptable, foco y movimiento reducido. Barlow, Inter, IBM Plex Mono y Atkinson Hyperlegible locales; con fuentes de sistema de respaldo.",
-    "es": {
-      "cat": "Interfaz y código",
-      "name": "CSS + tipografías",
-      "use": "Diseño adaptable, foco y movimiento reducido. Barlow, Inter, IBM Plex Mono y Atkinson Hyperlegible locales; con fuentes de sistema de respaldo."
-    }
-  },
-  {
-    "cat": "Datos de la NASA",
-    "name": "EIC · SST Anomaly (SVS 5176)",
-    "use": "30 imágenes del Pacífico: 16 mayo 2024–3 octubre 2026. Son una selección almacenada, no una conexión diaria en vivo.",
-    "es": {
-      "cat": "Datos de la NASA",
-      "name": "EIC · SST Anomaly (SVS 5176)",
-      "use": "30 imágenes del Pacífico: 16 mayo 2024–3 octubre 2026. Son una selección almacenada, no una conexión diaria en vivo."
-    }
-  },
-  {
-    "cat": "Datos de la NASA",
-    "name": "NASA GIBS · GHRSST MUR",
-    "use": "30 mapas de anomalías de cinco episodios entre 2010 y 2023. Cada fecha corresponde al día 15 del mes.",
-    "es": {
-      "cat": "Datos de la NASA",
-      "name": "NASA GIBS · GHRSST MUR",
-      "use": "30 mapas de anomalías de cinco episodios entre 2010 y 2023. Cada fecha corresponde al día 15 del mes."
-    }
-  },
-  {
-    "cat": "Datos de la NASA",
-    "name": "NASA POWER",
-    "use": "Archivo mensual 1981–2024. Incluye datos históricos de lluvia de Chiclayo, 2015–2018.",
-    "es": {
-      "cat": "Datos de la NASA",
-      "name": "NASA POWER",
-      "use": "Archivo mensual 1981–2024. Incluye datos históricos de lluvia de Chiclayo, 2015–2018."
-    }
-  },
-  {
-    "cat": "Música y sonido",
-    "name": "Web Audio API",
-    "use": "Osciladores, filtros y envolventes sintetizan cinco instrumentos. Volumen y reverberación se cancelan al pausar o saltar.",
-    "es": {
-      "cat": "Música y sonido",
-      "name": "Web Audio API",
-      "use": "Osciladores, filtros y envolventes sintetizan cinco instrumentos. Volumen y reverberación se cancelan al pausar o saltar."
-    }
-  },
-  {
-    "cat": "Música y sonido",
-    "name": "Compositor por reglas",
-    "use": "Melodía utiliza escala, 4–6 acordes y tempo del protagonista. Datos usa niveles y tonos sin progresión armónica.",
-    "es": {
-      "cat": "Música y sonido",
-      "name": "Compositor por reglas",
-      "use": "Melodía utiliza escala, 4–6 acordes y tempo del protagonista. Datos usa niveles y tonos sin progresión armónica."
-    }
-  },
-  {
-    "cat": "Música y sonido",
-    "name": "ConvolverNode",
-    "use": "Reverberación generada localmente y salida independiente por músico, para silenciar también su cola sonora.",
-    "es": {
-      "cat": "Música y sonido",
-      "name": "ConvolverNode",
-      "use": "Reverberación generada localmente y salida independiente por músico, para silenciar también su cola sonora."
-    }
-  },
-  {
-    "cat": "Música y sonido",
-    "name": "Catálogo editorial de impactos v1",
-    "use": "Registros estáticos con fuente, territorio y mes. Solo la regla explícita de Pacora/marzo 2023 cambia el tempo.",
-    "es": {
-      "cat": "Música y sonido",
-      "name": "Catálogo editorial de impactos v1",
-      "use": "Registros estáticos con fuente, territorio y mes. Solo la regla explícita de Pacora/marzo 2023 cambia el tempo."
-    }
-  },
-  {
-    "cat": "Producción y revisión",
-    "name": "Python + ffmpeg",
-    "use": "Preparación de fotogramas y datos; empaquetado del sitio estático. No se descarga el video fuente durante la visita.",
-    "es": {
-      "cat": "Producción y revisión",
-      "name": "Python + ffmpeg",
-      "use": "Preparación de fotogramas y datos; empaquetado del sitio estático. No se descarga el video fuente durante la visita."
-    }
-  },
-  {
-    "cat": "Producción y revisión",
-    "name": "Node.js + Playwright",
-    "use": "Regresiones de controles, audio, idiomas, guías, errores y composición en Chromium. No reemplazan pruebas con usuarios.",
-    "es": {
-      "cat": "Producción y revisión",
-      "name": "Node.js + Playwright",
-      "use": "Regresiones de controles, audio, idiomas, guías, errores y composición en Chromium. No reemplazan pruebas con usuarios."
-    }
-  },
-  {
-    "cat": "Producción y revisión",
-    "name": "Git + GitHub",
-    "use": "Control de versiones del proyecto y publicación de la versión estática de EarthRhythm.",
-    "es": {
-      "cat": "Producción y revisión",
-      "name": "Git + GitHub",
-      "use": "Control de versiones del proyecto y publicación de la versión estática de EarthRhythm."
-    }
-  },
-  {
-    "cat": "Producción y revisión",
-    "name": "Asistencia de IA documentada",
-    "use": "El registro conserva Claude Design/Code y Whisper como usos históricos. Codex asiste esta revisión de interfaz y pruebas.",
-    "es": {
-      "cat": "Producción y revisión",
-      "name": "Asistencia de IA documentada",
-      "use": "El registro conserva Claude Design/Code y Whisper como usos históricos. Codex asiste esta revisión de interfaz y pruebas."
-    }
-  }
+  { cat: "Interfaz y código", name: "HTML + CSS + JavaScript", label: "La página que recorres",
+    use: "Elige discos, cambia de idioma y navega entre las secciones." },
+  { cat: "Interfaz y código", name: "Canvas 2D", label: "Del mapa a la cuadrícula",
+    use: "Resume la imagen en 28 columnas y 16 filas para llevar el color a la música." },
+  { cat: "Interfaz y código", name: "SVG + Web Animations API", label: "Movimiento de la interfaz",
+    use: "Anima la introducción y las transiciones. Los músicos bailan con dibujos 2D." },
+  { cat: "Interfaz y código", name: "MP3 + Web Speech API", label: "La voz de Brisa",
+    use: "Reproduce grabaciones en español e inglés. La síntesis del navegador sirve de respaldo si falta la reproducción de audio." },
+  { cat: "Interfaz y código", name: "Controles HTML", label: "Navegación con teclado",
+    use: "Usa Tab para recorrer botones y controles, y Enter o Espacio para activarlos." },
+  { cat: "Interfaz y código", name: "Vibration API", label: "Música que se siente",
+    use: "En teléfonos compatibles, los pulsos pueden seguir la música aunque el audio esté silenciado." },
+  { cat: "Interfaz y código", name: "FileReader + Blob + localStorage", label: "Tus imágenes y preferencias",
+    use: "Tu navegador procesa las imágenes y guarda tus ajustes de idioma y accesibilidad." },
+  { cat: "Interfaz y código", name: "CSS + tipografías", label: "Lectura a tu medida",
+    use: "Ajusta contraste, tamaño, tipografía o movimiento desde Accesibilidad." },
+  { cat: "Datos de la NASA", name: "NASA SVS 5176 · Earth Information Center", label: "El Pacífico reciente",
+    use: "30 mapas guardados del 16 de mayo de 2024 al 3 de octubre de 2026. Muestran cuánto cambió la temperatura superficial del mar respecto a lo habitual." },
+  { cat: "Datos de la NASA", name: "NASA GIBS · GHRSST MUR", label: "Episodios históricos",
+    use: "30 mapas de cinco episodios entre 2010 y 2023. Cada mapa corresponde al día 15 de su mes." },
+  { cat: "Datos de la NASA", name: "NASA POWER", label: "Lluvia en Chiclayo",
+    use: "La muestra de la prueba práctica usa datos mensuales de Chiclayo entre 2015 y 2018." },
+  { cat: "Música y sonido", name: "Web Audio API", label: "Cinco instrumentos",
+    use: "El navegador genera el sonido de cada músico. Puedes escuchar a la banda o silenciar instrumentos por separado." },
+  { cat: "Música y sonido", name: "Compositor por reglas", label: "Melodía y Datos",
+    use: "Melodía usa la escala, los acordes y el ritmo del protagonista. Datos convierte los niveles de color en tonos." },
+  { cat: "Música y sonido", name: "ConvolverNode", label: "El eco del escenario",
+    use: "Cada músico tiene su propia reverberación. Si lo silencias, también se corta su eco." },
+  { cat: "Música y sonido", name: "Catálogo editorial de impactos v1", label: "Una historia que cambia el ritmo",
+    use: "El registro de Pacora de marzo de 2023 activa un cambio de velocidad en la música." },
+  { cat: "Producción y revisión", name: "Python + ffmpeg", label: "Preparar las imágenes",
+    use: "Extraen los fotogramas y preparan los archivos estáticos que usa la web." },
+  { cat: "Producción y revisión", name: "Node.js + Playwright", label: "Probar la experiencia",
+    use: "Las pruebas comprueban los controles, el audio, los idiomas y el espacio disponible en pantalla." },
+  { cat: "Producción y revisión", name: "Git + GitHub", label: "Registrar los cambios",
+    use: "El repositorio conserva el código, los datos y el historial de cambios de EarthRhythm." },
+  { cat: "Producción y revisión", name: "Vercel y GitHub Pages", label: "Publicar las versiones",
+    use: "Vercel sirve la página principal. GitHub Pages conserva versiones de prueba del proyecto." }
 ];
 var STEPS = [
  {title:'Un mapa con fecha',body:'Cada disco reúne seis mapas de la NASA. Muestran si el mar estuvo más frío o más cálido de lo habitual.'},
@@ -3718,63 +3588,25 @@ var MUSIC_EN = {
 };
 var CAT_EN = { 'Interfaz y código': 'Interface and code', 'Datos de la NASA': 'NASA data', 'Música y sonido': 'Music and sound', 'Producción y revisión': 'Production and review' };
 var TECH_EN = {
-  "SVG + Web Animations API": {
-    "use": "Optional presentation and transitions. The band keeps V2’s animated WebP portraits and 2D gestures."
-  },
-  "MP3 + Web Speech API": {
-    "use": "Brisa narrates in English or Spanish using lightweight recordings and a browser voice fallback."
-  },
-  "HTML + CSS + JavaScript": {
-    "use": "Static interface with state bindings and native controls. No application server is required."
-  },
-  "Canvas 2D": {
-    "use": "Reduces images to 28×16 cells and draws numeric series. Files are processed locally."
-  },
-  "Web Speech API": {
-    "use": "Optional reading with available voices matching the language. Text remains when no matching voice exists."
-  },
-  "Vibration API": {
-    "use": "Optional pulses when testing vibration, processing files and following the intensity of the music. Requests are limited and respect reduced motion."
-  },
-  "FileReader + Blob + localStorage": {
-    "use": "Local images and an example with the logo. Stores language and preferences, not your images."
-  },
-  "CSS + tipografías": {
-    "use": "Responsive layout, focus and reduced motion. Local Barlow, Inter, IBM Plex Mono and Atkinson Hyperlegible; system fonts provide fallbacks."
-  },
-  "EIC · SST Anomaly (SVS 5176)": {
-    "use": "30 Pacific images: 16 May 2024–3 October 2026. This is a stored selection, not a daily live feed."
-  },
-  "NASA GIBS · GHRSST MUR": {
-    "use": "30 anomaly maps from five episodes between 2010 and 2023. Each date corresponds to the 15th of its month."
-  },
-  "NASA POWER": {
-    "use": "Monthly file for 1981–2024. Includes historical rainfall data for Chiclayo, 2015–2018."
-  },
-  "Web Audio API": {
-    "use": "Oscillators, filters and envelopes synthesize five instruments. Volume and reverb are cancelled on pause or seek."
-  },
-  "Compositor por reglas": {
-    "use": "Melody uses the lead’s scale, 4–6 chords and tempo. Data uses levels and tones without a chord progression."
-  },
-  "ConvolverNode": {
-    "use": "Locally generated reverb and an independent output per musician, so muting also cuts its sound tail."
-  },
-  "Catálogo editorial de impactos v1": {
-    "use": "Static records with source, territory and month. Only the explicit Pacora/March 2023 rule changes tempo."
-  },
-  "Python + ffmpeg": {
-    "use": "Prepares frames and data; packages the static site. The source video is not downloaded during a visit."
-  },
-  "Node.js + Playwright": {
-    "use": "Regression checks for controls, audio, languages, guides, errors and layout in Chromium. They do not replace user testing."
-  },
-  "Git + GitHub": {
-    "use": "Version control and publication of the static EarthRhythm site."
-  },
-  "Asistencia de IA documentada": {
-    "use": "The log preserves Claude Design/Code and Whisper as historical uses. Codex assists this interface revision and testing."
-  }
+  "HTML + CSS + JavaScript": {"label": "The site you explore", "use": "Choose discs, switch languages and move between sections."},
+  "Canvas 2D": {"label": "From map to grid", "use": "Summarizes the image in 28 columns and 16 rows to turn color into music."},
+  "SVG + Web Animations API": {"label": "Motion on the site", "use": "Animates the intro and transitions. The musicians dance using 2D artwork."},
+  "MP3 + Web Speech API": {"label": "Brisa’s voice", "use": "Plays Spanish and English recordings. Browser speech is a fallback when audio playback is unavailable."},
+  "Controles HTML": {"label": "Keyboard navigation", "use": "Use Tab to move through buttons and controls, and Enter or Space to activate them.", "name": "HTML controls"},
+  "Vibration API": {"label": "Music you can feel", "use": "On compatible phones, pulses can follow the music even when audio is muted."},
+  "FileReader + Blob + localStorage": {"label": "Your images and preferences", "use": "Your browser processes images and saves your language and accessibility settings."},
+  "CSS + tipografías": {"label": "Reading your way", "use": "Adjust contrast, text size, font or motion from Accessibility.", "name": "CSS + fonts"},
+  "NASA SVS 5176 · Earth Information Center": {"label": "The recent Pacific", "use": "30 snapshots from May 16, 2024 through October 3, 2026. They show how far sea surface temperatures were from usual."},
+  "NASA GIBS · GHRSST MUR": {"label": "Past episodes", "use": "30 maps from five episodes between 2010 and 2023. Each map is from the 15th of its month."},
+  "NASA POWER": {"label": "Rainfall in Chiclayo", "use": "The practice example uses monthly rainfall data for Chiclayo from 2015 to 2018."},
+  "Web Audio API": {"label": "Five instruments", "use": "The browser generates each musician’s sound. Listen to the whole band or mute instruments individually."},
+  "Compositor por reglas": {"label": "Melody and Data", "use": "Melody uses the lead musician’s scale, chords and rhythm. Data turns color levels into tones.", "name": "Rule-based composition"},
+  "ConvolverNode": {"label": "The stage’s echo", "use": "Each musician has their own reverb. Muting a musician also cuts their echo."},
+  "Catálogo editorial de impactos v1": {"label": "A story that changes the tempo", "use": "The Pacora record for March 2023 triggers a change in the music’s tempo.", "name": "Editorial impact catalog v1"},
+  "Python + ffmpeg": {"label": "Preparing the images", "use": "Extracts frames and prepares the static files used by the site."},
+  "Node.js + Playwright": {"label": "Testing the experience", "use": "Tests check the controls, audio, languages and available screen space."},
+  "Git + GitHub": {"label": "Tracking changes", "use": "The repository holds the code, data and change history for EarthRhythm."},
+  "Vercel y GitHub Pages": {"label": "Publishing versions", "use": "Vercel serves the main site. GitHub Pages hosts preview versions of the project.", "name": "Vercel and GitHub Pages"}
 };
 var STEPS_EN = [
  {title:'A dated map',body:'Each disc includes six NASA maps. They show where the ocean was cooler or warmer than usual.'},
@@ -3870,25 +3702,22 @@ var TX = {
     "methodSourcesTitle": "Consultar las fuentes",
     "originalPalette": "Paleta original",
     "monthlyData": "Datos mensuales",
-    "techKicker": "Tecnología",
     "techFilterAria": "Filtrar tecnologías",
-    "techNote": "Detalle técnico",
-    "techEmpty": "No hay herramientas con este filtro en la categoría. Elige «Todo» para verlas.",
     "module": "Módulo",
     "credTitle": "Créditos y uso de IA",
     "credData": "Datos",
-    "credDataP1": "Fotogramas de la visualización del Earth Information Center «Sea Surface Temperature (SST) Anomaly – Near Real Time» (NASA SVS 5176, variante Pacífico, 16 may 2024 – 3 oct 2026), recortados al Pacífico sudeste; datos JPL MUR SST. Crédito: NASA’s Scientific Visualization Studio.",
+    "credDataP1": "El Estudio de Visualización Científica de la NASA (SVS) publica la visualización 5176 del Pacífico usando el análisis MUR de NASA JPL. EarthRhythm recorta los mapas al Pacífico sudeste.",
     "credDataP2": "Los discos «NASA GIBS» (2010–2023) usan NASA JPL GHRSST L4 MUR 0,25° SST Anomalies, día 15 de cada mes, vía NASA GIBS/Worldview.",
     "credDataScale": "La barra original de EIC va de −4 a +4 °C. En GIBS, los extremos agrupan valores bajo −3 °C y desde +3 °C. La cuadrícula estima diferencias a partir de los colores de cada imagen.",
     "credScience": "Fuentes científicas",
     "credDev": "Desarrollo y tecnología",
     "credTools": "Herramientas principales",
     "credInstitution": "Aviso institucional",
-    "credDevP": "Interfaz en HTML, CSS y JavaScript. Canvas 2D analiza los fotogramas y Web Audio sintetiza los instrumentos en el navegador. La versión estática para GitHub Pages se genera con scripts/build_pages.py.",
+    "credDevP": "El equipo de EarthRhythm diseñó la experiencia, las ilustraciones 2D y la banda. El navegador convierte los mapas en música con Canvas 2D y Web Audio.",
     "credAi": "Declaración de uso de IA",
     "credAiP": "El registro del proyecto documenta Claude Design y Claude Code para planificación y prototipos, y Whisper para transcribir la orientación. Esta revisión utiliza Codex para código y pruebas, y recupera las ilustraciones 2D del equipo. Los personajes y sus historias son de ficción.",
     "notice": "Aviso",
-    "noticeP": "Proyecto independiente de sonificación de datos oceánicos.",
+    "noticeP": "EarthRhythm es un proyecto independiente que convierte datos oceánicos en música. Usa fuentes públicas de la NASA.",
     "back": "Atrás",
     "prevScreen": "Pantalla anterior",
     "nextScreen": "Pantalla siguiente",
@@ -3991,25 +3820,22 @@ var TX = {
     "methodSourcesTitle": "Consult the sources",
     "originalPalette": "Original palette",
     "monthlyData": "Monthly data",
-    "techKicker": "Technology",
     "techFilterAria": "Filter technologies",
-    "techNote": "Technical detail",
-    "techEmpty": "No tools in this category match the filter. Choose “All” to see them.",
     "module": "Module",
     "credTitle": "Credits and AI use",
     "credData": "Data",
-    "credDataP1": "Frames from the Earth Information Center visualization “Sea Surface Temperature (SST) Anomaly – Near Real Time” (NASA SVS 5176, Pacific variant, 16 May 2024 – 3 Oct 2026), cropped to the southeast Pacific; JPL MUR SST data. Credit: NASA’s Scientific Visualization Studio.",
+    "credDataP1": "NASA’s Scientific Visualization Studio publishes Pacific visualization 5176 using NASA JPL’s MUR analysis. EarthRhythm crops the maps to the southeastern Pacific.",
     "credDataP2": "The “NASA GIBS” discs (2010–2023) use NASA JPL GHRSST L4 MUR 0.25° SST Anomalies, the 15th of each month, via NASA GIBS/Worldview.",
     "credDataScale": "The EIC color bar runs from −4 to +4 °C. GIBS groups values below −3 °C and at or above +3 °C at the ends of its scale. The grid estimates differences from each image’s colors.",
     "credScience": "Scientific sources",
     "credDev": "Development and technology",
     "credTools": "Main tools",
     "credInstitution": "Institutional notice",
-    "credDevP": "Interface built with HTML, CSS and JavaScript. Canvas 2D analyzes the frames and Web Audio synthesizes the instruments in the browser. The static GitHub Pages version is generated with scripts/build_pages.py.",
+    "credDevP": "The EarthRhythm team designed the experience, the 2D illustrations and the band. The browser turns maps into music with Canvas 2D and Web Audio.",
     "credAi": "AI use statement",
     "credAiP": "The project log documents Claude Design and Claude Code for planning and prototypes, and Whisper for transcribing the orientation. This revision uses Codex for code and testing and restores the team’s 2D illustrations. The characters and stories are fictional.",
     "notice": "Notice",
-    "noticeP": "Independent ocean-data sonification project.",
+    "noticeP": "EarthRhythm is an independent project that turns ocean data into music. It uses public NASA sources.",
     "back": "Back",
     "prevScreen": "Previous screen",
     "nextScreen": "Next screen",
@@ -4050,7 +3876,7 @@ function applyLang() {
   Object.keys(MUSIC).forEach(function (k) { localize(MUSIC[k], MUSIC_EN[k]); if (MUSIC[k].dark) localize(MUSIC[k].dark, MUSIC_EN[k + '_dark']); });
   TECH.forEach(function (t) {
     var base = t.es || t, en = TECH_EN[base.name] || {};
-    localize(t, Object.assign({ cat: CAT_EN[base.cat] || base.cat, name: base.name, note: base.note, mod: base.mod }, en));
+    localize(t, Object.assign({ cat: CAT_EN[base.cat] || base.cat, name: base.name }, en));
   });
   STEPS.forEach(function (x, i) { localize(x, STEPS_EN[i]); });
   Object.keys(ROUTE_LOOK).forEach(function (k) { localize(ROUTE_LOOK[k], { title: ROUTE_EN[k] }); });
@@ -4459,7 +4285,15 @@ class Component extends DCLogic {
     var directLink = ['#banda', '#escuchar', '#listen', '#jugar', '#play'].includes(window.location?.hash);
     var completedWelcome = false;
     try { completedWelcome = localStorage.getItem('ts_welcome_seen') === '1'; } catch (ignored) {}
-    this.state.showWelcome = !completedWelcome && !this.preferencesConfigured && !directLink;
+    var firstVisit = !completedWelcome && !this.preferencesConfigured;
+    this.state.showWelcome = firstVisit && !directLink;
+    if (firstVisit) {
+      if (typeof preferences?.values.voice !== 'boolean') this.state.voice = true;
+      if (!this.motionExplicit) {
+        this.motionExplicit = true;
+        this.state.reducedMotion = false;
+      }
+    }
     if (completedWelcome && !directLink) {
       this.state.tab = 'juke';
       this.state.sub = 0;
@@ -4709,9 +4543,7 @@ class Component extends DCLogic {
   }
   focusPreferences() { document.getElementById('preferences-title')?.focus({ preventScroll: true }); }
   openPreferences(event) {
-    const menu = document.getElementById('tour-a11y');
-    this.preferencesReturnFocus = this.state.showWelcome ? event?.currentTarget : menu?.querySelector('summary');
-    if (menu) menu.open = false;
+    this.preferencesReturnFocus = event?.currentTarget;
     this.stopSpeech();
     this.setState({ showPreferences: true, preferencePage: 0 }, () => {
       this.setPreferencesInert(true);
@@ -4739,7 +4571,10 @@ class Component extends DCLogic {
   completeWelcome() {
     if (!this.pendingWelcome || this.cinema?.root || document.hidden || this.disposed) return;
     this.pendingWelcome = false;
-    this.goTab('juke');
+    this.setState({ tab: 'juke', sub: 0, route: ROUTE_LOOK.juke }, () => {
+      if (!this.tutorialProgress?.completed) this.startTutorial(false);
+      else document.getElementById('disc-library-title')?.focus({ preventScroll: true });
+    });
   }
   entryPreferencesVm() {
     var s = this.state, self = this;
@@ -4748,7 +4583,7 @@ class Component extends DCLogic {
       ['contrast', T('Alto contraste', 'High contrast')],
       ['big', T('Texto grande', 'Large text')], ['legible', T('Fuente legible', 'Readable font')],
       ['voice', T('Modo voz', 'Voice mode'), T('Lee una vez cada paso del tutorial.', 'Reads each tutorial step once.')],
-      ['sfx', T('Efectos sonoros', 'Sound effects')],
+      ['sfx', T('Efectos de sonido', 'Sound effects')],
       ['theme', T('Modo claro', 'Light mode')], ['vibe', T('Vibración', 'Vibration')]
     ];
     var items = controls.map(function ([key, label, hint]) {
@@ -4775,7 +4610,6 @@ class Component extends DCLogic {
       nextLabel: T('Siguiente', 'Next'),
       prev: function () { self.setState({ preferencePage: Math.max(0, page - 1) }, () => self.focusPreferences()); },
       next: function () { self.setState({ preferencePage: Math.min(pages - 1, page + 1) }, () => self.focusPreferences()); },
-      settingsLabel: T('Todos los ajustes', 'All settings'),
       closeLabel: T('Cerrar', 'Close'),
       open: function (event) { self.openPreferences(event); }, close: function () { self.closePreferences(); }
     };
@@ -5739,7 +5573,7 @@ class Component extends DCLogic {
     var groups = {}, order = [];
     TECH.forEach(function (t) {
       if (!groups[t.cat]) { groups[t.cat] = []; order.push(t.cat); }
-      groups[t.cat].push({ name: t.name, use: t.use, note: t.note || '', hasNote: !!t.note });
+      groups[t.cat].push({ name: t.name, label: t.label, use: t.use });
     });
     return order.map(function (c) { return { title: c, items: groups[c], nasa: c === T('Datos de la NASA', 'NASA data') }; });
   }
@@ -6644,7 +6478,7 @@ class Component extends DCLogic {
     var tog = function (k) { return function () { self.setPreference(k, !self.state[k]); }; };
     var gameAvailable = !!this.rhythmQuery?.matches, isGame = s.tab === 'game', rhythmMode = isGame && s.sub === 1;
     var tabDef = PAGE_ORDER.map(function (k) { return { k: k, l: ROUTE_LOOK[k].title }; });
-    var a11yDef = [{ k: 'contrast', l: T('Alto contraste', 'High contrast') }, { k: 'big', l: T('Texto grande', 'Large text') }, { k: 'legible', l: T('Fuente legible', 'Readable font') }, { k: 'voice', l: T('Modo voz', 'Voice mode') }, { k: 'vibe', l: T('Vibración', 'Vibration') }, { k: 'sfx', l: T('Efectos de sonido', 'Sound effects') }, { k: 'reducedMotion', l: T('Movimiento reducido', 'Reduced motion') }];
+    var a11yDef = [{ k: 'contrast', l: T('Alto contraste', 'High contrast') }, { k: 'big', l: T('Texto grande', 'Large text') }, { k: 'legible', l: T('Fuente legible', 'Readable font') }, { k: 'voice', l: T('Modo voz', 'Voice mode') }, { k: 'vibe', l: T('Vibración', 'Vibration') }, { k: 'sfx', l: T('Efectos de sonido', 'Sound effects') }, { k: 'reducedMotion', l: T('Usar animaciones', 'Use animations') }];
     var activeN = BAND.filter(function (b) { return !s.mute[b.k]; }).length;
     var isJuke = s.tab === 'juke', isData = s.tab === 'how' && s.sub === 0, hasCustom = !!s.custom;
     var gl = this.glowFor(a);
@@ -6732,6 +6566,14 @@ class Component extends DCLogic {
       extra: function () { if (!s.playing) self.play(); } };
     var titles = this.subTitles(), cnt = titles.length, sub = Math.min(s.sub, cnt - 1), pgOrder = PAGE_ORDER, pgNext = s.tab === 'home' ? 'juke' : pgOrder[(pgOrder.indexOf(s.tab) + 1) % pgOrder.length];
     var lastSub = sub === cnt - 1, techPgs = s.tab === 'tech' ? this.techPages() : [], techCur = techPgs[sub] || { title: '', items: [] };
+    var techViews = s.tab === 'tech' ? [
+      { kind: 'interface', intro: T('Así prepara tu navegador las imágenes, el sonido y los controles.', 'Here’s how your browser handles images, sound and controls.'), action: T('Probar con una imagen', 'Try it with an image'), tab: 'how' },
+      { kind: 'nasa', intro: T('De aquí vienen los mapas del Pacífico y la muestra de lluvia.', 'These are the sources for the Pacific maps and the rainfall example.') },
+      { kind: 'music', intro: T('Así se convierte el color en notas para los cinco músicos.', 'Here’s how colors become notes for all five musicians.'), action: T('Escuchar un disco', 'Listen to a disc'), tab: 'juke' },
+      { kind: 'production', intro: T('Las herramientas con las que preparamos, probamos y publicamos EarthRhythm.', 'The tools we use to prepare, test and publish EarthRhythm.'), action: T('Ver el repositorio', 'View the repository'), url: 'https://github.com/pierovelezzz/EarthRhythm' },
+      { kind: 'credits', intro: T('Quién creó el proyecto y en qué partes se usó inteligencia artificial.', 'Who made the project and where artificial intelligence was used.'), action: T('Consultar créditos', 'View project credits'), url: 'https://github.com/pierovelezzz/EarthRhythm/blob/main/docs/CREDITOS.md' }
+    ] : [];
+    var techView = techViews[sub] || {};
     var topics = s.tab === 'how' || s.tab === 'tech';
     var navVm = { label: titles[sub], n: sub + 1, total: cnt, compact: cnt > 3 ? 'compact' : '',
       counter: ('0' + (sub + 1)).slice(-2) + ' / ' + ('0' + cnt).slice(-2),
@@ -6806,7 +6648,7 @@ class Component extends DCLogic {
         on: !!s.showWelcome, explorer: !s.showWelcome,
         title: T('No solo visualizamos el planeta. Le damos vida.', 'We don’t just visualize our planet. We bring it to life.'),
         body: T('Descubre cómo cambia el Pacífico con mapas de la NASA, música y exploración interactiva.', 'Explore the changing Pacific through NASA maps, music and interactive discovery.'),
-        startLabel: T('Empezar a explorar', 'Start exploring'), note: T('Fácil de entender. Accesible para todos.', 'Easy to understand. Accessible to everyone.'),
+        startLabel: T('Empezar a explorar', 'Start exploring'),
         motionOn: !reducedMotion, motionLabel: T('Usar animaciones', 'Use animations'),
         changeMotion: function (event) { self.setPreference('reducedMotion', !event.target.checked); },
         start: function () { self.startWelcome(); }
@@ -6879,7 +6721,7 @@ class Component extends DCLogic {
       onNavKey: function (event) { self.navKey(event); },
       headerClass: s.big || s.legible ? 'readable-nav' : '',
       tabs: tabDef.map(function (t) { var on = s.tab === t.k; return { ic: self.icons[t.k], label: t.l, short: { juke: T('Escuchar','Listen'), band: T('Banda','Band'), how: T('Cómo funciona','How does it work?'), tech: T('Tecnología','Technology') }[t.k] || t.l, cur: on ? 'page' : 'false', bg: on ? th.accent : th.panel, fg: on ? '#0A0D1A' : th.fg, border: on ? th.accent : th.line, go: function () { self.goTab(t.k); } }; }),
-      a11y: a11yDef.filter(function (o) { return o.k !== 'vibe' || self.hapticVm().visible; }).map(function (o) { var on = o.k === 'reducedMotion' ? reducedMotion : !!s[o.k]; return { ic: self.icons[{ contrast: 'contrast', big: 'bigtext', legible: 'legible', voice: 'voice', vibe: 'vibe', sfx: 'voice', reducedMotion: 'clock' }[o.k]], label: o.l, on: on, disabled: o.k === 'vibe' && !self.haptics.supported(), bg: on ? th.fg : 'transparent', fg: on ? th.bg : th.fg, toggle: o.k === 'reducedMotion' ? toggleMotion : tog(o.k) }; }),
+      a11y: a11yDef.filter(function (o) { return o.k !== 'vibe' || self.hapticVm().visible; }).map(function (o) { var on = o.k === 'reducedMotion' ? !reducedMotion : !!s[o.k]; return { ic: self.icons[{ contrast: 'contrast', big: 'bigtext', legible: 'legible', voice: 'voice', vibe: 'vibe', sfx: 'voice', reducedMotion: 'clock' }[o.k]], label: o.l, on: on, disabled: o.k === 'vibe' && !self.haptics.supported(), bg: on ? th.fg : 'transparent', fg: on ? th.bg : th.fg, toggle: o.k === 'reducedMotion' ? toggleMotion : tog(o.k) }; }),
       sets: [{ key: 'eic', label: 'EIC', years: '2024–26' }, { key: 'prev', label: 'NASA GIBS', years: '2010–23' }].map(function (o) {
         var on = s.set === o.key;
         return { label: o.label, years: o.years, on: on, pick: function () { if (!on && self.settleArrivedRoute()) self.applySet(o.key); } };
@@ -6904,7 +6746,9 @@ class Component extends DCLogic {
       gridAfter: s.col < 0 ? 0 : (27 - s.col) / 28,
       stats: a ? { warm: a.warm.toFixed(2), cold: a.cold.toFixed(2), hot: Math.round(a.hot * 100) + '%', coast: referenceCoast && a.coastPixels > 0 ? (a.coast >= 0 ? '+' : '') + a.coast.toFixed(1) : '—' } : { warm: '…', cold: '…', hot: '…', coast: referenceCoast ? '…' : '—' },
       tour: tourVm, nav: navVm, scr: scrVm, scrCls: scrCls,
-      techCur: { title: techCur.title, items: techCur.items, nasa: !!techCur.nasa, num: ('0' + (sub + 1)).slice(-2) },
+      techCur: Object.assign({}, techCur, techView, {
+        internal: !!techView.tab, external: !!techView.url, open: function () { self.goTab(techView.tab); }
+      }),
       bandViewClass: isBand ? 'band-view' : '',
       bandCur: Object.assign({}, band[bandIndex], this.characterVm(bandKey), {
         previewOn: s.previewKey === bandKey,

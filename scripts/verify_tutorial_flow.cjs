@@ -54,10 +54,13 @@ async function main(){
    await page.keyboard.press('Escape');
    // First visit keeps the tutorial available after the optional introduction.
    await page.evaluate(()=>{localStorage.removeItem('ts_tutorial');localStorage.removeItem('ts_prefs');localStorage.removeItem('ts_welcome_seen');});await page.goto(base+'?first-visit');
+   const motion=page.locator('.welcome-motion input');
+   assert(await motion.isChecked(),'Welcome defaults to animations even with a reduced-motion system setting');
+   await motion.uncheck();
    await page.locator('.welcome-start').click();
    await page.locator('.discgrid .dcard').first().waitFor();
    assert.equal(await page.locator('.ts-cinema').count(),0,'Reduced motion goes directly to the discs');
-   await startFromHelp();await step(1);
+   await step(1);
    report.checks.push({width,lang,singleContextCard:true,pauseResume:true,reload:true,withoutSound:true,completeAndRestart:true,firstVisit:true});console.log('PASS tutorial',width,lang);await context.close();
   }
  }finally{fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(report,null,2));await browser.close();}
