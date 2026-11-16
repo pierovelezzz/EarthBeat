@@ -2180,13 +2180,37 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog, #brisa-ai-dialog) .px .pla
 .px.app[data-contrast="true"] .brisa-ai-role{color:var(--fg)}
 .px .brisa-ai-dialog .btn.quiet,.px .brisa-ai-spot-badge .btn.quiet{border-color:var(--line);color:var(--fg)}
 .px .brisa-ai-dialog .kicker{color:var(--muted)}
+.px .brisa-ai-resizer{position:absolute;top:0;bottom:0;left:-6px;width:12px;cursor:ew-resize;z-index:235;touch-action:none;display:flex;align-items:center;justify-content:center}
+.px .brisa-ai-resizer::after{content:"";width:4px;height:52px;border-radius:999px;background:var(--line);opacity:.8;transition:background-color .15s,transform .15s,opacity .15s}
+.px .brisa-ai-resizer:hover::after,.px.app.brisa-ai-resizing .brisa-ai-resizer::after{background:var(--accent);opacity:1;transform:scaleY(1.25)}
+.px.app.brisa-ai-resizing{user-select:none;cursor:ew-resize}
+@media(max-width:859px){.px .brisa-ai-resizer{display:none}}
+.px .band-voice-btn{width:auto;min-width:44px;padding:6px 14px;display:inline-flex;align-items:center;gap:8px;letter-spacing:.08em}
+.px.app[data-theme="light"] .lede,.px.app[data-theme="light"] .credit-section p,.px.app[data-theme="light"] .credit-heading .credit-index,.px.app[data-theme="light"] .credit-section .credit-review{color:var(--muted)}
+.px.app[data-theme="light"] .credit-heading svg,.px.app[data-theme="light"] .credit-tools,.px.app[data-theme="light"] .signal-state.on{color:var(--fg)}
+.px.app[data-theme="light"] .credit-section,.px.app[data-theme="light"] .drop{border-color:var(--line)}
+.px.app[data-theme="light"] .drop{background:color-mix(in srgb,var(--fg) 3%,var(--panel))}
+.px.app[data-theme="light"] .btn.quiet{border-color:var(--line);color:var(--fg)}
+.px.app[data-theme="light"] .amber,.px.app[data-theme="light"] .eyebrow,.px.app[data-theme="light"] .guidefab .glabel{color:#785000}
+.px.app[data-theme="light"] .top,.px.app[data-theme="light"] .bar,.px.app[data-theme="light"] .bottomnav.with-pages{background:rgba(245,247,250,.96);border-color:var(--line)}
+.px.app[data-theme="light"] details.menu>summary,.px.app[data-theme="light"] .langsw{border-color:var(--line);color:var(--fg)}
+.px.app[data-theme="light"] .langsw button:hover,.px.app[data-theme="light"] .steps button:hover,.px.app[data-theme="light"] .steps button.on{color:var(--fg);border-bottom-color:var(--fg)}
+.px.app[data-theme="light"] .langsw button[aria-pressed="true"],.px.app[data-theme="light"] .seg button[aria-pressed="true"],.px.app[data-theme="light"] .engines button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.px.app[data-theme="light"] .dcard,.px.app[data-theme="light"] .bchip,.px.app[data-theme="light"] .lead,.px.app[data-theme="light"] .status{background:var(--panel);border-color:var(--line);color:var(--fg)}
+.px.app[data-theme="light"] .dcard[aria-pressed="true"]{background:var(--surface);border-color:var(--fg)}
+.px.app[data-theme="light"] .bsel{background:var(--panel);color:var(--muted);border-color:var(--line)}
+.px.app[data-theme="light"] .bsel[aria-pressed="true"]{color:var(--fg);border-color:var(--swatch);border-bottom:3px solid var(--swatch);background:linear-gradient(0deg,color-mix(in srgb,var(--swatch) 18%,var(--panel)),var(--panel));box-shadow:0 2px 8px rgba(15,32,56,.08)}
+.px.app[data-theme="light"]:not([data-contrast="true"]) .bshow{background:var(--panel);border-color:var(--line);box-shadow:0 6px 20px rgba(15,32,56,.08)}
+.px.app[data-theme="light"]:not([data-contrast="true"]) .bscene{background:radial-gradient(ellipse at 50% 62%,color-mix(in srgb,var(--band-light) 22%,#101b2d),#0b1322 76%);border-radius:6px;margin-inline:8px}
+.px.app[data-theme="light"] .bsummary,.px.app[data-theme="light"] .bstory{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.px.app[data-theme="light"] .bquote{background:color-mix(in srgb,var(--band) 10%,var(--panel));color:var(--fg);border-left:3px solid var(--band);padding:8px 12px;border-radius:0 6px 6px 0}
 @media(forced-colors:active){
   .px .brisa-ai-dialog,.px .brisa-ai-spot-badge,.px .brisa-ai-trigger,.px .tour-ai-open,.px .brisa-ai-chip{border-color:CanvasText;background:Canvas;color:CanvasText}
   .px .brisa-ai-voice-toggle[aria-pressed="true"],.px .brisa-ai-play-btn[aria-pressed="true"]{background:Highlight;color:HighlightText}
 }
 </style>
 </helmet>
-<div class="px app main-edition {{bandViewClass}} {{brisaDockClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}">
+<div class="px app main-edition {{bandViewClass}} {{brisaDockClass}} {{motionClass}}" data-theme="{{theme.mode}}" data-contrast="{{highContrast}}" data-motion-mode="{{motionMode}}" style="--bg: {{th.bg}}; --panel: {{th.panel}}; --surface: {{th.surface}}; --line: {{th.line}}; --fg: {{th.fg}}; --muted: {{th.muted}}; --accent: {{th.accent}}; --hot: {{th.hot}}; --cold: {{th.cold}}; --mag: {{th.magenta}}; --head: {{th.headFont}}; --body: {{th.bodyFont}}; --section: {{sectionColor}}; font-size: {{th.fs}}; {{brisaDockVars}}">
 
 <sc-if value="{{showBg}}">
 <div class="skyfix space-sky" aria-hidden="true" inert>
@@ -2587,7 +2611,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog, #brisa-ai-dialog) .px .pla
 </figcaption>
 </figure>
 <div id="tour-binfo" class="binfo">
-<button type="button" class="btn sm section-voice" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
+<button type="button" class="btn sm section-voice band-voice-btn" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-pressed="{{speaking}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"></path><path class="speaker-waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg><span>{{sectionVoiceLabel}}</span></button>
 <sc-if value="{{audioError}}"><p role="alert" class="small">{{audioError}}</p></sc-if>
 <p role="status" class="small">{{bandCur.previewStatus}}</p>
 <sc-if value="{{bandCur.previewMuted}}"><button type="button" class="btn sm" onClick="{{bandCur.previewUnmute}}">{{bandCur.previewUnmuteLabel}}</button></sc-if>
@@ -2764,6 +2788,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog, #brisa-ai-dialog) .px .pla
 </div>
 </sc-if>
 <aside id="brisa-ai-dialog" class="brisa-ai-dialog" role="dialog" aria-modal="false" aria-labelledby="brisa-ai-title" aria-describedby="brisa-ai-subtitle" tabindex="-1">
+<div id="brisa-ai-resizer" class="brisa-ai-resizer" aria-hidden="true" title="{{tx.brisaResizeHint}}" onPointerDown="{{brisaAi.startResize}}" onDblClick="{{brisaAi.resetWidth}}"></div>
 <header class="brisa-ai-head">
 <div class="brisa-ai-head-top">
 <div class="brisa-ai-identity">
@@ -3844,7 +3869,8 @@ var TX = {
     "brisaSpotBtn": "Guía visual",
     "brisaSpotReplay": "Ver en pantalla",
     "brisaSpotNext": "Siguiente",
-    "brisaSpotClose": "Cerrar guía"
+    "brisaSpotClose": "Cerrar guía",
+    "brisaResizeHint": "Arrastra el borde para ajustar el ancho (doble clic para restablecer)"
   },
   "en": {
     "brandAria": "EarthRhythm, go home",
@@ -4000,7 +4026,8 @@ var TX = {
     "brisaSpotBtn": "Visual guide",
     "brisaSpotReplay": "Show on screen",
     "brisaSpotNext": "Next",
-    "brisaSpotClose": "Close guide"
+    "brisaSpotClose": "Close guide",
+    "brisaResizeHint": "Drag edge to resize panel (double-click to reset)"
   }
 };
 
@@ -4409,10 +4436,13 @@ function readBrisaAiSettings() {
 }
 function writeBrisaAiSettings(settings) {
   try {
+    var prev = readBrisaAiSettings();
+    var width = (settings && settings.panelWidth !== undefined) ? (Number(settings.panelWidth) || 0) : (Number(prev.panelWidth) || 0);
     localStorage.setItem('ts_brisa_ai', JSON.stringify({
-      customOrKey: String(settings?.customOrKey || '').trim(),
-      customElKey: String(settings?.customElKey || '').trim(),
-      voiceId: String(settings?.voiceId || '').trim()
+      customOrKey: String(settings?.customOrKey ?? prev.customOrKey ?? '').trim(),
+      customElKey: String(settings?.customElKey ?? prev.customElKey ?? '').trim(),
+      voiceId: String(settings?.voiceId ?? prev.voiceId ?? '').trim(),
+      panelWidth: width
     }));
     return true;
   } catch (ignored) { return false; }
@@ -4423,6 +4453,7 @@ function brisaAiConfig() {
   var voices = Array.isArray(base.elevenlabsVoices) && base.elevenlabsVoices.length ? base.elevenlabsVoices : BRISA_DEFAULT_VOICES;
   var rawVoice = String(saved.voiceId || base.defaultVoiceId || voices[0].id || '').trim();
   var validVoice = voices.some(function (v) { return v.id === rawVoice; }) ? rawVoice : voices[0].id;
+  var savedWidth = Number(saved.panelWidth) || 0;
   return {
     proxyBaseUrl: String(base.proxyBaseUrl || '').trim().replace(/\/+$/, ''),
     openrouterEndpoint: base.openrouterEndpoint || 'https://openrouter.ai/api/v1/chat/completions',
@@ -4436,6 +4467,7 @@ function brisaAiConfig() {
     elevenlabsFallbackModel: base.elevenlabsFallbackModel || 'eleven_multilingual_v2',
     elevenlabsVoices: voices,
     voiceId: validVoice,
+    panelWidth: savedWidth >= 300 && savedWidth <= 800 ? Math.round(savedWidth) : 0,
     customOrKey: String(saved.customOrKey || '').trim(),
     customElKey: String(saved.customElKey || '').trim()
   };
@@ -4617,6 +4649,7 @@ class Component extends DCLogic {
     this.state.brisaSpeakingId = '';
     this.state.brisaTtsLoadingId = '';
     this.state.brisaAiVoiceId = initialAiCfg.voiceId;
+    this.state.brisaAiWidth = initialAiCfg.panelWidth || 0;
     this.state.brisaAiCustomOr = initialAiCfg.customOrKey;
     this.state.brisaAiCustomEl = initialAiCfg.customElKey;
     this.brisaAiSeq = 0;
@@ -4633,6 +4666,7 @@ class Component extends DCLogic {
     this.brisaSpotKey = '';
     this.brisaForceAudioMic = false;
     this.brisaMicRec = null;
+    this.brisaResizeCleanup = null;
     this.state.brisaSpotSteps = [];
     this.state.brisaSpotIdx = -1;
     this.state.brisaSpotRect = null;
@@ -4949,16 +4983,35 @@ class Component extends DCLogic {
     }
     return GUIDES[key] || [];
   }
+  hasBrisaElevenLabs() {
+    var cfg = brisaAiConfig();
+    return !!(typeof window !== 'undefined' && typeof window.Audio === 'function' && typeof fetch === 'function' && (cfg.customElKey || cfg.elevenlabsKey || cfg.proxyBaseUrl));
+  }
   guideStep() { var s = this.state; return s.tour ? this.guideSteps()[s.tour - 1] || null : null; }
   sectionNarration() {
     var s = this.state;
+    if (s.tab === 'band' && this.hasBrisaElevenLabs()) {
+      var member = BAND[Math.min(s.bsel, BAND.length - 1)] || BAND[0];
+      var cvm = this.characterVm(member.k);
+      var ins = BAND_INSTRUMENTS[member.k];
+      return {
+        t: member.name + ', ' + ins.name,
+        b: (cvm.persona || member.persona) + '. ' + member.quote + '. ' + (cvm.story || '')
+      };
+    }
     if (s.tab === 'how' && s.sub === 0) return GUIDES.practice[0];
     return this.guideSteps()[0];
   }
   narrateBrisa(step, manual) {
     if (!step || (!manual && !this.state.voice)) return;
+    if (this.hasBrisaElevenLabs()) {
+      this.stopSpeech();
+      var fullText = brisaSpeechPlainText([step.t, step.b].filter(Boolean).join('. '));
+      this.playBrisaSpeechText(fullText, '__narrate__', !!manual);
+      return;
+    }
     if (typeof window.Audio !== 'function' || !step.audio) {
-      this.speak(step.t + '. ' + step.b, manual);
+      this.speak(step.t + '. ' + step.b, manual, '', true);
       return;
     }
     this.stopSpeech();
@@ -4968,7 +5021,7 @@ class Component extends DCLogic {
       if (self.brisaAudio !== audio) return;
       self.brisaAudio = null;
       if (error && error.name !== 'NotAllowedError') {
-        self.speak(step.t + '. ' + step.b, manual);
+        self.speak(step.t + '. ' + step.b, manual, '', true);
         return;
       }
       self.setState({ speaking: false, speechNotice: error ? uiMessage(
@@ -4986,6 +5039,53 @@ class Component extends DCLogic {
   toggleSectionVoice() {
     if (this.state.speaking) this.stopSpeech();
     else this.narrateBrisa(this.sectionNarration(), true);
+  }
+  startBrisaResize(event) {
+    if (!event || (event.pointerType === 'mouse' && event.button !== 0) || typeof window === 'undefined' || window.innerWidth < 860) return;
+    var dialog = document.getElementById('brisa-ai-dialog');
+    var app = document.querySelector('.px.app');
+    if (!dialog || !app) return;
+    event.preventDefault();
+    if (this.brisaResizeCleanup) this.brisaResizeCleanup();
+    var self = this;
+    var startX = event.clientX;
+    var startW = dialog.getBoundingClientRect().width;
+    var currentW = startW;
+    var maxW = Math.max(340, Math.min(720, window.innerWidth - 320));
+    app.classList.add('brisa-ai-resizing');
+    var onMove = function (e) {
+      currentW = Math.round(Math.max(300, Math.min(maxW, startW + (startX - e.clientX))));
+      app.style.setProperty('--brisa-dock-w', currentW + 'px');
+      if (self.state.brisaSpotSteps && self.state.brisaSpotSteps.length) self.measureBrisaSpotlight();
+    };
+    var cleanup = function (commit) {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onCancel);
+      app.classList.remove('brisa-ai-resizing');
+      self.brisaResizeCleanup = null;
+      if (commit && !self.disposed) {
+        writeBrisaAiSettings({ panelWidth: currentW });
+        self.setState({ brisaAiWidth: currentW }, function () {
+          if (self.state.brisaSpotSteps && self.state.brisaSpotSteps.length) self.measureBrisaSpotlight();
+        });
+      }
+    };
+    var onUp = function () { cleanup(true); };
+    var onCancel = function () { cleanup(false); };
+    this.brisaResizeCleanup = function () { cleanup(false); };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onCancel);
+  }
+  resetBrisaWidth() {
+    var app = typeof document !== 'undefined' ? document.querySelector('.px.app') : null;
+    if (app) app.style.removeProperty('--brisa-dock-w');
+    writeBrisaAiSettings({ panelWidth: 0 });
+    var self = this;
+    this.setState({ brisaAiWidth: 0 }, function () {
+      if (self.state.brisaSpotSteps && self.state.brisaSpotSteps.length) self.measureBrisaSpotlight();
+    });
   }
   focusBrisaAI() {
     var target = document.getElementById('brisa-ai-input') || document.getElementById('brisa-ai-close') || document.getElementById('brisa-ai-dialog');
@@ -5710,7 +5810,7 @@ class Component extends DCLogic {
   async playBrisaSpeechText(cleanText, messageId, manual) {
     if (!cleanText) return;
     if (typeof window.Audio !== 'function') {
-      this.speak(cleanText, !!manual, messageId);
+      this.speak(cleanText, !!manual, messageId, true);
       return;
     }
     var voiceId = this.state.brisaAiVoiceId || brisaAiConfig().voiceId;
@@ -5726,7 +5826,7 @@ class Component extends DCLogic {
         if (self.brisaAudio !== audio) return;
         self.brisaAudio = null;
         if (error && error.name !== 'NotAllowedError') {
-          self.speak(cleanText, !!manual, messageId);
+          self.speak(cleanText, !!manual, messageId, true);
           return;
         }
         self.setState({
@@ -5770,13 +5870,13 @@ class Component extends DCLogic {
       }
       this.setState({ speaking: false, brisaSpeakingId: '', brisaTtsLoadingId: '' });
       this.syncVolume();
-      this.speak(cleanText, true, messageId);
+      this.speak(cleanText, true, messageId, true);
     } catch (err) {
       if (this.disposed || ctrl.signal.aborted || (err && err.name === 'AbortError')) return;
       if (this.brisaTtsAbort === ctrl) this.brisaTtsAbort = null;
       this.setState({ speaking: false, brisaSpeakingId: '', brisaTtsLoadingId: '' });
       this.syncVolume();
-      this.speak(cleanText, true, messageId);
+      this.speak(cleanText, true, messageId, true);
     }
   }
   async speakBrisaAI(messageId, manual) {
@@ -5997,6 +6097,7 @@ class Component extends DCLogic {
     this.brisaAiReturnFocus = null;
     clearTimeout(this.brisaSpotTimer);
     cancelAnimationFrame(this.brisaSpotRaf);
+    if (this.brisaResizeCleanup) this.brisaResizeCleanup();
     this.cancelBrisaAI();
     this.stopBrisaDictation(false);
     this.clearBrisaAudioCache();
@@ -6049,6 +6150,7 @@ class Component extends DCLogic {
     var restarting = this.state.bphase === 'entry' || this.state.bphase === 'reset';
     var previous = restarting && this.bandPrevious != null ? this.bandPrevious : this.state.bsel;
     this.cancelBandClip();
+    if (this.state.speaking) this.stopSpeech();
     this.bandPrevious = previous;
     var self = this, turn = this.bandTurn, key = BAND[index].k;
     this.playCue(BAND_CUES[key]);
@@ -7240,8 +7342,13 @@ class Component extends DCLogic {
     }
     this.syncVolume();
   }
-  speak(text, manual, speakingMsgId) {
+  speak(text, manual, speakingMsgId, forceBrowserTts) {
     if (!manual && !this.state.voice) return;
+    if (!forceBrowserTts && this.hasBrisaElevenLabs()) {
+      this.stopSpeech();
+      this.playBrisaSpeechText(brisaSpeechPlainText(text), speakingMsgId || '__speak__', !!manual);
+      return;
+    }
     this.stopSpeech();
     if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
       this.setState({
@@ -7417,15 +7524,17 @@ class Component extends DCLogic {
     var activeN = BAND.filter(function (b) { return !s.mute[b.k]; }).length;
     var isJuke = s.tab === 'juke', isData = s.tab === 'how' && s.sub === 0, hasCustom = !!s.custom;
     var gl = this.glowFor(a);
+    var lightBandColors = { silbo: '#7A5200', inti: '#9F310F', mama: '#005F73', yaku: '#1F6318', illapa: '#881960' };
     var band = BAND.map(function (b, bi) {
         var lvl = s.levels[b.k] || 0, off = s.mute[b.k];
+        var uiColor = hc ? th.fg : light ? lightBandColors[b.k] : b.color;
         return { key: b.k, thumbUrl: 'sprites/' + b.k + '/miniatura-banda.webp',
           spriteActive: s.playing && !off && !s.masterMuted && s.volume > 0, spriteMuted: off,
-          ic: self.icons[INS_ICON[b.k]], lvlW: Math.round((off ? 0 : lvl) * 100) + '%', rowBg: off ? 'transparent' : th.bg, rowOp: off ? '0.55' : '1', pwColor: off ? th.muted : b.color, clips: b.clips, ins: b.ins, delay: (bi * 0.08).toFixed(2) + 's', name: b.name, color: b.color, disc: DISCS[DISC_CHAR.indexOf(b.k)].title, origin: b.origin, listens: b.listens, plays: b.plays, persona: b.persona, quote: b.quote, brief: b.brief,
+          ic: self.icons[INS_ICON[b.k]], lvlW: Math.round((off ? 0 : lvl) * 100) + '%', rowBg: off ? 'transparent' : th.bg, rowOp: off ? '0.55' : '1', pwColor: off ? th.muted : uiColor, clips: b.clips, ins: b.ins, delay: (bi * 0.08).toFixed(2) + 's', name: b.name, color: b.color, uiColor: uiColor, disc: DISCS[DISC_CHAR.indexOf(b.k)].title, origin: b.origin, listens: b.listens, plays: b.plays, persona: b.persona, quote: b.quote, brief: b.brief,
           on: !off, mixLabel: off ? T('Silenciado', 'Muted') : T('Activado', 'Enabled'),
           muteLabel: off ? 'OFF' : 'ON', muteAria: (off ? T('Activar a ', 'Switch on ') : T('Desactivar a ', 'Switch off ')) + b.name,
-          btnBg: off ? 'transparent' : b.color, btnFg: off ? th.fg : '#0A0D1A', btnBorder: off ? th.line : b.color,
-          border: !off && lvl > 0.15 && s.playing ? b.color : th.line, anim: !off && lvl > 0.15 && s.playing ? 'bob' : '', meter: meterOf(off ? 0 : lvl, b.color), toggle: toggleBand(b.k) };
+          btnBg: off ? 'transparent' : uiColor, btnFg: off ? th.fg : (hc ? th.bg : light ? '#FFFFFF' : '#0A0D1A'), btnBorder: off ? th.line : uiColor,
+          border: !off && lvl > 0.15 && s.playing ? uiColor : th.line, anim: !off && lvl > 0.15 && s.playing ? 'bob' : '', meter: meterOf(off ? 0 : lvl, uiColor), toggle: toggleBand(b.k) };
     });
     var bandIndex = Math.min(s.bsel, BAND.length - 1);
     var bandKey = BAND[bandIndex].k;
@@ -7590,9 +7699,9 @@ class Component extends DCLogic {
       heroGo: function () { self.goTab('juke'); },
       heroBand: function () { self.goTab('band'); },
       speechUnavailable: !window.speechSynthesis || !window.SpeechSynthesisUtterance,
-      brisaUnavailable: typeof window.Audio !== 'function' && (!window.speechSynthesis || !window.SpeechSynthesisUtterance),
+      brisaUnavailable: !this.hasBrisaElevenLabs() && typeof window.Audio !== 'function' && (!window.speechSynthesis || !window.SpeechSynthesisUtterance),
       speaking: s.speaking,
-      sectionVoiceLabel: s.speaking ? T('Detener voz', 'Stop voice') : T('Escuchar voz', 'Listen to voice'),
+      sectionVoiceLabel: s.speaking ? T('Detener voz', 'Stop voice') : (isBand ? T('Escuchar historia (voz IA)', 'Listen to story (AI voice)') : T('Escuchar voz', 'Listen to voice')),
       sectionVoice: function () { self.toggleSectionVoice(); },
       sectionVoiceNotice: uiText(s.speechNotice),
       goDiscs: function () { self.goSub(0); },
@@ -7657,7 +7766,7 @@ class Component extends DCLogic {
         entrance: bandPhase === 'entry' ? 'bentering' : bandPhase === 'reset' ? 'bresetting' : ''
       }),
       bandSel: band.map(function (x, i) {
-        return { thumbUrl: x.thumbUrl, name: x.name, color: hc ? th.fg : x.color, on: i === bandIndex, pick: function () { self.pickBand(i); } };
+        return { thumbUrl: x.thumbUrl, name: x.name, color: hc ? th.fg : light ? lightBandColors[x.k] : x.color, on: i === bandIndex, pick: function () { self.pickBand(i); } };
       }),
       moreOpen: s.more, toggleMore: function (event) { if (self.state.more) self.closeMore(); else self.openMore(event); }, closeMore: function () { self.closeMore(); },
       fileName: hasCustom ? uiLabel(s.custom) : T('Tu archivo', 'Your file'),
@@ -7693,12 +7802,12 @@ class Component extends DCLogic {
       rhythmHelp: T('Cada flecha resume qué tan fría o cálida está una franja del mapa respecto a lo habitual. Un cambio fuerte puede ir en cualquiera de las dos direcciones. Tras cada recorrido, el mapa pasa al siguiente mes.',
         'Each arrow shows how cool or warm a strip of the map is compared with usual. A large change can go in either direction. After each sweep, the map moves to the next month.'),
       playThisDisc: function () { self.openRhythmDisc(s.disc); },
-      describeLabel: this.utterance ? T('Detener descripción', 'Stop description') : T('Describir en voz alta', 'Describe aloud'),
+      describeLabel: (this.utterance || (s.speaking && s.brisaSpeakingId === '__describe__')) ? T('Detener descripción', 'Stop description') : T('Describir en voz alta', 'Describe aloud'),
       describe: function () {
-        if (self.utterance) { self.stopSpeech(); return; }
+        if (self.utterance || (self.state.speaking && self.state.brisaSpeakingId === '__describe__')) { self.stopSpeech(); return; }
         var text = self.describeText();
         self.setState({ caption: text });
-        self.speak(text, true);
+        self.speak(text, true, '__describe__');
       },
       prevFrame: function () { self.gotoFrame(s.frame - 1); }, nextFrame: function () { self.gotoFrame(s.frame + 1); },
       speed: String(s.speed), onSpeed: function (e) { var was = s.playing; self.stop(); self.setState({ speed: parseInt(e.target.value, 10) }, function () { if (was) self.play(); }); },
@@ -7733,6 +7842,7 @@ class Component extends DCLogic {
       onDrop: function (e) { e.preventDefault(); self.setState({ over: false }); var fl = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (fl) self.handleFile(fl); },
       useSample: function () { self.loadSample(); },
       brisaDockClass: s.brisaAiOpen ? 'brisa-ai-docked' : '',
+      brisaDockVars: s.brisaAiWidth >= 300 ? ('--brisa-dock-w: ' + Math.round(s.brisaAiWidth) + 'px') : '',
       brisaSpot: self.brisaSpotVm(s, tx),
       brisaAi: self.brisaAiVm(s, tx),
       onUpMode: function (e) { self.setMode(e.target.value); },
@@ -7807,6 +7917,8 @@ class Component extends DCLogic {
       on: true,
       open: function (event) { self.openBrisaAI(event); },
       close: function () { self.closeBrisaAI(); },
+      startResize: function (event) { self.startBrisaResize(event); },
+      resetWidth: function () { self.resetBrisaWidth(); },
       voiceOn: !!s.voice,
       toggleVoice: function () {
         var next = !self.state.voice;

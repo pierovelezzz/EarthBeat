@@ -399,5 +399,25 @@ test('Spotlight step builder, Flash v2.5 prefetch cache, and WAV encoder work cl
   await comp.speakBrisaAI(comp.state.brisaAiMessages[1].id, true);
   assert.equal(ttsCalls.length, 1, 'Manual click on Escuchar must play immediately from prefetched cache');
   assert.equal(createdAudio.length, 1);
+
+  // Panel width persists cleanly alongside settings
+  exports.writeBrisaAiSettings({ panelWidth: 512 });
+  assert.equal(exports.brisaAiConfig().panelWidth, 512);
+
+  // Platform-wide speech ("Describir en voz alta" & Band character story) routes through ElevenLabs
+  comp.stopSpeech();
+  comp.state.tab = 'juke';
+  comp.state.sub = 1;
+  await comp.renderVals().describe();
+  await new Promise(r => setTimeout(r, 15));
+  assert.equal(ttsCalls.length, 2, 'Describe aloud must use ElevenLabs when configured');
+
+  comp.stopSpeech();
+  comp.state.tab = 'band';
+  comp.state.bsel = 0; // Silbo
+  comp.toggleSectionVoice();
+  await new Promise(r => setTimeout(r, 15));
+  assert.equal(ttsCalls.length, 3, 'Band section voice must use ElevenLabs for active musician');
+  assert.match(ttsCalls[2].body.text, /SILBO/i);
   comp.componentWillUnmount();
 });

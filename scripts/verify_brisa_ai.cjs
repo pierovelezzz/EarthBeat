@@ -255,10 +255,27 @@ async function main() {
     failNetwork = false;
     report.checks.push('quick-voice-switch-and-offline-fallback');
 
+    // Drag-to-resize handle widens docked panel cleanly
+    const resizerBox = await page.locator('#brisa-ai-resizer').boundingBox();
+    assert(resizerBox && resizerBox.height > 200, 'Draggable resize handle must span panel height on desktop');
+    const beforeResizeW = await page.locator('#brisa-ai-dialog').evaluate(el => el.getBoundingClientRect().width);
+    await page.mouse.move(resizerBox.x + resizerBox.width / 2, resizerBox.y + resizerBox.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(resizerBox.x - 110, resizerBox.y + resizerBox.height / 2, { steps: 6 });
+    await page.mouse.up();
+    await page.waitForTimeout(40);
+    const afterResizeW = await page.locator('#brisa-ai-dialog').evaluate(el => el.getBoundingClientRect().width);
+    assert(afterResizeW > beforeResizeW + 70, `Expected panel width to grow after drag (${beforeResizeW} -> ${afterResizeW})`);
+    await page.locator('#brisa-ai-resizer').dblclick();
+    await page.waitForTimeout(40);
+    const resetW = await page.locator('#brisa-ai-dialog').evaluate(el => el.getBoundingClientRect().width);
+    assert(Math.abs(resetW - beforeResizeW) < 8, 'Double-click on resizer must reset width');
+    report.checks.push('desktop-resizer-drag-and-reset');
+
     // Theme + High Contrast + Large Text + axe checks while #brisa-ai-dialog is open
-    for (const [colorScheme, contrast, big] of [['dark', 'normal', false], ['light', 'normal', false], ['dark', 'high', true]]) {
+    for (const [colorScheme, contrast, big] of [['dark', false, false], ['light', false, false], ['dark', true, true]]) {
       await page.evaluate(({ colorScheme, contrast, big }) => __app.setState({ colorScheme, contrast, big }), { colorScheme, contrast, big });
-      await page.waitForTimeout(60);
+      await page.waitForTimeout(300);
       const ov = await page.locator('#brisa-ai-dialog').evaluate(el => el.scrollWidth > el.clientWidth + 1);
       assert.equal(ov, false, `Overflow in dialog under theme=${colorScheme} contrast=${contrast} big=${big}`);
       if (axeSource) {
@@ -274,12 +291,41 @@ async function main() {
     }
     report.checks.push('themes-high-contrast-and-axe-dialog-audit');
 
-    // 4. Mobile 390x844 EN check
+    // Light Mode Contrast + ElevenLabs Character Story audit on La Banda (Silbo yellow check)
     await page.locator('#brisa-ai-close').click();
     await page.waitForFunction(() => !document.querySelector('#brisa-ai-dialog'));
+    await page.evaluate(() => {
+      __app.setPreference('voice', false);
+      __app.stopSpeech();
+      __app.setColorScheme('light');
+      __app.setPreference('contrast', false);
+      __app.setPreference('big', false);
+      __app.goTab('band');
+    });
+    await page.waitForSelector('.bpage');
+    await page.waitForFunction(() => !__app.state.trans);
+    await page.waitForTimeout(300);
+    await page.locator('#tour-binfo .section-voice').click();
+    await page.waitForFunction(() => window.__app && window.__app.state.speaking === true);
+    assert(report.elevenlabsCalls.length >= 3, 'Band character voice must use ElevenLabs API');
+    assert.match(report.elevenlabsCalls.at(-1).body.text, /SILBO/i, 'Band character voice must read selected musician profile');
+    await page.locator('#tour-binfo .section-voice').click();
+    if (axeSource) {
+      const bandAxe = await page.evaluate(async () => {
+        return await axe.run(document.querySelector('.bpage'), {
+          runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] }
+        });
+      });
+      assert.deepEqual(bandAxe.violations, [], 'La Banda light-mode WCAG contrast violations: ' + JSON.stringify(bandAxe.violations));
+    }
+    report.checks.push('band-light-mode-contrast-and-elevenlabs-story-voice');
+
+    // 4. Mobile 390x844 EN check
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => {
-      __app.setState({ colorScheme: 'dark', contrast: 'normal', big: false });
+      __app.setColorScheme('dark');
+      __app.setPreference('contrast', false);
+      __app.setPreference('big', false);
       __app.setLang('en');
     });
     const mobileBtn = page.locator('.bottomnav #brisa-ai-open');
