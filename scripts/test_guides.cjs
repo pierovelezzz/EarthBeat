@@ -1448,18 +1448,33 @@ test('light and slate themes combine with high contrast without changing the sel
   c.setPreference('contrast',false);assert.equal(c.renderVals().th.bg,'#171E2B');
 });
 
-test('the four preferences combine and persist without asking for a diagnosis or opening a guide', () => {
-  const { component:c, context, storage } = setup({ firstVisit:true, language:'es-PE' });
-  context.window.matchMedia=()=>({matches:false});
-  assert.equal(c.state.showPreferences,false); assert.equal(c.state.tour,0);
-  c.openPreferences(); assert.equal(c.state.showPreferences,true);
-  assert.equal(c.renderVals().preferences.choices.length,4);
-  for (const key of ['voice','big','contrast','reducedMotion']) c.setPreference(key,true);
-  assert.equal(c.bandReduced(),true); c.finishPreferences(false);
-  assert.equal(c.state.showPreferences,false); assert.equal(c.state.tour,0);
+test('first-visit recommendations combine, preserve declined settings, and stay optional', () => {
+  const { component:c, storage } = setup({ firstVisit:true, language:'es-PE' });
+  assert.equal(c.state.showWelcome,true);
+  c.openPreferences();
+  const choices=c.renderVals().preferences.choices;
+  assert.equal(choices.length,5);
+  for (const id of ['visual','sensory']) choices.find(choice=>choice.id==='preferences-'+id).change({target:{checked:true}});
+  c.recommendations();
+  assert.equal(c.state.big,false);
+  const options=c.renderVals().preferences.choices;
+  assert(options.some(option=>option.id==='preferences-contrast'));
+  options.find(option=>option.id==='preferences-big').change({target:{checked:false}});
+  c.applyRecommendations();
+  assert.equal(c.state.big,false);
+  assert.equal(c.state.contrast,true);
+  assert.equal(c.state.reducedMotion,true);
+  assert.equal(c.state.voice,false);
+  assert.equal(c.state.showPreferences,false);
+  assert.equal(c.state.showWelcome,true);
+  c.startWelcome();
+  assert.equal(c.state.showWelcome,false);
+  assert.equal(c.state.tour,0);
   const next=setup({language:'es-PE',storage:Object.fromEntries(storage)}).component;
-  assert.equal(next.state.showPreferences,false);
-  for (const key of ['voice','big','contrast','reducedMotion']) assert.equal(next.state[key],true);
+  assert.equal(next.state.showWelcome,false);
+  assert.equal(next.state.contrast,true);
+  assert.equal(next.state.reducedMotion,true);
+  assert(!storage.get('ts_prefs').includes('visual'));
 });
 
 test('stored preferences only accept known boolean values and recover from invalid JSON', () => {

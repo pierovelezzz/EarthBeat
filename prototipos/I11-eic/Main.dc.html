@@ -1360,6 +1360,41 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
   .px .legend-voice{grid-column:1;grid-row:auto;justify-self:start}
 }
 /* Optional, combinable preferences. No diagnosis or account is requested. */
+.px .welcome-entry{flex:1;display:grid;place-items:center;min-height:0;padding:clamp(8px,3vh,32px);overflow:auto}
+.px .welcome-card{
+  display:grid;gap:clamp(6px,1.8vh,18px);width:min(100%,760px);padding:clamp(12px,3vh,30px);
+  border:1px solid #738db1;border-radius:16px;color:#f6f8ff;background:#0c214b;text-align:center
+}
+.px.app[data-contrast="true"] .welcome-card{color:var(--fg);background:var(--bg);border-color:var(--fg)}
+.px .welcome-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;text-align:start}
+.px .welcome-top .btn{color:inherit;border-color:#94aacc;min-height:44px}
+.px .welcome-top .btn[aria-pressed="true"]{background:#ffda4b;color:#142039;border-color:#ffda4b}
+.px .welcome-brand{display:flex;align-items:center;gap:8px;font-weight:800}
+.px .welcome-logo{width:clamp(38px,8vh,82px);height:auto;justify-self:center}
+.px .welcome-card h1{margin:0;font:800 italic clamp(1.2em,3.4vw,2.3em)/1.15 var(--head);text-wrap:balance}
+.px .welcome-card p{margin:0;font-size:.9em;line-height:1.35}
+.px .welcome-card .welcome-actions{display:grid;gap:7px}
+.px .welcome-actions .btn{min-height:44px;white-space:normal}
+.px .welcome-actions .welcome-start{background:#ffda4b;color:#142039;border-color:#ffda4b}
+.px .welcome-actions .welcome-preferences{color:inherit;border-color:#94aacc}
+.px .welcome-card :is(button,a):focus-visible{outline:3px solid #ffe77d;outline-offset:2px}
+.px .welcome-motion{display:inline-flex;justify-self:center;align-items:center;gap:8px;min-height:44px;font-size:.88em}
+.px .welcome-motion input{width:20px;height:20px;accent-color:#ffda4b}
+.px .welcome-card .welcome-note{font-size:.76em}
+.px .entry-settings-link{grid-column:1/-1;justify-self:start;min-height:44px}
+.px .preferences-choices.entry-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.px .preferences-choices.entry-choices label{min-height:44px;padding:7px;gap:7px}
+.px .preferences-choices.entry-choices small{font-size:.78em}
+.px .preferences-dialog .preference-notes{margin:0;padding-inline-start:18px;display:grid;gap:4px;font-size:.84em}
+.px .preferences-dialog .preference-page{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.px .preference-page .btn{min-height:44px}
+@media(max-width:600px){.px .preferences-choices.entry-choices{grid-template-columns:minmax(0,1fr)}}
+@media(max-height:660px){
+  .px .preferences-dialog{padding:12px;gap:7px}
+  .px .preferences-dialog .preferences-actions{gap:5px}
+  .px .preferences-dialog .preferences-actions button{flex-basis:130px}
+}
+@media(max-height:445px){.px .welcome-logo{display:none}.px .welcome-card{gap:5px}}
 .px .preferences-dim{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1100}
 .px .preferences-dialog{position:fixed;z-index:1101;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;padding:24px;display:grid;gap:14px;background:var(--bg);border:1px solid var(--fg);border-radius:8px;box-shadow:0 12px 80px #000}
 .px .preferences-dialog h2{font:700 clamp(1.4em,2.5vw,1.8em)/1.2 var(--head)}
@@ -1419,6 +1454,9 @@ html[data-ts-reduced-motion="true"]{scroll-behavior:auto}
 .px .practice-example .logo-example{width:100%;height:clamp(92px,16vh,150px);object-fit:contain;padding:6px}
 .px .practice-example h2{font-size:clamp(1.3em,3vw,2em);overflow-wrap:anywhere}
 .px .practice-example .sample-preview{height:auto;max-height:280px;aspect-ratio:560/320}
+@media(min-width:1100px) and (max-height:830px){
+  .px .practice-example .logo-example{height:clamp(90px,20dvh,162px);aspect-ratio:auto}
+}
 .px.app[data-theme="light"][data-contrast="false"] .bshow,
 .px.app[data-theme="light"][data-contrast="false"] .bsel{
   --bg:#111a27;--fg:#f2f6fc;--muted:#c1cee0;--line:#788ca7;--accent:#b8e9f5
@@ -1966,7 +2004,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   background:#101c2b;color:#f0f6ff;font:700 .78em/1.2 var(--head);pointer-events:none
 }
 .px .map-source svg{flex:none}
-.px .map-mode-label{padding-inline-start:6px;border-inline-start:1px solid #bacbdd;color:#c8effa}
 .px .map-fact{
   display:grid;gap:3px;margin-top:4px;padding:7px 9px;border:1px solid var(--line);
   border-inline-start:3px solid var(--accent);border-radius:5px;background:var(--surface);
@@ -2222,6 +2259,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .listen-player .player-layout{row-gap:5px}
   .px .listen-player .map-reading{padding-block:6px}
 }
+@media(min-width:1100px) and (max-height:830px){
+  .px .listen-band[data-rhythm="true"] .band-stage{min-height:clamp(350px,51vh,412px)}
+}
 .px.main-edition .legend-swatch{min-height:44px}
 @media(min-width:1100px) and (max-height:700px){
   .px .workspace > .in:has(.listen-player){height:auto}
@@ -2237,7 +2277,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 .px .listen-player .player-layout #tour-frame .mapbox{height:auto;min-height:0;max-height:none;aspect-ratio:auto}
 .px .listen-player #tour-frame .mapbox img.map{position:static;width:100%;height:auto;object-fit:contain}
 @media(min-width:1100px) and (max-height:940px){
-  .px .listen-player #tour-frame .mapbox img.map{max-height:clamp(112px,calc(100dvh - 652px),340px)}
+  .px .listen-player #tour-frame .mapbox{
+    --photo-height:clamp(125px,calc(60dvh - 321px),340px);
+    width:min(100%,calc(var(--photo-height) * 1.75 + 2px));justify-self:center
+  }
+  .px .listen-player .map-fact{gap:2px;margin-top:2px;padding-block:5px}
 }
 @media(min-width:1100px) and (hover:hover) and (pointer:fine){
   .px .listen-player .player-layout{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr) minmax(0,1.04fr)}
@@ -2303,6 +2347,24 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="space-flight flight-two"><svg class="space-rocket" viewBox="0 0 40 96" focusable="false"><path d="M16 68 20 93 24 68" fill="#9cddeb"/><path d="M12 43 3 64l10-3m15-18 9 21-10-3" fill="#cc9a5d"/><path d="M20 3C9 15 9 39 13 66h14c4-27 4-51-7-63Z" fill="#cbdce8"/><path d="M20 3v63h7c4-27 4-51-7-63Z" fill="#879eb6"/><circle cx="20" cy="31" r="6" fill="#294d70" stroke="#f3f9fc" stroke-width="2"/><path d="M13 61h14v8H13Z" fill="#476682"/></svg></div>
 </div>
 </sc-if>
+<sc-if value="{{welcome.on}}">
+<a class="skip-content" href="#welcome-content">{{tx.skipContent}}</a>
+<main class="welcome-entry" id="welcome-content" tabindex="-1">
+<section class="welcome-card" aria-labelledby="welcome-title">
+<div class="welcome-top"><span class="welcome-brand">EarthRhythm</span><div class="row"><div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-label="{{l.name}}" aria-pressed="{{l.on}}" onClick="{{l.pick}}">{{l.short}}</button></sc-for></div><button type="button" class="btn sm" onClick="{{preferences.open}}" aria-label="{{preferences.title}}" title="{{preferences.title}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.2" r="1.5" fill="currentColor" stroke="none"/><path d="M7 10h10M12 10v4m0 0-3 4.5m3-4.5 3 4.5"/></svg></button></div></div>
+<img class="welcome-logo" src="./earthrhythm-sample.webp" width="600" height="500" alt="">
+<h1 id="welcome-title">{{welcome.title}}</h1>
+<p>{{welcome.body}}</p>
+<div class="welcome-actions">
+<button type="button" class="btn welcome-start" onClick="{{welcome.start}}">{{welcome.startLabel}}</button>
+<button type="button" class="btn welcome-preferences" onClick="{{preferences.open}}">{{preferences.title}}</button>
+</div>
+<label class="welcome-motion"><input type="checkbox" checked="{{welcome.motionOn}}" onChange="{{welcome.changeMotion}}">{{welcome.motionLabel}}</label>
+<p class="welcome-note">{{welcome.note}}</p>
+</section>
+</main>
+</sc-if>
+<sc-if value="{{welcome.explorer}}">
 <div role="status" aria-live="polite" class="sr">{{pageName}} · {{nav.label}}</div>
 
 <header class="top {{headerClass}}">
@@ -2337,6 +2399,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="btn sm" onClick="{{haptic.stop}}" disabled="{{haptic.stopOff}}">{{haptic.stopLabel}}</button></div>
 </section>
 </sc-if>
+<button type="button" class="btn sm entry-settings-link" onClick="{{preferences.open}}">{{preferences.recommendedLabel}}</button>
 </div>
 </details>
 <sc-if value="{{gameAvailable}}">
@@ -2552,7 +2615,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </sc-if>
 <div class="mapbox">
 <img decoding="async" fetchpriority="high" class="map {{frameAnim}}" src="{{frameUrl}}" alt="{{frameAlt}}">
-<sc-if value="{{standardPlayer}}"><span class="map-source"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="7" r="1"/><path d="m3 15 5-5 3 3 3-4 3 4"/></svg><span>{{mapSource}}</span><span class="map-mode-label">{{listeningMode}}</span></span></sc-if>
+<sc-if value="{{standardPlayer}}"><span class="map-source"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="7" r="1"/><path d="m3 15 5-5 3 3 3-4 3 4"/></svg><span>{{mapSource}}</span></span></sc-if>
 <div aria-hidden="true" class="scanline" style="--scan-x: {{scanLeft}}"></div>
 <span class="tagbox" aria-hidden="true">{{frameLabel}}</span>
 <sc-if value="{{showStrip}}" hint-placeholder-val="{{ true }}">
@@ -2847,14 +2910,22 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 </sc-if>
 
+</sc-if>
 <sc-if value="{{preferences.on}}">
 <div class="preferences-dim" aria-hidden="true"></div>
 <section id="preferences-dialog" class="preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="preferences-title" aria-describedby="preferences-body" tabindex="-1">
-<p class="kicker">EarthRhythm · Brisa</p>
-<h2 id="preferences-title">{{preferences.title}}</h2><p id="preferences-body">{{preferences.body}}</p>
-<div class="preferences-choices"><sc-for list="{{preferences.choices}}" as="p"><label for="{{p.id}}"><input id="{{p.id}}" type="checkbox" checked="{{p.on}}" disabled="{{p.disabled}}" onChange="{{p.change}}"><span><strong>{{p.label}}</strong><span class="small muted">{{p.hint}}</span></span></label></sc-for></div>
-<div class="row" role="group" aria-label="{{tx.langAria}}"><sc-for list="{{langs}}" as="l"><button type="button" class="btn sm" aria-pressed="{{l.on}}" onClick="{{l.pick}}" lang="{{l.code}}">{{l.short}}</button></sc-for></div>
-<div class="preferences-actions"><button type="button" class="btn primary" onClick="{{preferences.continue}}">{{preferences.continueLabel}}</button><button type="button" class="btn" onClick="{{preferences.tutorial}}">{{preferences.tutorialLabel}}</button></div>
+<h2 id="preferences-title" tabindex="-1">{{preferences.title}}</h2><p id="preferences-body">{{preferences.body}}</p>
+<div class="preferences-choices entry-choices"><sc-for list="{{preferences.choices}}" as="p"><label for="{{p.id}}"><input id="{{p.id}}" type="checkbox" checked="{{p.on}}" disabled="{{p.disabled}}" onChange="{{p.change}}"><span><strong>{{p.label}}</strong><small class="muted">{{p.hint}}</small></span></label></sc-for></div>
+<sc-if value="{{preferences.hasNotes}}"><ul class="preference-notes"><sc-for list="{{preferences.notes}}" as="n"><li>{{n}}</li></sc-for></ul></sc-if>
+<sc-if value="{{preferences.paged}}"><div class="preference-page"><button type="button" class="btn sm" onClick="{{preferences.prev}}" disabled="{{preferences.prevOff}}">{{tx.back}}</button><span role="status">{{preferences.pageLabel}}</span><button type="button" class="btn sm" onClick="{{preferences.next}}" disabled="{{preferences.nextOff}}">{{preferences.nextLabel}}</button></div></sc-if>
+<div class="preferences-actions">
+<sc-if value="{{preferences.selecting}}"><button type="button" class="btn primary" onClick="{{preferences.review}}" disabled="{{preferences.none}}">{{preferences.reviewLabel}}</button></sc-if>
+<sc-if value="{{preferences.reviewing}}"><button type="button" class="btn primary" onClick="{{preferences.apply}}">{{preferences.applyLabel}}</button><button type="button" class="btn" onClick="{{preferences.backToNeeds}}">{{preferences.editLabel}}</button></sc-if>
+<sc-if value="{{preferences.canAdvance}}"><button type="button" class="btn" onClick="{{preferences.advanced}}">{{preferences.advancedLabel}}</button></sc-if>
+<sc-if value="{{preferences.selecting}}"><button type="button" class="btn" onClick="{{preferences.clear}}" disabled="{{preferences.none}}">{{preferences.clearLabel}}</button></sc-if>
+<sc-if value="{{preferences.advancedView}}"><button type="button" class="btn" onClick="{{preferences.reset}}">{{preferences.resetLabel}}</button></sc-if>
+<button type="button" class="btn" onClick="{{preferences.close}}">{{preferences.closeLabel}}</button>
+</div>
 </section>
 </sc-if>
 
@@ -3192,10 +3263,10 @@ var GUIDES = {
     {
       "id": "tour-discs",
       "t": "1. Elige un disco",
-      "b": "Hola, soy Brisa. Exploraremos datos de la Tierra con imagen, texto y sonido opcional. Pulsa la portada de un disco para empezar.",
+      "b": "Cada disco reúne seis mapas de la NASA. Elige una portada y fíjate en cómo cambian los colores de un mes a otro.",
       "en": {
         "t": "1. Pick a disc",
-        "b": "Hi, I’m Brisa. We will explore Earth data with images, text and optional sound. Select a disc cover to start."
+        "b": "Each disc brings together six NASA maps. Pick a cover and notice how the colors change from month to month."
       },
       "sub": 0,
       "action": "disc"
@@ -3203,10 +3274,10 @@ var GUIDES = {
     {
       "id": "tour-play",
       "t": "2. Explora el reproductor",
-      "b": "Puedes pulsar Reproducir o continuar con la versión escrita sin sonido. Consulta el mapa, su fecha y los controles. Al pausar conservas tu posición.",
+      "b": "La línea va de izquierda a derecha. Cada columna que cruza se convierte en un paso de la música. Pulsa Reproducir para verlo o sigue con la versión escrita.",
       "en": {
         "t": "2. Explore the player",
-        "b": "Press Play or continue with the written version without sound. Inspect the map, its date and controls. Pausing keeps your position."
+        "b": "The line moves from left to right. Every column it crosses adds a step to the music. Press Play to see it or use the written version."
       },
       "sub": 1,
       "action": "play"
@@ -3214,10 +3285,10 @@ var GUIDES = {
     {
       "id": "player-legend",
       "t": "3. Interpreta la leyenda",
-      "b": "Elige en la leyenda una opción cuya descripción indique agua más fría de lo esperado. Puedes leer las etiquetas y los datos; no necesitas distinguir colores, escuchar ni responder rápido.",
+      "b": "Un valor bajo cero indica agua más fría de lo habitual en ese lugar. Busca una casilla que lo indique en su etiqueta.",
       "en": {
         "t": "3. Read the legend",
-        "b": "Choose a legend option whose description means cooler-than-expected water. Read its labels and data; no color recognition, hearing or quick response is needed."
+        "b": "A value below zero means water cooler than usual for that area. Find a square that says so in its label."
       },
       "sub": 1,
       "action": "legend"
@@ -4160,7 +4231,6 @@ class CinematicIntro {
     if(app.disposed||app.state.showPreferences||app.state.tab!=='home'||app.state.tour||document.hidden||this.hasSeen())return;
     if (['#banda', '#escuchar', '#listen'].includes(document.location?.hash)) {
       this.markSeen();
-      app.entryWelcomePending = false;
       return;
     }
     this.markSeen();
@@ -4262,7 +4332,6 @@ class CinematicIntro {
     if(restoreFocus&&focused){var target=this.returnFocus?.isConnected&&this.returnFocus!==document.body?this.returnFocus:document.querySelector('.hero .btn.primary');target?.focus({preventScroll:true});}
     this.returnFocus=null;
     this.owner.completeWelcome();
-    if (restoreFocus) this.owner.showEntryPreferences();
   }
 }
 
@@ -4354,10 +4423,25 @@ class Component extends DCLogic {
     this.motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     this.motionExplicit = typeof preferences?.values.reducedMotion === 'boolean';
     this.state.reducedMotion = !!this.motionQuery?.matches;
+    this.state.contrast = !!window.matchMedia?.('(prefers-contrast: more)')?.matches;
     if (preferences) PREFERENCE_KEYS.forEach(function (key) { if (typeof preferences.values[key] === 'boolean') self.state[key] = preferences.values[key]; });
     this.preferencesConfigured = !!(preferences && preferences.configured);
     this.state.showPreferences = false; this.state.sampleStarting = false;
-    this.entryWelcomePending = !this.preferencesConfigured;
+    var directLink = ['#banda', '#escuchar', '#listen', '#jugar', '#play'].includes(window.location?.hash);
+    var completedWelcome = false;
+    try { completedWelcome = localStorage.getItem('ts_welcome_seen') === '1'; } catch (ignored) {}
+    this.state.showWelcome = !completedWelcome && !this.preferencesConfigured && !directLink;
+    if (completedWelcome && !directLink) {
+      this.state.tab = 'juke';
+      this.state.sub = 0;
+      this.state.route = ROUTE_LOOK.juke;
+    }
+    this.spokenTutorialSteps = new Set();
+    this.state.preferenceView = 'needs';
+    this.state.preferencePage = 0;
+    this.state.preferenceNeeds = {};
+    this.state.preferenceDraft = {};
+    this.state.preferenceExcluded = {};
     if (window.location?.href) {
       var entryUrl = new URL(window.location.href);
       if (entryUrl.searchParams.get('movimiento') === 'completo') {
@@ -4429,9 +4513,7 @@ class Component extends DCLogic {
           self.playbackNeedsRender = false;
           self.setState({});
         }
-        self.cinema?.start();
         self.completeWelcome();
-        self.showEntryPreferences();
         if (self.state.tour) self.focusTourTarget();
       }
     };
@@ -4447,6 +4529,7 @@ class Component extends DCLogic {
       self.onTourLayout();
       clearTimeout(self.navResizeTimer);
       self.navResizeTimer = setTimeout(function () { if (!self.disposed) self.ensureNavVisible(); }, 100);
+      if (self.state.showPreferences) self.setState({ preferencePage: 0 });
       clearTimeout(self.tourResizeTimer);
       if (self.state.tour) self.tourResizeTimer = setTimeout(function () { self.focusTourTarget(); }, 160);
     };
@@ -4479,7 +4562,6 @@ class Component extends DCLogic {
     this.setState({ vw: viewport ? viewport.width : window.innerWidth, vh: viewport ? viewport.height : window.innerHeight });
     if (this.state.showPreferences) { this.setPreferencesInert(true); this.focusPreferences(); }
     this.cinema = new CinematicIntro(this);
-    this.cinema.start();
     this.homePreviewTimer = setInterval(function () { self.syncHomePreview(); }, 200);
   }
   closeMenu(menu) {
@@ -4507,10 +4589,7 @@ class Component extends DCLogic {
     var patch = {}; patch[key] = !!value;
     this.setState(patch); this.savePreferences();
     if (key === 'contrast' && value) this.cinema?.finish(true);
-    if (key === 'voice') {
-      if (!value) this.stopSpeech();
-      else if (!this.state.showPreferences) this.narrateBrisa(this.state.tour && !this.state.tutorial ? this.contextHelpStep() : this.guideStep() || this.sectionNarration());
-    }
+    if (key === 'voice' && !value) this.stopSpeech();
     if (key === 'big' || key === 'legible') {
       this.ensureNavVisible();
       this.positionAccessibilityMenu();
@@ -4594,7 +4673,7 @@ class Component extends DCLogic {
   setPreferencesInert(on) {
     if (on) {
       if (this.preferencesInert) return;
-      this.preferencesInert = Array.from(document.querySelectorAll('.px > header, .px > main, .px > .bottomnav, #tour-guide, #tour-card')).map(function (node) {
+      this.preferencesInert = Array.from(document.querySelectorAll('.px > header, .px > main, .px > .bottomnav, #tour-guide, #tour-card, .px > .skip-content')).map(function (node) {
         var previous = node.inert; node.inert = true; return { node: node, previous: previous };
       });
     } else {
@@ -4602,48 +4681,134 @@ class Component extends DCLogic {
       this.preferencesInert = null;
     }
   }
-  focusPreferences() { var target = document.getElementById('preferences-voice') || document.getElementById('preferences-dialog'); if (target) target.focus({ preventScroll: true }); }
-  showEntryPreferences() {
-    if (!this.entryWelcomePending || !this.cinema?.hasSeen() || this.cinema.root || document.hidden || this.disposed) return;
-    this.entryWelcomePending = false;
-    if (this.state.tab === 'home' && !this.state.tour) this.openPreferences();
-  }
-  openPreferences() {
+  focusPreferences() { document.getElementById('preferences-title')?.focus({ preventScroll: true }); }
+  openPreferences(event) {
     const menu = document.getElementById('tour-a11y');
-    this.preferencesReturnFocus = menu?.querySelector('summary');
+    this.preferencesReturnFocus = this.state.showWelcome ? event?.currentTarget : menu?.querySelector('summary');
     if (menu) menu.open = false;
     this.stopSpeech();
-    this.setState({ showPreferences: true }, () => {
+    this.setState({ showPreferences: true, preferenceView: 'needs', preferencePage: 0, preferenceNeeds: {}, preferenceDraft: {}, preferenceExcluded: {} }, () => {
       this.setPreferencesInert(true);
       this.focusPreferences();
     });
   }
-  finishPreferences(tutorial) {
+  closePreferences() {
     if (!this.state.showPreferences) return;
-    this.preferencesConfigured = true;
     this.setPreferencesInert(false);
-    this.pendingWelcome = { tutorial: tutorial };
-    this.setState({ showPreferences: false });
+    var target = this.preferencesReturnFocus;
+    this.preferencesReturnFocus = null;
+    this.setState({ showPreferences: false }, () => target?.focus({ preventScroll: true }));
+  }
+  startWelcome() {
+    if (!this.state.showWelcome || this.state.showPreferences) return;
+    this.preferencesConfigured = true;
+    this.pendingWelcome = true;
+    try { localStorage.setItem('ts_welcome_seen', '1'); } catch (ignored) {}
     this.savePreferences();
-    this.syncPreferenceMotion();
-    this.cinema?.start();
-    this.completeWelcome();
+    this.setState({ showWelcome: false }, () => {
+      if (!this.bandReduced()) this.cinema?.start();
+      this.completeWelcome();
+    });
   }
   completeWelcome() {
     if (!this.pendingWelcome || this.cinema?.root || document.hidden || this.disposed) return;
-    var tutorial = this.pendingWelcome.tutorial;
-    this.pendingWelcome = null;
-    if (tutorial) {
-      this.startTutorial();
-      return;
-    }
-    var target = this.preferencesReturnFocus || document.querySelector('.hero .btn.primary') || document.getElementById('main-content');
-    this.preferencesReturnFocus = null;
-    target?.focus({ preventScroll: true });
-    if (this.state.voice) this.narrateBrisa(this.sectionNarration());
+    this.pendingWelcome = false;
+    this.goTab('juke');
+  }
+  changePreferenceView(view) {
+    this.setState({ preferenceView: view, preferencePage: 0 }, () => this.focusPreferences());
+  }
+  recommendations() {
+    var needs = this.state.preferenceNeeds, draft = {};
+    if (needs.visual) Object.assign(draft, { big: true, contrast: true, legible: true });
+    if (needs.motor) draft.big = true;
+    if (needs.cognitive) draft.legible = true;
+    if (needs.sensory) Object.assign(draft, { reducedMotion: true, sfx: false });
+    this.setState({ preferenceDraft: draft, preferenceExcluded: {} });
+    this.changePreferenceView('review');
+  }
+  applyRecommendations() {
+    Object.entries(this.state.preferenceDraft).forEach(([key, value]) => {
+      if (!this.state.preferenceExcluded[key]) this.setPreference(key, value);
+    });
+    this.closePreferences();
+  }
+  resetEntryPreferences() {
+    this.stopSpeech();
+    this.haptics.stop();
+    this.motionExplicit = false;
+    this.setColorScheme('dark');
+    this.setState({ big: false, legible: false, voice: false, vibe: false, sfx: true,
+      contrast: !!window.matchMedia?.('(prefers-contrast: more)')?.matches,
+      reducedMotion: !!this.motionQuery?.matches }, () => {
+      this.savePreferences();
+      this.syncPreferenceMotion();
+      this.syncVolume();
+    });
+  }
+  entryPreferencesVm() {
+    var s = this.state, self = this, selecting = s.preferenceView === 'needs', reviewing = s.preferenceView === 'review';
+    var categories = [
+      ['visual', T('Visión y lectura', 'Vision and reading'), T('Ver el texto y distinguir los colores.', 'See text and distinguish colors.')],
+      ['hearing', T('Audición', 'Hearing'), T('Seguir la experiencia con texto y señales visuales.', 'Follow with text and visual cues.')],
+      ['motor', T('Manejo de controles', 'Using controls'), T('Usar el teclado, el ratón o la pantalla táctil.', 'Use a keyboard, mouse or touch screen.')],
+      ['cognitive', T('Comprensión', 'Understanding'), T('Leer instrucciones sencillas y recibir ayuda.', 'Read simple instructions and get help.')],
+      ['sensory', T('Comodidad sensorial', 'Sensory comfort'), T('Reducir movimiento y sonidos.', 'Reduce motion and sounds.')]
+    ];
+    var controls = [
+      ['big', T('Texto grande','Large text')], ['contrast', T('Alto contraste','High contrast')],
+      ['legible', T('Fuente legible','Readable font')], ['reducedMotion', T('Movimiento reducido','Reduced motion')],
+      ['sfx', T('Efectos sonoros','Sound effects')], ['voice', T('Modo voz','Voice mode'), T('Lee una vez cada paso del tutorial.','Reads each tutorial step once.')],
+      ['vibe', T('Vibración','Vibration')], ['theme', T('Modo claro','Light mode')]
+    ];
+    var settings = reviewing ? controls.filter(function (option) { return option[0] in s.preferenceDraft; }) : controls;
+    var items = (selecting ? categories : settings).map(function (option) {
+      var key = option[0], hint = option[2] || '', disabled = !selecting && key === 'vibe' && !self.haptics.supported();
+      if (disabled) hint = T('Tu dispositivo no ofrece vibración.', 'Your device does not support vibration.');
+      if (reviewing && key === 'sfx') hint = T('Desactivar los efectos sonoros.', 'Turn sound effects off.');
+      return {
+        id: 'preferences-' + key, label: option[1], hint: hint, disabled: disabled,
+        on: selecting ? !!s.preferenceNeeds[key] : reviewing ? !s.preferenceExcluded[key] : key === 'theme' ? s.colorScheme === 'light' : !!s[key],
+        change: function (event) {
+          var checked = event.target.checked;
+          if (selecting) self.setState({ preferenceNeeds: Object.assign({}, s.preferenceNeeds, { [key]: checked }) });
+          else if (reviewing) {
+            self.setState({ preferenceExcluded: Object.assign({}, s.preferenceExcluded, { [key]: !checked }) });
+          } else if (key === 'theme') self.setColorScheme(checked ? 'light' : 'dark');
+          else self.setPreference(key, checked);
+        }
+      };
+    });
+    var notes = [], needs = s.preferenceNeeds;
+    if (reviewing && needs.hearing) notes.push(T('Los mapas tienen descripciones y la música tiene señales visuales.', 'Maps have descriptions and music has visual cues.'));
+    if (reviewing && needs.motor) notes.push(T('Puedes usar el teclado desde el inicio con Tab, Enter y Espacio.', 'Use the keyboard from the start with Tab, Enter and Space.'));
+    if (reviewing && needs.cognitive) notes.push(T('Puedes abrir la ayuda de Brisa en cada apartado.', 'Open Brisa’s help in each section when you need it.'));
+    var viewHeight = window.visualViewport?.height || window.innerHeight, viewWidth = window.visualViewport?.width || window.innerWidth;
+    var perPage = viewHeight < 520 ? 2 : viewHeight < 690 || viewWidth < 600 ? 3 : selecting ? 5 : 4;
+    var pages = Math.max(1, Math.ceil(items.length / perPage)), page = Math.min(s.preferencePage, pages - 1);
+    return {
+      on: s.showPreferences, title: T('Preferencias de accesibilidad', 'Accessibility preferences'),
+      body: selecting ? T('¿Qué te facilitaría usar EarthRhythm? Puedes elegir varias opciones.', 'What would make EarthRhythm easier to use? Choose as many as you like.')
+        : reviewing ? T('Marca los ajustes que quieres aplicar.', 'Select the settings you want to apply.')
+        : T('Aquí puedes cambiar cada ajuste por separado.', 'Change each setting individually here.'),
+      choices: items.slice(page * perPage, (page + 1) * perPage), notes: notes, hasNotes: !!notes.length && page === 0,
+      selecting: selecting, reviewing: reviewing, advancedView: !selecting && !reviewing, canAdvance: selecting || reviewing, none: !Object.values(needs).some(Boolean),
+      paged: pages > 1, pageLabel: (page + 1) + ' / ' + pages, prevOff: page === 0, nextOff: page === pages - 1,
+      nextLabel: T('Siguiente', 'Next'),
+      prev: function () { self.setState({ preferencePage: Math.max(0, page - 1) }, () => self.focusPreferences()); },
+      next: function () { self.setState({ preferencePage: Math.min(pages - 1, page + 1) }, () => self.focusPreferences()); },
+      recommendedLabel: T('Ajustes recomendados','Recommended settings'), reviewLabel: T('Ver recomendaciones','View recommendations'),
+      advancedLabel: T('Ajustes avanzados','Advanced settings'), applyLabel: T('Aplicar ajustes','Apply settings'),
+      closeLabel: T('Cerrar','Close'), editLabel: T('Cambiar selección','Edit selection'),
+      clearLabel: T('Limpiar selección','Clear selection'), resetLabel: T('Restablecer ajustes','Reset settings'),
+      clear: function () { self.setState({ preferenceNeeds: {} }); }, reset: function () { self.resetEntryPreferences(); },
+      review: function () { self.recommendations(); }, apply: function () { self.applyRecommendations(); },
+      backToNeeds: function () { self.changePreferenceView('needs'); }, advanced: function () { self.changePreferenceView('advanced'); },
+      open: function (event) { self.openPreferences(event); }, close: function () { self.closePreferences(); }
+    };
   }
   preferencesKey(event) {
-    if (event.key === 'Escape') { event.preventDefault(); this.finishPreferences(false); return; }
+    if (event.key === 'Escape') { event.preventDefault(); this.closePreferences(); return; }
     if (event.key !== 'Tab') return;
     var dialog = document.getElementById('preferences-dialog'); if (!dialog) return;
     var targets = Array.from(dialog.querySelectorAll('button:not(:disabled),input:not(:disabled),a[href]'));
@@ -4687,7 +4852,6 @@ class Component extends DCLogic {
       caption: T('Idioma: español.', 'Language: English.') }, function () {
         if (s.tour) self.focusTourTarget();
         self.ensureNavVisible();
-        if (s.voice && !s.showPreferences) self.narrateBrisa(s.tour && !s.tutorial ? self.contextHelpStep() : self.guideStep() || self.sectionNarration());
       });
   }
   guideKey() { return this.state.tutorial ? 'tutorial' : this.state.tab + ':' + this.state.sub; }
@@ -4712,7 +4876,7 @@ class Component extends DCLogic {
     return this.guideSteps()[0];
   }
   narrateBrisa(step, manual) {
-    if (!step || (!manual && !this.state.voice)) return;
+    if (!step || !manual) return;
     if (typeof window.Audio !== 'function' || !step.audio) {
       this.speak(step.t + '. ' + step.b, manual);
       return;
@@ -4724,7 +4888,8 @@ class Component extends DCLogic {
       if (self.brisaAudio !== audio) return;
       self.brisaAudio = null;
       if (error && error.name !== 'NotAllowedError') {
-        self.speak(step.t + '. ' + step.b, manual);
+        self.setState({ speaking: false, speechNotice: uiMessage('La grabación de Brisa no está disponible. Puedes leer el texto.', 'Brisa’s recording is unavailable. You can read the text.') });
+        self.syncVolume();
         return;
       }
       self.setState({ speaking: false, speechNotice: error ? uiMessage(
@@ -4817,7 +4982,7 @@ class Component extends DCLogic {
       return;
     }
     var done = Object.assign({}, s.tutorialDone); done[action] = true;
-    this.setState({ tutorialDone: done, tutorialFeedback: action === 'legend' ? uiMessage('Correcto. Elegiste un nivel de agua más fría de lo esperado. Puedes terminar el tutorial.', 'Correct. You chose a cooler-than-expected water level. You can finish the tutorial.') : null });
+    this.setState({ tutorialDone: done, tutorialFeedback: action === 'legend' ? uiMessage('Así se lee la diferencia: el número dice cuánto cambió el agua respecto a lo habitual. Ya puedes seguir explorando por tu cuenta.', 'That number tells you how far the water is from its usual temperature. You’re ready to keep exploring on your own.') : null });
     this.saveTutorialProgress(false);
     if (action === 'disc') this.tourGo(2);
     else if (action === 'play') this.tourGo(3);
@@ -4896,8 +5061,14 @@ class Component extends DCLogic {
       var heading = document.getElementById('tour-t');
       if (heading) heading.focus({ preventScroll: true });
     });
-    if (s.tutorial) this.saveTutorialProgress(false);
-    if (s.voice) this.narrateBrisa(s.tutorial ? st : this.contextHelpStep());
+    if (s.tutorial) {
+      this.saveTutorialProgress(false);
+      var speechKey = LANG + ':' + n;
+      if (s.voice && !this.spokenTutorialSteps.has(speechKey)) {
+        this.spokenTutorialSteps.add(speechKey);
+        this.narrateBrisa(st, true);
+      }
+    }
   }
   tourClose(keepTutorialState) {
     if (!this.state.tour) return;
@@ -5271,7 +5442,7 @@ class Component extends DCLogic {
 
   syncHomePreview(){
     var s=this.state;
-    if(this.disposed||s.tab!=='home'||s.trans||s.showPreferences||s.more||s.tour||document.hidden||this.bandReduced()||this.cinema?.root||this.journey?.root){this.homePreviewDue=0;return;}
+    if(this.disposed||s.tab!=='home'||s.trans||s.showWelcome||s.showPreferences||s.more||s.tour||document.hidden||this.bandReduced()||this.cinema?.root||this.journey?.root){this.homePreviewDue=0;return;}
     var card=document.querySelector('.home-demo');
     if(!card||card.matches(':hover')||card.contains(document.activeElement)){this.homePreviewDue=0;return;}
     var now=Date.now();if(!this.homePreviewDue)this.homePreviewDue=now+3000;
@@ -5362,7 +5533,6 @@ class Component extends DCLogic {
       self.setState(Object.assign({ routeArrived: !finished && self.state.trans }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
         self.resetScreenScroll();
         self.ensureNavVisible();
-        if (self.state.voice && !self.state.tutorial && !self.state.showPreferences) self.narrateBrisa(self.sectionNarration());
         if (self.state.tab === 'juke' || self.state.tab === 'game') {
           var sub = self.state.sub;
           if (sub === 1) self.loadDisc(self.state.disc);
@@ -6243,10 +6413,10 @@ class Component extends DCLogic {
       [T('La NASA publica mapas centrados en el Pacífico para observar sus cambios.', 'NASA publishes maps centered on the Pacific to show how it changes.'), svs],
       [T('El análisis MUR de la NASA reúne observaciones de varios satélites.', 'NASA’s MUR analysis combines observations from several satellites.'), dataset],
       [T('En NASA Worldview puedes alternar entre la temperatura y su diferencia con lo habitual.', 'NASA Worldview lets you switch between temperature and its difference from usual.'), worldview],
-      [T('Sensores como MODIS, en los satélites Aqua y Terra, aportan datos al análisis MUR.', 'Sensors such as MODIS, on the Aqua and Terra satellites, contribute data to the MUR analysis.'), dataset],
+      [T('MODIS mide la superficie del mar desde Aqua y Terra.', 'MODIS monitors the ocean surface from Aqua and Terra.'), dataset],
       s.set === 'prev'
         ? [T('La escala histórica de NASA agrupa en un color los aumentos de 3 °C o más.', 'The historical NASA color scale groups warming of 3 °C or more into one color.'), palette]
-        : [T('La NASA también ofrece el mapa como animación para seguir cambios entre fechas.', 'NASA also provides an animation to follow changes across dates.'), svs]
+        : [T('La NASA también anima estos mapas para mostrar sus cambios.', 'NASA also animates these maps to show how they change.'), svs]
     ];
     var index = (s.frame + s.disc) % facts.length, fact = facts[index];
     var observation = T('Estamos leyendo los colores de esta imagen.', 'We’re reading the colors in this image.');
@@ -6276,8 +6446,8 @@ class Component extends DCLogic {
           '{n} of {total} squares with data are close to the usual temperature.', { n: neutral, total: total })),
         uiText(uiMessage('En {n} de {total} filas con datos aparecen zonas cálidas y frías a la vez.',
           'In {n} of {total} rows with data, warm and cool areas appear together.', { n: mixed, total: rows })),
-        uiText(uiMessage('{n} de {total} cuadros con datos se alejan bastante de lo habitual, hacia frío o calor.',
-          '{n} of {total} squares with data show a marked shift toward warmer or cooler water.', { n: strong, total: total })),
+        uiText(uiMessage('{n} de {total} cuadros muestran un cambio marcado de frío o calor.',
+          '{n} of {total} squares show a marked change toward warmth or cold.', { n: strong, total: total })),
         uiText(uiMessage('La cuadrícula distingue {warm} cuadros más cálidos y {cool} más fríos de lo habitual.',
           'The grid shows {warm} warmer and {cool} cooler squares than usual.', { warm: warm, cool: cool }))
       ][index];
@@ -6323,7 +6493,7 @@ class Component extends DCLogic {
     this.syncVolume();
   }
   speak(text, manual) {
-    if (!manual && !this.state.voice) return;
+    if (!manual) return;
     this.stopSpeech();
     if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
       this.setState({ speechNotice: uiMessage('La voz no está disponible aquí. Puedes seguir con el texto.', 'Voice is unavailable here. You can continue with the text.') });
@@ -6541,7 +6711,7 @@ class Component extends DCLogic {
       closeLabel: s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen'),
       canUseText: s.tutorial && s.tour === 2,
       useTextLabel: T('Continuar con la versión escrita', 'Continue with the written version'), useText: function () { self.tutorialAction('play'); },
-      voiceLabel: s.speaking ? T('Detener voz de Brisa', 'Stop Brisa’s voice') : tx.guideListen,
+      voiceLabel: s.speaking ? T('Detener lectura', 'Stop reading') : s.tutorial && tstep?.audio ? tx.guideListen : T('Leer en voz alta · voz del dispositivo', 'Read aloud · device voice'),
       place: place, cardSt: cardSt, spot: !!R, spotSt: spotSt, dim: !R,
       compact: vw < 280 ? 'narrow' : '',
       who: s.tutorial ? T('Brisa · Tutorial práctico', 'Brisa · Practical tutorial') : T('Brisa · Ayuda', 'Brisa · Help'),
@@ -6634,18 +6804,16 @@ class Component extends DCLogic {
       languageCode: LANG,
       languageKeys: function(event) { self.onLanguageKey(event); },
       sample: { pending: !!s.sampleStarting, label: s.sampleStarting ? T('Preparando muestra…', 'Preparing sample…') : typeof(window.AudioContext || window.webkitAudioContext) === 'function' ? tx.heroCta : T('Explorar una muestra', 'Explore a sample'), start: function() { self.startSample(); } },
-      preferences: {
-        on: s.showPreferences, title: T('¿Cómo prefieres usarlo?', 'How would you like to use it?'),
-        body: T('Puedes cambiarlo luego en Accesibilidad.', 'You can change it later in Accessibility.'),
-        choices: [
-          ['voice', T('Modo voz de Brisa', 'Brisa voice mode'), T('Brisa habla al entrar en cada apartado. Puedes desactivar su voz aquí.', 'Brisa speaks as you open each section. You can turn her voice off here.')],
-          ['big', T('Texto grande', 'Large text'), T('Aumenta el tamaño de lectura.', 'Increase the reading size.')],
-          ['contrast', T('Alto contraste', 'High contrast'), T('Bordes y texto con mayor contraste.', 'Stronger contrast for borders and text.')],
-          ['reducedMotion', T('Movimiento reducido', 'Reduced motion'), T('Personajes y transiciones sin animación.', 'Characters and transitions without animation.')]
-        ].concat(self.hapticVm().visible ? [['vibe', T('Vibración opcional', 'Optional vibration'), T('Pulsos de intensidad musical, incluso sin sonido. Puedes probarlos y detenerlos en Accesibilidad. Depende del navegador y del teléfono.', 'Musical intensity pulses, even without sound. Test or stop them in Accessibility. Availability depends on your browser and phone.')]] : []).map(function (option) { return { id: 'preferences-' + option[0], label: option[1], hint: option[2], on: option[0] === 'reducedMotion' ? reducedMotion : !!s[option[0]], disabled: option[0] === 'vibe' && !self.haptics.supported(), change: function (e) { self.setPreference(option[0], e.target.checked); } }; }),
-        continueLabel: T('Continuar', 'Continue'), tutorialLabel: this.tutorialEntryLabel(),
-        continue: function () { self.finishPreferences(false); }, tutorial: function () { self.finishPreferences(true); }
+      welcome: {
+        on: !!s.showWelcome, explorer: !s.showWelcome,
+        title: T('No solo visualizamos el planeta. Le damos vida.', 'We don’t just visualize our planet. We bring it to life.'),
+        body: T('Descubre cómo cambia el Pacífico con mapas de la NASA, música y exploración interactiva.', 'Explore the changing Pacific through NASA maps, music and interactive discovery.'),
+        startLabel: T('Empezar a explorar', 'Start exploring'), note: T('Sin cuenta · Accesible desde el inicio', 'No account required · Accessible from the start'),
+        motionOn: !reducedMotion, motionLabel: T('Usar animaciones', 'Use animations'),
+        changeMotion: function (event) { self.setPreference('reducedMotion', !event.target.checked); },
+        start: function () { self.startWelcome(); }
       },
+      preferences: this.entryPreferencesVm(),
       frameCount: s.disc === 5 ? T('tu archivo', 'your file') : T('fotograma ', 'frame ') + (s.frame + 1) + T(' de ', ' of ') + d.files.length, prevOff: s.frame <= 0, nextOff: s.frame >= d.files.length - 1,
       trans: s.trans, route: s.route, pageName: ROUTE_LOOK[s.tab].title,
       sectionNumber: PAGES[s.tab][0],

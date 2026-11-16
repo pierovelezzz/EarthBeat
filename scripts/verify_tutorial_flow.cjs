@@ -52,10 +52,12 @@ async function main(){
    await startFromHelp();await step(1);await pick();await page.locator('#tour-card .tbubble button').first().click();await step(1);
    assert.equal(await page.evaluate(()=>__app.state.tutorialDone.disc),false);
    await page.keyboard.press('Escape');
-   // First-visit entry is optional and launches the same tutorial, not a second flow.
-   await page.evaluate(()=>{localStorage.removeItem('ts_tutorial');localStorage.removeItem('ts_prefs');});await page.goto(base+'?first-visit');
-   const skip=page.locator('.cinema-skip');if(await skip.isVisible())await skip.click();
-   await page.locator('#preferences-dialog').waitFor();await page.locator('.preferences-actions button').nth(1).click();await step(1);
+   // First visit keeps the tutorial available after the optional introduction.
+   await page.evaluate(()=>{localStorage.removeItem('ts_tutorial');localStorage.removeItem('ts_prefs');localStorage.removeItem('ts_welcome_seen');});await page.goto(base+'?first-visit');
+   await page.locator('.welcome-start').click();
+   await page.locator('.discgrid .dcard').first().waitFor();
+   assert.equal(await page.locator('.ts-cinema').count(),0,'Reduced motion goes directly to the discs');
+   await startFromHelp();await step(1);
    report.checks.push({width,lang,singleContextCard:true,pauseResume:true,reload:true,withoutSound:true,completeAndRestart:true,firstVisit:true});console.log('PASS tutorial',width,lang);await context.close();
   }
  }finally{fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(report,null,2));await browser.close();}
