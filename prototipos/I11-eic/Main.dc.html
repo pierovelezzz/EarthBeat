@@ -4325,6 +4325,7 @@ class Component extends DCLogic {
     this.state.showWelcome = firstVisit && !directLink;
     if (firstVisit) {
       if (typeof preferences?.values.voice !== 'boolean') this.state.voice = true;
+      if (typeof preferences?.values.sfx !== 'boolean') this.state.sfx = true;
       if (!this.motionExplicit) {
         this.motionExplicit = true;
         this.state.reducedMotion = false;

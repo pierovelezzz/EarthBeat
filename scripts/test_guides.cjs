@@ -1454,9 +1454,10 @@ test('first-visit settings apply and persist immediately without dismissing the 
   assert.equal(c.state.showWelcome,true);
   c.openPreferences();
   const choices=c.renderVals().preferences.choices;
-  assert.deepEqual(Array.from(choices.filter(choice=>choice.on),choice=>choice.id), ['preferences-reducedMotion', 'preferences-voice']);
+  assert.deepEqual(Array.from(choices.filter(choice=>choice.on),choice=>choice.id), ['preferences-reducedMotion', 'preferences-voice', 'preferences-sfx']);
   choices.find(choice=>choice.id==='preferences-contrast').change({target:{checked:true}});
   choices.find(choice=>choice.id==='preferences-reducedMotion').change({target:{checked:false}});
+  choices.find(choice=>choice.id==='preferences-sfx').change({target:{checked:false}});
   assert.equal(c.state.contrast,true);
   assert.equal(c.state.reducedMotion,true);
   assert.equal(c.renderVals().welcome.motionOn,false);
@@ -1465,6 +1466,7 @@ test('first-visit settings apply and persist immediately without dismissing the 
   assert.equal(reload.state.showWelcome,true);
   assert.equal(reload.state.contrast,true);
   assert.equal(reload.state.reducedMotion,true);
+  assert.equal(reload.state.sfx,false);
   c.closePreferences();
   c.startWelcome();
   assert.equal(c.state.showWelcome,false);
