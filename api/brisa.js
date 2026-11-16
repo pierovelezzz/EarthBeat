@@ -26,12 +26,26 @@ function readBody(req) {
   return req.body || {};
 }
 
+function configuredProxy() {
+  const value = process.env.BRISA_PROXY_URL?.trim();
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) return null;
+    url.pathname = url.pathname.replace(/\/+$/, '') + '/';
+    return url;
+  } catch {
+    return null;
+  }
+}
+
 module.exports = async function brisa(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const listedChatKey = (process.env.OPENROUTER_KEYS || '').split(/[,\n]/).map(key => key.trim()).find(Boolean);
   const chatKey = (process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_KEY || listedChatKey || '').trim();
   const voiceKey = (process.env.ELEVENLABS_API_KEY || process.env.ELEVENLABS_KEY || '').trim();
-  if (req.method === 'GET') return res.json({ chat: Boolean(chatKey), voice: Boolean(voiceKey) });
+  const proxy = configuredProxy();
+  if (req.method === 'GET') return res.json({ chat: Boolean(chatKey || proxy), voice: Boolean(voiceKey || proxy) });
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (Number(req.headers['content-length'] || 0) > 4096) return res.status(413).json({ error: 'size' });
   let body;
@@ -43,7 +57,8 @@ module.exports = async function brisa(req, res) {
   if (!text || text.length > (body.action === 'chat' ? 380 : 600)) {
     return res.status(400).json({ error: 'text' });
   }
-  if (body.action === 'chat' && !chatKey || body.action === 'voice' && !voiceKey) {
+  const directKey = body.action === 'chat' ? chatKey : voiceKey;
+  if (!directKey && !proxy) {
     return res.status(503).json({ error: 'unavailable' });
   }
   if (!allowedToSend(req, body.action)) return res.status(429).json({ error: 'rate' });
@@ -56,13 +71,22 @@ module.exports = async function brisa(req, res) {
       const configuredVoice = (process.env.BRISA_ES_VOICE_ID || '').trim();
       const voice = selected === 'brisa' && /^[a-zA-Z0-9]{20}$/.test(configuredVoice) ? configuredVoice : voices[selected];
       const settings = selected === 'brisa' ? { stability: 0.52, similarity_boost: 0.76, speed: 1.06 } : undefined;
-      const result = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voice + '?output_format=mp3_22050_32', {
+      const url = voiceKey
+        ? 'https://api.elevenlabs.io/v1/text-to-speech/' + voice + '?output_format=mp3_22050_32'
+        : new URL('api/elevenlabs', proxy);
+      const result = await fetch(url, {
         method: 'POST',
-        headers: { 'xi-api-key': voiceKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-        body: JSON.stringify({ text, model_id: 'eleven_flash_v2_5', language_code: body.language, voice_settings: settings }),
+        headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg', ...(voiceKey && { 'xi-api-key': voiceKey }) },
+        body: JSON.stringify({
+          text, model_id: 'eleven_flash_v2_5', language_code: body.language,
+          voice_settings: settings, voiceId: voiceKey ? undefined : voice
+        }),
+        redirect: 'error',
         signal: timeout
       });
-      if (!result.ok) return res.status(502).json({ error: 'voice' });
+      if (!result.ok || !result.headers.get('content-type')?.startsWith('audio/')) {
+        return res.status(502).json({ error: 'voice' });
+      }
       res.setHeader('Content-Type', 'audio/mpeg');
       return res.end(Buffer.from(await result.arrayBuffer()));
     }
@@ -71,9 +95,10 @@ module.exports = async function brisa(req, res) {
       .filter(item => item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string')
       .map(item => ({ role: item.role, content: item.content.slice(0, 380) }));
     const screen = typeof body.screen === 'string' ? body.screen.slice(0, 80) : '';
-    const result = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const url = chatKey ? 'https://openrouter.ai/api/v1/chat/completions' : new URL('api/openrouter', proxy);
+    const result = await fetch(url, {
       method: 'POST',
-      headers: { Authorization: 'Bearer ' + chatKey, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...(chatKey && { Authorization: 'Bearer ' + chatKey }) },
       body: JSON.stringify({
         model: process.env.BRISA_CHAT_MODEL || 'openrouter/free',
         max_tokens: 180,
@@ -87,6 +112,7 @@ module.exports = async function brisa(req, res) {
           ].join(' ')
         }].concat(history, [{ role: 'user', content: JSON.stringify({ screen, question: text }) }])
       }),
+      redirect: 'error',
       signal: timeout
     });
     if (!result.ok) return res.status(502).json({ error: 'chat' });
