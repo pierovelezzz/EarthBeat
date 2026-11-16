@@ -3473,8 +3473,8 @@ var TECH = [
     use: "Resume la imagen en 28 columnas y 16 filas para llevar el color a la música." },
   { cat: "Interfaz y código", name: "SVG + Web Animations API", label: "Movimiento de la interfaz",
     use: "Anima la introducción y las transiciones. Los músicos bailan con dibujos 2D." },
-  { cat: "Interfaz y código", name: "MP3 + Web Speech API", label: "La voz de Brisa",
-    use: "Reproduce grabaciones en español e inglés. La síntesis del navegador sirve de respaldo si falta la reproducción de audio." },
+  { cat: "Interfaz y código", name: "OpenRouter + ElevenLabs", label: "La asistente Brisa",
+    use: "Las preguntas abiertas se envían a OpenRouter. ElevenLabs lee las respuestas. Evita escribir datos personales." },
   { cat: "Interfaz y código", name: "Controles HTML", label: "Navegación con teclado",
     use: "Usa Tab para recorrer botones y controles, y Enter o Espacio para activarlos." },
   { cat: "Interfaz y código", name: "Vibration API", label: "Música que se siente",
@@ -3627,7 +3627,7 @@ var TECH_EN = {
   "HTML + CSS + JavaScript": {"label": "The site you explore", "use": "Choose discs, switch languages and move between sections."},
   "Canvas 2D": {"label": "From map to grid", "use": "Summarizes the image in 28 columns and 16 rows to turn color into music."},
   "SVG + Web Animations API": {"label": "Motion on the site", "use": "Animates the intro and transitions. The musicians dance using 2D artwork."},
-  "MP3 + Web Speech API": {"label": "Brisa’s voice", "use": "Plays Spanish and English recordings. Browser speech is a fallback when audio playback is unavailable."},
+  "OpenRouter + ElevenLabs": {"label": "Brisa, the assistant", "use": "Open questions are sent to OpenRouter. ElevenLabs reads replies aloud. Avoid sharing personal information."},
   "Controles HTML": {"label": "Keyboard navigation", "use": "Use Tab to move through buttons and controls, and Enter or Space to activate them.", "name": "HTML controls"},
   "Vibration API": {"label": "Music you can feel", "use": "On compatible phones, pulses can follow the music even when audio is muted."},
   "FileReader + Blob + localStorage": {"label": "Your images and preferences", "use": "Your browser processes images and saves your language and accessibility settings."},
@@ -4388,11 +4388,13 @@ class Component extends DCLogic {
       event.stopPropagation();
     };
     this.onBrisaChatOpen = () => this.stopSpeech();
+    this.onBrisaChatGuide = (event) => this.handleBrisaChatGuide(event.detail);
     this.discPointerRoot = document.querySelector('.px.app');
     if (this.discPointerRoot) {
       this.discPointerRoot.addEventListener('mousedown', this.onDiscPointer, true);
       this.discPointerRoot.addEventListener('click', this.onDiscPointer, true);
       this.discPointerRoot.addEventListener('earthrhythm:chat-open', this.onBrisaChatOpen);
+      this.discPointerRoot.addEventListener('earthrhythm:chat-guide', this.onBrisaChatGuide);
     }
     // La guía vuelve a medir su objetivo cuando la ventana cambia de tamaño, se desplaza, se minimiza o vuelve a estar visible.
     this.onTourLayout = function () {
@@ -4820,6 +4822,25 @@ class Component extends DCLogic {
       onComplete: first ? () => this.brisaBandIntros.add(ownVoice) : null
     };
   }
+  handleBrisaChatGuide(detail) {
+    if (detail.action === 'screen' || detail.action === 'member') {
+      var step;
+      if (detail.action === 'screen') {
+        var help = this.nextBrisaLine();
+        step = help.key === 'band' ? this.bandNarration(this.state.bsel, true) : this.brisaLine(help.key, help.index);
+      } else if (Number.isInteger(detail.index) && BAND[detail.index]) {
+        step = this.bandNarration(detail.index, true);
+      }
+      if (step) detail.reply = { text: step.b, clip: step.audio };
+      return;
+    }
+    if (this.state.tutorial) return;
+    if (detail.action === 'visual') {
+      this.openContextHelp(null, !detail.voice);
+    } else if (detail.action === 'visit' && Number.isInteger(detail.index) && BAND[detail.index]) {
+      this.goTab('band', 0, detail.index);
+    }
+  }
   canResumeTutorialOnOpen() {
     var s = this.state;
     return this.tutorialProgress?.completed === false && !s.playing && !s.audioPending && !(s.tab === 'juke' && s.sub === 1);
@@ -4830,14 +4851,14 @@ class Component extends DCLogic {
     if (this.canResumeTutorialOnOpen()) { this.startTutorial(false, event); return; }
     this.openContextHelp(event);
   }
-  openContextHelp(event) {
+  openContextHelp(event, silent) {
     if (!this.settleArrivedRoute()) return;
     if (this.state.tour) this.tourClose();
     this.rememberTourOrigin();
     if (event && event.currentTarget) this.tourReturnFocus = event.currentTarget;
     this.brisaHelp = this.nextBrisaLine();
     this.tourGo(1);
-    if (this.state.tour && this.state.voice) this.narrateBrisa(this.contextHelpStep(), true);
+    if (!silent && this.state.tour && this.state.voice) this.narrateBrisa(this.contextHelpStep(), true);
   }
   contextHelpStep() {
     var help = this.brisaHelp;
@@ -5093,6 +5114,7 @@ class Component extends DCLogic {
       this.discPointerRoot.removeEventListener('mousedown', this.onDiscPointer, true);
       this.discPointerRoot.removeEventListener('click', this.onDiscPointer, true);
       this.discPointerRoot.removeEventListener('earthrhythm:chat-open', this.onBrisaChatOpen);
+      this.discPointerRoot.removeEventListener('earthrhythm:chat-guide', this.onBrisaChatGuide);
     }
     this.invalidateLoads();
     this.revokeCustom();
@@ -5303,10 +5325,18 @@ class Component extends DCLogic {
     }
     this.routeChange(patch, s.tab, this.subTitles()[i]);
   }
-  goTab(k, sub) {
+  goTab(k, sub, bandMember) {
     if (this.state.tutorial) return;
     this.settleArrivedRoute();
     var s = this.state;
+    if (k === 'band' && k === s.tab && Number.isInteger(bandMember)) {
+      this.stopSpeech();
+      this.cancelBandClip();
+      this.setState({ bsel: bandMember, bphase: 'idle' }, function () {
+        document.querySelector('#tour-bpick [aria-pressed="true"]')?.focus({ preventScroll: true });
+      });
+      return;
+    }
     if (k === 'game' && !this.rhythmQuery?.matches) return;
     if (k === 'juke' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0); return; }
     if (k === 'game' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0); return; }
@@ -5322,6 +5352,7 @@ class Component extends DCLogic {
     // Cambiar de sección cierra la ayuda; Silbo la reanuda solo cuando se le pide.
     if (s.tour) this.tourClose();
     var patch = { tab: k, sub: sub || 0, tour: 0, tourRect: null, more: false };
+    if (k === 'band' && Number.isInteger(bandMember)) patch.bsel = bandMember;
     if (s.tab === 'how') patch.upMsg = '';
     if (k === 'how' && patch.sub === 0 && s.custom && s.disc !== 5) Object.assign(patch, { disc: 5, frame: 0, col: -1, ended: false });
     this.routeChange(patch, k);
@@ -5458,6 +5489,10 @@ class Component extends DCLogic {
       self.setState(Object.assign({ routeArrived: !finished && self.state.trans }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
         self.resetScreenScroll();
         self.ensureNavVisible();
+        if (tab === 'band' && Number.isInteger(patch.bsel)) {
+          document.querySelector('#tour-bpick [aria-pressed="true"]')?.focus({ preventScroll: true });
+          return;
+        }
         if (self.state.tab === 'juke' || self.state.tab === 'game') {
           var sub = self.state.sub;
           if (sub === 1) self.loadDisc(self.state.disc);

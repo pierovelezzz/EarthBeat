@@ -34,22 +34,22 @@ window.earthRhythmSpanishVoice = async (text, signal) => {
 };
 const copy = {
   es: {
-    launch: 'Chat con Brisa', close: 'Cerrar', status: 'Brisa responde sobre EarthRhythm.',
-    live: 'Las preguntas abiertas se envían a OpenRouter. Evita incluir datos personales.',
-    local: 'Ayuda integrada. Elige una pregunta o escribe sobre los mapas, la música o la banda.',
-    ask: 'Tu pregunta', send: 'Enviar', read: 'Leer la última respuesta', stop: 'Detener lectura',
-    voice: 'Voz de ElevenLabs', dictate: 'Dictar', stopDictation: 'Detener dictado',
+    launch: 'Habla con Brisa', assistant: 'Asistente IA', close: 'Cerrar', status: 'Conversación con Brisa',
+    intro: '¡Hola! Soy Brisa. Pregúntame por el mapa, sus colores o cómo suena el Pacífico.',
+    ask: 'Tu pregunta', placeholder: 'Pregunta por el mapa, la música o la banda…', send: 'Enviar', clear: 'Limpiar',
+    speaker: 'Leer respuestas en voz alta', visual: 'Guía visual', now: '¿Qué estoy viendo ahora?',
+    band: 'Músicos de la banda', visit: 'Ver en La banda', dictate: 'Dictar', stopDictation: 'Detener dictado',
     dictating: 'Escuchando…', dictationError: 'El dictado no pudo continuar. Puedes escribir la pregunta.',
     waiting: 'Brisa está preparando una respuesta…', fallback: 'Brisa respondió con la ayuda integrada.', noVoice: 'La lectura en voz alta no está disponible en este dispositivo.',
     localAnswer: 'Puedo ayudarte a leer los mapas de la NASA, probar una imagen, conocer a los músicos o jugar con los discos. ¿Qué quieres explorar?',
     guest: 'Tú', agent: 'Brisa'
   },
   en: {
-    launch: 'Chat with Brisa', close: 'Close', status: 'Brisa answers questions about EarthRhythm.',
-    live: 'Open questions go to OpenRouter. Please leave out personal information.',
-    local: 'Built-in help. Pick a question or ask about the maps, music or band.',
-    ask: 'Your question', send: 'Send', read: 'Read the latest answer', stop: 'Stop reading',
-    voice: 'ElevenLabs voice', dictate: 'Dictate', stopDictation: 'Stop dictation',
+    launch: 'Talk to Brisa', assistant: 'AI assistant', close: 'Close', status: 'Conversation with Brisa',
+    intro: 'Hi, I’m Brisa. Ask me about the map, its colors or what the Pacific sounds like.',
+    ask: 'Your question', placeholder: 'Ask about the map, the music or the band…', send: 'Send', clear: 'Clear',
+    speaker: 'Read replies aloud', visual: 'Visual guide', now: 'What am I looking at?',
+    band: 'Band musicians', visit: 'View in The Band', dictate: 'Dictate', stopDictation: 'Stop dictation',
     dictating: 'Listening…', dictationError: 'Dictation stopped. You can type your question.',
     waiting: 'Brisa is preparing an answer…', fallback: 'Brisa replied using built-in help.', noVoice: 'Read aloud is unavailable on this device.',
     localAnswer: 'I can help you read NASA maps, try an image, meet the musicians or play with the discs. What would you like to explore?',
@@ -98,35 +98,50 @@ const musicianAnswers = {
   illapa: ['Illapa toca el timbal.', 'Illapa plays the timpani.']
 };
 
+const musicians = [
+  ['silbo', 'Silbo', '#ffd447'], ['inti', 'Inti', '#ff7958'], ['mama', 'Mamacocha', '#38c6e8'],
+  ['yaku', 'Yaku', '#7be38a'], ['illapa', 'Illapa', '#f475ba']
+];
+const speakerIcon = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="waves" d="M16 9a4 4 0 0 1 0 6m2-9a8 8 0 0 1 0 12"/><path class="mute" d="m16 10 5 5m0-5-5 5"/></svg>';
+
 const markup = [
   '<style>',
   ':host{display:inline-grid;justify-items:start;font:inherit;color:var(--fg,#fff)}',
-  'button,input,select{box-sizing:border-box;font:inherit;min-height:44px;color:inherit}',
+  'button,textarea{box-sizing:border-box;font:inherit;min-height:44px;color:inherit}',
   'button{padding:5px 10px;border:1px solid var(--line,#8ca6c5);border-radius:6px;background:var(--surface,#21344e);cursor:pointer}',
-  'button:disabled{opacity:.65;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent,#ffd447);outline-offset:2px}',
+  'button:disabled{opacity:.65;cursor:default}button:focus-visible,textarea:focus-visible,.messages:focus-visible{outline:2px solid var(--accent,#ffd447);outline-offset:2px}',
   '.launch{display:inline-flex;align-items:center;gap:5px;font-size:.84em;font-weight:700;border-color:var(--fg,#fff)}',
-  'dialog{box-sizing:border-box;position:fixed;inset:12px 12px 12px auto;margin:0;width:min(430px,calc(100% - 24px));height:fit-content;max-height:calc(100dvh - 24px);padding:0;overflow:auto;border:1px solid var(--line,#8ca6c5);border-radius:12px;background:var(--bg,#171e2b);color:inherit}',
-  'dialog::backdrop{background:#0008}',
-  '.panel{box-sizing:border-box;display:grid;gap:9px;padding:13px;min-width:0}',
-  'header,.tools,form{display:flex;align-items:center;gap:8px;flex-wrap:wrap}header{justify-content:space-between}',
-  'h2,p{margin:0}h2{font-size:1.18em}.note,.status{font-size:.85em;color:var(--muted,#c5d4e7)}.status:empty{display:none}',
-  '.prompts{display:flex;flex-wrap:wrap;gap:6px}.prompts button{font-size:.84em}',
-  '.messages{display:grid;gap:8px;max-height:min(42dvh,310px);overflow:auto;overscroll-behavior:contain;overflow-wrap:anywhere}',
-  '.messages:empty{display:none}.message{display:grid;gap:3px;padding:8px 10px;border-inline-start:3px solid var(--accent,#ffd447);background:var(--panel,#202b38)}',
-  '.message strong{font-size:.84em}.ask-label{flex-basis:100%;font-weight:700}',
-  'input,select{max-width:100%;padding:5px 8px;border:1px solid var(--line,#8ca6c5);border-radius:6px;background:var(--panel,#202b38)}',
-  'input{flex:1 1 140px;min-width:0}.tools label{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.86em}',
+  'dialog{box-sizing:border-box;position:fixed;inset:0 0 0 auto;margin:0;width:min(420px,100%);height:100dvh;max-width:none;max-height:none;padding:0;overflow:auto;border:1px solid var(--line,#8ca6c5);border-radius:14px 0 0 14px;background:var(--bg,#171e2b);color:inherit;box-shadow:-16px 0 40px #0004}',
+  'dialog::backdrop{background:#0003}',
+  '.panel{box-sizing:border-box;display:grid;grid-template-rows:auto auto auto minmax(80px,1fr) auto;height:100%;gap:10px;padding:14px;min-width:0}',
+  'header,.tools,.compose-actions{display:flex;align-items:center;gap:8px}header{padding-bottom:10px;border-bottom:1px solid var(--line,#8ca6c5)}',
+  '.identity{flex:1;min-width:0}.assistant,.status{font-size:.84em;color:var(--muted,#c5d4e7)}.status:empty{display:none}',
+  '.portrait{width:42px;height:42px;flex:none;object-fit:cover;border:1px solid #54dbc8;border-radius:50%;background:#03151c}',
+  'dialog[data-talking] .portrait{outline:2px solid var(--fg,#fff);outline-offset:3px}',
+  '.speaker,.close{display:grid;width:44px;flex:none;place-items:center;padding:0;border-radius:50%}',
+  '.speaker[aria-pressed="true"]{background:var(--fg,#fff);color:var(--bg,#171e2b)}.speaker[aria-pressed="false"] .waves,.speaker[aria-pressed="true"] .mute{display:none}',
+  '.tools{flex-wrap:wrap}.tools button,.visit,.compose-actions button{font-size:.86em}',
+  'h2,p{margin:0}h2{font-size:1.18em;line-height:1.2}',
+  '.musicians{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}',
+  '.musicians button{display:grid;justify-items:center;align-content:center;gap:3px;min-width:0;padding:4px 1px;color:#f6f8fc;background:#151e2d;border-bottom:2px solid var(--member);font-size:.72em;overflow-wrap:anywhere}',
+  '.musicians button:hover,.musicians button[aria-pressed="true"]{border-color:var(--member);background:#283447}.musicians button:focus-visible{outline-color:var(--member)}',
+  '.musicians img{width:26px;height:34px;object-fit:contain}',
+  '.messages{display:grid;align-content:start;gap:9px;min-height:0;overflow:auto;overscroll-behavior:contain;overflow-wrap:anywhere;padding:2px}',
+  '.message{display:grid;gap:4px;padding:10px 12px;line-height:1.4;border:1px solid var(--line,#8ca6c5);border-inline-start:3px solid var(--accent,#ffd447);border-radius:8px;background:var(--panel,#202b38)}',
+  '.message[data-role="user"]{margin-inline-start:12%;border-inline-start-width:1px}.message strong{font-size:.84em}.visit{justify-self:start;margin-top:4px}',
+  '.compose{display:grid;gap:6px;min-width:0}.compose-actions{flex-wrap:wrap}.send{margin-inline-start:auto;background:var(--fg,#fff);color:var(--bg,#171e2b)}',
+  'textarea{width:100%;padding:8px;border:1px solid var(--line,#8ca6c5);border-radius:6px;background:var(--panel,#202b38);resize:none}',
+  '.ask-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}',
   '[hidden]{display:none!important}',
   '</style>',
   '<button type="button" class="launch" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9h8m-8 3h5"/></svg><span></span></button>',
   '<dialog aria-labelledby="heading"><div class="panel">',
-  '<header><h2 id="heading"></h2><button type="button" class="close"></button></header>',
-  '<p class="note"></p><div class="prompts"></div>',
+  '<header><img class="portrait" src="./brisa/portrait.webp" alt=""><div class="identity"><p class="assistant"></p><h2 id="heading"></h2></div><button type="button" class="speaker" aria-pressed="false">' + speakerIcon + '</button><button type="button" class="close"><span aria-hidden="true">×</span></button></header>',
+  '<div class="tools"><button type="button" class="visual"></button><button type="button" class="now"></button></div>',
+  '<div class="musicians" role="group"></div>',
   '<div class="messages" role="log" aria-live="polite" tabindex="0"></div>',
-  '<p class="status" role="status"></p>',
-  '<form><label class="ask-label" for="question"></label><input id="question" name="question" type="text" maxlength="380" autocomplete="off" required>',
-  '<button type="button" class="mic" hidden></button><button type="submit" class="send"></button></form>',
-  '<div class="tools"><button type="button" class="read" disabled></button><label class="voices" hidden><span></span><select><option value="brisa">Brisa · Leoni Vergara</option><option value="sarah">Sarah</option><option value="aria">Aria</option><option value="laura">Laura</option></select></label></div>',
+  '<form class="compose"><p class="status" role="status"></p><label class="ask-label" for="question"></label><textarea id="question" name="question" rows="2" maxlength="380" autocomplete="off" required></textarea>',
+  '<div class="compose-actions"><button type="button" class="mic" hidden></button><button type="button" class="clear"></button><button type="submit" class="send"></button></div></form>',
   '</div></dialog>'
 ].join('');
 
@@ -138,44 +153,92 @@ class EarthRhythmBrisaChat extends HTMLElement {
     this.attachShadow({ mode: 'open' }).innerHTML = markup;
     this.services = {};
     this.history = [];
+    try { this.chatVoice = localStorage.getItem('ts_brisa_chat_audio'); } catch {}
     this.find('.launch').addEventListener('click', () => this.openChat());
-    this.find('.close').addEventListener('click', () => {
-      this.cancelChat();
-      this.dialog.close();
-    });
+    this.find('.close').addEventListener('click', () => this.dialog.close());
     this.dialog.addEventListener('cancel', () => this.cancelChat());
     this.dialog.addEventListener('close', () => this.cancelChat());
     this.dialog.addEventListener('keydown', event => { if (event.key === 'Escape') event.stopPropagation(); });
     this.find('form').addEventListener('submit', event => {
       event.preventDefault();
-      this.send(this.find('input').value);
+      this.send(this.find('textarea').value);
     });
-    this.find('.read').addEventListener('click', () => this.read());
+    this.find('textarea').addEventListener('keydown', event => {
+      if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return;
+      event.preventDefault();
+      this.find('form').requestSubmit();
+    });
     this.find('.mic').addEventListener('click', () => this.dictate());
-    this.find('select').addEventListener('change', () => {
-      try { localStorage.setItem('ts_brisa_chat_voice_'+this.language, this.find('select').value); } catch {}
-      this.stopReading();
+    this.find('.clear').addEventListener('click', () => {
+      this.clearConversation();
+      this.find('textarea').focus();
     });
+    this.find('.speaker').addEventListener('click', () => this.toggleVoice());
+    this.find('.visual').addEventListener('click', () => {
+      const voice = this.voiceMode;
+      this.dialog.close();
+      this.cancelChat();
+      this.guide({ action: 'visual', voice });
+    });
+    this.find('.now').addEventListener('click', () => {
+      const reply = this.guide({ action: 'screen' });
+      this.send(this.text.now, reply || this.localReply(this.text.now));
+    });
+    this.find('.musicians').append(...musicians.map(([key, name, color], index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.style.setProperty('--member', color);
+      button.setAttribute('aria-pressed', 'false');
+      const image = document.createElement('img');
+      image.src = './sprites/' + key + '/miniatura-banda.webp';
+      image.alt = '';
+      const label = document.createElement('span');
+      label.textContent = name;
+      button.append(image, label);
+      button.addEventListener('click', () => this.introduceMusician(index));
+      return button;
+    }));
   }
 
   find(selector) { return this.shadowRoot.querySelector(selector); }
   get dialog() { return this.find('dialog'); }
   get language() { return this.getAttribute('language') === 'en' ? 'en' : 'es'; }
   get text() { return copy[this.language]; }
-  get voiceMode() { return this.getAttribute('voice-mode') === 'true'; }
+  get voiceMode() { return this.chatVoice == null ? this.getAttribute('voice-mode') === 'true' : this.chatVoice === 'on'; }
 
   connectedCallback() {
-    this.updateVoiceSelection();
     this.updateText();
+    if (!this.find('.messages').children.length) this.addMessage('assistant', this.text.intro);
   }
 
-  updateVoiceSelection() {
-    const spanish = this.language === 'es', select = this.find('select');
-    select.options[0].hidden = !spanish;
-    let voice;
-    try { voice = localStorage.getItem('ts_brisa_chat_voice_'+this.language) || localStorage.getItem('ts_brisa_chat_voice'); } catch {}
-    const choices = spanish ? ['brisa','sarah','aria','laura'] : ['sarah','aria','laura'];
-    select.value = choices.includes(voice) ? voice : choices[0];
+  toggleVoice() {
+    this.chatVoice = this.voiceMode ? 'off' : 'on';
+    try { localStorage.setItem('ts_brisa_chat_audio', this.chatVoice); } catch {}
+    this.updateSpeaker();
+    if (!this.voiceMode) this.stopReading();
+    else if (this.lastAnswer) void this.read();
+  }
+
+  updateSpeaker() {
+    const button = this.find('.speaker');
+    button.setAttribute('aria-label', this.text.speaker);
+    button.setAttribute('aria-pressed', String(this.voiceMode));
+    button.title = this.text.speaker;
+  }
+
+  guide(detail) {
+    this.dispatchEvent(new CustomEvent('earthrhythm:chat-guide', { bubbles: true, detail }));
+    return detail.reply;
+  }
+
+  async introduceMusician(index) {
+    if (this.pending) return;
+    const name = musicians[index][1];
+    const reply = this.guide({ action: 'member', index }) || this.localReply(name);
+    Array.from(this.find('.musicians').children).forEach((button, position) => {
+      button.setAttribute('aria-pressed', String(position === index));
+    });
+    await this.send(name, { ...reply, member: index });
   }
 
   disconnectedCallback() { this.cancelChat(); }
@@ -184,10 +247,10 @@ class EarthRhythmBrisaChat extends HTMLElement {
     if (previous === current) return;
     if (name === 'voice-mode') {
       if (!this.voiceMode && this.reading) this.stopReading();
+      this.updateSpeaker();
       return;
     }
-    if (this.dialog.open) this.clearConversation();
-    this.updateVoiceSelection();
+    this.clearConversation();
     this.updateText();
   }
 
@@ -195,40 +258,49 @@ class EarthRhythmBrisaChat extends HTMLElement {
     const text = this.text;
     this.find('.launch').setAttribute('aria-label', text.launch);
     this.find('.launch').title = text.launch;
-    const labels = { '.launch span': this.language === 'es' ? 'IA' : 'AI', h2: text.launch, '.close': text.close, '.ask-label': text.ask,
-      '.send': text.send, '.read': this.reading ? text.stop : text.read,
-      '.mic': this.recognition ? text.stopDictation : text.dictate, '.voices span': text.voice };
+    const labels = { '.launch span': this.language === 'es' ? 'IA' : 'AI', h2: text.launch, '.assistant': text.assistant,
+      '.ask-label': text.ask, '.send': text.send, '.clear': text.clear, '.visual': text.visual, '.now': text.now,
+      '.mic': this.recognition ? text.stopDictation : text.dictate };
     for (const [selector, label] of Object.entries(labels)) this.find(selector).textContent = label;
+    this.find('.close').setAttribute('aria-label', text.close);
+    this.find('.close').title = text.close;
+    this.find('textarea').placeholder = text.placeholder;
+    this.find('.musicians').setAttribute('aria-label', text.band);
     this.find('.messages').setAttribute('aria-label', text.status);
-    this.find('.note').textContent = this.services.chat ? text.live : text.local;
-    this.find('.voices').hidden = !this.services.voice;
     this.find('.mic').hidden = !(window.SpeechRecognition || window.webkitSpeechRecognition);
-    this.find('.prompts').replaceChildren(...topics.slice(0, 3).map(topic => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.textContent = topic[this.language][0];
-      button.addEventListener('click', () => this.send(topic[this.language][0], topic));
-      return button;
-    }));
+    this.updateSpeaker();
   }
 
   async openChat() {
     if (this.dialog.open) return;
     this.dispatchEvent(new CustomEvent('earthrhythm:chat-open', { bubbles: true }));
     this.dialog.showModal();
-    this.find('input').focus();
+    this.find('textarea').focus();
     this.services = await getBrisaServices();
     this.updateText();
   }
 
-  addMessage(role, value) {
+  addMessage(role, value, member) {
     const row = document.createElement('div');
     row.className = 'message';
+    row.dataset.role = role;
     const title = document.createElement('strong');
     title.textContent = role === 'user' ? this.text.guest : this.text.agent;
     const body = document.createElement('p');
     body.textContent = value;
     row.append(title, body);
+    if (Number.isInteger(member)) {
+      const visit = document.createElement('button');
+      visit.className = 'visit';
+      visit.type = 'button';
+      visit.textContent = this.text.visit;
+      visit.addEventListener('click', () => {
+        this.dialog.close();
+        this.cancelChat();
+        this.guide({ action: 'visit', index: member });
+      });
+      row.append(visit);
+    }
     const log = this.find('.messages');
     log.append(row);
     log.scrollTop = log.scrollHeight;
@@ -246,10 +318,9 @@ class EarthRhythmBrisaChat extends HTMLElement {
     question = question.trim().slice(0, 380);
     if (!question || this.pending) return;
     this.stopReading();
-    this.find('input').value = '';
-    this.find('.prompts').hidden = true;
+    this.find('textarea').value = '';
     this.addMessage('user', question);
-    let reply = fixedAnswer ? { text: fixedAnswer[this.language][1], clip: 'chat-' + fixedAnswer.id } : this.localReply(question);
+    let reply = fixedAnswer || this.localReply(question);
     if (this.services.chat && !fixedAnswer) {
       const request = this.pending = new AbortController();
       this.find('.send').disabled = true;
@@ -273,23 +344,21 @@ class EarthRhythmBrisaChat extends HTMLElement {
       this.find('.send').disabled = false;
       this.find('.status').textContent = reply.clip ? this.text.fallback : '';
     }
-    this.addMessage('assistant', reply.text);
+    this.addMessage('assistant', reply.text, reply.member);
     this.history.push({ role: 'user', content: question }, { role: 'assistant', content: reply.text });
     this.history = this.history.slice(-4);
     this.lastAnswer = reply;
-    this.find('.read').disabled = false;
     if (this.voiceMode && this.dialog.open) void this.read();
   }
 
   async read() {
-    if (this.reading) { this.stopReading(); return; }
+    if (this.reading) return;
     const reply = this.lastAnswer;
     if (!reply) return;
     const request = this.reading = new AbortController();
-    this.find('.read').textContent = this.text.stop;
     if (this.services.voice) {
       try {
-        const audio = await requestBrisaVoice(reply.text, this.language, this.find('select').value, request.signal, 10000);
+        const audio = await requestBrisaVoice(reply.text, this.language, this.language === 'es' ? 'brisa' : 'sarah', request.signal, 10000);
         if (audio) {
           if (this.reading !== request) return;
           this.audioUrl = URL.createObjectURL(audio);
@@ -313,6 +382,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
     }
     const utterance = new SpeechSynthesisUtterance(reply.text);
     utterance.lang = this.language === 'es' ? 'es-PE' : 'en-US';
+    utterance.onstart = () => { if (this.reading === request) this.dialog.setAttribute('data-talking', ''); };
     utterance.onend = utterance.onerror = () => { if (this.reading === request) this.stopReading(); };
     this.utterance = utterance;
     speechSynthesis.speak(utterance);
@@ -321,7 +391,10 @@ class EarthRhythmBrisaChat extends HTMLElement {
   async playClip(url) {
     const audio = this.audio = new Audio(url);
     await audio.play();
-    if (this.audio === audio) audio.onended = audio.onerror = () => this.stopReading();
+    if (this.audio === audio) {
+      this.dialog.setAttribute('data-talking', '');
+      audio.onended = audio.onerror = () => this.stopReading();
+    }
   }
 
   stopReading() {
@@ -330,7 +403,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
     if (this.audio) { this.audio.onended = this.audio.onerror = null; this.audio.pause(); this.audio = null; }
     if (this.audioUrl) { URL.revokeObjectURL(this.audioUrl); this.audioUrl = null; }
     if (this.utterance) { this.utterance = null; window.speechSynthesis?.cancel(); }
-    this.find('.read').textContent = this.text.read;
+    this.dialog.removeAttribute('data-talking');
   }
 
   dictate() {
@@ -340,8 +413,8 @@ class EarthRhythmBrisaChat extends HTMLElement {
     const recognition = this.recognition = new Recognition();
     recognition.lang = this.language === 'es' ? 'es-PE' : 'en-US';
     recognition.onresult = event => {
-      this.find('input').value = event.results[0][0].transcript.slice(0, 380);
-      this.find('input').focus();
+      this.find('textarea').value = event.results[0][0].transcript.slice(0, 380);
+      this.find('textarea').focus();
     };
     let error = false;
     const finish = () => {
@@ -362,8 +435,9 @@ class EarthRhythmBrisaChat extends HTMLElement {
     this.history = [];
     this.lastAnswer = null;
     this.find('.messages').replaceChildren();
-    this.find('.prompts').hidden = false;
-    this.find('.read').disabled = true;
+    this.find('textarea').value = '';
+    for (const button of this.find('.musicians').children) button.setAttribute('aria-pressed', 'false');
+    this.addMessage('assistant', this.text.intro);
   }
 
   cancelChat() {
