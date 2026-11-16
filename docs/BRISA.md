@@ -18,3 +18,9 @@ El movimiento reducido conserva contenido, poses y controles. La reproducción d
 ---
 
 [Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)
+
+## Chat con Brisa
+
+El chat funciona con preguntas y respuestas integradas en GitHub Pages y Vercel. En Vercel, la ruta del mismo sitio /api/brisa habilita respuestas abiertas al configurar OPENROUTER_API_KEY y voces seleccionables al configurar ELEVENLABS_API_KEY en el entorno del proyecto. También admite los nombres OPENROUTER_KEY, OPENROUTER_KEYS y ELEVENLABS_KEY de v4-IA. BRISA_CHAT_MODEL permite elegir un modelo de OpenRouter.
+
+Configura las claves como variables privadas de Vercel y vuelve a desplegar. Usa claves limitadas a la función necesaria y configura un tope de consumo en cada proveedor. Las preguntas escritas se envían a OpenRouter solo con el servicio activo. El botón de lectura usa ElevenLabs si está habilitado, las grabaciones de Brisa para las respuestas integradas y la voz del dispositivo como respaldo para respuestas abiertas. El dictado utiliza el servicio de reconocimiento del navegador cuando está disponible. La narración preparada de Brisa en el tutorial y La banda sigue usando sus grabaciones locales.

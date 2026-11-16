@@ -17,6 +17,8 @@ def build(destination: Path) -> None:
     prototype = root / "prototipos" / "I11-eic"
     support_runtime = root / "scripts" / "pages-support.js"
     dance_runtime = root / "scripts" / "band-dance.js"
+    brisa_chat = root / "scripts" / "brisa-chat.js"
+    chat_version = sha256(lf_bytes(brisa_chat)).hexdigest()[:12]
     musicians = {"silbo", "inti", "mama", "yaku", "illapa"}
     support_version = sha256(lf_bytes(support_runtime)).hexdigest()[:12]
     dance_version = sha256(lf_bytes(dance_runtime))
@@ -51,7 +53,8 @@ def build(destination: Path) -> None:
     html = html.replace(support_marker, f'src="./support.js?v={support_version}"', 1)
     html = html.replace(
         "</head>",
-        f'<script type="module" src="./runtime/band-dance.js?v={dance_version.hexdigest()[:12]}"></script>\n</head>',
+        f'<script type="module" src="./runtime/band-dance.js?v={dance_version.hexdigest()[:12]}"></script>\n'
+        f'<script type="module" src="./runtime/brisa-chat.js?v={chat_version}"></script>\n</head>',
         1,
     )
     html = html.replace(
@@ -64,6 +67,7 @@ def build(destination: Path) -> None:
     copy2(support_runtime, destination / "support.js")
     (destination / "runtime").mkdir(exist_ok=True)
     copy2(dance_runtime, destination / "runtime")
+    copy2(brisa_chat, destination / "runtime")
     copy2(prototype / "stage.webp", destination)
     copytree(root / "assets" / "fonts", destination / "fonts", dirs_exist_ok=True)
     for folder in ("fotogramas", "fotogramas-anteriores", "brisa", "miniaturas"):
