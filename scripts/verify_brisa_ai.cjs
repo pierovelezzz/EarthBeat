@@ -54,6 +54,17 @@ async function main() {
           })
         });
       }
+      if (url.startsWith('https://api.elevenlabs.io/v1/speech-to-text') || url === 'https://brisa-proxy.test/api/elevenlabs-stt') {
+        if (failNetwork) {
+          return route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ detail: 'simulated offline' }) });
+        }
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({ text: '¿Qué significan los colores?' })
+        });
+      }
       if (url.startsWith('https://api.elevenlabs.io/v1/text-to-speech/') || url === 'https://brisa-proxy.test/api/elevenlabs') {
         const body = JSON.parse(route.request().postData() || '{}');
         const viaProxy = url.startsWith('https://brisa-proxy.test/');
@@ -148,7 +159,22 @@ async function main() {
     assert(homeGeom.mainShrank, 'Main workspace must shrink cleanly to the left of right-docked Brisa panel');
     assert.equal(homeGeom.voiceOptions, 6, 'Quick voice selector must expose 6 ElevenLabs voices');
     assert.deepEqual(homeGeom.smallTargets, [], 'Dialog interactive controls must be >= 44px: ' + JSON.stringify(homeGeom.smallTargets));
-    report.checks.push('desktop-home-docked-geometry-and-adaptive-layout');
+    assert.equal(await page.locator('.brisa-ai-chip').count(), 2, 'Initial empty panel should display only 2 concise starter recommendations');
+
+    // Cross-tab Band walkthrough directly from Home starter chip ("Los 5 músicos de la banda")
+    await page.locator('.brisa-ai-chip').nth(1).click();
+    await page.waitForSelector('.brisa-ai-msg-assistant');
+    await page.waitForFunction(() => window.__app && __app.state.tab === 'band' && !__app.state.trans);
+    await page.waitForSelector('#tour-bshow');
+    await page.waitForSelector('.brisa-ai-spot-box');
+    assert.equal(await page.locator('.brisa-ai-chip').count(), 0, 'Starter chips hide cleanly once conversation begins');
+    const bandPills = await page.locator('.brisa-ai-spot-pill').count();
+    assert.equal(bandPills, 5, 'Asking about the 5 band members attaches all 5 character pills');
+    await page.locator('.brisa-ai-spot-pill').nth(2).click();
+    assert.equal(await page.evaluate(() => __app.state.bsel), 2, 'Clicking 3rd pill switches live stage to Mamacocha');
+    await page.locator('.brisa-ai-form-buttons button').filter({ hasText: 'Limpiar' }).click();
+    assert.equal(await page.locator('.brisa-ai-chip').count(), 2, 'Clearing chat restores 2 starter chips cleanly');
+    report.checks.push('desktop-home-docked-geometry-cross-tab-band-and-concise-chips');
 
     // Escape from docked panel restores focus cleanly
     await page.keyboard.press('Escape');
@@ -156,7 +182,11 @@ async function main() {
     assert(await page.evaluate(() => document.activeElement?.id === 'brisa-ai-open'), 'Escape must restore focus to launcher');
     report.checks.push('desktop-docked-escape-restore');
 
-    // 2. Open from #tour-card
+    // 2. Return to Home and open from #tour-card
+    await page.evaluate(() => {
+      __app.goTab('home');
+    });
+    await page.waitForFunction(() => !__app.state.trans && __app.state.tab === 'home');
     await page.locator('.home-process #tour-guide').click();
     await page.waitForSelector('#tour-card');
     await page.locator('#tour-card .tour-ai-open').click();
@@ -190,11 +220,20 @@ async function main() {
     await voiceToggle.click();
     assert.equal(await voiceToggle.getAttribute('aria-pressed'), 'true');
 
+    // Verify STT transcription into input box cleanly populates #brisa-ai-input
+    const transcribed = await page.evaluate(async () => {
+      const wav = window.__app ? encodeBrisaPcmWavBuffer([new Float32Array([0.1, -0.1, 0.2])], 16000, 16000) : null;
+      return wav ? await __app.transcribeBrisaAudio(wav.buffer) : '';
+    });
+    assert.equal(transcribed, '¿Qué significan los colores?', 'ElevenLabs STT endpoint path must return clean transcribed text');
+
     // Send a prompt via Shift+Enter newline + Enter submit
     const input = page.locator('#brisa-ai-input');
+    const prevOrCount = report.openrouterCalls.length;
+    const prevElCount = report.elevenlabsCalls.length;
     await input.fill('¿Qué es Yaku aquí');
     await input.press('Shift+Enter');
-    assert.equal(report.openrouterCalls.length, 0, 'Shift+Enter must not submit prematurely');
+    assert.equal(report.openrouterCalls.length, prevOrCount, 'Shift+Enter must not submit prematurely');
     await input.type('y qué fuentes de la NASA usa?');
     await input.press('Enter');
 
@@ -202,20 +241,21 @@ async function main() {
     await page.waitForFunction(() => window.__app && window.__app.state.speaking === true);
 
     // Verify OpenRouter payload contained live NASA SVS/GIBS/POWER & Pacora state
-    assert.equal(report.openrouterCalls.length, 1);
-    const sysPrompt = report.openrouterCalls[0].messages[0].content;
+    assert.equal(report.openrouterCalls.length, prevOrCount + 1);
+    const sysPrompt = report.openrouterCalls.at(-1).messages[0].content;
     assert(sysPrompt.includes('"discId":"yaku2023"'), 'System prompt must contain live discId yaku2023');
     assert(sysPrompt.includes('"pacoraRuleActive":true'), 'System prompt must reflect Pacora rule on Yaku Mar 2023');
     assert(sysPrompt.includes('NASA SVS 5176') && sysPrompt.includes('GHRSST L4 MUR') && sysPrompt.includes('NASA POWER Monthly API'));
 
     // Verify ElevenLabs called with default Sarah voice + Flash v2.5 + latency optimization and music ducked
-    assert.equal(report.elevenlabsCalls.length, 1);
-    assert.equal(report.elevenlabsCalls[0].voiceId, 'EXAVITQu4vr4xnSDxMaL');
-    assert.equal(report.elevenlabsCalls[0].hasKey, !report.elevenlabsCalls[0].viaProxy);
-    if (!report.elevenlabsCalls[0].viaProxy) {
-      assert(report.elevenlabsCalls[0].url.includes('optimize_streaming_latency=3'), 'Direct ElevenLabs call should optimize streaming latency');
+    assert.equal(report.elevenlabsCalls.length, prevElCount + 1);
+    const curElCall = report.elevenlabsCalls.at(-1);
+    assert.equal(curElCall.voiceId, 'EXAVITQu4vr4xnSDxMaL');
+    assert.equal(curElCall.hasKey, !curElCall.viaProxy);
+    if (!curElCall.viaProxy) {
+      assert(curElCall.url.includes('optimize_streaming_latency=3'), 'Direct ElevenLabs call should optimize streaming latency');
     }
-    assert.equal(report.elevenlabsCalls[0].body.model_id, 'eleven_flash_v2_5');
+    assert.equal(curElCall.body.model_id, 'eleven_flash_v2_5');
     // Verify automatic visual spotlight walkthrough is active over workspace on the left
     await page.waitForSelector('.brisa-ai-spot-box');
     await page.waitForSelector('#brisa-ai-spot-badge');
@@ -232,7 +272,7 @@ async function main() {
     assert(Math.abs(restoredGain - 0.8) < 0.02, 'Expected restored gain ~0.8, got ' + restoredGain);
     await playBtn.click();
     await page.waitForFunction(() => window.__app && window.__app.state.speaking);
-    assert.equal(report.elevenlabsCalls.length, 1, 'Replay with same voice must hit cache instead of ElevenLabs API');
+    assert.equal(report.elevenlabsCalls.length, prevElCount + 1, 'Replay with same voice must hit cache instead of ElevenLabs API');
     await playBtn.click();
     await page.waitForFunction(() => window.__app && !window.__app.state.speaking);
     report.checks.push('openrouter-live-context-spotlight-and-elevenlabs-cache-ducking');
@@ -241,14 +281,15 @@ async function main() {
     await page.selectOption('#brisa-ai-voice-quick', '9BWtsMINqrJLrRacOk9x');
     await playBtn.click();
     await page.waitForFunction(() => window.__app && window.__app.state.speaking);
-    assert.equal(report.elevenlabsCalls.length, 2);
-    assert.equal(report.elevenlabsCalls[1].voiceId, '9BWtsMINqrJLrRacOk9x');
+    assert.equal(report.elevenlabsCalls.length, prevElCount + 2);
+    assert.equal(report.elevenlabsCalls.at(-1).voiceId, '9BWtsMINqrJLrRacOk9x');
     await playBtn.click();
     await page.waitForFunction(() => window.__app && !window.__app.state.speaking);
 
     // Offline fallback check
     failNetwork = true;
-    await page.locator('.brisa-ai-chip').first().click();
+    await input.fill('¿Qué es NASA SVS 5176?');
+    await input.press('Enter');
     await page.waitForFunction(() => window.__app && window.__app.state.brisaAiMessages.length === 4);
     const lastText = await page.locator('.brisa-ai-msg-assistant').last().textContent();
     assert(lastText.length > 30, 'Offline fallback must render helpful response');
@@ -301,6 +342,7 @@ async function main() {
       __app.setPreference('contrast', false);
       __app.setPreference('big', false);
       __app.goTab('band');
+      __app.setState({ bsel: 0 });
     });
     await page.waitForSelector('.bpage');
     await page.waitForFunction(() => !__app.state.trans);

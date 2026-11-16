@@ -65,6 +65,22 @@ async function handleElevenLabs(request, env, cors) {
   return new Response(JSON.stringify({ error: 'TTS failed' }), { status: 502, headers: { 'Content-Type': 'application/json', ...cors } });
 }
 
+async function handleElevenLabsStt(request, env, cors) {
+  const apiKey = (env.ELEVENLABS_KEY || '').trim();
+  if (!apiKey) return new Response(JSON.stringify({ error: 'Missing ELEVENLABS_KEY' }), { status: 503, headers: { 'Content-Type': 'application/json', ...cors } });
+  const contentType = request.headers.get('content-type') || '';
+  if (!contentType.includes('multipart/form-data')) {
+    return new Response(JSON.stringify({ error: 'multipart/form-data required' }), { status: 400, headers: { 'Content-Type': 'application/json', ...cors } });
+  }
+  const upstream = await fetch('https://api.elevenlabs.io/v1/speech-to-text', {
+    method: 'POST',
+    headers: { 'xi-api-key': apiKey, 'Content-Type': contentType },
+    body: await request.arrayBuffer()
+  });
+  const text = await upstream.text();
+  return new Response(text, { status: upstream.status, headers: { 'Content-Type': 'application/json', ...cors } });
+}
+
 export default {
   async fetch(request, env) {
     const cors = makeCors(request, env);
@@ -72,6 +88,7 @@ export default {
     if (request.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: cors });
     const { pathname } = new URL(request.url);
     if (pathname.endsWith('/api/openrouter')) return handleOpenRouter(request, env, cors);
+    if (pathname.endsWith('/api/elevenlabs-stt')) return handleElevenLabsStt(request, env, cors);
     if (pathname.endsWith('/api/elevenlabs')) return handleElevenLabs(request, env, cors);
     return new Response('Not found', { status: 404, headers: cors });
   }

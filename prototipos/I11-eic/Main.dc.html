@@ -2844,11 +2844,13 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog, #brisa-ai-dialog) .px .pla
 </section>
 </sc-if>
 
+<sc-if value="{{brisaAi.empty}}">
 <div class="brisa-ai-chips" role="group" aria-label="{{tx.brisaAiSuggestionsLabel}}">
 <sc-for list="{{brisaAi.suggestions}}" as="sug">
 <button type="button" class="brisa-ai-chip" onClick="{{sug.ask}}" disabled="{{brisaAi.loading}}">{{sug.label}}</button>
 </sc-for>
 </div>
+</sc-if>
 
 <div id="brisa-ai-log" class="brisa-ai-log" role="log" aria-live="polite" aria-relevant="additions text" aria-label="{{tx.brisaAiLogLabel}}">
 <sc-if value="{{brisaAi.empty}}">
@@ -4462,6 +4464,7 @@ function brisaAiConfig() {
       ? base.openrouterModels
       : ['nvidia/nemotron-3.5-lightning:free', 'google/gemma-4-26b-a4b-it:free', 'google/gemma-4-31b-it:free', 'openrouter/free'],
     elevenlabsEndpoint: base.elevenlabsEndpoint || 'https://api.elevenlabs.io/v1/text-to-speech',
+    elevenlabsSttEndpoint: base.elevenlabsSttEndpoint || 'https://api.elevenlabs.io/v1/speech-to-text',
     elevenlabsKey: String(base.elevenlabsKey || '').trim(),
     elevenlabsModel: base.elevenlabsModel || 'eleven_flash_v2_5',
     elevenlabsFallbackModel: base.elevenlabsFallbackModel || 'eleven_multilingual_v2',
@@ -4472,13 +4475,13 @@ function brisaAiConfig() {
     customElKey: String(saved.customElKey || '').trim()
   };
 }
-function encodeBrisaPcmWavBase64(chunks, inputRate, targetRate) {
-  var total = 0, i, j, offset = 0;
+function encodeBrisaPcmWavBuffer(chunks, inputRate, targetRate) {
+  var total = 0, i, j, offset = 0, peak = 0;
   for (i = 0; i < chunks.length; i++) total += chunks[i].length;
-  if (!total) return '';
+  if (!total) return null;
   var merged = new Float32Array(total);
   for (i = 0; i < chunks.length; i++) { merged.set(chunks[i], offset); offset += chunks[i].length; }
-  var outRate = targetRate || 12000;
+  var outRate = targetRate || 16000;
   var ratio = inputRate > outRate ? (inputRate / outRate) : 1;
   if (ratio === 1) outRate = inputRate;
   var outLen = Math.max(1, Math.floor(merged.length / ratio));
@@ -4501,14 +4504,24 @@ function encodeBrisaPcmWavBase64(chunks, inputRate, targetRate) {
   for (j = 0; j < outLen; j++) {
     var srcIdx = j * ratio, i0 = Math.floor(srcIdx), i1 = Math.min(merged.length - 1, i0 + 1), frac = srcIdx - i0;
     var sample = merged[i0] * (1 - frac) + merged[i1] * frac;
+    var absVal = Math.abs(sample);
+    if (absVal > peak) peak = absVal;
     sample = Math.max(-1, Math.min(1, sample));
     view.setInt16(44 + j * 2, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
   }
-  var bytes = new Uint8Array(buf), bin = '';
+  return { buffer: buf, peak: peak, sampleRate: outRate, durationSec: outLen / outRate };
+}
+function arrayBufferToBase64(buf) {
+  if (!buf || typeof btoa !== 'function') return '';
+  var bytes = new Uint8Array(buf), bin = '', i;
   for (i = 0; i < bytes.length; i += 8192) {
     bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
   }
-  return typeof btoa === 'function' ? btoa(bin) : '';
+  return btoa(bin);
+}
+function encodeBrisaPcmWavBase64(chunks, inputRate, targetRate) {
+  var wav = encodeBrisaPcmWavBuffer(chunks, inputRate, targetRate || 12000);
+  return wav ? arrayBufferToBase64(wav.buffer) : '';
 }
 function brisaStripMarkdown(text) {
   return String(text || '')
@@ -5208,86 +5221,145 @@ class Component extends DCLogic {
     }
   }
   buildBrisaSpotlightSteps(question) {
-    var s = this.state, q = String(question || '').toLowerCase(), en = LANG === 'en';
+    var s = this.state, q = String(question || '').toLowerCase().trim(), en = LANG === 'en';
     var d = DISCS[s.disc] || DISCS[0], prof = this.profile();
     var dt = this.frameDate(s.disc, s.frame);
     var frameLabel = MES[dt.m] + ' ' + dt.y;
-    var askColors = /color|escala|scale|-5|\+5|naranja|azul|fr[ií]o|c[aá]lido|cold|warm|leyenda|legend/.test(q);
-    var askNasa = /nasa|svs|gibs|power|fuente|source|sat[eé]lite|satellite|datos|data/.test(q);
-    var askBand = /banda|m[uú]sic|musician|silbo|inti|mamacocha|yaku|illapa|pacora|instrument/.test(q);
+    var curSub = Number.isInteger(s.sub) ? s.sub : 0;
+    var askColors = /color|escala|scale|-5|\+5|naranja|azul|fr[ií]o|c[aá]lido|cold|warm|leyenda|legend|melod[ií]a.*datos|datos.*melod[ií]a|melody.*data/.test(q);
+    var askNasa = /nasa|svs|gibs|fuente|sources?|sat[eé]lite|satellite|tecnolog|cr[eé]dit|credit/.test(q);
+    var askPower = /power|lluvia|rain|chiclayo|gal[aá]pagos|iquitos|subir|archivo|c[oó]mo\s+funciona|how\s+it\s+works|28.?16|rejilla|grid/.test(q);
+    var explicitBandWord = /\b(banda?|personaj[es]*|m[uú]sic[oa]s?|integrant[es]*|musicians?|members?)\b/.test(q);
+    var yakuMeansDisc = (d.id === 'yaku2023' || /2023|pacora|cicl[oó]n|cyclone|disco|disc|aqu[ií]|here/.test(q)) && !explicitBandWord;
+    var namedBandIdx = -1;
+    if (!/\b(todos|5|cinco|personaj|m[uú]sic[oa]s?|band[a]?|integrant|members?)\b/.test(q)) {
+      BAND.forEach(function (m, idx) {
+        if (m.k === 'yaku' && yakuMeansDisc) return;
+        if (namedBandIdx < 0 && q.indexOf(m.name.toLowerCase()) >= 0) namedBandIdx = idx;
+      });
+    }
+    var askBand = namedBandIdx >= 0 || explicitBandWord || /silbo|inti|mamacocha|illapa/.test(q) || (/\byaku\b/.test(q) && !yakuMeansDisc);
+    var onActivePlayerTopic = (s.tab === 'juke' || s.tab === 'game') && curSub === 1 && d.id === 'yaku2023' && /\byaku\b|aqu[ií]|pacora|disco/.test(q);
+    var askOnlyCurrent = !q || onActivePlayerTopic || (/qu[eé]\s+(estoy|vemos|suena|hay|es\s+esto)|what\s+am\s+i\s+(seeing|hearing|looking)|pantalla\s+actual|esta\s+pantalla/.test(q) && !askColors && !askNasa && !askBand && !askPower);
     var steps = [];
-    if (s.tab === 'home') {
-      if (askColors) {
+    if (askBand && q) {
+      if (namedBandIdx >= 0) {
+        var mOne = BAND[namedBandIdx], instOne = BAND_INSTRUMENTS[mOne.k], vmOne = this.characterVm(mOne.k);
         steps = [
-          { selector: '.home-map', label: en ? 'NASA map' : 'Mapa NASA', title: en ? 'Blue cold vs. warm orange' : 'Azul frío vs. naranja cálido', text: en ? 'Each hue shows ocean anomaly from −5 (cold) to +5 (warm) in ' + d.title + '.' : 'Cada tono muestra anomalías del mar de −5 (frío) a +5 (cálido) en ' + d.title + '.' },
-          { selector: '.homeflow', label: en ? 'Pixel to sound' : 'Color a sonido', title: en ? 'Mapped into 5 voices' : 'Traducido a 5 voces', text: en ? 'Those derived color levels drive notes, chords and tempo in real time.' : 'Esos niveles derivados guían las notas, los acordes y el pulso en tiempo real.' },
-          { selector: '#tour-cta', label: en ? 'Listen' : 'Escuchar', title: en ? 'Hear the color scale' : 'Escucha la escala', text: en ? 'Tap here to hear this map turned directly into music.' : 'Pulsa aquí para escuchar cómo suena ahora esta escala de colores.' }
-        ];
-      } else if (askNasa) {
-        steps = [
-          { selector: '.home-map', label: 'NASA SVS / GIBS', title: en ? 'Real NASA sea maps' : 'Mapas reales de la NASA', text: en ? 'Driven by NASA SVS 5176 (2024–2026) and historical NASA GIBS (2010–2023).' : 'Impulsado por NASA SVS 5176 (2024–2026) y NASA GIBS históricos (2010–2023).' },
-          { selector: '.homeflow', label: en ? 'NASA POWER' : 'NASA POWER', title: en ? '3-step browser engine' : 'Proceso de 3 pasos', text: en ? 'Also includes NASA POWER rainfall examples processed privately in your browser.' : 'Incluye además lluvia real de NASA POWER procesada en tu navegador.' }
+          { tab: 'band', sub: 0, bsel: namedBandIdx, selector: '#tour-bshow', label: mOne.name, title: mOne.name + ' · ' + instOne.name, text: (en ? 'Role: ' : 'Papel: ') + instOne.name + (vmOne.episode ? ' · ' + vmOne.episode : '') + '.' },
+          { tab: 'band', sub: 0, bsel: namedBandIdx, selector: '#tour-binfo', label: en ? 'Story & sound' : 'Historia y sonido', title: mOne.name + ' · ' + (vmOne.place || ''), text: vmOne.story || (en ? 'Listen to their voice in the band or player.' : 'Escucha su timbre aquí y llévalo al reproductor.') }
         ];
       } else {
-        steps = [
-          { selector: '#home-title', label: en ? 'Summary' : 'Inicio', title: en ? 'Peru ocean to music' : 'Océano de Perú en música', text: en ? 'You are on Home exploring ' + d.title + ' (' + frameLabel + ').' : 'Estás en Inicio viendo ' + d.title + ' (' + frameLabel + ').' },
-          { selector: '.home-map', label: en ? 'Map' : 'Mapa', title: en ? 'Active NASA preview' : 'Vista previa de la NASA', text: en ? 'This satellite image shows sea temperature anomalies off Peru.' : 'Este mapa satelital muestra anomalías térmicas frente a la costa del Perú.' },
-          { selector: '#tour-cta', label: en ? 'Listen' : 'Muestra', title: en ? 'Hear the band play it' : 'Escuchar la muestra', text: en ? 'Start audio or open Listen to inspect every month and band instrument.' : 'Pulsa aquí para escuchar ahora o pasar al reproductor completo.' },
-          { selector: '.homeflow', label: en ? 'How it plays' : 'Cómo suena', title: en ? 'Map -> Levels -> Music' : 'Mapa -> Niveles -> Música', text: en ? 'Warm and cold zones become melodies led by ' + prof.name + '.' : 'Las zonas frías y cálidas se vuelven música guiada por ' + prof.name + '.' }
-        ];
+        var roleNotes = {
+          silbo: T('Quena de viento · Voz del cielo en anomalías cálidas ≥ +2 (ref. Bajo Piura, mar 2017).', 'Andean quena flute · High voice on warm anomalies ≥ +2 (Bajo Piura, Mar 2017 ref.).'),
+          inti: T('Marimba solar · Lleva el pulso en zonas cálidas (ref. Paita / UNESCO 01099).', 'Solar marimba · Carries warm sea pulse and tone (Paita / UNESCO 01099 ref.).'),
+          mama: T('Arpa y bajos · Sostiene aguas frías o calmas en tonos suaves (ref. Santa Lucía 2010).', 'Harp & bass pad · Anchors cooler or calmer waters (Santa Lucía 2010 ref.).'),
+          yaku: T('Gotería pentatónica · Trae lluvia; en Pacora mar 2023 frena −10 BPM.', 'Pentatonic drops · Rainfall voice; Pacora Mar 2023 slows tempo −10 BPM.'),
+          illapa: T('Timbalería / trueno · Suena solo en calor extremo ≥ +4.4 (ref. Tumbes dic 2023).', 'Timpani thunder · Triggers on extreme warmth ≥ +4.4 (Tumbes Dec 2023 ref.).')
+        };
+        steps = BAND.map(function (m, idx) {
+          return {
+            tab: 'band', sub: 0, bsel: idx,
+            selector: '#tour-bshow',
+            label: m.name,
+            title: (idx + 1) + '/5 · ' + m.name + ' (' + BAND_INSTRUMENTS[m.k].name + ')',
+            text: roleNotes[m.k] || BAND_INSTRUMENTS[m.k].name
+          };
+        });
       }
-    } else if ((s.tab === 'juke' || s.tab === 'game') && s.sub === 1) {
-      if (askColors) {
-        steps = [
-          { selector: '#player-legend', label: en ? 'Scale −5..+5' : 'Escala −5..+5', title: en ? 'Derived color levels' : 'Niveles de color −5 a +5', text: en ? '−5 is deep cold blue, 0 is near usual, and +5 is extreme warm orange.' : '−5 es azul muy frío, 0 es cercano a lo habitual y +5 naranja cálido extremo.' },
-          { selector: '#tour-frame .mapbox', label: en ? 'Scan column' : 'Mapa activo', title: en ? 'Scanned west to east' : 'Barrido oeste a este', text: en ? 'EarthRhythm reads 28 columns of colors on this NASA map (' + frameLabel + ').' : 'La página lee 28 columnas de color sobre este mapa (' + frameLabel + ').' },
-          { selector: '#tour-modes', label: en ? 'Sound mode' : 'Modo sonoro', title: en ? 'Melody vs. Data' : 'Melodía frente a Datos', text: en ? 'Melody adds harmonies; Data maps each color level straight to pitch.' : 'Melodía suma acordes de banda; Datos convierte cada nivel directo en nota.' }
-        ];
-      } else if (askBand) {
-        steps = [
-          { selector: '.listen-band .band-stage', label: en ? 'Band stage' : 'Escenario', title: en ? 'Lead: ' + prof.name : 'Líder: ' + prof.name, text: en ? 'Watch the 5 fictional musicians highlight as their voices react.' : 'Mira cómo se iluminan los 5 músicos ficticios al responder al mapa.' },
-          { selector: '#tour-machine', label: en ? 'Mixers' : 'Pistas', title: en ? 'Individual tracks' : 'Mezcla por músico', text: en ? 'Toggle each instrument or follow their live pattern bars.' : 'Activa o silencia cada instrumento y observa sus barras de ritmo.' }
-        ];
-      } else {
-        steps = [
-          { selector: '#tour-frame .mapbox', label: en ? 'Map' : 'Mapa NASA', title: en ? 'Seeing: ' + d.title : 'Viendo: ' + d.title, text: en ? 'Month ' + frameLabel + '. Notice the warm and cool patches along the coast.' : 'Mes ' + frameLabel + '. Observa las franjas cálidas y frías frente a la costa.' },
-          { selector: '#player-legend', label: en ? 'Legend' : 'Colores', title: en ? '−5 cold to +5 warm' : 'Escala −5 a +5', text: en ? 'These colors guide the pitch, chords, and dynamics as the bar sweeps.' : 'Estos tonos definen las notas e instrumentos durante cada barrido.' },
-          { selector: '#tour-play', label: en ? 'Play' : 'Audio', title: en ? (s.playing ? 'Playing in ' + (s.engine === 'melody' ? 'Melody' : 'Data') : 'Ready to play') : (s.playing ? 'Sonando ahora' : 'Botón reproducir'), text: en ? 'Controls playback in ' + (s.engine === 'melody' ? 'Melody' : 'Data') + ' mode led by ' + prof.name + '.' : 'Controla el audio en modo ' + (s.engine === 'melody' ? 'Melodía' : 'Datos') + ' con ' + prof.name + '.' },
-          { selector: '#tour-machine', label: en ? 'Band' : 'Banda', title: en ? 'Active instruments' : 'Qué estás escuchando', text: en ? 'Each track voices one part of the ocean column you are hearing.' : 'Cada pista representa un instrumento de la banda tocando el océano.' }
-        ];
-      }
-    } else if (s.tab === 'juke' && s.sub === 0) {
+    } else if (askColors && !askOnlyCurrent) {
+      var playerTab = s.tab === 'game' ? 'game' : 'juke';
       steps = [
-        { selector: '#tour-sets', label: en ? 'Datasets' : 'Catálogos', title: en ? 'NASA SVS vs. GIBS' : 'NASA SVS frente a GIBS', text: en ? 'Switch between current 2024–2026 events and 2010–2023 historical discs.' : 'Alterna entre eventos actuales (2024–2026) y discos históricos (2010–2023).' },
-        { selector: '#tour-discs', label: en ? 'Seasons' : 'Discos', title: en ? 'Choose a season' : 'Elige un disco', text: en ? 'Pick any season here to inspect its 30 monthly NASA maps.' : 'Elige una temporada para explorar sus 30 mapas mensuales.' }
+        { tab: playerTab, sub: 1, selector: '#player-legend', label: en ? 'Scale −5..+5' : 'Escala −5..+5', title: en ? 'Derived color levels' : 'Niveles de color −5 a +5', text: en ? '−5 is deep cold blue, 0 is near usual, and +5 is extreme warm orange.' : '−5 es azul muy frío, 0 es cercano a lo habitual y +5 naranja cálido extremo.' },
+        { tab: playerTab, sub: 1, selector: '#tour-frame .mapbox', label: en ? 'Scan column' : 'Mapa activo', title: en ? 'Scanned west to east' : 'Barrido oeste a este', text: en ? 'EarthRhythm reads 28 columns of colors on this NASA map (' + frameLabel + ').' : 'La página lee 28 columnas de color sobre este mapa (' + frameLabel + ').' },
+        { tab: playerTab, sub: 1, selector: '#tour-modes', label: en ? 'Sound mode' : 'Modo sonoro', title: en ? 'Melody vs. Data' : 'Melodía frente a Datos', text: en ? 'Melody adds harmonies; Data maps each color level straight to pitch.' : 'Melodía suma acordes de banda; Datos convierte cada nivel directo en nota.' }
+      ];
+    } else if (askPower && !askOnlyCurrent) {
+      steps = [
+        { tab: 'how', sub: 0, selector: '#tour-sample', label: 'NASA POWER', title: en ? 'Chiclayo rainfall' : 'Lluvia de Chiclayo', text: en ? 'Try 48 real monthly rainfall values from NASA POWER (2015–2018).' : 'Prueba 48 datos reales de lluvia mensual de Chiclayo (NASA POWER).' },
+        { tab: 'how', sub: 0, selector: '#tour-drop', label: en ? 'Upload' : 'Tu archivo', title: en ? 'Browser-only' : '100% en tu dispositivo', text: en ? 'Drop any local image; it is processed privately inside your browser.' : 'Sube una imagen local; todo se procesa sin salir de tu navegador.' },
+        { tab: 'how', sub: 1, selector: '#tour-steps', label: en ? '28×16 grid' : 'Rejilla 28×16', title: en ? 'Pixel to column sound' : 'Del color al sonido', text: en ? 'Shows how EarthRhythm converts pixels into column music.' : 'Resume cómo pasamos de píxeles de color a notas e instrumentos.' }
+      ];
+    } else if (askNasa && !askOnlyCurrent) {
+      steps = [
+        { tab: 'tech', sub: 0, selector: '#tour-topics', label: en ? 'NASA sources' : 'Fuentes NASA', title: en ? 'SVS 5176, GIBS & POWER' : 'SVS 5176, GIBS y POWER', text: en ? 'Explore NASA SVS 5176, GIBS MUR, POWER, sound engine and ethics cards here.' : 'Consulta aquí las fichas de NASA SVS 5176, GIBS MUR, POWER, sonido y ética.' },
+        { tab: 'tech', sub: 0, selector: '#tour-techcards', label: en ? 'Details' : 'Detalle', title: en ? 'Verified documentation' : 'Documentación verificada', text: en ? 'Official links and exact scientific scope for every source on EarthRhythm.' : 'Enlaces oficiales y límites científicos reales de todo el proyecto.' }
+      ];
+    } else if (s.tab === 'home') {
+      steps = [
+        { tab: 'home', sub: 0, selector: '#home-title', label: en ? 'Summary' : 'Inicio', title: en ? 'Peru ocean to music' : 'Océano de Perú en música', text: en ? 'You are on Home exploring ' + d.title + ' (' + frameLabel + ').' : 'Estás en Inicio viendo ' + d.title + ' (' + frameLabel + ').' },
+        { tab: 'home', sub: 0, selector: '.home-map', label: en ? 'Map' : 'Mapa', title: en ? 'Active NASA preview' : 'Vista previa de la NASA', text: en ? 'This satellite image shows sea temperature anomalies off Peru.' : 'Este mapa satelital muestra anomalías térmicas frente a la costa del Perú.' },
+        { tab: 'home', sub: 0, selector: '#tour-cta', label: en ? 'Listen' : 'Muestra', title: en ? 'Hear the band play it' : 'Escuchar la muestra', text: en ? 'Start audio or open Listen to inspect every month and band instrument.' : 'Pulsa aquí para escuchar ahora o pasar al reproductor completo.' },
+        { tab: 'home', sub: 0, selector: '.homeflow', label: en ? 'How it plays' : 'Cómo suena', title: en ? 'Map -> Levels -> Music' : 'Mapa -> Niveles -> Música', text: en ? 'Warm and cold zones become melodies led by ' + prof.name + '.' : 'Las zonas frías y cálidas se vuelven música guiada por ' + prof.name + '.' }
+      ];
+    } else if ((s.tab === 'juke' || s.tab === 'game') && curSub === 1) {
+      steps = [
+        { tab: s.tab, sub: 1, selector: '#tour-frame .mapbox', label: en ? 'Map' : 'Mapa NASA', title: en ? 'Seeing: ' + d.title : 'Viendo: ' + d.title, text: en ? 'Month ' + frameLabel + '. Notice the warm and cool patches along the coast.' : 'Mes ' + frameLabel + '. Observa las franjas cálidas y frías frente a la costa.' },
+        { tab: s.tab, sub: 1, selector: '#player-legend', label: en ? 'Legend' : 'Colores', title: en ? '−5 cold to +5 warm' : 'Escala −5 a +5', text: en ? 'These colors guide the pitch, chords, and dynamics as the bar sweeps.' : 'Estos tonos definen las notas e instrumentos durante cada barrido.' },
+        { tab: s.tab, sub: 1, selector: '#tour-play', label: en ? 'Play' : 'Audio', title: en ? (s.playing ? 'Playing in ' + (s.engine === 'melody' ? 'Melody' : 'Data') : 'Ready to play') : (s.playing ? 'Sonando ahora' : 'Botón reproducir'), text: en ? 'Controls playback in ' + (s.engine === 'melody' ? 'Melody' : 'Data') + ' mode led by ' + prof.name + '.' : 'Controla el audio en modo ' + (s.engine === 'melody' ? 'Melodía' : 'Datos') + ' con ' + prof.name + '.' },
+        { tab: s.tab, sub: 1, selector: '#tour-machine', label: en ? 'Band' : 'Banda', title: en ? 'Active instruments' : 'Qué estás escuchando', text: en ? 'Each track voices one part of the ocean column you are hearing.' : 'Cada pista representa un instrumento de la banda tocando el océano.' }
+      ];
+    } else if (s.tab === 'juke' && curSub === 0) {
+      steps = [
+        { tab: 'juke', sub: 0, selector: '#tour-sets', label: en ? 'Datasets' : 'Catálogos', title: en ? 'NASA SVS vs. GIBS' : 'NASA SVS frente a GIBS', text: en ? 'Switch between current 2024–2026 events and 2010–2023 historical discs.' : 'Alterna entre eventos actuales (2024–2026) y discos históricos (2010–2023).' },
+        { tab: 'juke', sub: 0, selector: '#tour-discs', label: en ? 'Seasons' : 'Discos', title: en ? 'Choose a season' : 'Elige un disco', text: en ? 'Pick any season here to inspect its 30 monthly NASA maps.' : 'Elige una temporada para explorar sus 30 mapas mensuales.' }
       ];
     } else if (s.tab === 'band') {
       steps = [
-        { selector: '#tour-bpick', label: en ? 'Musicians' : '5 músicos', title: en ? 'Choose a musician' : 'Elige un personaje', text: en ? 'Select Silbo, Inti, Mamacocha, Yaku, or Illapa to see their role.' : 'Cambia entre Silbo, Inti, Mamacocha, Yaku o Illapa para conocer su papel.' },
-        { selector: '.bidentity', label: en ? 'Identity' : 'Protagonista', title: prof.name + ' (' + prof.bpm + ' BPM)', text: en ? 'Each fictional musician uses a musical key and ocean anomaly rule.' : 'Cada personaje ficticio usa una tonalidad y regla del océano.' },
-        { selector: '#tour-bshow', label: en ? 'Preview' : 'Sonido', title: en ? 'Live instrument preview' : 'Muestra del instrumento', text: en ? 'Hear how this synth sounds and open them directly in the player.' : 'Escucha cómo suena su timbre y llévalo directo al reproductor.' }
+        { tab: 'band', sub: 0, selector: '#tour-bpick', label: en ? 'Musicians' : '5 músicos', title: en ? 'Choose a musician' : 'Elige un personaje', text: en ? 'Select Silbo, Inti, Mamacocha, Yaku, or Illapa to see their role.' : 'Cambia entre Silbo, Inti, Mamacocha, Yaku o Illapa para conocer su papel.' },
+        { tab: 'band', sub: 0, selector: '#tour-bshow', label: (BAND[s.bsel] || BAND[0]).name, title: (BAND[s.bsel] || BAND[0]).name + ' · ' + BAND_INSTRUMENTS[(BAND[s.bsel] || BAND[0]).k].name, text: en ? 'Visual figure, musical key and ocean rule for the active character.' : 'Figura en escena, tonalidad y regla del océano del personaje activo.' },
+        { tab: 'band', sub: 0, selector: '#tour-binfo', label: en ? 'Story & voice' : 'Historia y voz', title: en ? 'Instrument narration' : 'Narración y sonido', text: en ? 'Hear their story with ElevenLabs voice or test them in the player.' : 'Escucha su historia con voz natural o llévalo directo al reproductor.' }
       ];
     } else if (s.tab === 'how') {
       steps = [
-        { selector: '#tour-sample', label: 'NASA POWER', title: en ? 'Chiclayo rainfall' : 'Lluvia de Chiclayo', text: en ? 'Try 48 real monthly rainfall values from NASA POWER (2015–2018).' : 'Prueba 48 datos reales de lluvia mensual de Chiclayo (NASA POWER).' },
-        { selector: '#tour-drop', label: en ? 'Upload' : 'Tu archivo', text: en ? 'Drop any local image; it is processed privately inside your browser.' : 'Sube una imagen local; todo se procesa sin salir de tu navegador.', title: en ? 'Browser-only' : '100% en tu dispositivo' },
-        { selector: '#tour-steps', label: en ? 'Steps' : 'Pasos', title: en ? '28×16 grid scan' : 'Rejilla de 28×16', text: en ? 'Shows how EarthRhythm converts pixels into column music.' : 'Resume cómo pasamos de píxeles de color a notas e instrumentos.' }
+        { tab: 'how', sub: curSub, selector: curSub === 1 ? '#tour-steps' : '#tour-sample', label: curSub === 1 ? (en ? 'Steps' : 'Pasos') : 'NASA POWER', title: curSub === 1 ? (en ? '28×16 grid scan' : 'Rejilla de 28×16') : (en ? 'Chiclayo rainfall' : 'Lluvia de Chiclayo'), text: curSub === 1 ? (en ? 'Shows how EarthRhythm converts pixels into column music.' : 'Resume cómo pasamos de píxeles de color a notas e instrumentos.') : (en ? 'Try 48 real monthly rainfall values from NASA POWER (2015–2018).' : 'Prueba 48 datos reales de lluvia mensual de Chiclayo (NASA POWER).') },
+        { tab: 'how', sub: 0, selector: '#tour-drop', label: en ? 'Upload' : 'Tu archivo', title: en ? 'Browser-only' : '100% en tu dispositivo', text: en ? 'Drop any local image; it is processed privately inside your browser.' : 'Sube una imagen local; todo se procesa sin salir de tu navegador.' }
       ];
     } else {
       steps = [
-        { selector: '#tour-topics', label: en ? 'Topics' : 'Temas', title: en ? 'Science & NASA archive' : 'Fuentes NASA y ciencia', text: en ? 'Explore SVS 5176, GIBS, POWER, sound engine, and ethics credits.' : 'Consulta las fichas sobre SVS 5176, GIBS, POWER, sonido y ética.' },
-        { selector: '#tour-techcards', label: en ? 'Details' : 'Detalle', title: en ? 'Verified documentation' : 'Documentación verificada', text: en ? 'Official links and exact scientific scope for everything on EarthRhythm.' : 'Enlaces oficiales y límites científicos reales de todo el proyecto.' }
+        { tab: 'tech', sub: 0, selector: '#tour-topics', label: en ? 'Topics' : 'Temas', title: en ? 'Science & NASA archive' : 'Fuentes NASA y ciencia', text: en ? 'Explore SVS 5176, GIBS, POWER, sound engine, and ethics credits.' : 'Consulta las fichas sobre SVS 5176, GIBS, POWER, sonido y ética.' },
+        { tab: 'tech', sub: 0, selector: '#tour-techcards', label: en ? 'Details' : 'Detalle', title: en ? 'Verified documentation' : 'Documentación verificada', text: en ? 'Official links and exact scientific scope for everything on EarthRhythm.' : 'Enlaces oficiales y límites científicos reales de todo el proyecto.' }
       ];
     }
     var hasDom = typeof document !== 'undefined' && !!document.querySelector('.px .scr');
     if (hasDom) {
-      var mounted = steps.filter(function (st) {
-        var el = document.querySelector(st.selector);
-        return el && (!el.closest || !el.closest('[hidden]'));
-      });
-      if (mounted.length) steps = mounted;
+      var targetTab = steps[0] && steps[0].tab;
+      var targetSub = steps[0] && typeof steps[0].sub === 'number' ? steps[0].sub : curSub;
+      if (!targetTab || (targetTab === s.tab && targetSub === curSub)) {
+        var mounted = steps.filter(function (st) {
+          if (st.tab && st.tab !== s.tab) return true;
+          var el = document.querySelector(st.selector);
+          return el && (!el.closest || !el.closest('[hidden]'));
+        });
+        if (mounted.length) steps = mounted;
+      }
     }
     return steps;
+  }
+  syncBrisaSpotlightTarget(step, opts) {
+    if (this.disposed || !step) return;
+    var targetTab = step.tab || this.state.tab;
+    var targetSub = typeof step.sub === 'number' ? step.sub : 0;
+    var self = this;
+    if (this.state.tab !== targetTab || this.state.sub !== targetSub) {
+      this.goTab(targetTab, targetSub, {
+        keepSpotlight: true,
+        silentVoice: true,
+        keepSpeech: true,
+        bsel: typeof step.bsel === 'number' ? step.bsel : undefined,
+        onSettled: function () {
+          if (!self.disposed && self.state.brisaAiOpen) self.measureBrisaSpotlight();
+        }
+      });
+      return;
+    }
+    if (targetTab === 'band' && typeof step.bsel === 'number' && this.state.bsel !== step.bsel) {
+      this.pickBand(step.bsel, {
+        keepSpeech: !!(opts && opts.keepSpeech),
+        quietCue: !!(opts && opts.quietCue)
+      });
+    }
+    this.measureBrisaSpotlight();
   }
   startBrisaSpotlight(steps, opts) {
     this.clearBrisaSpotlight(true);
@@ -5298,8 +5370,9 @@ class Component extends DCLogic {
     }
     var startIdx = (opts && typeof opts.index === 'number') ? Math.max(0, Math.min(list.length - 1, opts.index)) : 0;
     var self = this;
+    var firstStep = list[startIdx];
     this.setState({ brisaSpotSteps: list, brisaSpotIdx: startIdx, brisaSpotRect: null }, function () {
-      self.measureBrisaSpotlight();
+      self.syncBrisaSpotlightTarget(firstStep, { keepSpeech: true, quietCue: true });
     });
     if ((!opts || opts.auto !== false) && list.length > 1) {
       this.brisaSpotTimer = setInterval(function () {
@@ -5313,8 +5386,11 @@ class Component extends DCLogic {
           self.brisaSpotTimer = null;
           return;
         }
-        self.setState({ brisaSpotIdx: next }, function () { self.measureBrisaSpotlight(); });
-      }, 2600);
+        var nextStep = self.state.brisaSpotSteps[next];
+        self.setState({ brisaSpotIdx: next }, function () {
+          self.syncBrisaSpotlightTarget(nextStep, { keepSpeech: true, quietCue: true });
+        });
+      }, 2800);
     }
   }
   stepBrisaSpotlight(delta) {
@@ -5323,8 +5399,11 @@ class Component extends DCLogic {
     clearInterval(this.brisaSpotTimer);
     this.brisaSpotTimer = null;
     var next = Math.max(0, Math.min(list.length - 1, this.state.brisaSpotIdx + delta));
+    var nextStep = list[next];
     var self = this;
-    this.setState({ brisaSpotIdx: next }, function () { self.measureBrisaSpotlight(); });
+    this.setState({ brisaSpotIdx: next }, function () {
+      self.syncBrisaSpotlightTarget(nextStep, { keepSpeech: !!self.state.speaking, quietCue: !!self.state.speaking });
+    });
   }
   jumpBrisaSpotlight(steps, idx) {
     this.startBrisaSpotlight(steps, { index: idx, auto: false });
@@ -5333,7 +5412,10 @@ class Component extends DCLogic {
     if (this.brisaRecognition) {
       var sr = this.brisaRecognition;
       this.brisaRecognition = null;
-      try { sr.abort(); } catch (ignored) {}
+      try {
+        if (finalizeAudio && typeof sr.stop === 'function') sr.stop();
+        else sr.abort();
+      } catch (ignored) {}
     }
     if (this.brisaMicRec) {
       if (finalizeAudio) {
@@ -5362,34 +5444,73 @@ class Component extends DCLogic {
     try { rec.stream && rec.stream.getTracks().forEach(function (t) { t.stop(); }); } catch (ignored) {}
     var sampleRate = (rec.ctx && rec.ctx.sampleRate) || 16000;
     try { rec.ctx && rec.ctx.close(); } catch (ignored) {}
-    var wavBase64 = encodeBrisaPcmWavBase64(rec.chunks || [], sampleRate, 12000);
-    if (!wavBase64) {
+    var wav = encodeBrisaPcmWavBuffer(rec.chunks || [], sampleRate, 16000);
+    if (!wav || !wav.buffer || wav.peak <= 0.0001) {
       this.setState({
         brisaAiListening: false,
-        brisaAiStatus: uiMessage('No se detectó audio del micrófono. Habla cerca del micrófono o escribe tu pregunta.', 'No microphone sound was detected. Speak closer or type your question.')
+        brisaAiStatus: uiMessage('No se detectó sonido del micrófono. Revisa que tu micro no esté silenciado.', 'No microphone sound was detected. Check that your mic is not muted.')
       });
       return;
     }
     this.setState({
       brisaAiListening: false,
-      brisaAiStatus: uiMessage('Transcribiendo tu voz con IA…', 'Transcribing your voice…')
+      brisaAiStatus: uiMessage('Convirtiendo tu voz a texto…', 'Converting your voice to text…')
     });
-    var text = await this.transcribeBrisaAudio(wavBase64);
+    var text = await this.transcribeBrisaAudio(wav.buffer);
     if (this.disposed) return;
     if (text) {
       var cur = String(this.state.brisaAiInput || '').trim();
+      var self = this;
       this.setState({
         brisaAiInput: cur ? (cur + ' ' + text) : text,
-        brisaAiStatus: uiMessage('Texto dictado listo. Puedes editarlo o pulsar Enviar.', 'Dictated text ready. You can edit it or press Send.')
+        brisaAiStatus: uiMessage('Listo: ya puedes revisar el texto y pulsar Enviar.', 'Done: review your text and press Send.')
+      }, function () {
+        if (!self.disposed) self.focusBrisaAI();
       });
     } else {
       this.setState({
-        brisaAiStatus: uiMessage('No pude entender el audio o la API de transcripción no respondió. Prueba de nuevo o escribe.', 'Could not transcribe that audio right now. Try again or type your question.')
+        brisaAiStatus: uiMessage('No pude transcribir ese audio ahora. Acércate al micrófono o escribe tu pregunta.', 'Could not transcribe that audio right now. Try speaking closer or type your question.')
       });
     }
   }
-  async transcribeBrisaAudio(wavBase64) {
+  async transcribeBrisaAudio(wavBufferOrBase64) {
     var cfg = brisaAiConfig();
+    var elKey = cfg.customElKey || cfg.elevenlabsKey;
+    var hasProxy = !!cfg.proxyBaseUrl;
+    var wavBuf = (wavBufferOrBase64 instanceof ArrayBuffer) ? wavBufferOrBase64 : null;
+    if ((elKey || hasProxy) && wavBuf && typeof fetch === 'function' && typeof FormData !== 'undefined' && typeof Blob !== 'undefined') {
+      try {
+        var fd = new FormData();
+        fd.append('model_id', 'scribe_v1');
+        fd.append('language_code', LANG === 'en' ? 'eng' : 'spa');
+        fd.append('file', new Blob([wavBuf], { type: 'audio/wav' }), 'dictation.wav');
+        var sttUrl = (!cfg.customElKey && !cfg.elevenlabsKey && hasProxy)
+          ? (cfg.proxyBaseUrl + '/api/elevenlabs-stt')
+          : cfg.elevenlabsSttEndpoint;
+        var sttHeaders = {};
+        if (elKey && sttUrl === cfg.elevenlabsSttEndpoint) sttHeaders['xi-api-key'] = elKey;
+        var sttCtrl = typeof AbortController === 'function' ? new AbortController() : null;
+        var sttTimer = sttCtrl ? setTimeout(function () { sttCtrl.abort(); }, 18000) : null;
+        try {
+          var sttRes = await fetch(sttUrl, {
+            method: 'POST',
+            headers: sttHeaders,
+            body: fd,
+            signal: sttCtrl ? sttCtrl.signal : undefined
+          });
+          if (sttRes.ok) {
+            var data = await sttRes.json();
+            var clean = data && typeof data.text === 'string' ? data.text.trim() : '';
+            if (clean) return clean;
+          }
+        } finally {
+          clearTimeout(sttTimer);
+        }
+      } catch (ignored) {}
+    }
+    var wavBase64 = wavBuf ? arrayBufferToBase64(wavBuf) : String(wavBufferOrBase64 || '');
+    if (!wavBase64) return '';
+    if (!cfg.customOrKey && !cfg.openrouterKeys.length && !cfg.proxyBaseUrl) return '';
     var audioModels = Array.isArray(cfg.openrouterAudioModels) && cfg.openrouterAudioModels.length
       ? cfg.openrouterAudioModels
       : ['google/gemini-2.5-flash-lite', 'google/gemini-2.0-flash-001'];
@@ -5403,7 +5524,7 @@ class Component extends DCLogic {
         { type: 'input_audio', input_audio: { data: wavBase64, format: 'wav' } }
       ]
     }];
-    var res = await this.requestOpenRouterRaw(messages, { models: audioModels, temperature: 0.1, maxTokens: 120, timeoutMs: 16000 }, null);
+    var res = await this.requestOpenRouterRaw(messages, { models: audioModels, temperature: 0.1, maxTokens: 120, timeoutMs: 14000 }, null);
     return res && res.ok ? res.text.trim() : '';
   }
   async startBrisaAudioDictation() {
@@ -5418,10 +5539,15 @@ class Component extends DCLogic {
     }
     this.setState({
       brisaAiListening: true,
-      brisaAiStatus: uiMessage('Grabando tu voz… Pulsa «Detener dictado» al terminar.', 'Recording voice… Press “Stop dictation” when done.')
+      brisaAiStatus: uiMessage('Escuchando micrófono… Habla claro y pulsa «Detener dictado» (o haz una pausa al terminar).', 'Listening… Speak clearly and press “Stop dictation” (or pause when finished).')
     });
     try {
-      var stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      var stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      } catch (constraintErr) {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
       if (this.disposed || !this.state.brisaAiListening) {
         try { stream.getTracks().forEach(function (t) { t.stop(); }); } catch (ignored) {}
         return;
@@ -5433,21 +5559,38 @@ class Component extends DCLogic {
       var gain = ctx.createGain();
       gain.gain.value = 0;
       var chunks = [];
+      var self = this, startedAt = Date.now(), heardSpeech = false, lastSpeechAt = 0, autoStopping = false;
       proc.onaudioprocess = function (evt) {
         var data = evt && evt.inputBuffer ? evt.inputBuffer.getChannelData(0) : null;
-        if (data && data.length) chunks.push(new Float32Array(data));
+        if (!data || !data.length) return;
+        chunks.push(new Float32Array(data));
+        var sumSq = 0;
+        for (var i = 0; i < data.length; i += 4) sumSq += data[i] * data[i];
+        var rms = Math.sqrt(sumSq / Math.ceil(data.length / 4));
+        var now = Date.now();
+        if (rms > 0.012) {
+          if (!heardSpeech) {
+            heardSpeech = true;
+            if (!self.disposed && self.state.brisaAiListening) {
+              self.setState({ brisaAiStatus: uiMessage('Voz detectada… sigue hablando o haz una pausa para convertirla a texto.', 'Voice detected… keep speaking or pause to convert to text.') });
+            }
+          }
+          lastSpeechAt = now;
+        } else if (heardSpeech && !autoStopping && now - startedAt > 1200 && now - lastSpeechAt > 1700) {
+          autoStopping = true;
+          setTimeout(function () { if (self.brisaMicRec) self.finishBrisaAudioDictation(); }, 20);
+        }
       };
       src.connect(proc);
       proc.connect(gain);
       gain.connect(ctx.destination);
-      var self = this;
-      var timer = setTimeout(function () { self.finishBrisaAudioDictation(); }, 6500);
+      var timer = setTimeout(function () { self.finishBrisaAudioDictation(); }, 12000);
       this.brisaMicRec = { stream: stream, ctx: ctx, src: src, proc: proc, gain: gain, chunks: chunks, timer: timer };
     } catch (err) {
       this.brisaMicRec = null;
       var name = err && err.name ? String(err.name) : '';
       var msg = (name === 'NotAllowedError' || name === 'PermissionDeniedError')
-        ? uiMessage('Permiso de micrófono denegado. Activa el micrófono en la barra del navegador.', 'Microphone permission denied. Allow microphone access in your browser bar.')
+        ? uiMessage('Permiso de micrófono denegado. Actívalo en la barra de tu navegador.', 'Microphone permission denied. Allow microphone access in your browser bar.')
         : (name === 'NotFoundError' || name === 'DevicesNotFoundError')
           ? uiMessage('No se detectó ningún micrófono conectado en tu equipo.', 'No microphone device was detected.')
           : uiMessage('No se pudo abrir el micrófono. Prueba escribir tu pregunta.', 'Could not open the microphone. Try typing your question.');
@@ -5464,39 +5607,58 @@ class Component extends DCLogic {
       this.startBrisaAudioDictation();
       return;
     }
-    var self = this, rec = new SR(), gotResult = false, fellBack = false;
+    var self = this, rec = new SR(), baseText = String(this.state.brisaAiInput || '').trim(), gotResult = false, fellBack = false;
     rec.lang = LANG === 'en' ? 'en-US' : 'es-PE';
-    rec.interimResults = false;
+    rec.interimResults = true;
+    rec.continuous = true;
     rec.maxAlternatives = 1;
     this.brisaRecognition = rec;
-    this.setState({ brisaAiListening: true, brisaAiStatus: uiMessage('Escuchando tu pregunta… Habla ahora.', 'Listening for your question… Speak now.') });
+    this.setState({ brisaAiListening: true, brisaAiStatus: uiMessage('Escuchando tu voz… Habla ahora.', 'Listening… Speak now.') });
     rec.onresult = function (evt) {
-      var transcript = evt && evt.results && evt.results[0] && evt.results[0][0] ? String(evt.results[0][0].transcript || '').trim() : '';
-      if (!transcript) return;
+      if (!evt || !evt.results) return;
+      var parts = [];
+      for (var i = 0; i < evt.results.length; i++) {
+        var r = evt.results[i];
+        var piece = r && r[0] && r[0].transcript ? String(r[0].transcript).trim() : '';
+        if (piece) parts.push(piece);
+      }
+      var spoken = parts.join(' ').trim();
+      if (!spoken) return;
       gotResult = true;
-      var cur = String(self.state.brisaAiInput || '').trim();
       self.setState({
-        brisaAiInput: cur ? (cur + ' ' + transcript) : transcript,
-        brisaAiStatus: uiMessage('Texto dictado listo. Puedes editarlo o pulsar Enviar.', 'Dictated text ready. You can edit it or press Send.')
+        brisaAiInput: baseText ? (baseText + ' ' + spoken) : spoken,
+        brisaAiStatus: uiMessage('Transcribiendo en vivo… Pulsa «Detener dictado» al terminar.', 'Live voice typing… Press “Stop dictation” when done.')
       });
     };
     rec.onerror = function (evt) {
       self.brisaRecognition = null;
       var errCode = evt && evt.error ? String(evt.error) : '';
-      if (errCode === 'network' || errCode === 'service-not-allowed' || errCode === 'language-not-supported' || errCode === 'audio-capture') {
+      if (errCode === 'aborted') {
+        if (!self.disposed && self.state.brisaAiListening) self.setState({ brisaAiListening: false });
+        return;
+      }
+      if (errCode === 'network' || errCode === 'service-not-allowed' || errCode === 'language-not-supported' || errCode === 'audio-capture' || errCode === 'start-failed') {
         self.brisaForceAudioMic = true;
       }
-      if (!gotResult && !fellBack && errCode !== 'aborted') {
+      if (!gotResult && !fellBack && errCode !== 'not-allowed') {
         fellBack = true;
         self.startBrisaAudioDictation();
         return;
       }
-      self.setState({ brisaAiListening: false, brisaAiStatus: uiMessage('No se pudo capturar el audio del micrófono. Prueba escribir tu pregunta.', 'Could not capture microphone audio. Try typing your question.') });
+      var errMsg = errCode === 'not-allowed'
+        ? uiMessage('Permiso de micrófono denegado. Actívalo en la barra de tu navegador.', 'Microphone permission denied. Enable microphone access in your browser bar.')
+        : uiMessage('No se escuchó voz. Intenta de nuevo o escribe tu pregunta.', 'No speech heard. Try again or type your question.');
+      self.setState({ brisaAiListening: false, brisaAiStatus: errMsg });
     };
     rec.onend = function () {
       if (self.brisaRecognition === rec) self.brisaRecognition = null;
       if (!fellBack && !self.brisaMicRec && !self.disposed && self.state.brisaAiListening) {
-        self.setState({ brisaAiListening: false });
+        self.setState({
+          brisaAiListening: false,
+          brisaAiStatus: gotResult
+            ? uiMessage('Listo: texto convertido. Pulsa Enviar o sigue dictando.', 'Ready: voice converted to text. Press Send or keep dictating.')
+            : self.state.brisaAiStatus
+        });
       }
     };
     try { rec.start(); } catch (ignored) { rec.onerror({ error: 'start-failed' }); }
@@ -5563,37 +5725,21 @@ class Component extends DCLogic {
   brisaQuickSuggestions() {
     var s = this.state, d = DISCS[s.disc] || DISCS[0];
     if (LANG === 'en') {
-      var list = [
-        'What am I seeing and hearing right now?',
-        'What do the −5 to +5 map colors mean?',
-        'Which NASA data sources power this page?',
-        'Who are the 5 musicians in the band?'
-      ];
       if (s.tab === 'band') {
         var curBand = BAND[s.bsel] || BAND[0];
-        list[0] = 'Tell me about ' + curBand.name + ' and their role';
-      } else if (d.id === 'yaku2023') {
-        list[3] = 'Why does the Pacora March 2023 frame slow the music?';
-      } else if (s.tab === 'how') {
-        list[0] = 'Explain the NASA POWER Chiclayo rainfall example';
+        return ['Tell me about ' + curBand.name, 'All 5 musicians'];
       }
-      return list;
+      if (s.tab === 'how') return ['Chiclayo rainfall (NASA POWER)', 'How uploads sound'];
+      if (d.id === 'yaku2023') return ['What is Yaku (Mar 2023)?', 'Colors −5 to +5'];
+      return ['What am I seeing now?', 'The 5 band musicians'];
     }
-    var esList = [
-      '¿Qué estoy viendo y escuchando ahora?',
-      '¿Qué significan los colores de −5 a +5?',
-      '¿Qué fuentes de la NASA usa esta página?',
-      '¿Quiénes son los 5 personajes de la banda?'
-    ];
     if (s.tab === 'band') {
       var miembro = BAND[s.bsel] || BAND[0];
-      esList[0] = 'Cuéntame sobre ' + miembro.name + ' y sus referencias';
-    } else if (d.id === 'yaku2023') {
-      esList[3] = '¿Por qué cambia el ritmo en Pacora (marzo 2023)?';
-    } else if (s.tab === 'how') {
-      esList[0] = 'Explícame el ejemplo de lluvia de Chiclayo (NASA POWER)';
+      return ['Cuéntame sobre ' + miembro.name, 'Los 5 músicos de la banda'];
     }
-    return esList;
+    if (s.tab === 'how') return ['Lluvia de Chiclayo (NASA POWER)', '¿Cómo traduce mi archivo?'];
+    if (d.id === 'yaku2023') return ['¿Qué es Yaku (marzo 2023)?', 'Colores de −5 a +5'];
+    return ['¿Qué estoy viendo ahora?', 'Los 5 músicos de la banda'];
   }
   async requestOpenRouterRaw(messages, opts, signal) {
     var cfg = brisaAiConfig();
@@ -6144,16 +6290,16 @@ class Component extends DCLogic {
     ++this.bandTurn;
     if (!this.disposed && this.state.bphase !== 'idle') this.setState({ bphase: 'idle' });
   }
-  pickBand(index) {
+  pickBand(index, opts) {
     if (!Number.isInteger(index) || index < 0 || index >= BAND.length || this.state.tab !== 'band' || this.disposed || (index === this.state.bsel && this.state.bphase !== 'idle')) return;
     if (this.state.previewKey && this.state.previewKey !== BAND[index].k) this.stop();
     var restarting = this.state.bphase === 'entry' || this.state.bphase === 'reset';
     var previous = restarting && this.bandPrevious != null ? this.bandPrevious : this.state.bsel;
     this.cancelBandClip();
-    if (this.state.speaking) this.stopSpeech();
+    if ((!opts || !opts.keepSpeech) && this.state.speaking) this.stopSpeech();
     this.bandPrevious = previous;
     var self = this, turn = this.bandTurn, key = BAND[index].k;
-    this.playCue(BAND_CUES[key]);
+    if (!opts || !opts.quietCue || !this.state.speaking) this.playCue(BAND_CUES[key]);
     var begin = function () {
       if (self.disposed || self.state.tab !== 'band' || turn !== self.bandTurn) return;
       var reduce = self.bandReduced();
@@ -6300,7 +6446,7 @@ class Component extends DCLogic {
     if (t === 'how') return [T('Prueba práctica', 'Try it'), T('Del mapa al sonido', 'From map to sound')];
     return this.techPages().map(function (p) { return p.title; });
   }
-  goSub(i) {
+  goSub(i, opts) {
     this.settleArrivedRoute();
     var s = this.state, cnt = this.subCount();
     if (!Number.isInteger(i) || i < 0 || i >= cnt || i === s.sub || s.trans) return;
@@ -6312,30 +6458,32 @@ class Component extends DCLogic {
       patch.upMsg = '';
       if (i === 0 && s.custom && s.disc !== 5) Object.assign(patch, { disc: 5, frame: 0, col: -1, ended: false });
     }
-    this.routeChange(patch, s.tab, this.subTitles()[i]);
+    this.routeChange(patch, s.tab, this.subTitles()[i], opts);
   }
-  goTab(k, sub) {
+  goTab(k, sub, opts) {
     this.settleArrivedRoute();
     var s = this.state;
     if (k === 'game' && !this.rhythmQuery?.matches) return;
-    if (k === 'juke' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0); return; }
-    if (k === 'game' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0); return; }
+    if (k === 'juke' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0, opts); return; }
+    if (k === 'game' && k === s.tab && sub == null && s.sub !== 0) { this.goSub(0, opts); return; }
     if ((k === s.tab && (sub == null || sub === s.sub)) || s.trans) return;
     if (s.more) this.closeMore();
-    if (k === s.tab) { this.goSub(sub); return; }
+    if (k === s.tab) { this.goSub(sub, opts); return; }
     if (s.tab === 'how' && s.sub === 0) this.startFileLoad();
     if (s.tab === 'band') {
       this.cancelBandClip();
       this.setState({ bphase: 'idle' });
     }
-    this.stop();
+    if (!opts || !opts.keepSpeech) this.stop();
     // Cambiar de sección cierra la ayuda; Silbo la reanuda solo cuando se le pide.
     if (s.tour) this.tourClose();
-    if (s.brisaSpotSteps && s.brisaSpotSteps.length) this.clearBrisaSpotlight(true);
-    var patch = { tab: k, sub: sub || 0, tour: 0, tourRect: null, brisaSpotSteps: [], brisaSpotIdx: 0, brisaSpotRect: null, more: false };
+    if (s.brisaSpotSteps && s.brisaSpotSteps.length && (!opts || !opts.keepSpotlight)) this.clearBrisaSpotlight(true);
+    var patch = { tab: k, sub: sub || 0, tour: 0, tourRect: null, more: false };
+    if (!opts || !opts.keepSpotlight) Object.assign(patch, { brisaSpotSteps: [], brisaSpotIdx: 0, brisaSpotRect: null });
+    if (k === 'band' && opts && Number.isInteger(opts.bsel)) Object.assign(patch, { bsel: opts.bsel, bphase: 'idle' });
     if (s.tab === 'how') patch.upMsg = '';
     if (k === 'how' && patch.sub === 0 && s.custom && s.disc !== 5) Object.assign(patch, { disc: 5, frame: 0, col: -1, ended: false });
-    this.routeChange(patch, k);
+    this.routeChange(patch, k, undefined, opts);
   }
 
   cancelSample() {
@@ -6452,14 +6600,14 @@ class Component extends DCLogic {
     if (this.state.trans && this.state.routeArrived && this.routeFinish) this.routeFinish();
     return !this.state.trans;
   }
-  routeChange(patch, tab, title) {
+  routeChange(patch, tab, title, opts) {
     if (!this.settleArrivedRoute()) return;
     this.cinema?.finish(false);
-    this.stopForScreen(tab, patch.sub == null ? this.state.sub : patch.sub);
+    this.stopForScreen(tab, patch.sub == null ? this.state.sub : patch.sub, opts);
     this.routeTimers.forEach(clearTimeout);
     this.routeTimers = [];
     var self = this, run = ++this.routeRun, swapped = false;
-    this.playCue(PAGE_CUES[tab]);
+    if (!opts || !opts.silentVoice) this.playCue(PAGE_CUES[tab]);
     var swap = function (finished) {
       if (run !== self.routeRun || swapped) return;
       swapped = true;
@@ -6467,13 +6615,14 @@ class Component extends DCLogic {
       self.setState(Object.assign({ routeArrived: !finished && self.state.trans }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
         self.resetScreenScroll();
         self.ensureNavVisible();
-        if (self.state.voice && !self.state.tutorial && !self.state.showPreferences) self.narrateBrisa(self.sectionNarration());
+        if (self.state.voice && !self.state.tutorial && !self.state.showPreferences && (!opts || !opts.silentVoice)) self.narrateBrisa(self.sectionNarration());
+        if (opts && opts.onSettled) opts.onSettled();
         if (self.state.tab === 'juke' || self.state.tab === 'game') {
           var sub = self.state.sub;
           if (sub === 1) self.loadDisc(self.state.disc);
           var headingId = ['disc-library-title', 'player-title', null][sub];
           var heading = headingId && document.getElementById(headingId);
-          if (heading) heading.focus({ preventScroll: true });
+          if (heading && !self.state.brisaAiOpen) heading.focus({ preventScroll: true });
         }
       });
     };
@@ -6483,7 +6632,9 @@ class Component extends DCLogic {
       self.routeTimers = [];
       self.routeFinish = null;
       if (!swapped) swap(true);
-      else self.setState({ trans: false, routeArrived: false });
+      else self.setState({ trans: false, routeArrived: false }, function () {
+        if (opts && opts.onSettled) opts.onSettled();
+      });
       ++self.routeRun;
     };
     if (this.bandReduced() || this.state.tour) { finish(); return; }
@@ -7441,11 +7592,11 @@ class Component extends DCLogic {
     if (!this.cur()) return;
     if (s.engine === 'melody') this.stepMelody(col); else this.step(col);
   }
-  stopForScreen(tab, sub) {
+  stopForScreen(tab, sub, opts) {
     if (tab === this.state.tab && sub === this.state.sub) return;
     this.haptics.stop();
     if (this.state.playing || this.state.audioPending || this.state.previewKey) this.stop();
-    this.stopSpeech();
+    if (!opts || !opts.keepSpeech) this.stopSpeech();
   }
   retireAudioGraph() {
     var self = this;

@@ -96,6 +96,8 @@ function createAppHarness(options = {}) {
     Uint8Array,
     ArrayBuffer,
     DataView,
+    Blob: globalThis.Blob,
+    FormData: globalThis.FormData,
     URL: {
       createObjectURL: () => 'blob:brisa-test-' + (++blobSeq),
       revokeObjectURL: u => revokedUrls.push(u)
@@ -131,7 +133,7 @@ function createAppHarness(options = {}) {
     ctx.EARTH_BRISA_CONFIG = Object.assign({}, ctx.EARTH_BRISA_CONFIG, options.brisaConfig);
   }
   vm.runInContext(
-    scriptMatch[1] + '\n;window.__exports = { Component, TX, TECH, TECH_EN, brisaAiConfig, writeBrisaAiSettings, brisaParagraphs, brisaSpeechPlainText, brisaFallbackAnswer, encodeBrisaPcmWavBase64, DISCS, BAND };',
+    scriptMatch[1] + '\n;window.__exports = { Component, TX, TECH, TECH_EN, brisaAiConfig, writeBrisaAiSettings, brisaParagraphs, brisaSpeechPlainText, brisaFallbackAnswer, encodeBrisaPcmWavBase64, encodeBrisaPcmWavBuffer, DISCS, BAND };',
     ctx,
     { filename: 'Main.dc.html' }
   );
@@ -420,4 +422,90 @@ test('Spotlight step builder, Flash v2.5 prefetch cache, and WAV encoder work cl
   assert.equal(ttsCalls.length, 3, 'Band section voice must use ElevenLabs for active musician');
   assert.match(ttsCalls[2].body.text, /SILBO/i);
   comp.componentWillUnmount();
+});
+
+test('ElevenLabs Scribe STT, concise 2-chip starters, and cross-tab Band spotlight walkthrough work cleanly', async (t) => {
+  const sttCalls = [];
+  const fetchMock = async (url, init) => {
+    if (url.includes('speech-to-text') || url.endsWith('/api/elevenlabs-stt')) {
+      sttCalls.push({
+        url,
+        hasKey: !!(init.headers && init.headers['xi-api-key']),
+        modelId: init.body && typeof init.body.get === 'function' ? init.body.get('model_id') : '',
+        langCode: init.body && typeof init.body.get === 'function' ? init.body.get('language_code') : '',
+        file: init.body && typeof init.body.get === 'function' ? init.body.get('file') : null
+      });
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ text: '¿Quiénes son los cinco personajes de la banda?' })
+      };
+    }
+    if (url.includes('openrouter.ai')) {
+      return {
+        ok: true,
+        status: 200,
+        text: async () => JSON.stringify({ choices: [{ message: { content: 'La banda tiene 5 músicos: Silbo, Inti, Mamacocha, Yaku e Illapa.' } }] })
+      };
+    }
+    if (url.includes('elevenlabs.io/v1/text-to-speech')) {
+      return { ok: true, status: 200, blob: async () => new Blob([new Uint8Array([73, 68, 51, 9])], { type: 'audio/mpeg' }) };
+    }
+    throw new Error('Unexpected URL: ' + url);
+  };
+
+  // Direct ElevenLabs Scribe STT check
+  const { comp, exports } = createAppHarness({
+    fetch: fetchMock,
+    brisaConfig: { openrouterKeys: ['test-or-key'], elevenlabsKey: 'test-el-key' }
+  });
+  t.after(() => { comp.componentWillUnmount(); });
+  assert.equal(comp.brisaQuickSuggestions().length, 2, 'Initial starter recommendations must be concise (2 chips)');
+
+  const wav = exports.encodeBrisaPcmWavBuffer([new Float32Array([0.1, -0.2, 0.3, -0.1])], 16000, 16000);
+  const directText = await comp.transcribeBrisaAudio(wav.buffer);
+  assert.equal(directText, '¿Quiénes son los cinco personajes de la banda?');
+  assert.equal(sttCalls[0].url, 'https://api.elevenlabs.io/v1/speech-to-text');
+  assert.equal(sttCalls[0].hasKey, true);
+  assert.equal(sttCalls[0].modelId, 'scribe_v1');
+  assert.equal(sttCalls[0].langCode, 'spa');
+  assert(sttCalls[0].file && sttCalls[0].file.size > 44);
+
+  // Proxy ElevenLabs Scribe STT check (zero client keys)
+  const { comp: proxyComp } = createAppHarness({
+    fetch: fetchMock,
+    brisaConfig: { proxyBaseUrl: 'https://brisa-proxy.example' }
+  });
+  t.after(() => { proxyComp.componentWillUnmount(); });
+  const proxyText = await proxyComp.transcribeBrisaAudio(wav.buffer);
+  assert.equal(proxyText, '¿Quiénes son los cinco personajes de la banda?');
+  assert.equal(sttCalls[1].url, 'https://brisa-proxy.example/api/elevenlabs-stt');
+  assert.equal(sttCalls[1].hasKey, false);
+
+  // Asking about the 5 band characters from Home navigates straight to Band & steps through all 5 without cutting speech
+  comp.state.brisaAiOpen = true;
+  comp.state.voice = true;
+  comp.state.tab = 'home';
+  comp.state.sub = 0;
+  await comp.askBrisaAI('¿Quiénes son los 5 personajes de la banda?');
+  await new Promise(r => setTimeout(r, 220));
+  assert.equal(comp.state.tab, 'band', 'Band query from Home must navigate straight to Band section');
+  assert.equal(comp.state.brisaAiOpen, true, 'Brisa panel must stay open during cross-tab navigation');
+  assert.equal(comp.state.brisaSpotSteps.length, 5, 'Should create 5 musician walkthrough steps');
+  assert.equal(comp.state.bsel, 0, 'Step 1/5 highlights Silbo');
+  assert.equal(comp.state.speaking, true, 'Voice narration must start smoothly');
+
+  for (let idx = 1; idx < 5; idx++) {
+    comp.stepBrisaSpotlight(1);
+    assert.equal(comp.state.brisaSpotIdx, idx);
+    assert.equal(comp.state.bsel, idx, `Spotlight step ${idx + 1}/5 must select band index ${idx}`);
+    assert.equal(comp.state.speaking, true, 'Advancing band spotlight must not abort Brisa narration');
+  }
+
+  // Asking about -5..+5 color scale from Band navigates straight to Player (#player-legend)
+  await comp.askBrisaAI('¿Qué significan los colores de -5 a +5?');
+  await new Promise(r => setTimeout(r, 220));
+  assert.equal(comp.state.tab, 'juke');
+  assert.equal(comp.state.sub, 1);
+  assert.equal(comp.state.brisaSpotSteps[0].selector, '#player-legend');
 });
