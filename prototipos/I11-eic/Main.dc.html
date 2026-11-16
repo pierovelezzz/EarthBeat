@@ -2169,20 +2169,22 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
   .px .rhythm-player .player-layout{grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:14px}
   .px .rhythm-player #tour-frame{grid-template-rows:auto auto 1fr}
   .px .rhythm-player #tour-frame .vcap{justify-content:flex-start}
-  .px .rhythm-player #tour-frame .mapbox{max-height:none}
+  .px .rhythm-player #tour-frame .mapbox{max-height:clamp(195px,35dvh,340px)}
   .px .rhythm-player #tour-frame .vcap h2{font:700 1.2em/1.25 var(--head)}
   .px .rhythm-player .listen-band{padding:12px;gap:8px}
   .px .rhythm-player .stage-musician:disabled{opacity:1;cursor:default}
   .px .listen-band[data-rhythm="true"] .stage-note-track{visibility:hidden}
-  .px .listen-band[data-rhythm="true"] .band-stage{min-height:clamp(390px,56vh,550px)}
-  .px .rhythm-map-key{display:grid;gap:8px;align-content:start;padding:8px 3px 2px}
-  .px .rhythm-map-key h3{margin:0;font:700 .86em/1.3 var(--head)}
-  .px .rhythm-map-key p{display:flex;align-items:center;gap:9px;margin:4px 0 0;color:var(--fg);font:700 1.08em/1.35 var(--head)}
-  .px .rhythm-map-key ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 10px;margin:0;padding:0;list-style:none}
-  .px .rhythm-map-key li{display:flex;align-items:center;gap:7px;font-size:.82em}
+  .px .listen-band[data-rhythm="true"] .band-stage{min-height:clamp(360px,54vh,550px)}
+  .px .rhythm-map-key{display:grid;gap:7px;align-content:center;margin-top:8px;padding:clamp(8px,1.2dvh,14px);border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+  .px .rhythm-map-key h3{margin:0;font:700 1.35em/1.2 var(--head)}
+  .px .rhythm-map-key p{margin:0;color:var(--fg);font-size:.98em;line-height:1.3}
+  .px .rhythm-map-key .rhythm-scan{display:flex;align-items:center;gap:8px;font-weight:700}
+  .px .rhythm-scan svg{flex:none}
+  .px .rhythm-map-key ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 9px;margin:0;padding:0;list-style:none}
+  .px .rhythm-map-key li{display:flex;align-items:center;gap:8px;padding:3px 7px;border:1px solid var(--line);border-radius:4px;background:var(--panel);font-size:.98em;font-weight:600}
   .px .rhythm-map-key kbd{
-    display:grid;place-items:center;flex:none;width:25px;min-height:24px;border:1px solid currentColor;border-radius:4px;
-    font:700 1.12em/1 system-ui,sans-serif;color:var(--rhythm-ink);background:#101c29
+    display:grid;place-items:center;flex:none;width:34px;min-height:32px;border:1px solid currentColor;border-radius:4px;
+    font:700 1.35em/1 system-ui,sans-serif;color:var(--rhythm-ink);background:#101c29
   }
   .px earthrhythm-game{
     position:absolute;z-index:2;inset:8px 8px auto;display:grid;gap:5px;
@@ -2674,8 +2676,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{rhythmMode}}">
 <div class="rhythm-map-key" id="rhythm-help">
 <h3 id="rhythm-key-title">{{rhythmKeyLabel}}</h3>
+<p id="rhythm-instructions">{{rhythmInstructions}}</p>
 <ul aria-labelledby="rhythm-key-title"><sc-for list="{{rhythmLanes}}" as="lane"><li data-direction="{{lane.direction}}"><kbd>{{lane.arrow}}</kbd><span>{{lane.label}}</span></li></sc-for></ul>
-<p><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><path d="M2 3h2V1h2v2h4V1h2v2h2v12H2zm2 5v5h8V8z"/><path d="M6 9h2v2H6z"/></svg>{{rhythmHelp}}</p>
+<p class="rhythm-scan"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><path d="M2 3h2V1h2v2h4V1h2v2h2v12H2zm2 5v5h8V8z"/><path d="M6 9h2v2H6z"/></svg>{{rhythmHelp}}</p>
 </div>
 </sc-if>
 <sc-if value="{{standardPlayer}}">
@@ -2743,7 +2746,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </sc-for>
 </div>
 <sc-if value="{{rhythmMode}}">
-<earthrhythm-game role="group" tabindex="0" aria-label="{{rhythmLabel}}" aria-describedby="rhythm-help" data-playing="{{rhythmPlaying}}" data-ended="{{rhythmEnded}}">
+<earthrhythm-game role="group" tabindex="0" aria-label="{{rhythmLabel}}" aria-describedby="rhythm-instructions" data-playing="{{rhythmPlaying}}" data-ended="{{rhythmEnded}}">
 <div class="rhythm-score">
 <div class="rhythm-tally"><svg width="20" height="20" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 0h8v2h2v2h2v8h-2v2h-2v2H4v-2H2v-2H0V4h2V2h2z"/><path fill="#251809" d="M7 3h2v3h4v2h-2v2h-1v3H8v-2H7v2H5v-3H4V8H3V6h4z"/></svg><span class="sr">{{rhythmScoreLabel}}</span><strong data-score>0</strong></div>
 </div>
@@ -3362,7 +3365,7 @@ var BRISA_LINES = {
   "tech": [["Aquí puedes ver cómo el programa lee los colores y los convierte en notas.", "Here you can see how the software reads colors and turns them into notes."], ["Cada mapa pasa por una cuadrícula antes de llegar a los instrumentos. Aquí tienes las herramientas que lo hacen posible.", "Each map passes through a grid before it reaches the instruments. Here are the tools that make it happen."]],
   "sources": [["Aquí están las fuentes de la NASA. Úsalas para saber de dónde vienen los mapas y qué muestran.", "Here are the NASA sources. Use them to find out where the maps come from and what they show."], ["Los mapas comparan la temperatura del mar con lo habitual en esa zona. En las fuentes puedes consultar cómo se hizo esa comparación.", "The maps compare ocean temperatures with what’s usual in each area. The sources explain how that comparison was made."]],
   "credits": [["Aquí puedes conocer quién hizo la música, los personajes y la página.", "Here you can learn who made the music, the characters, and the website."], ["¿Te llamó la atención algún instrumento? Los créditos reúnen los aportes que dieron vida a la banda.", "Did an instrument catch your ear? The credits bring together the contributions behind the band."]],
-  "game": [["Pulsa cada flecha cuando llegue al recuadro. El mapa sigue avanzando mientras juegas.", "Press each arrow key when its note reaches the target. The map keeps moving as you play."], ["Cada barrido recorre un mes. Fíjate cómo cambia el mapa durante la partida.", "Each scan covers one month. See how the map changes as you play."]],
+  "game": [["Usa las flechas del teclado. ¡Diviértete!", "Use the arrow keys. Have fun!"], ["Cada barrido recorre un mes. Fíjate cómo cambia el mapa durante la partida.", "Each scan covers one month. See how the map changes as you play."]],
   "feedback": [["Busca un número menor que cero. Ese color marca agua más fría de lo habitual.", "Look for a number below zero. That color marks water cooler than usual."], ["¡Eso es! El número indica cuántos grados más fría estaba el agua.", "That’s it! The number shows how many degrees cooler the water was."]]
 };
 var BRISA_BAND_LINES = {
@@ -4742,6 +4745,10 @@ class Component extends DCLogic {
   narrateScreenOnce() {
     var s = this.state;
     if (!s.voice || s.tutorial || document.hidden || this.disposed) return;
+    if (s.tab === 'game') {
+      if (s.sub === 1 && !s.playing && !s.audioPending) this.narrateBrisa(this.brisaLine('game', 0), true);
+      return;
+    }
     var key = this.brisaContextKey();
     if (this.brisaSpokenScreens.has(key)) return;
     this.brisaSpokenScreens.add(key);
@@ -6504,6 +6511,7 @@ class Component extends DCLogic {
   async play() {
     this.settleArrivedRoute();
     if (this.disposed || this.state.trans || this.state.playing || this.state.audioPending) return;
+    if (this.state.tab === 'game') this.stopSpeech();
     if (this.state.previewKey) this.stop();
     var self = this, run = ++this.audioRun;
     this.setState({ audioPending: true, audioError: '' });
@@ -6960,7 +6968,8 @@ class Component extends DCLogic {
       rhythmToggleLabel: T('Jugar este disco', 'Play this disc'),
       rhythmExitLabel: T('Salir de la partida', 'Leave game'),
       rhythmMapTitle: T('Mapa de la NASA', 'NASA map'),
-      rhythmKeyLabel: T('Teclas para jugar', 'Arrow keys to play'),
+      rhythmKeyLabel: T('Cómo jugar', 'How to play'),
+      rhythmInstructions: this.brisaLine('game', 0).b,
       rhythmHitLabel: T('¡Acierto!', 'Hit!'),
       rhythmScoreLabel: T('Aciertos', 'Hits'),
       rhythmFinishTitle: T('¡Felicitaciones!', 'Congratulations!'),
