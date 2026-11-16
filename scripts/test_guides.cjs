@@ -234,7 +234,7 @@ test('resuming a tutorial from another collection restores the outside collectio
   c.applySet('prev');c.startTutorial();c.renderVals().discs[1].pick();c.tourClose();
   c.applySet('eic');c.state.tab='juke';c.state.sub=1;c.state.disc=3;c.state.frame=2;c.state.col=4;
   const analysis={cells:Array(448).fill(1),warm:1,cold:0,hot:0,coast:0};c.state.an['3_2']=analysis;
-  c.tourOpen();assert.equal(c.state.set,'prev');assert.equal(c.state.disc,1);assert.equal(c.state.tour,2);
+  c.startTutorial(false);assert.equal(c.state.set,'prev');assert.equal(c.state.disc,1);assert.equal(c.state.tour,2);
   c.tourClose();assert.equal(c.state.set,'eic');assert.equal(c.state.disc,3);assert.equal(c.state.frame,2);assert.equal(c.state.col,4);
   assert.equal(c.cur(),analysis);assert.equal(c.tutorialProgress.set,'prev');
 });
@@ -243,7 +243,7 @@ test('pausing a cross-collection tutorial restarts a pending outside player fram
   const {component:c}=setup();
   c.applySet('prev');c.startTutorial();c.renderVals().discs[1].pick();c.tourClose();
   c.applySet('eic');c.state.tab='juke';c.state.sub=1;c.state.disc=3;c.state.frame=2;c.state.an={};
-  c.tourOpen();const reloaded=[];c.loadDisc=disc=>reloaded.push({disc,frame:c.state.frame,set:c.state.set});
+  c.startTutorial(false);const reloaded=[];c.loadDisc=disc=>reloaded.push({disc,frame:c.state.frame,set:c.state.set});
   c.tourClose();
   assert.deepEqual(reloaded,[{disc:3,frame:2,set:'eic'}]);
   assert.equal(c.state.playing,false);
@@ -1498,6 +1498,24 @@ test('contextual help never changes the active file, date, position or playback'
     c.tourOpen(); c.tourGo(2); c.tourGo(3); c.tourClose();
     assert.equal(JSON.stringify(['tab','sub','disc','frame','col','custom','mute','playing'].map(key=>c.state[key])),before);
   }
+});
+
+test('Brisa reads contextual guidance on click without replacing the active disc or resuming a pending tutorial', () => {
+  const {component:c}=setup();
+  c.state.tab='juke'; c.state.sub=1; c.state.voice=true; c.state.playing=true;
+  c.tutorialProgress={completed:false,step:2};
+  const heard=[];
+  c.narrateBrisa=line=>heard.push(line);
+  c.tourOpen();
+  assert.equal(c.state.tutorial,false);
+  assert.equal(c.state.playing,true);
+  assert.equal(heard.length,1);
+  assert.equal(heard[0].b,c.renderVals().tour.body);
+  c.tourClose();
+  c.state.voice=false;
+  c.tourOpen();
+  assert.equal(heard.length,1);
+  assert.equal(c.state.playing,true);
 });
 
 test('the tutorial progresses through choosing a disc, playback and interpreting the legend', async () => {

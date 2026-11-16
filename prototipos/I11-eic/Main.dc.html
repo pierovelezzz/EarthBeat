@@ -4820,10 +4820,14 @@ class Component extends DCLogic {
       onComplete: first ? () => this.brisaBandIntros.add(ownVoice) : null
     };
   }
+  canResumeTutorialOnOpen() {
+    var s = this.state;
+    return this.tutorialProgress?.completed === false && !s.playing && !s.audioPending && !(s.tab === 'juke' && s.sub === 1);
+  }
   tourOpen(event) {
     if (!this.settleArrivedRoute()) return;
     if (this.state.tour) { this.tourClose(); return; }
-    if (this.tutorialProgress && !this.tutorialProgress.completed) { this.startTutorial(false, event); return; }
+    if (this.canResumeTutorialOnOpen()) { this.startTutorial(false, event); return; }
     this.openContextHelp(event);
   }
   openContextHelp(event) {
@@ -4833,6 +4837,7 @@ class Component extends DCLogic {
     if (event && event.currentTarget) this.tourReturnFocus = event.currentTarget;
     this.brisaHelp = this.nextBrisaLine();
     this.tourGo(1);
+    if (this.state.tour && this.state.voice) this.narrateBrisa(this.contextHelpStep(), true);
   }
   contextHelpStep() {
     var help = this.brisaHelp;
@@ -6651,8 +6656,9 @@ class Component extends DCLogic {
           self.narrateTutorial(tstep);
         }
       },
-      restartLabel: this.tutorialProgress?.completed ? T('Repetir tutorial', 'Repeat tutorial') : T('Tutorial · 3 pasos', 'Tutorial · 3 steps'),
-      restart: function () { self.startTutorial(true); },
+      restartLabel: this.tutorialProgress?.completed === false ? T('Retomar tutorial', 'Resume tutorial')
+        : this.tutorialProgress?.completed ? T('Repetir tutorial', 'Repeat tutorial') : T('Tutorial · 3 pasos', 'Tutorial · 3 steps'),
+      restart: function () { self.startTutorial(self.tutorialProgress?.completed !== false); },
       closeLabel: s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen'),
       canDescribe: !s.tutorial && (s.tab === 'juke' && s.sub === 1 || s.tab === 'how' && s.sub === 0 && !!s.custom),
       canUseText: tutorialBlocked && s.tour === 2,
@@ -6753,7 +6759,7 @@ class Component extends DCLogic {
         event.preventDefault();
         self.setState({ playbackSettingsOpen: !self.state.playbackSettingsOpen });
       },
-      guideOpenLabel: s.tour ? s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen') : this.tutorialProgress && !this.tutorialProgress.completed ? this.tutorialEntryLabel() : T('Ayuda de esta pantalla', 'Help for this screen'),
+      guideOpenLabel: s.tour ? s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen') : this.canResumeTutorialOnOpen() ? this.tutorialEntryLabel() : T('Ayuda de esta pantalla', 'Help for this screen'),
       positionAccessibilityMenu: function (event) { self.positionAccessibilityMenu(event); },
       languageCode: LANG,
       languageKeys: function(event) { self.onLanguageKey(event); },
