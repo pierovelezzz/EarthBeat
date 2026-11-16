@@ -1,38 +1,43 @@
 # Proxy seguro para Brisa IA (OpenRouter + ElevenLabs)
 
-Este directorio permite publicar **EarthRhythm** en GitHub Pages (`pierovelezzz/EarthRhythm`) sin exponer ninguna clave en Git ni obligar a los visitantes a configurar claves manualmente.
+Este directorio permite publicar **EarthRhythm** en **Vercel** o **GitHub Pages** sin exponer ninguna clave en Git ni entregar tus API keys al encargado de otro despliegue.
 
 ## Cómo funciona
 
-1. El sitio estático en GitHub Pages llama a `proxyBaseUrl + '/api/openrouter'` y `proxyBaseUrl + '/api/elevenlabs'` **sin claves en el navegador**.
-2. Tu cuenta (o la del encargado del repositorio) aloja **solo esta pequeña API proxy** en **Vercel** (`proxy/vercel`) o **Cloudflare Workers** (`proxy/cloudflare-worker.js`), donde las claves se guardan como **variables de entorno secretas**. No es necesario migrar ni ser dueño del repositorio de GitHub Pages para desplegar este proxy aparte.
+1. El sitio estático llama a `proxyBaseUrl + '/api/openrouter'`, `proxyBaseUrl + '/api/elevenlabs'` y `proxyBaseUrl + '/api/elevenlabs-stt'` **sin claves en el navegador**.
+2. Tu propia cuenta aloja **solo esta API proxy** (`proxy/vercel` en Vercel o `proxy/cloudflare-worker.js` en Cloudflare Workers), donde tus API keys se guardan cifradas como variables de entorno **Secret / Sensitive**.
+3. Quien despliegue el frontend de EarthRhythm en otro Vercel o GitHub Pages únicamente configura la variable pública **`BRISA_PROXY_URL`** con la URL de tu proxy (por ejemplo `https://earthrhythm-brisa-proxy.vercel.app`) — jamás ve tus claves.
 
-## Variables de entorno requeridas
+## Variables de entorno del proxy
 
 - `OPENROUTER_KEYS`: lista de claves separadas por coma o salto de línea (el proxy las rota automáticamente).
-- `ELEVENLABS_KEY`: clave de ElevenLabs TTS.
-- `ALLOWED_ORIGINS` *(opcional)*: dominios permitidos separados por coma (por defecto acepta `https://*.github.io` y `localhost`).
+- `ELEVENLABS_KEY`: clave de ElevenLabs (idealmente una *Scoped API Key* dedicada solo a TTS/STT con límite mensual de créditos).
+- `ALLOWED_ORIGINS` *(recomendado)*: lista separada por coma de los orígenes web permitidos (acepta dominios exactos o comodines simples, por ejemplo `https://app-companero.vercel.app,https://pierovelezzz.github.io`). El proxy rechaza con HTTP `403` cualquier petición cuyo `Origin`/`Referer` no coincida antes de gastar créditos de ElevenLabs u OpenRouter. Si no se define, acepta únicamente `https://*.github.io` y `localhost`/`127.0.0.1`.
 
-## Opción A · Vercel (solo carpeta `proxy/vercel`)
+## Opción A · Tu Vercel solo como proxy (`proxy/vercel`)
 
 ```bash
 cd proxy/vercel
-vercel --prod
+vercel link --yes --project earthrhythm-brisa-proxy
+vercel env add ELEVENLABS_KEY production --sensitive --force
+vercel env add OPENROUTER_KEYS production --sensitive --force
+vercel env add ALLOWED_ORIGINS production --no-sensitive --force
+vercel --prod --yes
 ```
 
-Configura `OPENROUTER_KEYS` y `ELEVENLABS_KEY` en Vercel Project Settings → Environment Variables y obtendrás una URL pública (por ejemplo `https://brisa-proxy.vercel.app`).
+Cuando obtengas la URL final del proyecto del frontend (por ejemplo `https://earthrhythm-compa.vercel.app`), actualiza `ALLOWED_ORIGINS` a exactamente ese dominio para bloquear cualquier otro sitio.
+
+## Cómo lo despliega tu compañero en SU Vercel (cero API keys)
+
+1. Importa el repositorio `https://github.com/pierovelezzz/EarthRhythm` (rama `v4-IA`) en su Vercel.
+2. El archivo raíz [vercel.json](../vercel.json) ejecuta automáticamente `python3 scripts/build_pages.py _site` y publica `_site`.
+3. En **Project Settings → Environment Variables** de su Vercel solo agrega:
+   - `BRISA_PROXY_URL = https://tu-proxy.vercel.app` *(sin `/` final)*
+4. Redeploy / Deploy. `scripts/build_pages.py` incrustará esa URL en `_site/runtime/brisa-ai-config.js` sin tocar ninguna clave secreta.
 
 ## Opción B · Cloudflare Workers (plan gratuito)
 
 Crea un Worker nuevo en Cloudflare Dashboard, pega el contenido de `proxy/cloudflare-worker.js` y añade `OPENROUTER_KEYS` y `ELEVENLABS_KEY` como **Secrets** en *Settings → Variables*.
-
-## Conectar el proxy a GitHub Pages (cero configuración para visitantes)
-
-En el repositorio de GitHub (`Settings → Secrets and variables → Actions → Variables`), crea la variable pública:
-
-- `BRISA_PROXY_URL = https://tu-proxy.vercel.app` *(o tu URL de Workers, sin `/` final)*
-
-El flujo `.github/workflows/pages.yml` pasa `BRISA_PROXY_URL` automáticamente a `scripts/build_pages.py` sin guardar secretos en el código.
 
 ## Desarrollo local
 

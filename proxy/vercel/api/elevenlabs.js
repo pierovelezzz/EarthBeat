@@ -1,4 +1,4 @@
-import { corsHeaders, jsonResponse, preflight } from '../lib/proxy-utils.js';
+import { corsHeaders, jsonResponse, preflight, requireAllowedOrigin } from '../lib/proxy-utils.js';
 
 const ELEVENLABS_BASE = 'https://api.elevenlabs.io/v1/text-to-speech';
 const ALLOWED_VOICES = new Set([
@@ -18,6 +18,9 @@ export function OPTIONS(request) {
  * Proxy ElevenLabs TTS audio synthesis using server-side ELEVENLABS_KEY.
  */
 export async function POST(request) {
+  const blocked = requireAllowedOrigin(request);
+  if (blocked) return blocked;
+
   const apiKey = (process.env.ELEVENLABS_KEY || '').trim();
   if (!apiKey) {
     console.error('Brisa proxy missing ELEVENLABS_KEY environment variable');

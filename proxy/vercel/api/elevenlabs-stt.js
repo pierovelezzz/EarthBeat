@@ -1,12 +1,7 @@
-import { corsHeaders, jsonResponse, preflight } from '../lib/proxy-utils.js';
+import { corsHeaders, jsonResponse, preflight, requireAllowedOrigin } from '../lib/proxy-utils.js';
 
 const ELEVENLABS_STT_URL = 'https://api.elevenlabs.io/v1/speech-to-text';
-
-export const config = {
-  api: {
-    bodyParser: false
-  }
-};
+const MAX_AUDIO_BYTES = 2 * 1024 * 1024;
 
 export function OPTIONS(request) {
   return preflight(request);
@@ -16,8 +11,12 @@ export function OPTIONS(request) {
  * Proxy ElevenLabs Scribe STT audio transcription using server-side ELEVENLABS_KEY.
  */
 export async function POST(request) {
+  const blocked = requireAllowedOrigin(request);
+  if (blocked) return blocked;
+
   const apiKey = (process.env.ELEVENLABS_KEY || '').trim();
   if (!apiKey) {
+    console.error('Brisa proxy missing ELEVENLABS_KEY environment variable');
     return jsonResponse(request, { error: 'ELEVENLABS_KEY not configured' }, 503);
   }
   const contentType = request.headers.get('content-type') || '';
@@ -26,6 +25,9 @@ export async function POST(request) {
   }
   try {
     const bodyBuf = await request.arrayBuffer();
+    if (!bodyBuf.byteLength || bodyBuf.byteLength > MAX_AUDIO_BYTES) {
+      return jsonResponse(request, { error: 'Audio payload must be <= 2 MB' }, 413);
+    }
     const res = await fetch(ELEVENLABS_STT_URL, {
       method: 'POST',
       headers: {
@@ -35,6 +37,7 @@ export async function POST(request) {
       body: bodyBuf
     });
     const text = await res.text();
+    if (!res.ok) console.error(`ElevenLabs STT upstream error ${res.status}`);
     return new Response(text, {
       status: res.status,
       headers: { ...corsHeaders(request), 'Content-Type': 'application/json' }

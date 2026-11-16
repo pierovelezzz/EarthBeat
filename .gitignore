@@ -8,3 +8,4 @@ data/eic/*.mp4
 *.blend1
 scripts/brisa-ai-config.local.js
 .env*
+.vercel

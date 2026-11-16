@@ -1,4 +1,4 @@
-import { corsHeaders, jsonResponse, preflight } from '../lib/proxy-utils.js';
+import { corsHeaders, jsonResponse, preflight, requireAllowedOrigin } from '../lib/proxy-utils.js';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
@@ -10,6 +10,9 @@ export function OPTIONS(request) {
  * Proxy OpenRouter chat completions while rotating server-side OPENROUTER_KEYS.
  */
 export async function POST(request) {
+  const blocked = requireAllowedOrigin(request);
+  if (blocked) return blocked;
+
   const keys = (process.env.OPENROUTER_KEYS || '')
     .split(/[\s,]+/)
     .map((k) => k.trim())
@@ -45,9 +48,9 @@ export async function POST(request) {
       model,
       messages,
       temperature: typeof body?.temperature === 'number' ? body.temperature : 0.45,
-      max_tokens: typeof body?.max_tokens === 'number' ? Math.min(body.max_tokens, 600) : 460
+      max_tokens: typeof body?.max_tokens === 'number' ? Math.min(body.max_tokens, 600) : 460,
+      reasoning: body?.reasoning || { enabled: false }
     };
-    if (body?.reasoning) payload.reasoning = body.reasoning;
 
     const postUpstream = async (bodyObj) => {
       const res = await fetch(OPENROUTER_URL, {
@@ -69,10 +72,21 @@ export async function POST(request) {
         result = await postUpstream(payload);
       }
       if (result.res.ok) {
-        return new Response(result.text, {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders(request) }
-        });
+        let content = '';
+        try {
+          const parsed = JSON.parse(result.text || '{}');
+          content = typeof parsed?.choices?.[0]?.message?.content === 'string'
+            ? parsed.choices[0].message.content.trim()
+            : '';
+        } catch {
+          content = '';
+        }
+        if (content) {
+          return new Response(result.text, {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders(request) }
+          });
+        }
       }
       console.error(`OpenRouter upstream error ${result.res.status} on model ${model}`);
     } catch (err) {
