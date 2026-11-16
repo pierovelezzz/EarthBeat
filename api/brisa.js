@@ -73,6 +73,7 @@ module.exports = async function brisa(req, res) {
   }
   if (!allowedToSend(req, body.action)) return res.status(429).json({ error: 'rate' });
   const timeout = AbortSignal.timeout(9000);
+  const proxyHeaders = { Origin: req.headers.origin };
 
   try {
     if (body.action === 'voice') {
@@ -86,7 +87,10 @@ module.exports = async function brisa(req, res) {
         : new URL('api/elevenlabs', proxy);
       const result = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg', ...(voiceKey && { 'xi-api-key': voiceKey }) },
+        headers: {
+          'Content-Type': 'application/json', Accept: 'audio/mpeg',
+          ...(voiceKey ? { 'xi-api-key': voiceKey } : proxyHeaders)
+        },
         body: JSON.stringify({
           text, model_id: 'eleven_flash_v2_5', language_code: body.language,
           voice_settings: settings, voiceId: voiceKey ? undefined : voice
@@ -108,9 +112,12 @@ module.exports = async function brisa(req, res) {
     const url = chatKey ? 'https://openrouter.ai/api/v1/chat/completions' : new URL('api/openrouter', proxy);
     const result = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...(chatKey && { Authorization: 'Bearer ' + chatKey }) },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(chatKey ? { Authorization: 'Bearer ' + chatKey } : proxyHeaders)
+      },
       body: JSON.stringify({
-        model: process.env.BRISA_CHAT_MODEL || 'openrouter/free',
+        model: process.env.BRISA_CHAT_MODEL || (chatKey ? 'openrouter/free' : undefined),
         max_tokens: 180,
         messages: [{
           role: 'system',
