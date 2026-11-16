@@ -1,4 +1,37 @@
 const api = '/api/brisa';
+const spanishVoiceCache = new Map();
+let availableServices;
+
+function getBrisaServices() {
+  if (location.hostname.endsWith('.github.io')) return Promise.resolve({});
+  availableServices ??= fetch(api, { cache: 'no-store', signal: AbortSignal.timeout(1400) })
+    .then(response => response.ok && response.headers.get('content-type')?.includes('json') ? response.json() : {})
+    .catch(() => ({}));
+  return availableServices;
+}
+
+async function requestBrisaVoice(text, language, voice, signal, timeout) {
+  const response = await fetch(api, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'voice', language, text, voice }),
+    signal: AbortSignal.any([signal, AbortSignal.timeout(timeout)])
+  });
+  return response.ok && response.headers.get('content-type')?.includes('audio/') ? response.blob() : null;
+}
+
+window.earthRhythmSpanishVoice = async (text, signal) => {
+  const services = await getBrisaServices();
+  if (!services.voice || signal.aborted || !text || text.length > 600) return null;
+  if (spanishVoiceCache.has(text)) return spanishVoiceCache.get(text);
+  try {
+    const clip = await requestBrisaVoice(text, 'es', 'brisa', signal, 2800);
+    if (clip && !signal.aborted) {
+      if (spanishVoiceCache.size >= 48) spanishVoiceCache.delete(spanishVoiceCache.keys().next().value);
+      spanishVoiceCache.set(text, clip);
+    }
+    return clip;
+  } catch { return null; }
+};
 const copy = {
   es: {
     launch: 'Chat con Brisa', close: 'Cerrar', status: 'Brisa responde sobre EarthRhythm.',
@@ -93,7 +126,7 @@ const markup = [
   '<p class="status" role="status"></p>',
   '<form><label class="ask-label" for="question"></label><input id="question" name="question" type="text" maxlength="380" autocomplete="off" required>',
   '<button type="button" class="mic" hidden></button><button type="submit" class="send"></button></form>',
-  '<div class="tools"><button type="button" class="read" disabled></button><label class="voices" hidden><span></span><select><option value="sarah">Sarah</option><option value="aria">Aria</option><option value="laura">Laura</option></select></label></div>',
+  '<div class="tools"><button type="button" class="read" disabled></button><label class="voices" hidden><span></span><select><option value="brisa">Brisa · Leoni Vergara</option><option value="sarah">Sarah</option><option value="aria">Aria</option><option value="laura">Laura</option></select></label></div>',
   '</div></dialog>'
 ].join('');
 
@@ -116,7 +149,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
     this.find('.read').addEventListener('click', () => this.read());
     this.find('.mic').addEventListener('click', () => this.dictate());
     this.find('select').addEventListener('change', () => {
-      try { localStorage.setItem('ts_brisa_chat_voice', this.find('select').value); } catch {}
+      try { localStorage.setItem('ts_brisa_chat_voice_'+this.language, this.find('select').value); } catch {}
       this.stopReading();
     });
   }
@@ -127,11 +160,17 @@ class EarthRhythmBrisaChat extends HTMLElement {
   get text() { return copy[this.language]; }
 
   connectedCallback() {
-    try {
-      const voice = localStorage.getItem('ts_brisa_chat_voice');
-      if (['sarah', 'aria', 'laura'].includes(voice)) this.find('select').value = voice;
-    } catch {}
+    this.updateVoiceSelection();
     this.updateText();
+  }
+
+  updateVoiceSelection() {
+    const spanish = this.language === 'es', select = this.find('select');
+    select.options[0].hidden = !spanish;
+    let voice;
+    try { voice = localStorage.getItem('ts_brisa_chat_voice_'+this.language) || localStorage.getItem('ts_brisa_chat_voice'); } catch {}
+    const choices = spanish ? ['brisa','sarah','aria','laura'] : ['sarah','aria','laura'];
+    select.value = choices.includes(voice) ? voice : choices[0];
   }
 
   disconnectedCallback() { this.cancelChat(); }
@@ -139,6 +178,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
   attributeChangedCallback(name, oldLanguage, newLanguage) {
     if (oldLanguage === newLanguage) return;
     if (this.dialog.open) this.clearConversation();
+    this.updateVoiceSelection();
     this.updateText();
   }
 
@@ -168,12 +208,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
     this.dispatchEvent(new CustomEvent('earthrhythm:chat-open', { bubbles: true }));
     this.dialog.showModal();
     this.find('input').focus();
-    if (this.serviceChecked || location.hostname.endsWith('.github.io')) return;
-    try {
-      const result = await fetch(api, { cache: 'no-store', signal: AbortSignal.timeout(4000) });
-      if (result.ok && result.headers.get('content-type')?.includes('json')) this.services = await result.json();
-    } catch {}
-    this.serviceChecked = true;
+    this.services = await getBrisaServices();
     this.updateText();
   }
 
@@ -244,13 +279,8 @@ class EarthRhythmBrisaChat extends HTMLElement {
     this.find('.read').textContent = this.text.stop;
     if (this.services.voice) {
       try {
-        const result = await fetch(api, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'voice', language: this.language, text: reply.text, voice: this.find('select').value }),
-          signal: AbortSignal.any([request.signal, AbortSignal.timeout(10000)])
-        });
-        if (result.ok && result.headers.get('content-type')?.includes('audio/')) {
-          const audio = await result.blob();
+        const audio = await requestBrisaVoice(reply.text, this.language, this.find('select').value, request.signal, 10000);
+        if (audio) {
           if (this.reading !== request) return;
           this.audioUrl = URL.createObjectURL(audio);
           await this.playClip(this.audioUrl);

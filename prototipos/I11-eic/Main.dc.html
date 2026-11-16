@@ -946,7 +946,6 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 .px .tbubble:focus-visible{outline-offset:-2px}
 .px .tour h3{margin:0 0 6px;font:700 1.12em/1.15 var(--head);letter-spacing:.06em;text-transform:uppercase}
 .px .tour p{color:#dcdcdc;font-size:.92em;line-height:1.5}
-.px .tour .guide-control{margin-top:6px;min-height:44px;white-space:normal}
 .px .tour .tact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;min-width:0}
 .px .tour .tact button{min-width:0;min-height:44px;width:100%;padding:6px;font-size:max(12px,.75em);line-height:1.35;letter-spacing:.06em;white-space:normal;overflow-wrap:anywhere;margin:0}
 .px .tour .tact .primary{grid-column:2;grid-row:1}
@@ -2403,13 +2402,13 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <header class="top {{headerClass}}">
 <a class="skip-content" href="#main-content" onClick="{{skipContent}}">{{tx.skipContent}}</a>
 <div class="wrap">
-<button type="button" class="brand" onClick="{{goHome}}" aria-label="{{tx.brandAria}}">
+<button type="button" class="brand" onClick="{{goHome}}" disabled="{{navigationLocked}}" aria-label="{{tx.brandAria}}">
 <svg class="brandmark" width="38" height="24" viewBox="0 0 25 16" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><path d="M4 0h8v1h-8zM20 0h1v1h-1zM2 1h3v1h-3zM11 1h3v1h-3zM18 1h6v1h-6zM1 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM1 3h1v1h-1zM14 3h1v1h-1zM0 4h2v1h-2zM14 4h2v1h-2zM0 5h1v1h-1zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h1v1h-1zM15 9h1v1h-1zM0 10h1v1h-1zM15 10h1v1h-1zM0 11h2v1h-2zM14 11h2v1h-2zM1 12h1v1h-1zM14 12h1v1h-1zM1 13h2v1h-2zM13 13h2v1h-2zM2 14h3v1h-3zM11 14h3v1h-3zM4 15h8v1h-8z"></path><path d="M19 4h1v1h-1zM3 5h2v1h-2zM9 5h2v1h-2zM18 5h1v1h-1zM21 5h1v1h-1zM2 6h1v1h-1zM5 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM17 6h1v1h-1zM20 6h1v1h-1zM6 7h2v1h-2zM12 7h2v1h-2zM19 7h1v1h-1zM3 9h2v1h-2zM9 9h2v1h-2zM2 10h1v1h-1zM5 10h1v1h-1zM8 10h1v1h-1zM11 10h1v1h-1zM6 11h2v1h-2zM12 11h2v1h-2z" fill="#FFD447"></path></svg>
 <span class="wordmark">EarthRhythm</span>
 </button>
 <nav id="tour-nav" class="nav" aria-label="{{tx.sections}}" onKeyDown="{{onNavKey}}">
 <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
-<button type="button" onClick="{{t.go}}" aria-current="{{t.cur}}" aria-label="{{t.label}}" title="{{t.label}}"><span class="nav-full">{{t.label}}</span><span class="nav-short">{{t.short}}</span></button>
+<button type="button" onClick="{{t.go}}" disabled="{{navigationLocked}}" aria-current="{{t.cur}}" aria-label="{{t.label}}" title="{{t.label}}"><span class="nav-full">{{t.label}}</span><span class="nav-short">{{t.short}}</span></button>
 </sc-for>
 </nav>
 <div class="right">
@@ -2435,7 +2434,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 </details>
 <sc-if value="{{gameAvailable}}">
-<button type="button" class="btn game-nav" onClick="{{goGame}}" aria-current="{{gameNavCurrent}}" aria-label="{{gameNavLabel}}" title="{{gameNavLabel}}">
+<button type="button" class="btn game-nav" onClick="{{goGame}}" disabled="{{navigationLocked}}" aria-current="{{gameNavCurrent}}" aria-label="{{gameNavLabel}}" title="{{gameNavLabel}}">
 <svg width="28" height="20" viewBox="0 0 28 20" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M7 2h14v2h3v2h2v4h2v6h-2v2h-5v-2h-2v-2H9v2H7v2H2v-2H0v-6h2V6h2V4h3z"/><path fill="var(--game-icon-cutout)" d="M8 5h2v3h3v2h-3v3H8v-3H5V8h3zM19 6h3v3h-3zM16 10h3v3h-3z"/></svg>
 </button>
 </sc-if>
@@ -2571,8 +2570,8 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="pagehead slim">
 <div><p class="kicker">{{playKicker}}</p><h1 id="player-title" class="display md" tabindex="-1">{{playTitle}}</h1></div>
 <div class="row headtools">
-<sc-if value="{{canPlayRhythm}}"><button type="button" class="btn sm disc-action rhythm-toggle" onClick="{{playThisDisc}}" aria-label="{{rhythmToggleLabel}}" title="{{rhythmToggleLabel}}"><svg width="24" height="18" viewBox="0 0 28 20" fill="currentColor" fill-rule="evenodd" shape-rendering="crispEdges" aria-hidden="true"><path d="M7 2h14v2h3v2h2v4h2v6h-2v2h-5v-2h-2v-2H9v2H7v2H2v-2H0v-6h2V6h2V4h3zM8 5h2v3h3v2h-3v3H8v-3H5V8h3zM19 6h3v3h-3zM16 10h3v3h-3z"/></svg></button></sc-if>
-<sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet disc-action" onClick="{{goDiscs}}" aria-label="{{tx.changeDisc}}" title="{{tx.changeDisc}}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.3"/><path d="M9 4H4l2-2m-2 2 2 2M15 20h5l-2-2m2 2-2 2"/></svg></button></sc-if>
+<sc-if value="{{canPlayRhythm}}"><button type="button" class="btn sm disc-action rhythm-toggle" onClick="{{playThisDisc}}" disabled="{{navigationLocked}}" aria-label="{{rhythmToggleLabel}}" title="{{rhythmToggleLabel}}"><svg width="24" height="18" viewBox="0 0 28 20" fill="currentColor" fill-rule="evenodd" shape-rendering="crispEdges" aria-hidden="true"><path d="M7 2h14v2h3v2h2v4h2v6h-2v2h-5v-2h-2v-2H9v2H7v2H2v-2H0v-6h2V6h2V4h3zM8 5h2v3h3v2h-3v3H8v-3H5V8h3zM19 6h3v3h-3zM16 10h3v3h-3z"/></svg></button></sc-if>
+<sc-if value="{{isJuke}}"><button type="button" class="btn sm quiet disc-action" onClick="{{goDiscs}}" disabled="{{navigationLocked}}" aria-label="{{tx.changeDisc}}" title="{{tx.changeDisc}}"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.3"/><path d="M9 4H4l2-2m-2 2 2 2M15 20h5l-2-2m2 2-2 2"/></svg></button></sc-if>
 <sc-if value="{{rhythmMode}}"><button type="button" class="btn sm quiet" onClick="{{goDiscs}}">{{rhythmExitLabel}}</button></sc-if>
 <sc-if value="{{standardPlayer}}">
 <details class="mode-help" onKeyDown="{{listenHelpKeys}}">
@@ -2934,11 +2933,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="in2">
 <div class="side"><button type="button" class="btn quiet sm" onClick="{{nav.prev}}" disabled="{{nav.prevOff}}" title="{{tx.prevScreen}}"><span aria-hidden="true">←</span> {{tx.back}}</button></div>
 <div class="mid">
-<sc-if value="{{nav.showDots}}"><div class="steps {{nav.compact}}" role="group" aria-label="{{tx.screensAria}}"><sc-for list="{{nav.dots}}" as="d" hint-placeholder-count="3"><button type="button" class="{{d.cls}}" onClick="{{d.go}}" aria-current="{{d.cur}}"><b aria-hidden="true">{{d.n}}</b><span>{{d.label}}</span></button></sc-for></div></sc-if>
+<sc-if value="{{nav.showDots}}"><div class="steps {{nav.compact}}" role="group" aria-label="{{tx.screensAria}}"><sc-for list="{{nav.dots}}" as="d" hint-placeholder-count="3"><button type="button" class="{{d.cls}}" onClick="{{d.go}}" disabled="{{navigationLocked}}" aria-current="{{d.cur}}"><b aria-hidden="true">{{d.n}}</b><span>{{d.label}}</span></button></sc-for></div></sc-if>
 <span class="pagecount"><span aria-hidden="true">{{nav.counter}}</span><span class="sr">{{nav.countAria}}</span></span>
 </div>
 <div class="side r">
-<sc-if value="{{nav.showNext}}"><button type="button" class="btn primary sm" onClick="{{nav.next}}" title="{{tx.nextScreen}}"><span class="nav-next-long">{{nav.nextLabel}}</span><span class="nav-next-short">{{nav.shortNext}}</span> <span aria-hidden="true">→</span></button></sc-if>
+<sc-if value="{{nav.showNext}}"><button type="button" class="btn primary sm" onClick="{{nav.next}}" disabled="{{navigationLocked}}" title="{{tx.nextScreen}}"><span class="nav-next-long">{{nav.nextLabel}}</span><span class="nav-next-short">{{nav.shortNext}}</span> <span aria-hidden="true">→</span></button></sc-if>
 </div>
 </div>
 </footer>
@@ -2980,11 +2979,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="tsay" onClick="{{tour.close}}" aria-label="{{tour.closeLabel}}" title="{{tour.closeLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
 </div>
 <div class="tbubble" tabindex="0" role="region" aria-labelledby="tour-t">
-<h3 id="tour-t" tabindex="-1">{{tour.title}}</h3>
+<h3 id="tour-t" class="{{tour.titleClass}}" tabindex="-1">{{tour.title}}</h3>
 <p id="tour-b" aria-live="polite">{{tour.body}}</p>
 <p role="status" class="small">{{tour.feedback}}</p>
 <p class="small muted">{{tour.speechNotice}}</p>
-<sc-if value="{{tour.canFocusControl}}"><button type="button" class="btn sm guide-control" onClick="{{tour.focusControl}}">{{tour.controlLabel}}</button></sc-if>
 <sc-if value="{{tour.canUseText}}"><button type="button" class="btn sm" onClick="{{tour.useText}}">{{tour.useTextLabel}}</button></sc-if>
 </div>
 <div class="tact">
@@ -4724,12 +4722,33 @@ class Component extends DCLogic {
       return;
     }
     this.stopSpeech();
-    var self = this;
-    var audio = new window.Audio('./brisa/' + LANG + '-' + step.audio + '.mp3');
+    var language = LANG, self = this;
     this.brisaMapSpeaking = step.audio.startsWith('map-');
+    if (language !== 'es' || typeof window.earthRhythmSpanishVoice !== 'function') {
+      this.playBrisaClip(step, language);
+      return;
+    }
+    var request = this.brisaVoiceRequest = new AbortController();
+    this.setState({ speaking: true, speechNotice: null });
+    this.syncVolume();
+    window.earthRhythmSpanishVoice(step.b, request.signal).then(function (clip) {
+      if (self.brisaVoiceRequest !== request) return;
+      self.brisaVoiceRequest = null;
+      self.playBrisaClip(step, language, clip);
+    });
+  }
+  playBrisaClip(step, language, recording) {
+    var self = this, local = './brisa/' + language + '-' + step.audio + '.mp3';
+    var source = recording ? this.brisaVoiceUrl = URL.createObjectURL(recording) : local;
+    var audio = new window.Audio(source);
     var finish = function (error) {
       if (self.brisaAudio !== audio) return;
       self.brisaAudio = null;
+      self.releaseBrisaVoiceUrl();
+      if (recording && error) {
+        self.playBrisaClip(step, language);
+        return;
+      }
       self.brisaMapSpeaking = false;
       if (error && error.name !== 'NotAllowedError') {
         self.setState({ speaking: false, speechNotice: uiMessage('La grabación de Brisa no está disponible. Puedes leer el texto.', 'Brisa’s recording is unavailable. You can read the text.') });
@@ -5228,6 +5247,7 @@ class Component extends DCLogic {
     return this.techPages().map(function (p) { return p.title; });
   }
   goSub(i) {
+    if (this.state.tutorial) return;
     this.settleArrivedRoute();
     var s = this.state, cnt = this.subCount();
     if (!Number.isInteger(i) || i < 0 || i >= cnt || i === s.sub || s.trans) return;
@@ -5242,6 +5262,7 @@ class Component extends DCLogic {
     this.routeChange(patch, s.tab, this.subTitles()[i]);
   }
   goTab(k, sub) {
+    if (this.state.tutorial) return;
     this.settleArrivedRoute();
     var s = this.state;
     if (k === 'game' && !this.rhythmQuery?.matches) return;
@@ -5364,7 +5385,7 @@ class Component extends DCLogic {
     this.tutorialAction('disc');
   }
   openRhythmDisc(index) {
-    if (!this.settleArrivedRoute() || !this.rhythmQuery?.matches || index < 0 || index >= 5) return;
+    if (this.state.tutorial || !this.settleArrivedRoute() || !this.rhythmQuery?.matches || index < 0 || index >= 5) return;
     if (this.state.tour) this.tourEnd();
     this.stop();
     this.lastThunder = -9;
@@ -6336,13 +6357,21 @@ class Component extends DCLogic {
       b: T(...BRISA_MAP_LINES['ocean-' + signal]) + ' ' + T(...BRISA_MAP_LINES['coast-' + coast]) };
   }
   describeText() { return this.mapNarration().b; }
+  releaseBrisaVoiceUrl() {
+    if (!this.brisaVoiceUrl) return;
+    URL.revokeObjectURL(this.brisaVoiceUrl);
+    this.brisaVoiceUrl = null;
+  }
   stopSpeech() {
+    this.brisaVoiceRequest?.abort();
+    this.brisaVoiceRequest = null;
     this.brisaMapSpeaking = false;
     if (this.brisaAudio) {
       var audio = this.brisaAudio;
       this.brisaAudio = null;
       audio.pause();
     }
+    this.releaseBrisaVoiceUrl();
     this.utterance = null;
     if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (ignored) {} }
     if (this.state.speaking || this.state.speechNotice) this.setState({ speaking: false, speechNotice: null });
@@ -6562,25 +6591,16 @@ class Component extends DCLogic {
     cardSt = visibleStyle(cardSt) + ';max-height:calc(' + Math.max(0, vh - 24) + 'px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))';
     spotSt = visibleStyle(spotSt);
     var tutorialBlocked = !!(s.tutorial && tstep && !s.tutorialDone[tstep.action]);
-    var controlLabels = {
-      disc: T('Ir a las portadas', 'Go to disc covers'),
-      play: T('Ir a Reproducir', 'Go to Play'),
-      legend: T('Ir a los colores', 'Go to the colors')
-    };
     var contextHelp = s.tour && !s.tutorial ? this.contextHelpStep() : null;
     var tourVm = { on: !!tstep, n: s.tour, total: s.tutorial ? gsteps.length : 1,
       title: tstep ? contextHelp?.t || tstep.t : '',
+      titleClass: s.tutorial ? '' : 'sr',
       body: tstep ? contextHelp?.b || tstep.b : '',
       nextOff: false,
       feedback: uiText(s.tutorialFeedback), speechNotice: uiText(s.speechNotice),
       isTutorial: s.tutorial, showTutorialStart: !s.tutorial,
       restartLabel: this.tutorialProgress?.completed ? T('Repetir tutorial', 'Repeat tutorial') : T('Tutorial · 3 pasos', 'Tutorial · 3 steps'),
       restart: function () { self.startTutorial(true); },
-      canFocusControl: tutorialBlocked && !!tstep.id, controlLabel: controlLabels[tstep?.action],
-      focusControl: function () {
-        var target = document.getElementById(tstep.id)?.querySelector('button:not(:disabled)');
-        target?.focus();
-      },
       closeLabel: s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen'),
       canUseText: tutorialBlocked && s.tour === 2,
       useTextLabel: T('Seguir sin sonido', 'Continue without sound'), useText: function () { self.tutorialAction('play'); },
@@ -6621,7 +6641,7 @@ class Component extends DCLogic {
       countAria: T('Pantalla ', 'Screen ') + (sub + 1) + T(' de ', ' of ') + cnt,
       shortNext: T('Siguiente', 'Next'),
       dots: titles.map(function (x, i) { return { cls: i === sub ? 'on' : '', cur: i === sub ? 'step' : 'false', n: ('0' + (i + 1)).slice(-2), label: x, aria: T('Ir a ', 'Go to ') + x, go: function () { self.goSub(i); } }; }),
-      show: cnt > 1, topics: topics, showDots: !topics, prevOff: sub === 0,
+      show: cnt > 1, topics: topics, showDots: !topics, prevOff: s.tutorial || sub === 0,
       nextLabel: lastSub ? (s.tab === 'tech' ? ROUTE_LOOK.home.title : ROUTE_LOOK[pgNext].title) : T('Siguiente', 'Next'),
       prev: function () { self.goSub(sub - 1); },
       next: function () { if (lastSub) self.goTab(s.tab === 'tech' ? 'home' : pgNext); else self.goSub(sub + 1); },
@@ -6730,6 +6750,7 @@ class Component extends DCLogic {
       sectionVoiceLabel: s.speaking ? T('Detener voz', 'Stop voice') : T('Escuchar a Brisa', 'Hear Brisa'),
       sectionVoice: function () { self.toggleSectionVoice(); },
       sectionVoiceNotice: uiText(s.speechNotice),
+      navigationLocked: s.tutorial,
       goDiscs: function () { self.goSub(0); },
       playKicker: rhythmMode ? T('Jugar', 'Play') : isData ? tx.dataListenKicker : tx.listenKicker,
       playTitle: isData ? uiLabel(s.custom) : d.title,

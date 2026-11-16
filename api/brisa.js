@@ -1,4 +1,5 @@
 const voices = Object.freeze({
+  brisa: 'pBZVCk298iJlHAcHQwLr',
   sarah: 'EXAVITQu4vr4xnSDxMaL',
   aria: '9BWtsMINqrJLrRacOk9x',
   laura: 'FGY2WhTYpPnrIDTdsKH5'
@@ -50,11 +51,15 @@ module.exports = async function brisa(req, res) {
 
   try {
     if (body.action === 'voice') {
-      const voice = Object.hasOwn(voices, body.voice) ? voices[body.voice] : voices.sarah;
+      const preferred = body.language === 'es' ? 'brisa' : 'sarah';
+      const selected = Object.hasOwn(voices, body.voice) && (body.language === 'es' || body.voice !== 'brisa') ? body.voice : preferred;
+      const configuredVoice = (process.env.BRISA_ES_VOICE_ID || '').trim();
+      const voice = selected === 'brisa' && /^[a-zA-Z0-9]{20}$/.test(configuredVoice) ? configuredVoice : voices[selected];
+      const settings = selected === 'brisa' ? { stability: 0.52, similarity_boost: 0.76, speed: 1.06 } : undefined;
       const result = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voice + '?output_format=mp3_22050_32', {
         method: 'POST',
         headers: { 'xi-api-key': voiceKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-        body: JSON.stringify({ text, model_id: 'eleven_flash_v2_5', language_code: body.language }),
+        body: JSON.stringify({ text, model_id: 'eleven_flash_v2_5', language_code: body.language, voice_settings: settings }),
         signal: timeout
       });
       if (!result.ok) return res.status(502).json({ error: 'voice' });

@@ -27,12 +27,16 @@ async function main(){
      await page.locator('#tour-guide').click();
      await page.locator('#tour-card .tour-start').click();
    };
-   const pick=async()=>{await page.locator('#tour-card .guide-control').click();assert(await page.locator('.dcard').first().evaluate(el=>document.activeElement===el));await page.locator('.dcard').nth(2).focus();await page.keyboard.press('Enter');await step(2);};
+   const pick=async()=>{assert.equal(await page.locator('#tour-card .tbubble button').count(),0);await page.locator('.dcard').nth(2).focus();await page.keyboard.press('Enter');await step(2);};
    await page.locator('#tour-guide').click();
    assert.equal(await page.locator('#tour-card .tdots').count(),0);assert.equal((await page.locator('#tour-card .tn.dim').textContent()).trim(),'');
    assert.equal(await page.locator('#tour-card .tbubble button').count(),0);await audit('context-help');
    await page.locator('#tour-card .tact .primary').click();assert.equal(await page.locator('#tour-card').count(),0);
    await startFromHelp();await step(1);await audit('tutorial-step-1');await pick();await audit('tutorial-step-2');
+   assert(await page.locator('#tour-nav button').nth(1).isDisabled());
+   await page.evaluate(()=>{__app.goTab('band');__app.goSub(0);__app.openRhythmDisc(0);});
+   await step(2);
+   assert.equal(await page.evaluate(()=>__app.state.tab),'juke');
    await page.locator('#tour-card .skip').click();assert.equal(await page.locator('#tour-card').count(),0);
    let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('ts_tutorial')));assert.equal(saved.step,2);assert.equal(saved.done.disc,true);
    await page.locator('#tour-guide').click();await step(2);assert.equal(await page.evaluate(()=>__app.state.disc),2);assert.equal(await page.evaluate(()=>__app.state.playing),false);
