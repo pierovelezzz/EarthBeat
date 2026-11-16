@@ -110,7 +110,11 @@ const markup = [
   'button,textarea{box-sizing:border-box;font:inherit;min-height:44px;color:inherit}',
   'button{padding:5px 10px;border:1px solid var(--line,#8ca6c5);border-radius:6px;background:var(--surface,#21344e);cursor:pointer}',
   'button:disabled{opacity:.65;cursor:default}button:focus-visible,textarea:focus-visible,.messages:focus-visible{outline:2px solid var(--accent,#ffd447);outline-offset:2px}',
-  '.launch{display:inline-flex;align-items:center;gap:5px;font-size:.84em;font-weight:700;border-color:var(--fg,#fff)}',
+  '.launch{display:grid;place-items:center;width:44px;height:44px;padding:0;border-radius:50%;border-color:#ffd447;background:var(--surface,#21344e)}',
+  '.launch:hover{background:var(--panel,#202b38);border-color:var(--fg,#fff)}',
+  ':host-context([data-theme="light"]) .launch{border-color:#785000}',
+  ':host-context([data-contrast="true"]) .launch{border:2px solid currentColor}',
+  '@media(forced-colors:active){.launch{border-color:ButtonText}}',
   'dialog{box-sizing:border-box;position:fixed;inset:0 0 0 auto;margin:0;width:min(420px,100%);height:100dvh;max-width:none;max-height:none;padding:0;overflow:auto;border:1px solid var(--line,#8ca6c5);border-radius:14px 0 0 14px;background:var(--bg,#171e2b);color:inherit;box-shadow:-16px 0 40px #0004}',
   'dialog::backdrop{background:#0003}',
   '.panel{box-sizing:border-box;display:grid;grid-template-rows:auto auto auto minmax(80px,1fr) auto;height:100%;gap:10px;padding:14px;min-width:0}',
@@ -134,7 +138,7 @@ const markup = [
   '.ask-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}',
   '[hidden]{display:none!important}',
   '</style>',
-  '<button type="button" class="launch" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9h8m-8 3h5"/></svg><span></span></button>',
+  '<button type="button" class="launch" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg></button>',
   '<dialog aria-labelledby="heading"><div class="panel">',
   '<header><img class="portrait" src="./brisa/portrait.webp" alt=""><div class="identity"><p class="assistant"></p><h2 id="heading"></h2></div><button type="button" class="speaker" aria-pressed="false">' + speakerIcon + '</button><button type="button" class="close"><span aria-hidden="true">×</span></button></header>',
   '<div class="tools"><button type="button" class="visual"></button><button type="button" class="now"></button></div>',
@@ -258,7 +262,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
     const text = this.text;
     this.find('.launch').setAttribute('aria-label', text.launch);
     this.find('.launch').title = text.launch;
-    const labels = { '.launch span': this.language === 'es' ? 'IA' : 'AI', h2: text.launch, '.assistant': text.assistant,
+    const labels = { h2: text.launch, '.assistant': text.assistant,
       '.ask-label': text.ask, '.send': text.send, '.clear': text.clear, '.visual': text.visual, '.now': text.now,
       '.mic': this.recognition ? text.stopDictation : text.dictate };
     for (const [selector, label] of Object.entries(labels)) this.find(selector).textContent = label;
