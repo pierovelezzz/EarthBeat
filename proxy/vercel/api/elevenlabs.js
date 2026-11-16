@@ -2,13 +2,14 @@ import { corsHeaders, jsonResponse, preflight, requireAllowedOrigin } from '../l
 
 const ELEVENLABS_BASE = 'https://api.elevenlabs.io/v1/text-to-speech';
 const ALLOWED_VOICES = new Set([
-  'EXAVITQu4vr4xnSDxMaL',
   'pBZVCk298iJlHAcHQwLr',
+  'onwK4e9ZLuTAKqWW03F9',
+  'Xb7hH8MSUJpSbSDYk0k2',
+  'pNInz6obpgDQGcFmaJgB',
+  'EXAVITQu4vr4xnSDxMaL',
+  'N2lVS1w4EtoT3dr4eOWO',
   '9BWtsMINqrJLrRacOk9x',
-  'FGY2WhTYpPnrIDTdsKH5',
-  'XrExE9yKIg1WjnnlVkGX',
-  'SAz9YHcvj6GT2YYXdXww',
-  'CwhRBWXzGAHq8TQ4Fs17'
+  'FGY2WhTYpPnrIDTdsKH5'
 ]);
 
 export function OPTIONS(request) {
@@ -41,7 +42,7 @@ export async function POST(request) {
     return jsonResponse(request, { error: 'text is required' }, 400);
   }
 
-  const voiceId = ALLOWED_VOICES.has(body?.voiceId) ? body.voiceId : 'EXAVITQu4vr4xnSDxMaL';
+  const voiceId = ALLOWED_VOICES.has(body?.voiceId) ? body.voiceId : 'pBZVCk298iJlHAcHQwLr';
   const modelId = typeof body?.model_id === 'string' && body.model_id ? body.model_id : 'eleven_flash_v2_5';
   const models = modelId === 'eleven_multilingual_v2' ? [modelId] : [modelId, 'eleven_multilingual_v2'];
   const langCode = body?.language_code === 'es' || body?.language_code === 'en' ? body.language_code : undefined;

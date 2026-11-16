@@ -153,7 +153,7 @@ test('Static bundle includes key-free config script and optional local overrides
   assert.equal(cfg.elevenlabsKey, '');
   assert.equal(cfg.elevenlabsVoices.length, 6);
   assert.equal(cfg.elevenlabsModel, 'eleven_flash_v2_5');
-  assert.equal(cfg.voiceId, 'EXAVITQu4vr4xnSDxMaL');
+  assert.equal(cfg.voiceId, 'pBZVCk298iJlHAcHQwLr');
 
   const localPath = path.resolve('scripts/brisa-ai-config.local.js');
   if (fs.existsSync(localPath)) {
@@ -277,7 +277,7 @@ test('askBrisaAI falls back offline on errors and auto-speaks via ElevenLabs in 
   assert.equal(comp.state.brisaAiMessages[1].source, 'offline');
   assert.match(comp.state.brisaAiMessages[1].text, /SVS 5176/);
   assert.equal(ttsCalls.length, 1);
-  assert.match(ttsCalls[0].url, /EXAVITQu4vr4xnSDxMaL/);
+  assert.match(ttsCalls[0].url, /pBZVCk298iJlHAcHQwLr/);
   assert.equal(ttsCalls[0].key, 'test-el-key');
   assert.equal(comp.state.speaking, true);
   assert(Math.abs(comp.master.gain.value - 0.24) < 0.001, 'Music must duck while ElevenLabs speaks');
@@ -348,7 +348,7 @@ test('Proxy mode sends zero client keys to /api/openrouter and /api/elevenlabs',
   assert.equal(seen[0].headers.Authorization, undefined);
   assert.equal(seen[1].url, 'https://brisa-proxy.example/api/elevenlabs');
   assert.equal(seen[1].headers['xi-api-key'], undefined);
-  assert.equal(seen[1].body.voiceId, 'EXAVITQu4vr4xnSDxMaL');
+  assert.equal(seen[1].body.voiceId, 'pBZVCk298iJlHAcHQwLr');
   assert.equal(comp.state.brisaAiMessages[1].source, 'openrouter');
 });
 

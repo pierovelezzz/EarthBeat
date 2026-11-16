@@ -247,10 +247,10 @@ async function main() {
     assert(sysPrompt.includes('"pacoraRuleActive":true'), 'System prompt must reflect Pacora rule on Yaku Mar 2023');
     assert(sysPrompt.includes('NASA SVS 5176') && sysPrompt.includes('GHRSST L4 MUR') && sysPrompt.includes('NASA POWER Monthly API'));
 
-    // Verify ElevenLabs called with default Sarah voice + Flash v2.5 + latency optimization and music ducked
+    // Verify ElevenLabs called with default Leoni Latina voice + Flash v2.5 + latency optimization and music ducked
     assert.equal(report.elevenlabsCalls.length, prevElCount + 1);
     const curElCall = report.elevenlabsCalls.at(-1);
-    assert.equal(curElCall.voiceId, 'EXAVITQu4vr4xnSDxMaL');
+    assert.equal(curElCall.voiceId, 'pBZVCk298iJlHAcHQwLr');
     assert.equal(curElCall.hasKey, !curElCall.viaProxy);
     if (!curElCall.viaProxy) {
       assert(curElCall.url.includes('optimize_streaming_latency=3'), 'Direct ElevenLabs call should optimize streaming latency');
@@ -277,13 +277,17 @@ async function main() {
     await page.waitForFunction(() => window.__app && !window.__app.state.speaking);
     report.checks.push('openrouter-live-context-spotlight-and-elevenlabs-cache-ducking');
 
-    // Switch voice directly in header quick picker (Aria) and check offline fallback cleanly
-    await page.selectOption('#brisa-ai-voice-quick', '9BWtsMINqrJLrRacOk9x');
+    // Switch voice directly in header quick picker (Daniel) and check test-voice immediate request + offline fallback cleanly
+    await page.selectOption('#brisa-ai-voice-quick', 'onwK4e9ZLuTAKqWW03F9');
     await playBtn.click();
     await page.waitForFunction(() => window.__app && window.__app.state.speaking);
     assert.equal(report.elevenlabsCalls.length, prevElCount + 2);
-    assert.equal(report.elevenlabsCalls.at(-1).voiceId, '9BWtsMINqrJLrRacOk9x');
-    await playBtn.click();
+    assert.equal(report.elevenlabsCalls.at(-1).voiceId, 'onwK4e9ZLuTAKqWW03F9');
+    await page.selectOption('#brisa-ai-voice-quick', 'pNInz6obpgDQGcFmaJgB');
+    await page.locator('.brisa-ai-test-voice').click();
+    await page.waitForFunction(() => window.__app && window.__app.state.speaking);
+    assert.equal(report.elevenlabsCalls.at(-1).voiceId, 'pNInz6obpgDQGcFmaJgB', 'Switching dropdown during playback then clicking Probar voz must immediately play new voice');
+    await page.locator('.brisa-ai-test-voice').click();
     await page.waitForFunction(() => window.__app && !window.__app.state.speaking);
 
     // Offline fallback check

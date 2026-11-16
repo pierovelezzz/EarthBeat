@@ -1,13 +1,14 @@
 /* Cloudflare Worker proxy for EarthRhythm Brisa AI (zero keys exposed to visitors). */
 const ALLOWED_ORIGIN = /^https:\/\/[a-z0-9-]+\.github\.io$|^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i;
 const ALLOWED_VOICES = new Set([
-  'EXAVITQu4vr4xnSDxMaL',
   'pBZVCk298iJlHAcHQwLr',
+  'onwK4e9ZLuTAKqWW03F9',
+  'Xb7hH8MSUJpSbSDYk0k2',
+  'pNInz6obpgDQGcFmaJgB',
+  'EXAVITQu4vr4xnSDxMaL',
+  'N2lVS1w4EtoT3dr4eOWO',
   '9BWtsMINqrJLrRacOk9x',
-  'FGY2WhTYpPnrIDTdsKH5',
-  'XrExE9yKIg1WjnnlVkGX',
-  'SAz9YHcvj6GT2YYXdXww',
-  'CwhRBWXzGAHq8TQ4Fs17'
+  'FGY2WhTYpPnrIDTdsKH5'
 ]);
 
 function makeCors(request, env) {

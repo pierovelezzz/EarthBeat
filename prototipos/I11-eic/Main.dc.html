@@ -4422,12 +4422,12 @@ class SpaceJourney {
 }
 
 var BRISA_DEFAULT_VOICES = [
-  { id: 'EXAVITQu4vr4xnSDxMaL', label: 'Sarah · cálida y clara (ES/EN)', labelEn: 'Sarah · warm & clear (ES/EN)' },
-  { id: '9BWtsMINqrJLrRacOk9x', label: 'Aria · expresiva (ES/EN)', labelEn: 'Aria · expressive (ES/EN)' },
-  { id: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura · suave y didáctica (ES/EN)', labelEn: 'Laura · soft & clear (ES/EN)' },
-  { id: 'XrExE9yKIg1WjnnlVkGX', label: 'Matilda · narradora amigable (ES/EN)', labelEn: 'Matilda · friendly narrator (ES/EN)' },
-  { id: 'SAz9YHcvj6GT2YYXdXww', label: 'River · serena y cercana (ES/EN)', labelEn: 'River · calm & natural (ES/EN)' },
-  { id: 'CwhRBWXzGAHq8TQ4Fs17', label: 'Roger · voz grave y pausada (ES/EN)', labelEn: 'Roger · deep & steady (ES/EN)' }
+  { id: 'pBZVCk298iJlHAcHQwLr', label: 'Brisa · Leoni (latina cálida)', labelEn: 'Brisa · Leoni (Latin warmth)' },
+  { id: 'onwK4e9ZLuTAKqWW03F9', label: 'Daniel · barítono pausado (masculina)', labelEn: 'Daniel · deep baritone (male)' },
+  { id: 'Xb7hH8MSUJpSbSDYk0k2', label: 'Alice · clara y ágil (femenina)', labelEn: 'Alice · bright & clear (female)' },
+  { id: 'pNInz6obpgDQGcFmaJgB', label: 'Adam · narrador grave (masculina)', labelEn: 'Adam · deep narrator (male)' },
+  { id: 'EXAVITQu4vr4xnSDxMaL', label: 'Sarah · suave y amigable (femenina)', labelEn: 'Sarah · soft & friendly (female)' },
+  { id: 'N2lVS1w4EtoT3dr4eOWO', label: 'Callum · voz ronca (masculina)', labelEn: 'Callum · husky & steady (male)' }
 ];
 function readBrisaAiSettings() {
   try {
@@ -5888,7 +5888,7 @@ class Component extends DCLogic {
         var payload = {
           text: cleanText,
           model_id: models[i],
-          voice_settings: { stability: 0.45, similarity_boost: 0.78, style: 0.12, use_speaker_boost: true }
+          voice_settings: { stability: 0.42, similarity_boost: 0.85, style: 0.25, use_speaker_boost: true }
         };
         if (useProxy) payload.voiceId = chosenVoice;
         var res = await fetch(endpoint, {
@@ -6047,7 +6047,7 @@ class Component extends DCLogic {
     var vName = chosen ? String((LANG === 'en' ? (chosen.labelEn || chosen.label) : chosen.label)).split('·')[0].trim() : 'Brisa';
     var sample = LANG === 'en'
       ? 'Hi, I am ' + vName + '. Ready to guide you through EarthRhythm.'
-      : 'Hola, soy ' + vName + '. Lista para explicarte EarthRhythm con voz rápida.';
+      : 'Hola, soy ' + vName + '. Te acompaño en EarthRhythm con voz natural.';
     await this.playBrisaSpeechText(sample, '__voice_test__', true);
   }
   tourOpen(event) {
@@ -8087,6 +8087,7 @@ class Component extends DCLogic {
       voices: cfg.elevenlabsVoices.map(function (v) { return { id: v.id, label: LANG === 'en' ? (v.labelEn || v.label) : v.label }; }),
       onVoiceChange: function (e) {
         var voiceId = e.target.value;
+        if (self.state.speaking) self.stopSpeech();
         self.clearBrisaAudioCache();
         writeBrisaAiSettings({ voiceId: voiceId, customOrKey: self.state.brisaAiCustomOr, customElKey: self.state.brisaAiCustomEl });
         self.setState({ brisaAiVoiceId: voiceId }, function () {

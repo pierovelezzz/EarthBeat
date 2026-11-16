@@ -21,14 +21,14 @@
     elevenlabsKey: '',
     elevenlabsModel: 'eleven_flash_v2_5',
     elevenlabsFallbackModel: 'eleven_multilingual_v2',
-    defaultVoiceId: 'EXAVITQu4vr4xnSDxMaL',
+    defaultVoiceId: 'pBZVCk298iJlHAcHQwLr',
     elevenlabsVoices: [
-      { id: 'EXAVITQu4vr4xnSDxMaL', label: 'Sarah · cálida y clara (ES/EN)', labelEn: 'Sarah · warm & clear (ES/EN)' },
-      { id: '9BWtsMINqrJLrRacOk9x', label: 'Aria · expresiva (ES/EN)', labelEn: 'Aria · expressive (ES/EN)' },
-      { id: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura · suave y didáctica (ES/EN)', labelEn: 'Laura · soft & clear (ES/EN)' },
-      { id: 'XrExE9yKIg1WjnnlVkGX', label: 'Matilda · narradora amigable (ES/EN)', labelEn: 'Matilda · friendly narrator (ES/EN)' },
-      { id: 'SAz9YHcvj6GT2YYXdXww', label: 'River · serena y cercana (ES/EN)', labelEn: 'River · calm & natural (ES/EN)' },
-      { id: 'CwhRBWXzGAHq8TQ4Fs17', label: 'Roger · voz grave y pausada (ES/EN)', labelEn: 'Roger · deep & steady (ES/EN)' }
+      { id: 'pBZVCk298iJlHAcHQwLr', label: 'Brisa · Leoni (latina cálida)', labelEn: 'Brisa · Leoni (Latin warmth)' },
+      { id: 'onwK4e9ZLuTAKqWW03F9', label: 'Daniel · barítono pausado (masculina)', labelEn: 'Daniel · deep baritone (male)' },
+      { id: 'Xb7hH8MSUJpSbSDYk0k2', label: 'Alice · clara y ágil (femenina)', labelEn: 'Alice · bright & clear (female)' },
+      { id: 'pNInz6obpgDQGcFmaJgB', label: 'Adam · narrador grave (masculina)', labelEn: 'Adam · deep narrator (male)' },
+      { id: 'EXAVITQu4vr4xnSDxMaL', label: 'Sarah · suave y amigable (femenina)', labelEn: 'Sarah · soft & friendly (female)' },
+      { id: 'N2lVS1w4EtoT3dr4eOWO', label: 'Callum · voz ronca (masculina)', labelEn: 'Callum · husky & steady (male)' }
     ]
   }, existing);
 
