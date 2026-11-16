@@ -104,7 +104,7 @@ const markup = [
   'button,input,select{box-sizing:border-box;font:inherit;min-height:44px;color:inherit}',
   'button{padding:5px 10px;border:1px solid var(--line,#8ca6c5);border-radius:6px;background:var(--surface,#21344e);cursor:pointer}',
   'button:disabled{opacity:.65;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent,#ffd447);outline-offset:2px}',
-  '.launch{font-size:.84em;font-weight:700;border-color:var(--fg,#fff)}',
+  '.launch{display:inline-flex;align-items:center;gap:5px;font-size:.84em;font-weight:700;border-color:var(--fg,#fff)}',
   'dialog{box-sizing:border-box;position:fixed;inset:12px 12px 12px auto;margin:0;width:min(430px,calc(100% - 24px));height:fit-content;max-height:calc(100dvh - 24px);padding:0;overflow:auto;border:1px solid var(--line,#8ca6c5);border-radius:12px;background:var(--bg,#171e2b);color:inherit}',
   'dialog::backdrop{background:#0008}',
   '.panel{box-sizing:border-box;display:grid;gap:9px;padding:13px;min-width:0}',
@@ -118,7 +118,7 @@ const markup = [
   'input{flex:1 1 140px;min-width:0}.tools label{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.86em}',
   '[hidden]{display:none!important}',
   '</style>',
-  '<button type="button" class="launch" aria-haspopup="dialog"></button>',
+  '<button type="button" class="launch" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9h8m-8 3h5"/></svg><span></span></button>',
   '<dialog aria-labelledby="heading"><div class="panel">',
   '<header><h2 id="heading"></h2><button type="button" class="close"></button></header>',
   '<p class="note"></p><div class="prompts"></div>',
@@ -186,7 +186,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
     const text = this.text;
     this.find('.launch').setAttribute('aria-label', text.launch);
     this.find('.launch').title = text.launch;
-    const labels = { '.launch': 'Chat', h2: text.launch, '.close': text.close, '.ask-label': text.ask,
+    const labels = { '.launch span': this.language === 'es' ? 'IA' : 'AI', h2: text.launch, '.close': text.close, '.ask-label': text.ask,
       '.send': text.send, '.read': this.reading ? text.stop : text.read,
       '.mic': this.recognition ? text.stopDictation : text.dictate, '.voices span': text.voice };
     for (const [selector, label] of Object.entries(labels)) this.find(selector).textContent = label;

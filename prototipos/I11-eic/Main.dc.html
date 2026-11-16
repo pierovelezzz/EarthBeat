@@ -913,6 +913,7 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 .px .bottomnav .bar{min-width:0;border-top:0}
 .px .brisa-tools{display:flex;align-items:center;gap:5px}
 .px .bottomnav>.brisa-tools{grid-column:2}
+.px .player-tools .guidefab,.px .bidentity .guidefab{width:44px;height:44px;margin:0;padding:2px}
 .px .guidefab{position:relative;grid-column:2;justify-self:end;right:auto;bottom:auto;z-index:62;display:flex;align-items:center;justify-content:center;width:56px;height:56px;margin:8px max(14px,env(safe-area-inset-right,0px)) 8px 8px;padding:3px;border:1px solid rgba(255,212,71,.55);border-radius:40px;background:#000;box-shadow:0 12px 34px rgba(0,0,0,.65);transition:transform .25s,opacity .25s,border-color .25s}
 .px .guidefab:hover{border-color:#FFD447;transform:translateY(-2px)}
 .px .guidefab .gface{width:100%;height:100%;flex:1 1 auto}
@@ -951,6 +952,9 @@ html::-webkit-scrollbar,.px .scr::-webkit-scrollbar{display:none}
 .px .tour .tact .primary{grid-column:2;grid-row:1}
 .px .tour .tact .tour-start{grid-column:1;grid-row:1}
 .px .tour .tact .skip{grid-column:1/-1;min-height:44px}
+.px .tour-voice-choice{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-size:.88em}
+.px .tour-voice-choice input{width:18px;height:18px;flex:none;accent-color:var(--accent)}
+.px .tour-voice-choice input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .px .tour .tact .tour-extra~.skip{grid-column:2}
 .px .tour.narrow .gface{display:none}
 .px .tour.narrow .tguide{gap:4px}
@@ -2604,11 +2608,9 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 <div class="when"><b>{{frameLabel}}</b><span class="signal-state {{signalClass}}">{{signalLabel}}</span></div>
 <div class="player-tools">
-<button type="button" class="btn sm section-voice brisa-trigger" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><img class="brisa-badge" src="./brisa/portrait.webp" width="24" height="24" alt=""><span>Brisa</span></button>
-<sc-if value="{{rhythmMode}}"><earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat></sc-if>
-<sc-if value="{{standardPlayer}}">
-<button type="button" class="btn sm quiet" onClick="{{describe}}" disabled="{{brisaUnavailable}}">{{describeLabel}}</button>
-</sc-if>
+<sc-if value="{{standardPlayer}}"><button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button></sc-if>
+<sc-if value="{{rhythmMode}}"><button type="button" class="btn sm section-voice brisa-trigger" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><img class="brisa-badge" src="./brisa/portrait.webp" width="24" height="24" alt=""><span>Brisa</span></button></sc-if>
+<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
 </div>
 </div>
 
@@ -2786,7 +2788,10 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </div>
 <div class="bidentity">
 <div><h1 class="display">{{bandCur.name}}</h1><p class="muted">{{bandCur.instrumentName}} · {{bandCur.episode}}</p></div>
-<button type="button" class="btn sm section-voice brisa-trigger" onClick="{{sectionVoice}}" disabled="{{brisaUnavailable}}" aria-label="{{sectionVoiceLabel}}" title="{{sectionVoiceLabel}}" data-speaking="{{speaking}}"><img class="brisa-badge" src="./brisa/portrait.webp" width="24" height="24" alt=""><span>Brisa</span></button>
+<div class="brisa-tools">
+<button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""></button>
+<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+</div>
 </div>
 <figure id="tour-bshow" class="bshow">
 <div class="bstage-top" aria-hidden="true"><span>{{tx.inScene}}</span><span>{{bandCur.name}}</span></div>
@@ -2943,12 +2948,14 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 </footer>
 </sc-if>
 
+<sc-if value="{{showFooterHelpers}}">
 <div class="brisa-tools">
 <earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}">
 <img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="glabel">{{tx.guide}}</span>
 </button>
 </div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -2984,7 +2991,11 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <p role="status" class="small">{{tour.feedback}}</p>
 <p class="small muted">{{tour.speechNotice}}</p>
 <sc-if value="{{tour.canUseText}}"><button type="button" class="btn sm" onClick="{{tour.useText}}">{{tour.useTextLabel}}</button></sc-if>
+<sc-if value="{{tour.canDescribe}}"><button type="button" class="btn sm quiet" onClick="{{describe}}" disabled="{{brisaUnavailable}}">{{describeLabel}}</button></sc-if>
 </div>
+<sc-if value="{{tour.isTutorial}}">
+<label class="tour-voice-choice"><input type="checkbox" checked="{{tour.voiceOn}}" onChange="{{tour.changeVoice}}">{{tour.voiceOption}}</label>
+</sc-if>
 <div class="tact">
 <sc-if value="{{tour.showBack}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn sm quiet" onClick="{{tour.back}}">{{tx.back}}</button></sc-if>
 <button type="button" class="btn sm primary" onClick="{{tour.next}}" disabled="{{tour.nextOff}}">{{tour.nextLabel}}</button>
@@ -4317,6 +4328,7 @@ class Component extends DCLogic {
     }
     this.spokenTutorialSteps = new Set();
     this.brisaVisits = Object.create(null);
+    this.brisaSpokenScreens = new Set();
     this.brisaBandIntros = new Set();
     this.state.preferencePage = 0;
     if (window.location?.href) {
@@ -4715,6 +4727,18 @@ class Component extends DCLogic {
     this.brisaVisits[key] = (index + 1) % BRISA_LINES[key].length;
     return { key: key, index: index };
   }
+  narrateScreenOnce() {
+    var s = this.state;
+    if (!s.voice || s.tutorial || document.hidden || this.disposed) return;
+    var key = this.brisaContextKey();
+    if (this.brisaSpokenScreens.has(key)) return;
+    this.brisaSpokenScreens.add(key);
+    if (key === 'band') this.narrateBandMember(s.bsel);
+    else {
+      var line = this.nextBrisaLine();
+      this.narrateBrisa(this.brisaLine(line.key, line.index), true);
+    }
+  }
   narrateBrisa(step, manual) {
     if (!step || !manual) return;
     if (typeof window.Audio !== 'function' || !step.audio) {
@@ -4775,14 +4799,17 @@ class Component extends DCLogic {
     }
   }
   narrateBandMember(index, replayIntro) {
+    this.narrateBrisa(this.bandNarration(index, replayIntro), true);
+  }
+  bandNarration(index, replayIntro) {
     var key = BAND[index].k, ownVoice = LANG + ':' + key;
     var words = BRISA_BAND_LINES[key], first = !this.brisaBandIntros.has(ownVoice);
     var intro = replayIntro || first;
-    this.narrateBrisa({
+    return {
       audio: 'member-' + key + (intro ? '-intro' : '-name'),
       b: intro ? T(words[1], words[2]) : words[0],
       onComplete: first ? () => this.brisaBandIntros.add(ownVoice) : null
-    }, true);
+    };
   }
   tourOpen(event) {
     if (!this.settleArrivedRoute()) return;
@@ -4801,8 +4828,8 @@ class Component extends DCLogic {
   contextHelpStep() {
     var help = this.brisaHelp;
     var key = this.brisaContextKey();
-    return Object.assign({ t: T('Ayuda de esta pantalla', 'Help for this screen') },
-      this.brisaLine(key, help?.key === key ? help.index : 0));
+    var line = key === 'band' ? this.bandNarration(this.state.bsel, true) : this.brisaLine(key, help?.key === key ? help.index : 0);
+    return Object.assign({ t: T('Ayuda de esta pantalla', 'Help for this screen') }, line);
   }
   tutorialEntryLabel() {
     if (this.tutorialProgress && !this.tutorialProgress.completed) return T('Retomar tutorial · paso ', 'Resume tutorial · step ') + this.tutorialProgress.step + T(' de 3', ' of 3');
@@ -4943,6 +4970,7 @@ class Component extends DCLogic {
     var key = LANG + ':' + line.audio;
     if (!this.state.voice || this.spokenTutorialSteps.has(key)) return;
     this.spokenTutorialSteps.add(key);
+    this.brisaSpokenScreens.add(this.brisaContextKey());
     this.narrateBrisa(line, true);
   }
   tourClose(keepTutorialState) {
@@ -5416,7 +5444,6 @@ class Component extends DCLogic {
       self.setState(Object.assign({ routeArrived: !finished && self.state.trans }, patch, finished ? { trans: false, routeArrived: false } : {}), function () {
         self.resetScreenScroll();
         self.ensureNavVisible();
-        if (patch.tab === 'band' && self.state.voice) self.narrateBandMember(self.state.bsel);
         if (self.state.tab === 'juke' || self.state.tab === 'game') {
           var sub = self.state.sub;
           if (sub === 1) self.loadDisc(self.state.disc);
@@ -5424,6 +5451,7 @@ class Component extends DCLogic {
           var heading = headingId && document.getElementById(headingId);
           if (heading) heading.focus({ preventScroll: true });
         }
+        self.narrateScreenOnce();
       });
     };
     var finish = function () {
@@ -6599,9 +6627,19 @@ class Component extends DCLogic {
       nextOff: false,
       feedback: uiText(s.tutorialFeedback), speechNotice: uiText(s.speechNotice),
       isTutorial: s.tutorial, showTutorialStart: !s.tutorial,
+      voiceOn: s.voice, voiceOption: T('Escuchar a Brisa automáticamente', 'Hear Brisa automatically'),
+      changeVoice: function (event) {
+        var enabled = event.target.checked;
+        self.setPreference('voice', enabled);
+        if (enabled && tstep) {
+          self.spokenTutorialSteps.delete(LANG + ':' + tstep.audio);
+          self.narrateTutorial(tstep);
+        }
+      },
       restartLabel: this.tutorialProgress?.completed ? T('Repetir tutorial', 'Repeat tutorial') : T('Tutorial · 3 pasos', 'Tutorial · 3 steps'),
       restart: function () { self.startTutorial(true); },
       closeLabel: s.tutorial ? T('Cerrar tutorial y continuar después', 'Close tutorial and continue later') : T('Cerrar ayuda de esta pantalla', 'Close help for this screen'),
+      canDescribe: !s.tutorial && (s.tab === 'juke' && s.sub === 1 || s.tab === 'how' && s.sub === 0 && !!s.custom),
       canUseText: tutorialBlocked && s.tour === 2,
       useTextLabel: T('Seguir sin sonido', 'Continue without sound'), useText: function () { self.tutorialAction('play'); },
       voiceLabel: s.speaking ? T('Detener lectura', 'Stop reading') : T('Escuchar a Brisa', 'Hear Brisa'),
@@ -6778,7 +6816,7 @@ class Component extends DCLogic {
         event.currentTarget.open = false;
         event.currentTarget.querySelector('summary').focus();
       },
-      showFooter: s.tab !== 'home' && !isGame,
+      showFooter: s.tab !== 'home' && !isGame, showFooterHelpers: !scrVm.play && !isBand,
       bottomNavClass: (navVm.show ? 'with-pages' : '') + (topics ? ' with-topics' : ''),
       onNavKey: function (event) { self.navKey(event); },
       headerClass: s.big || s.legible ? 'readable-nav' : '',
