@@ -39,6 +39,16 @@ function configuredProxy() {
   }
 }
 
+function providerFailure(res, action, result, usingProxy) {
+  let reason;
+  if (usingProxy) {
+    if (result.status === 404 || result.status === 405) reason = 'proxy_route';
+    else if (result.status === 401 || result.status === 403) reason = 'proxy_access';
+    else if (result.status === 503) reason = 'proxy_unavailable';
+  }
+  return res.status(502).json({ error: action, reason });
+}
+
 module.exports = async function brisa(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const listedChatKey = (process.env.OPENROUTER_KEYS || '').split(/[,\n]/).map(key => key.trim()).find(Boolean);
@@ -85,7 +95,7 @@ module.exports = async function brisa(req, res) {
         signal: timeout
       });
       if (!result.ok || !result.headers.get('content-type')?.startsWith('audio/')) {
-        return res.status(502).json({ error: 'voice' });
+        return providerFailure(res, 'voice', result, !voiceKey);
       }
       res.setHeader('Content-Type', 'audio/mpeg');
       return res.end(Buffer.from(await result.arrayBuffer()));
@@ -115,7 +125,7 @@ module.exports = async function brisa(req, res) {
       redirect: 'error',
       signal: timeout
     });
-    if (!result.ok) return res.status(502).json({ error: 'chat' });
+    if (!result.ok) return providerFailure(res, 'chat', result, !chatKey);
     const answer = (await result.json()).choices?.[0]?.message?.content;
     if (typeof answer !== 'string' || !answer.trim()) return res.status(502).json({ error: 'chat' });
     return res.json({ answer: answer.trim().slice(0, 600) });
