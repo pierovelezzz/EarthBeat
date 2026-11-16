@@ -14,11 +14,11 @@ EarthRhythm tiene un tutorial práctico de tres pasos. La ayuda contextual de Br
 2. Explorar el reproductor: reproducir música o continuar con la versión escrita sin sonido. La alternativa escrita está disponible sin que el navegador tenga que producir un error de audio.
 3. Interpretar la leyenda eligiendo una descripción de agua más fría de lo esperado. Se pueden usar los nombres y valores escritos; no se exige distinguir colores, escuchar o responder con rapidez.
 
-La ayuda contextual tiene una sola tarjeta, sin contador ni botones Siguiente/Anterior. Entendido o Cerrar la cierran. El tutorial conserva los controles de pasos y la opción de saltar una acción.
+La ayuda contextual tiene una sola tarjeta. La guía visual de la estrella señala varios elementos y avanza por pasos. Desde allí también puedes iniciar un recorrido por los cinco músicos. Entendido o Cerrar la cierran. El tutorial conserva los controles de pasos y la opción de saltar una acción.
 
 ## Cerrar y retomar
 
-Cerrar, pulsar Saltar guía o salir a otra sección conserva el paso y las acciones completadas. Al pulsar Brisa de nuevo se recupera ese punto y la selección del mapa, con la música en pausa. La misma reanudación está disponible después de recargar la página en ese navegador.
+Cerrar o pulsar Saltar guía conserva el paso y las acciones completadas. Usa esos controles para salir del tutorial y navegar a otra sección. Al pulsar Brisa de nuevo se recupera ese punto y la selección del mapa, con la música en pausa. La misma reanudación está disponible después de recargar la página en ese navegador.
 
 Solo Terminar marca el tutorial como completado. Repetir tutorial o Reiniciar tutorial permiten comenzar explícitamente desde el paso 1. Reiniciar borra únicamente el progreso del tutorial.
 

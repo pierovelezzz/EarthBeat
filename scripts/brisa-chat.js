@@ -10,30 +10,34 @@ function getBrisaServices() {
   return availableServices;
 }
 
-async function requestBrisaVoice(text, language, voice, signal, timeout) {
+async function requestBrisaVoice(text, signal, timeout) {
   const response = await fetch(api, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'voice', language, text, voice }),
+    body: JSON.stringify({ action: 'voice', language: 'es', text }),
     signal: AbortSignal.any([signal, AbortSignal.timeout(timeout)])
   });
+  if (response.status === 503 && (await response.json().catch(() => null))?.reason === 'quota') {
+    throw Object.assign(new Error('Brisa voice quota exhausted'), { name: 'BrisaQuotaError' });
+  }
   return response.ok && response.headers.get('content-type')?.includes('audio/') ? response.blob() : null;
 }
 
-window.earthRhythmGuideVoice = async (text, language, signal) => {
+window.earthRhythmSpanishVoice = async (text, signal) => {
   const services = await getBrisaServices();
   if (!services.voice || signal.aborted || !text || text.length > 600) return null;
-  const key = language + ':' + text;
-  if (guideVoiceCache.has(key)) return guideVoiceCache.get(key);
+  if (guideVoiceCache.has(text)) return guideVoiceCache.get(text);
   try {
-    const clip = await requestBrisaVoice(text, language, language === 'es' ? 'brisa' : 'sarah', signal, 2800);
+    const clip = await requestBrisaVoice(text, signal, 8000);
     if (clip && !signal.aborted) {
       if (guideVoiceCache.size >= 48) guideVoiceCache.delete(guideVoiceCache.keys().next().value);
-      guideVoiceCache.set(key, clip);
+      guideVoiceCache.set(text, clip);
     }
     return clip;
-  } catch { return null; }
+  } catch (error) {
+    if (error.name === 'BrisaQuotaError') throw error;
+    return null;
+  }
 };
-window.earthRhythmSpanishVoice = (text, signal) => window.earthRhythmGuideVoice(text, 'es', signal);
 const copy = {
   es: {
     launch: 'Habla con Brisa', assistant: 'Asistente IA', close: 'Cerrar', status: 'Conversación con Brisa',
@@ -42,7 +46,7 @@ const copy = {
     speaker: 'Leer respuestas en voz alta', visual: 'Guía visual', now: '¿Qué estoy viendo ahora?',
     band: 'Los cinco músicos de la banda', dictate: 'Dictar', stopDictation: 'Detener dictado',
     dictating: 'Escuchando…', dictationError: 'El dictado no pudo continuar. Puedes escribir la pregunta.',
-    waiting: 'Brisa está preparando una respuesta…', fallback: 'Brisa respondió con la ayuda integrada.', noVoice: 'La lectura en voz alta no está disponible en este dispositivo.',
+    waiting: 'Brisa está preparando una respuesta…', fallback: 'Brisa respondió con la ayuda integrada.', noVoice: 'La voz de Brisa no está disponible por ahora. Puedes leer la respuesta.',
     localAnswer: 'Puedo ayudarte a leer los mapas de la NASA, probar una imagen, conocer a los músicos o jugar con los discos. ¿Qué quieres explorar?',
     guest: 'Tú', agent: 'Brisa'
   },
@@ -323,32 +327,36 @@ class EarthRhythmBrisaChat extends HTMLElement {
     const reply = this.lastAnswer;
     if (!reply) return;
     const request = this.reading = new AbortController();
-    if (this.services.voice) {
+    let useDeviceVoice = this.language === 'en';
+    if (this.language === 'es' && this.services.voice) {
       try {
-        const audio = await requestBrisaVoice(reply.text, this.language, this.language === 'es' ? 'brisa' : 'sarah', request.signal, 10000);
+        const audio = await requestBrisaVoice(reply.text, request.signal, 10000);
         if (audio) {
           if (this.reading !== request) return;
           this.audioUrl = URL.createObjectURL(audio);
           await this.playClip(this.audioUrl);
           return;
         }
-      } catch {}
+      } catch (error) { useDeviceVoice = error.name === 'BrisaQuotaError'; }
     }
     if (this.reading !== request) return;
-    if (reply.clip) {
+    if (useDeviceVoice && reply.clip) {
       try {
         await this.playClip('./brisa/' + this.language + '-' + reply.clip + '.mp3');
         return;
       } catch {}
     }
     if (this.reading !== request) return;
-    if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
+    if (!useDeviceVoice || !window.speechSynthesis || !window.SpeechSynthesisUtterance) {
       this.stopReading();
       this.find('.status').textContent = this.text.noVoice;
       return;
     }
     const utterance = new SpeechSynthesisUtterance(reply.text);
     utterance.lang = this.language === 'es' ? 'es-PE' : 'en-US';
+    const available = speechSynthesis.getVoices();
+    utterance.voice = available.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase())
+      || available.find(voice => voice.lang.toLowerCase().startsWith(this.language)) || null;
     utterance.onstart = () => { if (this.reading === request) this.dialog.setAttribute('data-talking', ''); };
     utterance.onend = utterance.onerror = () => { if (this.reading === request) this.stopReading(); };
     this.utterance = utterance;

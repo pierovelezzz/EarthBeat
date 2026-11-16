@@ -12,7 +12,7 @@
 
 ## Global constraints
 
-- Work on `accesibilidad/v4-flujo-inclusivo`, copied from `v4-NASA-Space-AC`.
+- The experiment used a local copy of the source at the time.
 - Preserve current layout, brand, music, selections and routes. Add settings and collapsed information only.
 - Do not ask for diagnoses. Keep all additions in Spanish and English.
 - Vibration is opt-in and phone-only; unsupported browsers retain written alternatives.

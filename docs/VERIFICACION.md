@@ -2,7 +2,7 @@
 
 ## Comprobaciones reproducibles
 
-Python 3.10 o posterior sirve para construir y verificar fuentes; esta revisión usa 3.12.14. La suite JavaScript se ejecuta con Node; esta revisión utiliza 26.13.0. El producto no necesita Node durante su uso.
+El generador requiere Python 3.10 o posterior y la suite JavaScript se ejecuta con Node. La revisión de entrega usó Python 3.14.6, Node 24.22.1 y Chromium.
 
 ```bash
 python scripts/verify_fonts.py
@@ -16,12 +16,14 @@ python scripts/run_browser_checks.py --list
 | Comprobación | Resultado |
 |---|---|
 | Huellas y tamaños de fuentes y avisos | 12 archivos verificados |
-| Generación del sitio desde esta rama | Correcta |
-| Suite de lógica del HTML generado | 135 pruebas, sin fallos |
+| Generación del sitio desde main | Correcta |
+| Suite de lógica del HTML generado | 143 pruebas, sin fallos |
+| Empaquetado portable | 6 pruebas, sin fallos |
 | Enlaces Markdown locales y referencias de archivos | Revisados con nombres y mayúsculas del árbol Git |
-| Código y recursos ajenos a documentación | Conservados |
+| Tecnología | Cinco pantallas verificadas de 320 a 1440 px. Seis enlaces NASA respondieron y la consulta de Chiclayo devolvió 48 registros mensuales. |
+| Guía visual y recorrido de Brisa | Se comprobaron el avance, los cinco músicos y la reproducción de sus clips en español e inglés. |
 
-En Chromium se probó la portada, el selector EN/ES con teclado, la reproducción del mapa de la portada, la leyenda y la banda en 320 × 568, 390 × 844, 768 × 1024, 844 × 390 y 1440 × 900. En 390 × 844 se comprobó también la apertura de preferencias y el cierre de la presentación.
+La prueba de voz verificó la selección de Leoni en la solicitud, la exclusión de ElevenLabs de la narración inglesa y la reacción de la API ante una respuesta simulada de cuota agotada. La síntesis de respuestas abiertas depende del servicio y navegador reales.
 
 ## Guiones de navegador disponibles
 

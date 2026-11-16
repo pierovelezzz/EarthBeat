@@ -1,9 +1,4 @@
-const voices = Object.freeze({
-  brisa: 'pBZVCk298iJlHAcHQwLr',
-  sarah: 'EXAVITQu4vr4xnSDxMaL',
-  aria: '9BWtsMINqrJLrRacOk9x',
-  laura: 'FGY2WhTYpPnrIDTdsKH5'
-});
+const brisaSpanishVoice = 'pBZVCk298iJlHAcHQwLr';
 const questions = new Map();
 const timeWindow = 60_000;
 
@@ -63,6 +58,9 @@ module.exports = async function brisa(req, res) {
   if (!body || !['chat', 'voice'].includes(body.action) || !['es', 'en'].includes(body.language)) {
     return res.status(400).json({ error: 'request' });
   }
+  if (body.action === 'voice' && body.language !== 'es') {
+    return res.status(400).json({ error: 'voice_language' });
+  }
   const text = typeof body.text === 'string' ? body.text.trim() : '';
   if (!text || text.length > (body.action === 'chat' ? 380 : 600)) {
     return res.status(400).json({ error: 'text' });
@@ -77,13 +75,8 @@ module.exports = async function brisa(req, res) {
 
   try {
     if (body.action === 'voice') {
-      const preferred = body.language === 'es' ? 'brisa' : 'sarah';
-      const selected = Object.hasOwn(voices, body.voice) && (body.language === 'es' || body.voice !== 'brisa') ? body.voice : preferred;
-      const configuredVoice = (process.env.BRISA_ES_VOICE_ID || '').trim();
-      const voice = selected === 'brisa' && /^[a-zA-Z0-9]{20}$/.test(configuredVoice) ? configuredVoice : voices[selected];
-      const settings = selected === 'brisa' ? { stability: 0.52, similarity_boost: 0.76, speed: 1.06 } : undefined;
       const url = voiceKey
-        ? 'https://api.elevenlabs.io/v1/text-to-speech/' + voice + '?output_format=mp3_22050_32'
+        ? 'https://api.elevenlabs.io/v1/text-to-speech/' + brisaSpanishVoice + '?output_format=mp3_22050_32'
         : new URL('api/elevenlabs', proxy);
       const result = await fetch(url, {
         method: 'POST',
@@ -92,13 +85,21 @@ module.exports = async function brisa(req, res) {
           ...(voiceKey ? { 'xi-api-key': voiceKey } : proxyHeaders)
         },
         body: JSON.stringify({
-          text, model_id: 'eleven_flash_v2_5', language_code: body.language,
-          voice_settings: settings, voiceId: voiceKey ? undefined : voice
+          text, model_id: 'eleven_flash_v2_5', language_code: 'es',
+          voice_settings: { stability: 0.52, similarity_boost: 0.76, speed: 1.06 },
+          voiceId: voiceKey ? undefined : brisaSpanishVoice
         }),
         redirect: 'error',
         signal: timeout
       });
       if (!result.ok || !result.headers.get('content-type')?.startsWith('audio/')) {
+        if (!result.ok) {
+          const details = await result.json().catch(() => null);
+          const code = details?.detail?.status || details?.detail?.code || details?.code;
+          if (code === 'quota_exceeded' || code === 'insufficient_credits') {
+            return res.status(503).json({ error: 'voice', reason: 'quota' });
+          }
+        }
         return providerFailure(res, 'voice', result, !voiceKey);
       }
       res.setHeader('Content-Type', 'audio/mpeg');

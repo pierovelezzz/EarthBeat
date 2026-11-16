@@ -1,9 +1,4 @@
-# Método de sonificación de V2
-
-> Las notas de este directorio nacieron en V2. Para el funcionamiento de la rama principal, consulta el [estado de main](ESTADO_ACTUAL.md).
-
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
+# Método de sonificación
 
 El analizador de la aplicación reduce las imágenes a una cuadrícula de 28 × 16, con 448 celdas. Los niveles derivados van de −5 a +5. Son una interpretación del color y decisiones de sonificación; no son grados de temperatura ni una medición calibrada de cualquier imagen.
 
@@ -20,7 +15,7 @@ El producto contiene dos catálogos de cinco discos y seis mapas por disco: trei
 
 EIC y GIBS tienen escalas distintas. La cuantización, el recorte, la compresión y la música añaden interpretación; sus niveles no vuelven físicamente comparables las dos visualizaciones. La anomalía de temperatura es una diferencia respecto a una referencia climática, no una temperatura absoluta.
 
-En V4, la leyenda del mapa de colores conserva los mismos 14 recuadros y muestra el valor aproximado de cada nivel en la escala de su fuente. EIC multiplica por 1,25 antes de sonificar, así que se divide el nivel entre 1,25 para rotular el recuadro. GIBS usa los intervalos de su paleta y multiplica por 5/3, así que su leyenda multiplica el nivel por 3/5. Por ejemplo, el nivel interno +5 corresponde al extremo +4 °C en EIC o al extremo superior de GIBS (≥ +3 °C). Cada recuadro representa un grupo de celdas parecido a ese valor. La cuadrícula se deriva de la imagen y no sustituye los datos de temperatura de la NASA.
+La leyenda del mapa de colores muestra el valor aproximado de cada nivel en la escala de su fuente. EIC multiplica por 1,25 antes de sonificar, así que se divide el nivel entre 1,25 para rotular el recuadro. GIBS usa los intervalos de su paleta y multiplica por 5/3, así que su leyenda multiplica el nivel por 3/5. Por ejemplo, el nivel interno +5 corresponde al extremo +4 °C en EIC o al extremo superior de GIBS (≥ +3 °C). Cada recuadro representa un grupo de celdas parecido a ese valor. La cuadrícula se deriva de la imagen y no sustituye los datos de temperatura de la NASA.
 
 - [Barra oficial EIC, NASA SVS 5176](https://svs.gsfc.nasa.gov/5176/).
 - [Intervalos de la paleta oficial de GIBS](https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html).

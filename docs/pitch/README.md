@@ -1,14 +1,10 @@
-# Material de presentación de V2
+# Presentar EarthRhythm
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
+La [publicación principal](https://earthrhythm-nasa.vercel.app/) es la demostración para [The Earth Information Jukebox](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/).
 
-Esta carpeta contiene este índice; no incluye diapositivas o un video final. Para redactar una presentación debe usarse el alcance actual de V2, sus datos y sus créditos.
+1. Abre un disco EIC y compara dos fechas.
+2. Reproduce el disco y sigue la línea que convierte los colores en música. Cambia entre Melodía y Datos.
+3. Abre la estrella de Brisa para señalar las partes de la pantalla o conocer a los cinco músicos.
+4. En Tecnología, abre Datos de la NASA para mostrar los fotogramas, la paleta y la lluvia de Chiclayo.
 
-La explicación comprobable es: una imagen almacenada o una muestra local se transforma en una cuadrícula y sus patrones se exploran con música sintetizada, texto y controles de accesibilidad. El producto es una interpretación educativa, no una medición calibrada, un servicio en vivo ni un sistema de alerta.
-
-No se debe presentar una función de otra rama, una prueba humana pendiente o un estudio 3D archivado como parte de esta edición.
-
----
-
-[Estado de esta rama](../ESTADO_ACTUAL.md) · [Verificación](../VERIFICACION.md) · [Inventario completo](../../archivos.md)
+El [método](../METODO.md) explica el alcance científico. Los [créditos](../CREDITOS.md) reúnen fuentes y atribuciones.

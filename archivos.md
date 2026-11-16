@@ -1,16 +1,16 @@
 # Inventario de archivos de main
 
-Esta lista enumera los 419 archivos versionados de la rama main. Una ruta incluida no implica que forme parte del sitio generado.
+Esta lista enumera los 639 archivos versionados de esta edición.
 
 | Área | Función |
 |---|---|
-| `prototipos/I11-eic/` | Fuente efectiva y recursos seleccionados por el build |
-| `scripts/build_pages.py`, `scripts/pages-support.js` | Construcción y montaje de la aplicación |
-| `data/` | Manifiesto, datos y catálogos versionados |
-| `assets/` | Ilustraciones fuente, fuentes y material editable conservado |
-| `src/`, `index.html`, I09/I10 | Prototipo modular y maquetas heredadas |
-| `scripts/` de verificación | Herramientas de revisión, no servicios del runtime |
-| `docs/` | Documentación de esta rama |
+| `prototipos/I11-eic/` | Interfaz principal, mapas y grabaciones |
+| `scripts/` | Construcción, componentes y verificación |
+| `api/` | Servicio de Brisa en Vercel |
+| `data/` | Datos, procedencia y catálogos |
+| `assets/` | Ilustraciones, animaciones y tipografías |
+| `src/` e `index.html` de la raíz | Prototipo modular heredado |
+| `docs/` | Documentación de entrega y registros anteriores |
 
 ## Raíz
 
@@ -18,16 +18,23 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 |---|
 | [.gitattributes](.gitattributes) |
 | [.gitignore](.gitignore) |
-| [README.md](README.md) |
 | [archivos.md](archivos.md) |
 | [index.html](index.html) |
+| [README.md](README.md) |
 
 ## .github
 
 | Archivo |
 |---|
 | [.github/CODEOWNERS](.github/CODEOWNERS) |
+| [.github/workflows/pages-v45.yml](.github/workflows/pages-v45.yml) |
 | [.github/workflows/pages.yml](.github/workflows/pages.yml) |
+
+## api
+
+| Archivo |
+|---|
+| [api/brisa.js](api/brisa.js) |
 
 ## assets
 
@@ -74,7 +81,6 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [assets/avatares/yaku/banda/keyframes/animacion.json](assets/avatares/yaku/banda/keyframes/animacion.json) |
 | [assets/avatares/yaku/banda/pose-epica.png](assets/avatares/yaku/banda/pose-epica.png) |
 | [assets/avatares/yaku/banda/pose-epica.prompt.json](assets/avatares/yaku/banda/pose-epica.prompt.json) |
-| [assets/fonts/README.md](assets/fonts/README.md) |
 | [assets/fonts/atkinson-hyperlegible-400-latin.woff2](assets/fonts/atkinson-hyperlegible-400-latin.woff2) |
 | [assets/fonts/atkinson-hyperlegible-700-latin.woff2](assets/fonts/atkinson-hyperlegible-700-latin.woff2) |
 | [assets/fonts/atkinsonhyperlegible-OFL.txt](assets/fonts/atkinsonhyperlegible-OFL.txt) |
@@ -88,6 +94,7 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [assets/fonts/ibmplexmono-OFL.txt](assets/fonts/ibmplexmono-OFL.txt) |
 | [assets/fonts/inter-400-latin.woff2](assets/fonts/inter-400-latin.woff2) |
 | [assets/fonts/inter-OFL.txt](assets/fonts/inter-OFL.txt) |
+| [assets/fonts/README.md](assets/fonts/README.md) |
 | [assets/fonts/sources.json](assets/fonts/sources.json) |
 
 ## data
@@ -136,6 +143,8 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 
 | Archivo |
 |---|
+| [docs/ACCESIBILIDAD_PROPUESTA.md](docs/ACCESIBILIDAD_PROPUESTA.md) |
+| [docs/ACCESIBILIDAD_VERIFICACION.md](docs/ACCESIBILIDAD_VERIFICACION.md) |
 | [docs/AUDIO_RELOJ.md](docs/AUDIO_RELOJ.md) |
 | [docs/AUDITORIA_2026-11-14.md](docs/AUDITORIA_2026-11-14.md) |
 | [docs/AUDITORIA_UX.md](docs/AUDITORIA_UX.md) |
@@ -147,24 +156,28 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [docs/ENTREGA_2026-11-14.md](docs/ENTREGA_2026-11-14.md) |
 | [docs/ENTREGA_PORTABLE.md](docs/ENTREGA_PORTABLE.md) |
 | [docs/ESTADO_ACTUAL.md](docs/ESTADO_ACTUAL.md) |
+| [docs/HISTORIAL_V2.md](docs/HISTORIAL_V2.md) |
 | [docs/IMPACTOS.md](docs/IMPACTOS.md) |
 | [docs/ITERACIONES.md](docs/ITERACIONES.md) |
 | [docs/METODO.md](docs/METODO.md) |
 | [docs/MODELOS_3D.md](docs/MODELOS_3D.md) |
 | [docs/PERSONAJES.md](docs/PERSONAJES.md) |
-| [docs/PIERO-MEJORAS.md](docs/PIERO-MEJORAS.md) |
+| [docs/pitch/README.md](docs/pitch/README.md) |
 | [docs/PLAN.md](docs/PLAN.md) |
 | [docs/PUBLICACION.md](docs/PUBLICACION.md) |
 | [docs/RENDIMIENTO.md](docs/RENDIMIENTO.md) |
 | [docs/REPRODUCTOR.md](docs/REPRODUCTOR.md) |
+| [docs/superpowers/plans/2026-11-15-accesibilidad.md](docs/superpowers/plans/2026-11-15-accesibilidad.md) |
+| [docs/superpowers/plans/2026-11-15-tutorial-continuidad.md](docs/superpowers/plans/2026-11-15-tutorial-continuidad.md) |
+| [docs/TUTORIAL.md](docs/TUTORIAL.md) |
 | [docs/USO_DE_IA.md](docs/USO_DE_IA.md) |
 | [docs/VERIFICACION.md](docs/VERIFICACION.md) |
-| [docs/pitch/README.md](docs/pitch/README.md) |
 
 ## prototipos
 
 | Archivo |
 |---|
+| [prototipos/I09-maqueta-movil/canvas.json](prototipos/I09-maqueta-movil/canvas.json) |
 | [prototipos/I09-maqueta-movil/Main.dc.html](prototipos/I09-maqueta-movil/Main.dc.html) |
 | [prototipos/I09-maqueta-movil/Movil-1-Jukebox.dc.html](prototipos/I09-maqueta-movil/Movil-1-Jukebox.dc.html) |
 | [prototipos/I09-maqueta-movil/Movil-2-Desplazado.dc.html](prototipos/I09-maqueta-movil/Movil-2-Desplazado.dc.html) |
@@ -173,18 +186,53 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I09-maqueta-movil/Movil-5-TusDatos.dc.html](prototipos/I09-maqueta-movil/Movil-5-TusDatos.dc.html) |
 | [prototipos/I09-maqueta-movil/Movil-6-Accesibilidad.dc.html](prototipos/I09-maqueta-movil/Movil-6-Accesibilidad.dc.html) |
 | [prototipos/I09-maqueta-movil/Movil-7-Compacto-360.dc.html](prototipos/I09-maqueta-movil/Movil-7-Compacto-360.dc.html) |
-| [prototipos/I09-maqueta-movil/canvas.json](prototipos/I09-maqueta-movil/canvas.json) |
-| [prototipos/I10-iconos/Main.dc.html](prototipos/I10-iconos/Main.dc.html) |
 | [prototipos/I10-iconos/canvas.json](prototipos/I10-iconos/canvas.json) |
-| [prototipos/I11-eic/Main.dc.html](prototipos/I11-eic/Main.dc.html) |
+| [prototipos/I10-iconos/Main.dc.html](prototipos/I10-iconos/Main.dc.html) |
 | [prototipos/I11-eic/brisa/CREDITS.md](prototipos/I11-eic/brisa/CREDITS.md) |
 | [prototipos/I11-eic/brisa/en-band-1.mp3](prototipos/I11-eic/brisa/en-band-1.mp3) |
 | [prototipos/I11-eic/brisa/en-band-2.mp3](prototipos/I11-eic/brisa/en-band-2.mp3) |
 | [prototipos/I11-eic/brisa/en-band-3.mp3](prototipos/I11-eic/brisa/en-band-3.mp3) |
 | [prototipos/I11-eic/brisa/en-band-4.mp3](prototipos/I11-eic/brisa/en-band-4.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-band.mp3](prototipos/I11-eic/brisa/en-chat-band.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-game.mp3](prototipos/I11-eic/brisa/en-chat-game.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-illapa.mp3](prototipos/I11-eic/brisa/en-chat-illapa.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-image.mp3](prototipos/I11-eic/brisa/en-chat-image.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-inti.mp3](prototipos/I11-eic/brisa/en-chat-inti.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-mamacocha.mp3](prototipos/I11-eic/brisa/en-chat-mamacocha.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-maps.mp3](prototipos/I11-eic/brisa/en-chat-maps.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-music.mp3](prototipos/I11-eic/brisa/en-chat-music.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-other.mp3](prototipos/I11-eic/brisa/en-chat-other.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-silbo.mp3](prototipos/I11-eic/brisa/en-chat-silbo.mp3) |
+| [prototipos/I11-eic/brisa/en-chat-yaku.mp3](prototipos/I11-eic/brisa/en-chat-yaku.mp3) |
 | [prototipos/I11-eic/brisa/en-credits-1.mp3](prototipos/I11-eic/brisa/en-credits-1.mp3) |
 | [prototipos/I11-eic/brisa/en-credits-2.mp3](prototipos/I11-eic/brisa/en-credits-2.mp3) |
 | [prototipos/I11-eic/brisa/en-credits-3.mp3](prototipos/I11-eic/brisa/en-credits-3.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-band-0.mp3](prototipos/I11-eic/brisa/en-guide-band-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-band-1.mp3](prototipos/I11-eic/brisa/en-guide-band-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-credits-0.mp3](prototipos/I11-eic/brisa/en-guide-credits-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-credits-1.mp3](prototipos/I11-eic/brisa/en-guide-credits-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-feedback-0.mp3](prototipos/I11-eic/brisa/en-guide-feedback-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-feedback-1.mp3](prototipos/I11-eic/brisa/en-guide-feedback-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-game-0.mp3](prototipos/I11-eic/brisa/en-guide-game-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-game-1.mp3](prototipos/I11-eic/brisa/en-guide-game-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-home-0.mp3](prototipos/I11-eic/brisa/en-guide-home-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-home-1.mp3](prototipos/I11-eic/brisa/en-guide-home-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-juke-0.mp3](prototipos/I11-eic/brisa/en-guide-juke-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-juke-1.mp3](prototipos/I11-eic/brisa/en-guide-juke-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-method-0.mp3](prototipos/I11-eic/brisa/en-guide-method-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-method-1.mp3](prototipos/I11-eic/brisa/en-guide-method-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-method-2.mp3](prototipos/I11-eic/brisa/en-guide-method-2.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-player-0.mp3](prototipos/I11-eic/brisa/en-guide-player-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-player-1.mp3](prototipos/I11-eic/brisa/en-guide-player-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-player-2.mp3](prototipos/I11-eic/brisa/en-guide-player-2.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-practice-0.mp3](prototipos/I11-eic/brisa/en-guide-practice-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-practice-1.mp3](prototipos/I11-eic/brisa/en-guide-practice-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-practice-player-0.mp3](prototipos/I11-eic/brisa/en-guide-practice-player-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-practice-player-1.mp3](prototipos/I11-eic/brisa/en-guide-practice-player-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-sources-0.mp3](prototipos/I11-eic/brisa/en-guide-sources-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-sources-1.mp3](prototipos/I11-eic/brisa/en-guide-sources-1.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-tech-0.mp3](prototipos/I11-eic/brisa/en-guide-tech-0.mp3) |
+| [prototipos/I11-eic/brisa/en-guide-tech-1.mp3](prototipos/I11-eic/brisa/en-guide-tech-1.mp3) |
 | [prototipos/I11-eic/brisa/en-home-1.mp3](prototipos/I11-eic/brisa/en-home-1.mp3) |
 | [prototipos/I11-eic/brisa/en-home-2.mp3](prototipos/I11-eic/brisa/en-home-2.mp3) |
 | [prototipos/I11-eic/brisa/en-home-3.mp3](prototipos/I11-eic/brisa/en-home-3.mp3) |
@@ -193,23 +241,115 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/brisa/en-juke-1.mp3](prototipos/I11-eic/brisa/en-juke-1.mp3) |
 | [prototipos/I11-eic/brisa/en-juke-2.mp3](prototipos/I11-eic/brisa/en-juke-2.mp3) |
 | [prototipos/I11-eic/brisa/en-juke-3.mp3](prototipos/I11-eic/brisa/en-juke-3.mp3) |
+| [prototipos/I11-eic/brisa/en-map-image-balanced.mp3](prototipos/I11-eic/brisa/en-map-image-balanced.mp3) |
+| [prototipos/I11-eic/brisa/en-map-image-cold.mp3](prototipos/I11-eic/brisa/en-map-image-cold.mp3) |
+| [prototipos/I11-eic/brisa/en-map-image-warm.mp3](prototipos/I11-eic/brisa/en-map-image-warm.mp3) |
+| [prototipos/I11-eic/brisa/en-map-loading.mp3](prototipos/I11-eic/brisa/en-map-loading.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-balanced-cold.mp3](prototipos/I11-eic/brisa/en-map-ocean-balanced-cold.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-balanced-none.mp3](prototipos/I11-eic/brisa/en-map-ocean-balanced-none.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-balanced-usual.mp3](prototipos/I11-eic/brisa/en-map-ocean-balanced-usual.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-balanced-warm.mp3](prototipos/I11-eic/brisa/en-map-ocean-balanced-warm.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-cold-cold.mp3](prototipos/I11-eic/brisa/en-map-ocean-cold-cold.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-cold-none.mp3](prototipos/I11-eic/brisa/en-map-ocean-cold-none.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-cold-usual.mp3](prototipos/I11-eic/brisa/en-map-ocean-cold-usual.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-cold-warm.mp3](prototipos/I11-eic/brisa/en-map-ocean-cold-warm.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-warm-cold.mp3](prototipos/I11-eic/brisa/en-map-ocean-warm-cold.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-warm-none.mp3](prototipos/I11-eic/brisa/en-map-ocean-warm-none.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-warm-usual.mp3](prototipos/I11-eic/brisa/en-map-ocean-warm-usual.mp3) |
+| [prototipos/I11-eic/brisa/en-map-ocean-warm-warm.mp3](prototipos/I11-eic/brisa/en-map-ocean-warm-warm.mp3) |
+| [prototipos/I11-eic/brisa/en-map-rain-balanced.mp3](prototipos/I11-eic/brisa/en-map-rain-balanced.mp3) |
+| [prototipos/I11-eic/brisa/en-map-rain-cold.mp3](prototipos/I11-eic/brisa/en-map-rain-cold.mp3) |
+| [prototipos/I11-eic/brisa/en-map-rain-warm.mp3](prototipos/I11-eic/brisa/en-map-rain-warm.mp3) |
+| [prototipos/I11-eic/brisa/en-member-illapa-intro.mp3](prototipos/I11-eic/brisa/en-member-illapa-intro.mp3) |
+| [prototipos/I11-eic/brisa/en-member-illapa-name.mp3](prototipos/I11-eic/brisa/en-member-illapa-name.mp3) |
+| [prototipos/I11-eic/brisa/en-member-inti-intro.mp3](prototipos/I11-eic/brisa/en-member-inti-intro.mp3) |
+| [prototipos/I11-eic/brisa/en-member-inti-name.mp3](prototipos/I11-eic/brisa/en-member-inti-name.mp3) |
+| [prototipos/I11-eic/brisa/en-member-mama-intro.mp3](prototipos/I11-eic/brisa/en-member-mama-intro.mp3) |
+| [prototipos/I11-eic/brisa/en-member-mama-name.mp3](prototipos/I11-eic/brisa/en-member-mama-name.mp3) |
+| [prototipos/I11-eic/brisa/en-member-silbo-intro.mp3](prototipos/I11-eic/brisa/en-member-silbo-intro.mp3) |
+| [prototipos/I11-eic/brisa/en-member-silbo-name.mp3](prototipos/I11-eic/brisa/en-member-silbo-name.mp3) |
+| [prototipos/I11-eic/brisa/en-member-yaku-intro.mp3](prototipos/I11-eic/brisa/en-member-yaku-intro.mp3) |
+| [prototipos/I11-eic/brisa/en-member-yaku-name.mp3](prototipos/I11-eic/brisa/en-member-yaku-name.mp3) |
 | [prototipos/I11-eic/brisa/en-player-1.mp3](prototipos/I11-eic/brisa/en-player-1.mp3) |
 | [prototipos/I11-eic/brisa/en-player-2.mp3](prototipos/I11-eic/brisa/en-player-2.mp3) |
 | [prototipos/I11-eic/brisa/en-player-3.mp3](prototipos/I11-eic/brisa/en-player-3.mp3) |
 | [prototipos/I11-eic/brisa/en-practice-1.mp3](prototipos/I11-eic/brisa/en-practice-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-band-0.mp3](prototipos/I11-eic/brisa/en-spotlight-band-0.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-band-1.mp3](prototipos/I11-eic/brisa/en-spotlight-band-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-band-2.mp3](prototipos/I11-eic/brisa/en-spotlight-band-2.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-game-1.mp3](prototipos/I11-eic/brisa/en-spotlight-game-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-home-0.mp3](prototipos/I11-eic/brisa/en-spotlight-home-0.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-home-1.mp3](prototipos/I11-eic/brisa/en-spotlight-home-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-home-2.mp3](prototipos/I11-eic/brisa/en-spotlight-home-2.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-illapa.mp3](prototipos/I11-eic/brisa/en-spotlight-illapa.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-inti.mp3](prototipos/I11-eic/brisa/en-spotlight-inti.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-library-0.mp3](prototipos/I11-eic/brisa/en-spotlight-library-0.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-library-1.mp3](prototipos/I11-eic/brisa/en-spotlight-library-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-mama.mp3](prototipos/I11-eic/brisa/en-spotlight-mama.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-method-0.mp3](prototipos/I11-eic/brisa/en-spotlight-method-0.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-method-1.mp3](prototipos/I11-eic/brisa/en-spotlight-method-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-player-0.mp3](prototipos/I11-eic/brisa/en-spotlight-player-0.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-player-1.mp3](prototipos/I11-eic/brisa/en-spotlight-player-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-player-2.mp3](prototipos/I11-eic/brisa/en-spotlight-player-2.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-practice-0.mp3](prototipos/I11-eic/brisa/en-spotlight-practice-0.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-practice-1.mp3](prototipos/I11-eic/brisa/en-spotlight-practice-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-silbo.mp3](prototipos/I11-eic/brisa/en-spotlight-silbo.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-tech-0.mp3](prototipos/I11-eic/brisa/en-spotlight-tech-0.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-tech-1.mp3](prototipos/I11-eic/brisa/en-spotlight-tech-1.mp3) |
+| [prototipos/I11-eic/brisa/en-spotlight-yaku.mp3](prototipos/I11-eic/brisa/en-spotlight-yaku.mp3) |
 | [prototipos/I11-eic/brisa/en-tech-1.mp3](prototipos/I11-eic/brisa/en-tech-1.mp3) |
 | [prototipos/I11-eic/brisa/en-tech-2.mp3](prototipos/I11-eic/brisa/en-tech-2.mp3) |
 | [prototipos/I11-eic/brisa/en-tech-3.mp3](prototipos/I11-eic/brisa/en-tech-3.mp3) |
 | [prototipos/I11-eic/brisa/en-tutorial-1.mp3](prototipos/I11-eic/brisa/en-tutorial-1.mp3) |
 | [prototipos/I11-eic/brisa/en-tutorial-2.mp3](prototipos/I11-eic/brisa/en-tutorial-2.mp3) |
 | [prototipos/I11-eic/brisa/en-tutorial-3.mp3](prototipos/I11-eic/brisa/en-tutorial-3.mp3) |
+| [prototipos/I11-eic/brisa/en-walkthrough-1.mp3](prototipos/I11-eic/brisa/en-walkthrough-1.mp3) |
+| [prototipos/I11-eic/brisa/en-walkthrough-2.mp3](prototipos/I11-eic/brisa/en-walkthrough-2.mp3) |
+| [prototipos/I11-eic/brisa/en-walkthrough-3.mp3](prototipos/I11-eic/brisa/en-walkthrough-3.mp3) |
 | [prototipos/I11-eic/brisa/es-band-1.mp3](prototipos/I11-eic/brisa/es-band-1.mp3) |
 | [prototipos/I11-eic/brisa/es-band-2.mp3](prototipos/I11-eic/brisa/es-band-2.mp3) |
 | [prototipos/I11-eic/brisa/es-band-3.mp3](prototipos/I11-eic/brisa/es-band-3.mp3) |
 | [prototipos/I11-eic/brisa/es-band-4.mp3](prototipos/I11-eic/brisa/es-band-4.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-band.mp3](prototipos/I11-eic/brisa/es-chat-band.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-game.mp3](prototipos/I11-eic/brisa/es-chat-game.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-illapa.mp3](prototipos/I11-eic/brisa/es-chat-illapa.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-image.mp3](prototipos/I11-eic/brisa/es-chat-image.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-inti.mp3](prototipos/I11-eic/brisa/es-chat-inti.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-mamacocha.mp3](prototipos/I11-eic/brisa/es-chat-mamacocha.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-maps.mp3](prototipos/I11-eic/brisa/es-chat-maps.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-music.mp3](prototipos/I11-eic/brisa/es-chat-music.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-other.mp3](prototipos/I11-eic/brisa/es-chat-other.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-silbo.mp3](prototipos/I11-eic/brisa/es-chat-silbo.mp3) |
+| [prototipos/I11-eic/brisa/es-chat-yaku.mp3](prototipos/I11-eic/brisa/es-chat-yaku.mp3) |
 | [prototipos/I11-eic/brisa/es-credits-1.mp3](prototipos/I11-eic/brisa/es-credits-1.mp3) |
 | [prototipos/I11-eic/brisa/es-credits-2.mp3](prototipos/I11-eic/brisa/es-credits-2.mp3) |
 | [prototipos/I11-eic/brisa/es-credits-3.mp3](prototipos/I11-eic/brisa/es-credits-3.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-band-0.mp3](prototipos/I11-eic/brisa/es-guide-band-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-band-1.mp3](prototipos/I11-eic/brisa/es-guide-band-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-credits-0.mp3](prototipos/I11-eic/brisa/es-guide-credits-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-credits-1.mp3](prototipos/I11-eic/brisa/es-guide-credits-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-feedback-0.mp3](prototipos/I11-eic/brisa/es-guide-feedback-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-feedback-1.mp3](prototipos/I11-eic/brisa/es-guide-feedback-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-game-0.mp3](prototipos/I11-eic/brisa/es-guide-game-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-game-1.mp3](prototipos/I11-eic/brisa/es-guide-game-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-home-0.mp3](prototipos/I11-eic/brisa/es-guide-home-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-home-1.mp3](prototipos/I11-eic/brisa/es-guide-home-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-juke-0.mp3](prototipos/I11-eic/brisa/es-guide-juke-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-juke-1.mp3](prototipos/I11-eic/brisa/es-guide-juke-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-method-0.mp3](prototipos/I11-eic/brisa/es-guide-method-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-method-1.mp3](prototipos/I11-eic/brisa/es-guide-method-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-method-2.mp3](prototipos/I11-eic/brisa/es-guide-method-2.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-player-0.mp3](prototipos/I11-eic/brisa/es-guide-player-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-player-1.mp3](prototipos/I11-eic/brisa/es-guide-player-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-player-2.mp3](prototipos/I11-eic/brisa/es-guide-player-2.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-practice-0.mp3](prototipos/I11-eic/brisa/es-guide-practice-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-practice-1.mp3](prototipos/I11-eic/brisa/es-guide-practice-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-practice-player-0.mp3](prototipos/I11-eic/brisa/es-guide-practice-player-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-practice-player-1.mp3](prototipos/I11-eic/brisa/es-guide-practice-player-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-sources-0.mp3](prototipos/I11-eic/brisa/es-guide-sources-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-sources-1.mp3](prototipos/I11-eic/brisa/es-guide-sources-1.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-tech-0.mp3](prototipos/I11-eic/brisa/es-guide-tech-0.mp3) |
+| [prototipos/I11-eic/brisa/es-guide-tech-1.mp3](prototipos/I11-eic/brisa/es-guide-tech-1.mp3) |
 | [prototipos/I11-eic/brisa/es-home-1.mp3](prototipos/I11-eic/brisa/es-home-1.mp3) |
 | [prototipos/I11-eic/brisa/es-home-2.mp3](prototipos/I11-eic/brisa/es-home-2.mp3) |
 | [prototipos/I11-eic/brisa/es-home-3.mp3](prototipos/I11-eic/brisa/es-home-3.mp3) |
@@ -218,18 +358,75 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/brisa/es-juke-1.mp3](prototipos/I11-eic/brisa/es-juke-1.mp3) |
 | [prototipos/I11-eic/brisa/es-juke-2.mp3](prototipos/I11-eic/brisa/es-juke-2.mp3) |
 | [prototipos/I11-eic/brisa/es-juke-3.mp3](prototipos/I11-eic/brisa/es-juke-3.mp3) |
+| [prototipos/I11-eic/brisa/es-map-image-balanced.mp3](prototipos/I11-eic/brisa/es-map-image-balanced.mp3) |
+| [prototipos/I11-eic/brisa/es-map-image-cold.mp3](prototipos/I11-eic/brisa/es-map-image-cold.mp3) |
+| [prototipos/I11-eic/brisa/es-map-image-warm.mp3](prototipos/I11-eic/brisa/es-map-image-warm.mp3) |
+| [prototipos/I11-eic/brisa/es-map-loading.mp3](prototipos/I11-eic/brisa/es-map-loading.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-balanced-cold.mp3](prototipos/I11-eic/brisa/es-map-ocean-balanced-cold.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-balanced-none.mp3](prototipos/I11-eic/brisa/es-map-ocean-balanced-none.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-balanced-usual.mp3](prototipos/I11-eic/brisa/es-map-ocean-balanced-usual.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-balanced-warm.mp3](prototipos/I11-eic/brisa/es-map-ocean-balanced-warm.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-cold-cold.mp3](prototipos/I11-eic/brisa/es-map-ocean-cold-cold.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-cold-none.mp3](prototipos/I11-eic/brisa/es-map-ocean-cold-none.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-cold-usual.mp3](prototipos/I11-eic/brisa/es-map-ocean-cold-usual.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-cold-warm.mp3](prototipos/I11-eic/brisa/es-map-ocean-cold-warm.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-warm-cold.mp3](prototipos/I11-eic/brisa/es-map-ocean-warm-cold.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-warm-none.mp3](prototipos/I11-eic/brisa/es-map-ocean-warm-none.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-warm-usual.mp3](prototipos/I11-eic/brisa/es-map-ocean-warm-usual.mp3) |
+| [prototipos/I11-eic/brisa/es-map-ocean-warm-warm.mp3](prototipos/I11-eic/brisa/es-map-ocean-warm-warm.mp3) |
+| [prototipos/I11-eic/brisa/es-map-rain-balanced.mp3](prototipos/I11-eic/brisa/es-map-rain-balanced.mp3) |
+| [prototipos/I11-eic/brisa/es-map-rain-cold.mp3](prototipos/I11-eic/brisa/es-map-rain-cold.mp3) |
+| [prototipos/I11-eic/brisa/es-map-rain-warm.mp3](prototipos/I11-eic/brisa/es-map-rain-warm.mp3) |
+| [prototipos/I11-eic/brisa/es-member-illapa-intro.mp3](prototipos/I11-eic/brisa/es-member-illapa-intro.mp3) |
+| [prototipos/I11-eic/brisa/es-member-illapa-name.mp3](prototipos/I11-eic/brisa/es-member-illapa-name.mp3) |
+| [prototipos/I11-eic/brisa/es-member-inti-intro.mp3](prototipos/I11-eic/brisa/es-member-inti-intro.mp3) |
+| [prototipos/I11-eic/brisa/es-member-inti-name.mp3](prototipos/I11-eic/brisa/es-member-inti-name.mp3) |
+| [prototipos/I11-eic/brisa/es-member-mama-intro.mp3](prototipos/I11-eic/brisa/es-member-mama-intro.mp3) |
+| [prototipos/I11-eic/brisa/es-member-mama-name.mp3](prototipos/I11-eic/brisa/es-member-mama-name.mp3) |
+| [prototipos/I11-eic/brisa/es-member-silbo-intro.mp3](prototipos/I11-eic/brisa/es-member-silbo-intro.mp3) |
+| [prototipos/I11-eic/brisa/es-member-silbo-name.mp3](prototipos/I11-eic/brisa/es-member-silbo-name.mp3) |
+| [prototipos/I11-eic/brisa/es-member-yaku-intro.mp3](prototipos/I11-eic/brisa/es-member-yaku-intro.mp3) |
+| [prototipos/I11-eic/brisa/es-member-yaku-name.mp3](prototipos/I11-eic/brisa/es-member-yaku-name.mp3) |
 | [prototipos/I11-eic/brisa/es-player-1.mp3](prototipos/I11-eic/brisa/es-player-1.mp3) |
 | [prototipos/I11-eic/brisa/es-player-2.mp3](prototipos/I11-eic/brisa/es-player-2.mp3) |
 | [prototipos/I11-eic/brisa/es-player-3.mp3](prototipos/I11-eic/brisa/es-player-3.mp3) |
 | [prototipos/I11-eic/brisa/es-practice-1.mp3](prototipos/I11-eic/brisa/es-practice-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-band-0.mp3](prototipos/I11-eic/brisa/es-spotlight-band-0.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-band-1.mp3](prototipos/I11-eic/brisa/es-spotlight-band-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-band-2.mp3](prototipos/I11-eic/brisa/es-spotlight-band-2.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-game-1.mp3](prototipos/I11-eic/brisa/es-spotlight-game-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-home-0.mp3](prototipos/I11-eic/brisa/es-spotlight-home-0.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-home-1.mp3](prototipos/I11-eic/brisa/es-spotlight-home-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-home-2.mp3](prototipos/I11-eic/brisa/es-spotlight-home-2.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-illapa.mp3](prototipos/I11-eic/brisa/es-spotlight-illapa.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-inti.mp3](prototipos/I11-eic/brisa/es-spotlight-inti.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-library-0.mp3](prototipos/I11-eic/brisa/es-spotlight-library-0.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-library-1.mp3](prototipos/I11-eic/brisa/es-spotlight-library-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-mama.mp3](prototipos/I11-eic/brisa/es-spotlight-mama.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-method-0.mp3](prototipos/I11-eic/brisa/es-spotlight-method-0.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-method-1.mp3](prototipos/I11-eic/brisa/es-spotlight-method-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-player-0.mp3](prototipos/I11-eic/brisa/es-spotlight-player-0.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-player-1.mp3](prototipos/I11-eic/brisa/es-spotlight-player-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-player-2.mp3](prototipos/I11-eic/brisa/es-spotlight-player-2.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-practice-0.mp3](prototipos/I11-eic/brisa/es-spotlight-practice-0.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-practice-1.mp3](prototipos/I11-eic/brisa/es-spotlight-practice-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-silbo.mp3](prototipos/I11-eic/brisa/es-spotlight-silbo.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-tech-0.mp3](prototipos/I11-eic/brisa/es-spotlight-tech-0.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-tech-1.mp3](prototipos/I11-eic/brisa/es-spotlight-tech-1.mp3) |
+| [prototipos/I11-eic/brisa/es-spotlight-yaku.mp3](prototipos/I11-eic/brisa/es-spotlight-yaku.mp3) |
 | [prototipos/I11-eic/brisa/es-tech-1.mp3](prototipos/I11-eic/brisa/es-tech-1.mp3) |
 | [prototipos/I11-eic/brisa/es-tech-2.mp3](prototipos/I11-eic/brisa/es-tech-2.mp3) |
 | [prototipos/I11-eic/brisa/es-tech-3.mp3](prototipos/I11-eic/brisa/es-tech-3.mp3) |
 | [prototipos/I11-eic/brisa/es-tutorial-1.mp3](prototipos/I11-eic/brisa/es-tutorial-1.mp3) |
 | [prototipos/I11-eic/brisa/es-tutorial-2.mp3](prototipos/I11-eic/brisa/es-tutorial-2.mp3) |
 | [prototipos/I11-eic/brisa/es-tutorial-3.mp3](prototipos/I11-eic/brisa/es-tutorial-3.mp3) |
+| [prototipos/I11-eic/brisa/es-walkthrough-1.mp3](prototipos/I11-eic/brisa/es-walkthrough-1.mp3) |
+| [prototipos/I11-eic/brisa/es-walkthrough-2.mp3](prototipos/I11-eic/brisa/es-walkthrough-2.mp3) |
+| [prototipos/I11-eic/brisa/es-walkthrough-3.mp3](prototipos/I11-eic/brisa/es-walkthrough-3.mp3) |
 | [prototipos/I11-eic/brisa/portrait.webp](prototipos/I11-eic/brisa/portrait.webp) |
 | [prototipos/I11-eic/canvas.json](prototipos/I11-eic/canvas.json) |
+| [prototipos/I11-eic/earthrhythm-icon.svg](prototipos/I11-eic/earthrhythm-icon.svg) |
+| [prototipos/I11-eic/earthrhythm-sample.webp](prototipos/I11-eic/earthrhythm-sample.webp) |
 | [prototipos/I11-eic/fotogramas-anteriores/costero2017_0.png](prototipos/I11-eic/fotogramas-anteriores/costero2017_0.png) |
 | [prototipos/I11-eic/fotogramas-anteriores/costero2017_1.png](prototipos/I11-eic/fotogramas-anteriores/costero2017_1.png) |
 | [prototipos/I11-eic/fotogramas-anteriores/costero2017_2.png](prototipos/I11-eic/fotogramas-anteriores/costero2017_2.png) |
@@ -290,6 +487,7 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/fotogramas/ver2026_3.webp](prototipos/I11-eic/fotogramas/ver2026_3.webp) |
 | [prototipos/I11-eic/fotogramas/ver2026_4.webp](prototipos/I11-eic/fotogramas/ver2026_4.webp) |
 | [prototipos/I11-eic/fotogramas/ver2026_5.webp](prototipos/I11-eic/fotogramas/ver2026_5.webp) |
+| [prototipos/I11-eic/Main.dc.html](prototipos/I11-eic/Main.dc.html) |
 | [prototipos/I11-eic/miniaturas/fotogramas-anteriores/costero2017_0.webp](prototipos/I11-eic/miniaturas/fotogramas-anteriores/costero2017_0.webp) |
 | [prototipos/I11-eic/miniaturas/fotogramas-anteriores/costero2017_1.webp](prototipos/I11-eic/miniaturas/fotogramas-anteriores/costero2017_1.webp) |
 | [prototipos/I11-eic/miniaturas/fotogramas-anteriores/costero2017_2.webp](prototipos/I11-eic/miniaturas/fotogramas-anteriores/costero2017_2.webp) |
@@ -353,6 +551,10 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/sprites/atrezo/atril.png](prototipos/I11-eic/sprites/atrezo/atril.png) |
 | [prototipos/I11-eic/sprites/atrezo/microfono.png](prototipos/I11-eic/sprites/atrezo/microfono.png) |
 | [prototipos/I11-eic/sprites/atrezo/satelite.png](prototipos/I11-eic/sprites/atrezo/satelite.png) |
+| [prototipos/I11-eic/sprites/illapa/baile/00.webp](prototipos/I11-eic/sprites/illapa/baile/00.webp) |
+| [prototipos/I11-eic/sprites/illapa/baile/01.webp](prototipos/I11-eic/sprites/illapa/baile/01.webp) |
+| [prototipos/I11-eic/sprites/illapa/baile/02.webp](prototipos/I11-eic/sprites/illapa/baile/02.webp) |
+| [prototipos/I11-eic/sprites/illapa/baile/03.webp](prototipos/I11-eic/sprites/illapa/baile/03.webp) |
 | [prototipos/I11-eic/sprites/illapa/busto.png](prototipos/I11-eic/sprites/illapa/busto.png) |
 | [prototipos/I11-eic/sprites/illapa/cara-apagado-s.webp](prototipos/I11-eic/sprites/illapa/cara-apagado-s.webp) |
 | [prototipos/I11-eic/sprites/illapa/cara-apagado.webp](prototipos/I11-eic/sprites/illapa/cara-apagado.webp) |
@@ -364,6 +566,10 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/sprites/illapa/particula.png](prototipos/I11-eic/sprites/illapa/particula.png) |
 | [prototipos/I11-eic/sprites/illapa/pose-banda-animada.webp](prototipos/I11-eic/sprites/illapa/pose-banda-animada.webp) |
 | [prototipos/I11-eic/sprites/illapa/pose-banda.webp](prototipos/I11-eic/sprites/illapa/pose-banda.webp) |
+| [prototipos/I11-eic/sprites/inti/baile/00.webp](prototipos/I11-eic/sprites/inti/baile/00.webp) |
+| [prototipos/I11-eic/sprites/inti/baile/01.webp](prototipos/I11-eic/sprites/inti/baile/01.webp) |
+| [prototipos/I11-eic/sprites/inti/baile/02.webp](prototipos/I11-eic/sprites/inti/baile/02.webp) |
+| [prototipos/I11-eic/sprites/inti/baile/03.webp](prototipos/I11-eic/sprites/inti/baile/03.webp) |
 | [prototipos/I11-eic/sprites/inti/busto.png](prototipos/I11-eic/sprites/inti/busto.png) |
 | [prototipos/I11-eic/sprites/inti/cara-apagado-s.webp](prototipos/I11-eic/sprites/inti/cara-apagado-s.webp) |
 | [prototipos/I11-eic/sprites/inti/cara-apagado.webp](prototipos/I11-eic/sprites/inti/cara-apagado.webp) |
@@ -375,6 +581,10 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/sprites/inti/particula.png](prototipos/I11-eic/sprites/inti/particula.png) |
 | [prototipos/I11-eic/sprites/inti/pose-banda-animada.webp](prototipos/I11-eic/sprites/inti/pose-banda-animada.webp) |
 | [prototipos/I11-eic/sprites/inti/pose-banda.webp](prototipos/I11-eic/sprites/inti/pose-banda.webp) |
+| [prototipos/I11-eic/sprites/mama/baile/00.webp](prototipos/I11-eic/sprites/mama/baile/00.webp) |
+| [prototipos/I11-eic/sprites/mama/baile/01.webp](prototipos/I11-eic/sprites/mama/baile/01.webp) |
+| [prototipos/I11-eic/sprites/mama/baile/02.webp](prototipos/I11-eic/sprites/mama/baile/02.webp) |
+| [prototipos/I11-eic/sprites/mama/baile/03.webp](prototipos/I11-eic/sprites/mama/baile/03.webp) |
 | [prototipos/I11-eic/sprites/mama/busto.png](prototipos/I11-eic/sprites/mama/busto.png) |
 | [prototipos/I11-eic/sprites/mama/cara-apagado-s.webp](prototipos/I11-eic/sprites/mama/cara-apagado-s.webp) |
 | [prototipos/I11-eic/sprites/mama/cara-apagado.webp](prototipos/I11-eic/sprites/mama/cara-apagado.webp) |
@@ -386,6 +596,10 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/sprites/mama/particula.png](prototipos/I11-eic/sprites/mama/particula.png) |
 | [prototipos/I11-eic/sprites/mama/pose-banda-animada.webp](prototipos/I11-eic/sprites/mama/pose-banda-animada.webp) |
 | [prototipos/I11-eic/sprites/mama/pose-banda.webp](prototipos/I11-eic/sprites/mama/pose-banda.webp) |
+| [prototipos/I11-eic/sprites/silbo/baile/00.webp](prototipos/I11-eic/sprites/silbo/baile/00.webp) |
+| [prototipos/I11-eic/sprites/silbo/baile/01.webp](prototipos/I11-eic/sprites/silbo/baile/01.webp) |
+| [prototipos/I11-eic/sprites/silbo/baile/02.webp](prototipos/I11-eic/sprites/silbo/baile/02.webp) |
+| [prototipos/I11-eic/sprites/silbo/baile/03.webp](prototipos/I11-eic/sprites/silbo/baile/03.webp) |
 | [prototipos/I11-eic/sprites/silbo/busto-escuchar.png](prototipos/I11-eic/sprites/silbo/busto-escuchar.png) |
 | [prototipos/I11-eic/sprites/silbo/busto.png](prototipos/I11-eic/sprites/silbo/busto.png) |
 | [prototipos/I11-eic/sprites/silbo/cara-apagado-s.webp](prototipos/I11-eic/sprites/silbo/cara-apagado-s.webp) |
@@ -398,6 +612,10 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/sprites/silbo/particula.png](prototipos/I11-eic/sprites/silbo/particula.png) |
 | [prototipos/I11-eic/sprites/silbo/pose-banda-animada.webp](prototipos/I11-eic/sprites/silbo/pose-banda-animada.webp) |
 | [prototipos/I11-eic/sprites/silbo/pose-banda.webp](prototipos/I11-eic/sprites/silbo/pose-banda.webp) |
+| [prototipos/I11-eic/sprites/yaku/baile/00.webp](prototipos/I11-eic/sprites/yaku/baile/00.webp) |
+| [prototipos/I11-eic/sprites/yaku/baile/01.webp](prototipos/I11-eic/sprites/yaku/baile/01.webp) |
+| [prototipos/I11-eic/sprites/yaku/baile/02.webp](prototipos/I11-eic/sprites/yaku/baile/02.webp) |
+| [prototipos/I11-eic/sprites/yaku/baile/03.webp](prototipos/I11-eic/sprites/yaku/baile/03.webp) |
 | [prototipos/I11-eic/sprites/yaku/busto.png](prototipos/I11-eic/sprites/yaku/busto.png) |
 | [prototipos/I11-eic/sprites/yaku/cara-apagado-s.webp](prototipos/I11-eic/sprites/yaku/cara-apagado-s.webp) |
 | [prototipos/I11-eic/sprites/yaku/cara-apagado.webp](prototipos/I11-eic/sprites/yaku/cara-apagado.webp) |
@@ -409,13 +627,16 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [prototipos/I11-eic/sprites/yaku/particula.png](prototipos/I11-eic/sprites/yaku/particula.png) |
 | [prototipos/I11-eic/sprites/yaku/pose-banda-animada.webp](prototipos/I11-eic/sprites/yaku/pose-banda-animada.webp) |
 | [prototipos/I11-eic/sprites/yaku/pose-banda.webp](prototipos/I11-eic/sprites/yaku/pose-banda.webp) |
+| [prototipos/I11-eic/stage.webp](prototipos/I11-eic/stage.webp) |
 | [prototipos/README.md](prototipos/README.md) |
 
 ## scripts
 
 | Archivo |
 |---|
+| [scripts/band-dance.js](scripts/band-dance.js) |
 | [scripts/benchmark_browser.cjs](scripts/benchmark_browser.cjs) |
+| [scripts/brisa-chat.js](scripts/brisa-chat.js) |
 | [scripts/browser_fixture.cjs](scripts/browser_fixture.cjs) |
 | [scripts/build_pages.py](scripts/build_pages.py) |
 | [scripts/descargar_fotogramas.py](scripts/descargar_fotogramas.py) |
@@ -430,6 +651,8 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [scripts/test_package_portable.py](scripts/test_package_portable.py) |
 | [scripts/update_gibs_palette.py](scripts/update_gibs_palette.py) |
 | [scripts/verify_a11y.cjs](scripts/verify_a11y.cjs) |
+| [scripts/verify_accessibility_flow.cjs](scripts/verify_accessibility_flow.cjs) |
+| [scripts/verify_band_actions.cjs](scripts/verify_band_actions.cjs) |
 | [scripts/verify_brisa.cjs](scripts/verify_brisa.cjs) |
 | [scripts/verify_cached_release.cjs](scripts/verify_cached_release.cjs) |
 | [scripts/verify_characters.cjs](scripts/verify_characters.cjs) |
@@ -451,26 +674,24 @@ Esta lista enumera los 419 archivos versionados de la rama main. Una ruta inclui
 | [scripts/verify_preferences_layout.cjs](scripts/verify_preferences_layout.cjs) |
 | [scripts/verify_public.cjs](scripts/verify_public.cjs) |
 | [scripts/verify_reflow.cjs](scripts/verify_reflow.cjs) |
+| [scripts/verify_reto05.cjs](scripts/verify_reto05.cjs) |
 | [scripts/verify_themes.cjs](scripts/verify_themes.cjs) |
+| [scripts/verify_tutorial_flow.cjs](scripts/verify_tutorial_flow.cjs) |
 
 ## src
 
 | Archivo |
 |---|
-| [src/accesibilidad/README.md](src/accesibilidad/README.md) |
 | [src/accesibilidad/index.js](src/accesibilidad/index.js) |
-| [src/analizador/README.md](src/analizador/README.md) |
+| [src/accesibilidad/README.md](src/accesibilidad/README.md) |
 | [src/analizador/index.js](src/analizador/index.js) |
-| [src/app/README.md](src/app/README.md) |
+| [src/analizador/README.md](src/analizador/README.md) |
 | [src/app/bus.js](src/app/bus.js) |
 | [src/app/main.js](src/app/main.js) |
-| [src/arte/README.md](src/arte/README.md) |
+| [src/app/README.md](src/app/README.md) |
 | [src/arte/index.js](src/arte/index.js) |
-| [src/fotogramas/README.md](src/fotogramas/README.md) |
+| [src/arte/README.md](src/arte/README.md) |
 | [src/fotogramas/index.js](src/fotogramas/index.js) |
-| [src/sonido/README.md](src/sonido/README.md) |
+| [src/fotogramas/README.md](src/fotogramas/README.md) |
 | [src/sonido/index.js](src/sonido/index.js) |
-
----
-
-[Estado de esta rama](docs/ESTADO_ACTUAL.md) · [Verificación](docs/VERIFICACION.md) · [Inventario completo](archivos.md)
+| [src/sonido/README.md](src/sonido/README.md) |

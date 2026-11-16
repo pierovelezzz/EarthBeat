@@ -1,23 +1,17 @@
-# Publicación de main
+# Publicación de EarthRhythm
 
-El código de esta versión está en [EarthRhythm, rama main](https://github.com/pierovelezzz/EarthRhythm/tree/main). La publicación de una rama Git no demuestra por sí sola que exista una web desplegada.
+- [Producción en Vercel](https://earthrhythm-nasa.vercel.app/). Es la versión de revisión del reto.
+- [GitHub Pages](https://pierovelezzz.github.io/EarthRhythm/). La portada estática se genera desde `main` y el mismo despliegue publica estas vistas de referencia.
 
-## Preparar y revisar el sitio
+| Rama | Vista previa |
+|---|---|
+| `V1` | [V1](https://pierovelezzz.github.io/EarthRhythm/v1/) |
+| `V2` | [V2](https://pierovelezzz.github.io/EarthRhythm/v2/) |
+| `V3` | [V3](https://pierovelezzz.github.io/EarthRhythm/v3/) |
+| `v4-NASA-Space-AC` | [V4](https://pierovelezzz.github.io/EarthRhythm/v4/) |
+| `v4.5` | [V4.5](https://pierovelezzz.github.io/EarthRhythm/v4.5/) |
+| `NASA-goal` | [NASA Goal](https://pierovelezzz.github.io/EarthRhythm/nasa-goal/) |
+| `juego-pc-basico` | [Juego PC](https://pierovelezzz.github.io/EarthRhythm/juego-pc/) |
+| `v4-IA` | [V4 IA](https://pierovelezzz.github.io/EarthRhythm/v4-ia/) |
 
-```bash
-python scripts/verify_fonts.py
-python scripts/build_pages.py _site
-python -m http.server 8765 --bind 127.0.0.1 --directory _site
-```
-
-Editar la fuente I11 y reconstruir; no tratar `_site` como fuente canónica. Identificar el commit seleccionado con `git rev-parse HEAD`.
-
-## Workflow incluido
-
-`.github/workflows/pages.yml` se ejecuta en pushes a `main` y con `workflow_dispatch`. GitHub Pages debe estar configurado para desplegar el sitio generado.
-
-No se acredita aquí una URL pública de la aplicación ni un despliegue nuevo. Las copias de código y los paquetes deben referirse a la rama y al commit realmente seleccionados.
-
----
-
-[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)
+Edita [la fuente de main](../prototipos/I11-eic/Main.dc.html) y reconstruye con `python scripts/build_pages.py _site`. GitHub Actions vuelve a publicar desde `main` tras un push o una ejecución manual de [pages.yml](../.github/workflows/pages.yml). Vercel sirve también `/api/brisa` para la integración descrita en [Brisa](BRISA.md).

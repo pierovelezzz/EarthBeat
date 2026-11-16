@@ -49,4 +49,4 @@ La vibración web no está disponible en todos los navegadores y teléfonos. Su 
 - [MDN Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API)
 - [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)
 
-Estado: alcance aprobado en la conversación e implementado en la rama copiada `accesibilidad/v4-flujo-inclusivo`. Ver [resultados y limitaciones](ACCESIBILIDAD_VERIFICACION.md). La sección de revisión comprobada conserva los hallazgos anteriores a los cambios.
+Este registro corresponde a una prueba interna. Consulta sus [resultados y limitaciones](ACCESIBILIDAD_VERIFICACION.md) y el [estado de main](ESTADO_ACTUAL.md) para la versión de entrega.

@@ -1,9 +1,6 @@
-# Imágenes y lluvia en V2
+# Prueba práctica con imágenes y lluvia
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
-
-La práctica se abre en ¿Cómo funciona? → Prueba práctica.
+En ¿Cómo funciona? → Prueba práctica puedes comenzar con el logo de EarthRhythm, elegir una imagen local o escuchar la muestra de Chiclayo.
 
 La interfaz permite PNG, JPG/JPEG, WebP y GIF. El límite de archivo es 8 MiB y el límite de imagen es 32 millones de píxeles. Una imagen animada se analiza como imagen fija; se conserva la proporción, con transparencia exterior, en el encuadre local de 560 × 320. PDF, SVG y archivos CSV/TSV/TXT no están admitidos por el selector actual. Permanecen funciones internas de series numéricas porque se utiliza la muestra de lluvia; eso no habilita una carga pública de CSV.
 

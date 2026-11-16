@@ -1,15 +1,10 @@
-# Reproductor de V2
-
-> Las notas de este directorio nacieron en V2. Para el funcionamiento de la rama principal, consulta el [estado de main](ESTADO_ACTUAL.md).
-
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
+# Reproductor de EarthRhythm
 
 Web Audio sintetiza la música localmente. Melodía utiliza perfiles, escalas, acordes y ritmo del código; Datos también transforma los niveles derivados en sonido y no representa una señal científica sin interpretación. La reproducción requiere una acción del usuario. Pausa, reanudación, selección de fecha, mezcla, volumen, silencio y repetición pertenecen al mismo reproductor.
 
 Escuchar tiene dos pasos: Elige un disco y Escucha. Los dos catálogos tienen cinco discos y cada disco conserva seis fechas seleccionables. La cuadrícula contiene 448 celdas y el barrido tiene 28 columnas. La selección de fecha cambia el fotograma; los controles de transporte conservan la pausa y la mezcla explícita del usuario.
 
-Los controles permiten elegir protagonista y silenciar músicos. La leyenda distingue la paleta y el tipo de entrada; la presencia de una función en V3 no implica que esta rama tenga la misma leyenda interactiva.
+Configuración reúne el volumen, la velocidad y el modo. Pulsa un músico para activarlo o silenciarlo. La leyenda explica los °C estimados para cada fuente NASA y muestra niveles relativos para imágenes propias. En computadora puedes abrir el juego desde el disco.
 
 | Perfil de Melodía | Tempo base del código, pulsaciones/minuto |
 |---|---:|

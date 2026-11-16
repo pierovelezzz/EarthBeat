@@ -1,31 +1,18 @@
-# Entrega portátil de V2
+# Entrega portátil de EarthRhythm
 
-> Las notas de este directorio nacieron en V2. Para el funcionamiento de la rama principal, consulta el [estado de main](ESTADO_ACTUAL.md).
+## Código y archivos registrados
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
-
-## Fuente comprometida
-
-Para generar un ZIP de los archivos versionados del commit seleccionado, desde la raíz de esta rama:
+Desde la raíz de `main`:
 
 ```bash
 git rev-parse HEAD
-git archive --format=zip --output=../EarthRhythm-V2-source.zip HEAD
+git archive --format=zip --output=../EarthRhythm-main-source.zip HEAD
 ```
 
-La salida no incluye `.git`, archivos sin seguimiento ni el sitio `_site` generado. Extraer en una carpeta nueva y ejecutar el build permite obtener el sitio estático correspondiente.
+El ZIP contiene los archivos versionados del commit. Extrae el código en una carpeta nueva y sigue el [README](../README.md) para construir el sitio.
 
-## Sitio estático
+## Sitio y paquete
 
-`python scripts/build_pages.py _site` copia los archivos que requiere el sitio. Puede entregarse esa carpeta junto con la identificación del commit utilizado y sus créditos. El servidor HTTP y la interacción del usuario siguen siendo necesarios para probar audio, voz y archivos locales en el modo soportado.
+`python scripts/build_pages.py _site` genera la aplicación estática. Publica ese directorio con un servidor HTTP. La revisión completa con el chat asistido y la síntesis en español se realiza en [Vercel](https://earthrhythm-nasa.vercel.app/).
 
-## Empaquetador heredado
-
-`scripts/package_portable.py` conserva un generador de paquete con manifiesto y verificador; consultar `--help` para sus argumentos. Su plantilla y el campo `branch` del manifiesto contienen referencias heredadas a `piero-mejoras`, y no deben interpretarse como una identificación automática de V2. No se presenta aquí una entrega producida con esa plantilla como si ya estuviera adaptada.
-
-Los resultados humanos o mediciones de paquetes anteriores no se transfieren por comprimir una carpeta. No se incorpora a la entrega la tabla de auditoría externa solicitada durante la migración.
-
----
-
-[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)
+`python scripts/package_portable.py --help` muestra cómo empaquetar una revisión con el commit y un manifiesto de integridad. El archivo generado se verifica con su `verify_package.py`.

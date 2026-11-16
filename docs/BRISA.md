@@ -1,28 +1,19 @@
-# Brisa y preferencias en V2
+# Brisa en EarthRhythm
 
-> Las notas de este directorio nacieron en V2. Para el funcionamiento de la rama principal, consulta el [estado de main](ESTADO_ACTUAL.md).
+Brisa acompaña la bienvenida, el tutorial de tres pasos, la ayuda de cada pantalla, la partida y el chat. La estrella abre el panel de IA. Desde allí se puede iniciar la guía visual o el recorrido de los cinco músicos. Ambos señalan elementos de la página y avanzan solos. Los botones de avance y retroceso permiten tomar el control.
 
-> Revisión documental: **14/11/2026 20:29:05 (UTC-05:00)** · EarthRhythm `V2`.
-> El alcance se refiere al código y los recursos de esta rama. Las fechas de observaciones y los avisos de licencia conservan su significado original.
+## Voz y texto
 
-Brisa tiene retrato en `prototipos/I11-eic/brisa/portrait.webp` y cincuenta MP3: veinticinco por idioma. La voz está activada en los valores iniciales del componente, empieza tras interacción y se puede apagar desde Accesibilidad. Los clips se reproducen con HTML Audio; el código también conserva la síntesis de voz del navegador y las alternativas escritas. Los créditos de las voces están en `prototipos/I11-eic/brisa/CREDITS.md`.
+- **Inglés.** Las explicaciones y los recorridos preparados usan la voz local de Brisa sintetizada con Piper y el modelo LJ Speech. Las respuestas abiertas del chat pueden leerse con una voz inglesa del dispositivo. El sitio no usa ElevenLabs para inglés.
+- **Español.** Los recorridos y la bienvenida de la partida incluyen clips de Leoni Vergara de ElevenLabs. La publicación principal solicita esa misma voz para los demás textos. Una confirmación de cuota agotada habilita las grabaciones de respaldo o la voz del dispositivo, según el texto. Si el servicio falla sin indicar la causa, el texto permanece disponible.
+- **Control.** Modo voz se configura en Accesibilidad. La bocina del chat controla sus lecturas y las guías que inicia. Al cambiar de pantalla, idioma o paso se cancela la locución anterior.
 
-El idioma sigue una elección guardada válida o la configuración inicial del navegador. Cambiar pantalla, idioma o paso cancela la locución anterior. La guía y el tutorial conservan alternativas escritas y no requieren oír para progresar.
+Los créditos de los clips y del retrato se conservan en [CREDITS.md](../prototipos/I11-eic/brisa/CREDITS.md).
 
-Las preferencias de voz, texto grande, contraste, movimiento reducido, fuente legible, vibración y efectos se guardan en `ts_prefs`; el idioma se guarda en `ts_lang`. No requieren una cuenta. Las preferencias pueden reabrirse desde Accesibilidad.
+## Publicación y privacidad
 
-El tutorial de la aplicación guía la elección de un disco, su reproducción y la interpretación de la leyenda. Se puede cerrar o saltar. Las regresiones de estado y foco están en `scripts/test_guides.cjs`; una simulación de voz no equivale a escucha humana.
+Las preguntas abiertas se envían a OpenRouter mediante `/api/brisa`. El audio en español que se genera al momento se solicita a ElevenLabs desde la misma ruta. Los archivos locales de imagen y las preferencias se procesan o guardan en el navegador.
 
-El movimiento reducido conserva contenido, poses y controles. La reproducción de la música tiene sus propios controles.
+Vercel admite las variables privadas `OPENROUTER_API_KEY`, `ELEVENLABS_API_KEY` o `BRISA_PROXY_URL` para el servidor intermediario. También admite `OPENROUTER_KEY`, `OPENROUTER_KEYS` y `ELEVENLABS_KEY`. `BRISA_CHAT_MODEL` permite elegir el modelo de conversación. El intermediario debe autorizar el origen de producción y transmitir el código de cuota del proveedor si se quiere habilitar ese respaldo.
 
----
-
-[Estado de esta rama](ESTADO_ACTUAL.md) · [Verificación](VERIFICACION.md) · [Inventario completo](../archivos.md)
-
-## Chat con Brisa
-
-El chat funciona con preguntas y respuestas integradas en GitHub Pages y Vercel. En Vercel, la ruta del mismo sitio /api/brisa habilita respuestas abiertas al configurar OPENROUTER_API_KEY y voces seleccionables al configurar ELEVENLABS_API_KEY en el entorno del proyecto. También admite los nombres OPENROUTER_KEY, OPENROUTER_KEYS y ELEVENLABS_KEY de v4-IA. BRISA_CHAT_MODEL permite elegir un modelo de OpenRouter.
-
-`BRISA_PROXY_URL` admite la URL HTTPS del servidor de v4-IA para los servicios que aún carecen de clave directa. El servidor de EarthRhythm llama a `api/openrouter` y `api/elevenlabs` bajo esa URL. Las versiones del intermediario cuya lista de voces excluye a Leoni Vergara usan Sarah como respaldo. La disponibilidad real depende de las claves configuradas en el intermediario.
-
-Configura las claves como variables privadas de Vercel y vuelve a desplegar. Usa claves limitadas a la función necesaria y configura un tope de consumo en cada proveedor. Las preguntas escritas se envían a OpenRouter solo con el servicio activo. El botón de lectura usa ElevenLabs si está habilitado, las grabaciones de Brisa para las respuestas integradas y la voz del dispositivo como respaldo para respuestas abiertas. El dictado utiliza el servicio de reconocimiento del navegador cuando está disponible. En español, el tutorial, La banda, la ayuda, los mapas y el chat usan la voz latina Leoni Vergara de ElevenLabs cuando la clave está habilitada. Añade la voz a la cuenta de ElevenLabs si el servicio la solicita. BRISA_ES_VOICE_ID permite configurar otra voz en español. Las grabaciones locales conservan el audio cuando el servicio no está disponible.
+GitHub Pages y el servidor estático local conservan las respuestas integradas, los textos y las grabaciones incluidas. La lectura de contenido que requiere el servicio depende de la publicación de Vercel.

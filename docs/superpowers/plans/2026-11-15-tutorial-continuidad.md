@@ -1,6 +1,6 @@
 # Tutorial único y reanudable
 
-Alcance confirmado por el usuario: un tutorial práctico de tres pasos, ayuda contextual sin recorrido numerado y reanudación después de cerrar o saltar la guía. Trabajar en la copia `accesibilidad/v4-flujo-inclusivo`.
+Este plan histórico cubrió el tutorial práctico de tres pasos, la ayuda contextual de una tarjeta y la reanudación después de cerrar o saltar la guía.
 
 - [x] Añadir regresiones para pausa/reanudación en pasos 2 y 3, recarga, finalización y reinicio explícito, datos guardados inválidos y almacenamiento bloqueado. Observar fallos antes de implementar.
 - [x] Guardar un progreso versionado independiente de las preferencias y del estado de retorno. Persistir solo pasos, acciones y selección NASA; nunca archivos locales ni reproducción automática.

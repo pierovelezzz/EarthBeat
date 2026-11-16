@@ -1,4 +1,4 @@
-"""Create a new portable TerraSonic package from a committed source tree and selected QA evidence."""
+"""Create a portable EarthRhythm package from a committed source tree and QA evidence."""
 import argparse
 from datetime import datetime, timezone
 from hashlib import sha256
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     if not (directory / "index.html").is_file():
         parser.error("The bundled site/index.html is missing")
     server = ThreadingHTTPServer(("127.0.0.1", args.port), partial(SimpleHTTPRequestHandler, directory=str(directory)))
-    print(f"TerraSonic: http://127.0.0.1:{server.server_port}/ — Ctrl+C to stop", flush=True)
+    print(f"EarthRhythm: http://127.0.0.1:{server.server_port}/ — Ctrl+C to stop", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -128,9 +128,9 @@ if __name__ == "__main__":
 '''
     (destination / "serve.py").write_text(serve, encoding="utf-8")
     preview_note = f"La vista publicada corresponde al código de aplicación `{preview_commit}`; puede diferir de este paquete." if preview_commit else "La URL puede servir una versión distinta; consulta docs/PUBLICACION.md del archivo fuente antes de atribuirle cambios."
-    (destination / "README.md").write_text(f'''# TerraSonic · copia portable de revisión
+    (destination / "README.md").write_text(f'''# EarthRhythm · copia portable de revisión
 
-Fuente: TerraSonic, rama piero-mejoras, commit `{full_commit}`.
+Fuente: EarthRhythm, commit `{full_commit}`.
 Vista independiente: {preview or 'consultar docs/PUBLICACION.md en source.zip'}.
 {preview_note} La huella de este paquete identifica esta copia.
 
@@ -138,13 +138,13 @@ Vista independiente: {preview or 'consultar docs/PUBLICACION.md en source.zip'}.
 2. Con Python 3.10 o posterior instalado, ejecuta `python serve.py` desde esa carpeta.
 3. Abre http://127.0.0.1:8765/. Para detener el servidor, pulsa Ctrl+C.
 
-`site/` contiene el producto estático listo para un host. No requiere Node, Blender, cuenta, backend, AWS ni base de datos. Archivos, fuentes, mapas, modelos y poses se incluyen. El audio requiere una acción del usuario y un navegador con Web Audio. Voz/vibración dependen del dispositivo y las voces instaladas; el texto y las poses permiten continuar sin esas APIs. Los enlaces documentales externos requieren red. Abrir index.html con file:// no es el modo soportado.
+`site/` contiene la versión estática con mapas, fuentes, ilustraciones y grabaciones. Se sirve por HTTP. La música comienza tras una acción del visitante. El chat con respuestas abiertas y la síntesis de voz en español requieren los servicios de la publicación principal.
 
 `source.zip` contiene solo archivos del commit Git. Extráelo en otra carpeta para editar: `python scripts/build_pages.py _site`; `node scripts/test_guides.cjs _site/index.html`. Node solo es necesario para pruebas. Consulta README.md para ejecutar y verificar esta rama.
 
 {('baseline-models.zip conserva el .blend y los cinco GLB originales del commit '+baseline_sha+', separados de la propuesta nueva.') if baseline_sha else 'Los modelos anteriores se pueden recuperar del commit base indicado en la documentación del repositorio.'}
 
-`evidence/` conserva una selección de JSON/capturas. Son pruebas automatizadas y renders de esta laptop; no acreditan certificación WCAG, prueba con personas, escucha humana ni aprobación cultural. Los 420 minutos efectivos y requisitos pendientes siguen en el registro fuente; el paquete es un checkpoint, no una declaración automática de cierre.
+`evidence/` contiene la evidencia seleccionada. Consulta la documentación de verificación para conocer el alcance de las pruebas.
 
 `manifest.json` enumera bytes y SHA-256. `python verify_package.py` comprueba la integridad. El empaquetador rechaza rutas de credenciales y patrones de claves conocidos; también evita .git, .env, .vercel, node_modules y _work. No se incluyen tokens, el enlace privado de reclamación de Vercel ni logs privados. Una búsqueda de patrones no demuestra ausencia universal de secretos; las entradas se limitan a fuente comprometida y evidencia seleccionada.
 ''', encoding="utf-8")
@@ -178,7 +178,7 @@ print('PASS package integrity:',len(expected),'files; source commit',manifest['s
         allowed(relative, b"" if relative in {"source.zip", "baseline-models.zip"} else file.read_bytes())
         files.append({"path": relative, "bytes": file.stat().st_size, "sha256": file_hash(file)})
     manifest = {"version": 1, "createdAt": datetime.now(timezone.utc).isoformat(), "sourceCommit": full_commit,
-                "branch": "piero-mejoras", "preview": preview, "previewSourceCommit": preview_commit,
+                "preview": preview, "previewSourceCommit": preview_commit,
                 "baselineModelsCommit": baseline_sha, "evidence": evidence_sources, "files": files}
     (destination / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     subprocess.run([sys.executable, str(destination / "verify_package.py")], check=True)

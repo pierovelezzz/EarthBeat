@@ -1,6 +1,6 @@
 # Accesibilidad añadida y verificación
 
-Fecha: 15 de noviembre de 2026. Trabajo local en `accesibilidad/v4-flujo-inclusivo`, creada desde `v4-NASA-Space-AC` antes de modificar el producto. La referencia original continúa en `a7f965abc467c2a3e67d6e5063ae871bdcaddbc6`. No se publicó ni se fusionó esta copia.
+Fecha de la prueba interna: 15 de noviembre de 2026. La comparación usó el commit `a7f965abc467c2a3e67d6e5063ae871bdcaddbc6`. Para revisar la versión publicada, consulta [Verificación de main](VERIFICACION.md).
 
 ## Recorrido de uso
 
