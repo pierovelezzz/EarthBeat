@@ -62,6 +62,7 @@ export function requireAllowedOrigin(request) {
   const list = configuredPatterns();
   if (list.includes('*')) return null;
   const origin = extractRequestOrigin(request);
+  if (!origin && process.env.ALLOW_SERVER_CALLS === 'true') return null;
   if (isOriginAllowed(origin)) return null;
   return new Response(JSON.stringify({ error: 'Origin not allowed' }), {
     status: 403,

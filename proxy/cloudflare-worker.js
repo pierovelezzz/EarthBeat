@@ -2,6 +2,7 @@
 const ALLOWED_ORIGIN = /^https:\/\/[a-z0-9-]+\.github\.io$|^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i;
 const ALLOWED_VOICES = new Set([
   'EXAVITQu4vr4xnSDxMaL',
+  'pBZVCk298iJlHAcHQwLr',
   '9BWtsMINqrJLrRacOk9x',
   'FGY2WhTYpPnrIDTdsKH5',
   'XrExE9yKIg1WjnnlVkGX',

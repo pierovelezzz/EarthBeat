@@ -35,9 +35,11 @@ export async function POST(request) {
     return jsonResponse(request, { error: 'messages array is required' }, 400);
   }
 
-  const models = Array.isArray(body?.models) && body.models.length
+  const fallbackModels = ['nvidia/nemotron-3.5-lightning:free', 'google/gemma-4-26b-a4b-it:free', 'openrouter/free'];
+  const requestedModels = Array.isArray(body?.models) && body.models.length
     ? body.models
-    : [body?.model || 'nvidia/nemotron-3.5-lightning:free', 'google/gemma-4-26b-a4b-it:free', 'openrouter/free'];
+    : (body?.model ? [body.model, ...fallbackModels.filter((m) => m !== body.model)] : fallbackModels);
+  const models = requestedModels;
   const start = Math.floor(Math.random() * keys.length);
   const attempts = Math.min(6, Math.max(models.length, keys.length, 3));
 
