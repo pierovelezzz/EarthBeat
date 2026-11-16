@@ -7,9 +7,9 @@
 | Entrada | La primera visita ofrece una bienvenida y ajustes de accesibilidad. Tras comenzar, se abre la experiencia y puede aparecer la secuencia animada. El navegador guarda el idioma, las preferencias y el avance del tutorial. |
 | Escuchar | Dos colecciones de cinco discos con seis mapas cada uno. El reproductor combina mapa NASA, cuadrícula, leyenda, contexto por fecha y banda. Los controles ajustan el volumen, la velocidad, el modo, la mezcla y la posición. |
 | La banda | Cinco personajes 2D, con fichas, historias ficticias, retratos animados y escucha por instrumento. |
-| ¿Cómo funciona? | Explicación de la cuadrícula y prueba con el logo, una imagen local o la lluvia de Chiclayo. |
+| ¿Cómo funciona? | Explicación de la cuadrícula y prueba con el logo o una imagen local. |
 | Jugar | Juego de ritmo con teclado en computadoras compatibles. Brisa presenta las flechas al abrir la partida si está activado el modo voz. |
 | Brisa | Tutorial práctico, ayuda contextual y chat. La guía visual señala elementos, y el recorrido de la banda pasa por sus cinco músicos. |
-| Tecnología | Interfaz, datos NASA, sonido, producción y créditos. Las tarjetas de datos enlazan a las fuentes de los mapas, la paleta original y la muestra de Chiclayo. |
+| Tecnología | Interfaz, datos NASA, sonido, producción y créditos. Las tarjetas de datos enlazan a las fuentes de los mapas y a las escalas de color. |
 
 El [método](METODO.md) describe los límites científicos. Consulta el [estado de la voz y la IA](BRISA.md), la [verificación](VERIFICACION.md) y la [fuente de la aplicación](../prototipos/I11-eic/Main.dc.html).

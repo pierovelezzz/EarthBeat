@@ -20,7 +20,7 @@ python scripts/run_browser_checks.py --list
 | Suite de lógica del HTML generado | 143 pruebas, sin fallos |
 | Empaquetado portable | 6 pruebas, sin fallos |
 | Enlaces Markdown locales y referencias de archivos | Revisados con nombres y mayúsculas del árbol Git |
-| Tecnología | Cinco pantallas verificadas de 320 a 1440 px. Seis enlaces NASA respondieron y la consulta de Chiclayo devolvió 48 registros mensuales. |
+| Tecnología | Cinco pantallas verificadas de 320 a 1440 px. La sección Datos de la NASA incluye cuatro enlaces entre las tarjetas de EIC y GIBS. |
 | Guía visual y recorrido de Brisa | Se comprobaron el avance, los cinco músicos y la reproducción de sus clips en español e inglés. |
 
 La prueba de voz verificó la selección de Leoni en la solicitud, la exclusión de ElevenLabs de la narración inglesa y la reacción de la API ante una respuesta simulada de cuota agotada. La síntesis de respuestas abiertas depende del servicio y navegador reales.

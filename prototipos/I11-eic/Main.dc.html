@@ -2348,7 +2348,6 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 @media(min-width:1050px){
   .px .tech-screen > .in{max-width:1240px;gap:12px}
   .px .tech-list[data-kind="interface"]{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .px .tech-list[data-kind="nasa"]{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media(min-width:901px) and (max-height:800px){.px .tech-screen > .in{padding-block:10px}}
 .px .section-voice{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:auto;min-height:44px;padding:4px 9px;flex:none}
@@ -3481,8 +3480,6 @@ var TECH = [
     use: "30 mapas del 16 de mayo de 2024 al 3 de octubre de 2026, recortados al Pacífico sudeste. La visualización se basa en el análisis MUR de NASA JPL." },
   { cat: "Datos de la NASA", name: "NASA GIBS · GHRSST MUR", label: "Episodios históricos",
     use: "30 mapas de cinco episodios entre 2010 y 2023. Cada imagen corresponde al día 15 del mes y se interpreta con la paleta original de GIBS." },
-  { cat: "Datos de la NASA", name: "NASA POWER", label: "Lluvia en Chiclayo",
-    use: "En Prueba práctica sonificamos 48 valores de Chiclayo (2015–2018). Son promedios mensuales de lluvia diaria en mm/día." },
   { cat: "Música y sonido", name: "Web Audio API", label: "Cinco instrumentos",
     use: "El navegador genera el sonido de cada músico. Puedes escuchar a la banda o silenciar instrumentos por separado." },
   { cat: "Música y sonido", name: "Compositor por reglas", label: "Melodía y Datos",
@@ -3630,7 +3627,6 @@ var TECH_EN = {
   "CSS + tipografías": {"label": "Reading your way", "use": "Adjust contrast, text size, font, theme and motion. Brisa’s visual guide points to controls.", "name": "CSS + fonts"},
   "NASA SVS 5176 · Earth Information Center": {"label": "The recent Pacific", "use": "30 maps from May 16, 2024 to October 3, 2026, cropped to the southeastern Pacific. The visualization uses NASA JPL’s MUR analysis."},
   "NASA GIBS · GHRSST MUR": {"label": "Past episodes", "use": "30 maps from five episodes between 2010 and 2023. Each image is dated on the 15th and interpreted using the original GIBS palette."},
-  "NASA POWER": {"label": "Rainfall in Chiclayo", "use": "Try it turns 48 Chiclayo values (2015–2018) into sound. They are monthly averages of daily rainfall in mm/day."},
   "Web Audio API": {"label": "Five instruments", "use": "The browser generates each musician’s sound. Listen to the whole band or mute instruments individually."},
   "Compositor por reglas": {"label": "Melody and Data", "use": "Melody uses the lead musician’s scale, chords and rhythm. Data turns color levels into tones.", "name": "Rule-based composition"},
   "ConvolverNode": {"label": "The stage’s echo", "use": "Each musician has their own reverb. Muting a musician also cuts their echo."},
@@ -5806,10 +5802,6 @@ class Component extends DCLogic {
       'NASA GIBS · GHRSST MUR': [
         { label: T('Abrir capa en NASA Worldview', 'Open layer in NASA Worldview'), url: 'https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR25_Sea_Surface_Temperature_Anomalies&t=2023-03-15&v=-150,-30,-65,22' },
         { label: T('Ver paleta de anomalías en °C', 'View anomaly palette in °C'), url: 'https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html' }
-      ],
-      'NASA POWER': [
-        { label: T('Consultar la API mensual', 'View monthly API documentation'), url: 'https://power.larc.nasa.gov/docs/services/api/temporal/monthly/' },
-        { label: T('Descargar datos de Chiclayo', 'Download Chiclayo data'), url: 'https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=PRECTOTCORR&community=AG&longitude=-79.84&latitude=-6.77&start=2015&end=2018&format=JSON' }
       ]
     };
     TECH.forEach(function (t) {
@@ -6830,7 +6822,7 @@ class Component extends DCLogic {
     var lastSub = sub === cnt - 1, techPgs = s.tab === 'tech' ? this.techPages() : [], techCur = techPgs[sub] || { title: '', items: [] };
     var techViews = s.tab === 'tech' ? [
       { kind: 'interface', intro: T('Así prepara tu navegador las imágenes, el sonido y los controles.', 'Here’s how your browser handles images, sound and controls.'), action: T('Probar con una imagen', 'Try it with an image'), tab: 'how' },
-      { kind: 'nasa', intro: T('Consulta los mapas originales, sus escalas de color y la lluvia de Chiclayo.', 'Explore the original maps, their color scales and rainfall in Chiclayo.'),
+      { kind: 'nasa', intro: T('Consulta los mapas originales, sus escalas de color y los datos de temperatura del Pacífico.', 'Explore the original maps, their color scales and the Pacific temperature data.'),
         dataNote: T('Los grados de la cuadrícula son estimaciones. EIC va de −4 a +4 °C y GIBS agrupa los extremos en sus límites de ±3 °C.', 'The grid shows estimates. EIC spans −4 to +4 °C, and GIBS groups extreme values at its ±3 °C limits.') },
       { kind: 'music', intro: T('Así se convierte el color en notas para los cinco músicos.', 'Here’s how colors become notes for all five musicians.'), action: T('Escuchar un disco', 'Listen to a disc'), tab: 'juke' },
       { kind: 'production', intro: T('Las herramientas con las que preparamos, probamos y publicamos EarthRhythm.', 'The tools we use to prepare, test and publish EarthRhythm.'), action: T('Ver el repositorio', 'View the repository'), url: 'https://github.com/pierovelezzz/EarthRhythm' },

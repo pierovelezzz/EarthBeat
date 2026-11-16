@@ -1,33 +1,32 @@
-# EarthRhythm · El Pacífico hecho música
+# EarthRhythm · Hear the Pacific
 
-**Español** · [English](README.en.md)
+[Español](README.es.md) · **English**
 
-EarthRhythm es una aplicación bilingüe de sonificación creada para **The Earth Information Jukebox**, reto del **NASA Space Apps Challenge 2026**. Convierte mapas de la NASA del Pacífico sudeste en música en tiempo real para explorar cómo cambia el océano. La rama `main` contiene la versión de entrega del equipo.
+EarthRhythm is a bilingual sonification app built for **The Earth Information Jukebox**, a **NASA Space Apps Challenge 2026** challenge. It turns NASA maps of the southeastern Pacific into music in real time, so you can explore how the ocean changes by looking and listening. The team's submission is on the `main` branch.
 
-[Probar EarthRhythm](https://earthrhythm-nasa.vercel.app/) · [Consultar el reto](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/) · [Consultar fuentes y créditos](docs/CREDITOS.md)
+[Try EarthRhythm](https://earthrhythm-nasa.vercel.app/) · [View the challenge](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/) · [Sources and credits in Spanish](docs/CREDITOS.md)
 
-## Qué puedes hacer
+## What you can do
 
-- **Escuchar.** Diez discos y sesenta mapas en dos colecciones. Compara meses, lee la leyenda aproximada, cambia de velocidad y alterna entre Melodía y Datos. La cuadrícula de 28 × 16 se recorre por columnas y Web Audio genera la música mientras avanza el mapa.
-- **Conocer a la banda.** Silbo toca la quena, Inti la marimba, Mamacocha el arpa, Yaku el gotero musical e Illapa el timbal. Cada personaje tiene una historia ficticia y un instrumento que puedes escuchar.
-- **Probar con otra imagen.** En ¿Cómo funciona? puedes explorar el método, escuchar el logo, cargar tu propia imagen o probar una muestra de lluvia de Chiclayo. La imagen se procesa en tu navegador.
-- **Jugar en computadora.** Usa las flechas cuando lleguen al objetivo. El mapa avanza con la música y cambia de fecha durante la partida.
-- **Explorar con Brisa.** La bienvenida y el tutorial presentan la experiencia. La estrella abre el chat, la guía visual y el recorrido de los cinco músicos. La bocina controla la lectura.
-- **Ajustar la interfaz.** Cambia el idioma, el contraste, el tamaño, la fuente, el tema, la voz, los efectos o el movimiento. Las sugerencias de Brisa también aparecen como texto.
+- **Listen.** Browse ten discs with sixty maps across two collections. Compare months, read the estimated values in the legend, change playback speed, and switch between Melody and Data. Web Audio generates music as the scan moves across the columns of a 28 × 16 grid.
+- **Meet the band.** Silbo plays the quena, Inti the marimba, Mamacocha the harp, Yaku the musical dropper, and Illapa the timpani. Each musician has a fictional story and an instrument you can hear.
+- **Try another image.** In How does it work?, explore the method, listen to the EarthRhythm logo, or choose your own image. Your browser processes your image locally.
+- **Play on a computer.** Press the arrow keys when notes reach their targets. The map moves with the music and changes dates as you play.
+- **Explore with Brisa.** Start with the welcome and tutorial. Select the star to open the chat, launch a visual guide, or take a tour of the five musicians. Use the speaker button to control narration.
+- **Make the interface yours.** Change the language, contrast, text size, font, theme, voice, effects, or motion settings. Brisa’s guidance is also available in writing.
 
-## Datos de la NASA
+## NASA data
 
-| Fuente | Uso |
+| Source | How EarthRhythm uses it |
 |---|---|
-| [NASA Earth Information Center / SVS 5176](https://svs.gsfc.nasa.gov/5176/) | 30 mapas del 16 de mayo de 2024 al 3 de octubre de 2026. Los fotogramas se basan en el análisis [NASA JPL MUR](https://podaac.jpl.nasa.gov/dataset/MUR-JPL-L4-GLOB-v4.1). |
-| [NASA Worldview / GIBS](https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR25_Sea_Surface_Temperature_Anomalies&t=2023-03-15&v=-150,-30,-65,22) | 30 mapas históricos de cinco episodios entre 2010 y 2023. Se interpretan con su [paleta oficial](https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html). |
-| [NASA POWER, API mensual](https://power.larc.nasa.gov/docs/services/api/temporal/monthly/) | 48 promedios mensuales de precipitación diaria en Chiclayo, Perú, entre 2015 y 2018. |
+| [NASA Earth Information Center / SVS 5176](https://svs.gsfc.nasa.gov/5176/) | 30 maps from May 16, 2024 to October 3, 2026. The frames are based on [NASA JPL’s MUR analysis](https://podaac.jpl.nasa.gov/dataset/MUR-JPL-L4-GLOB-v4.1). |
+| [NASA Worldview / GIBS](https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR25_Sea_Surface_Temperature_Anomalies&t=2023-03-15&v=-150,-30,-65,22) | 30 historical maps from five episodes between 2010 and 2023. EarthRhythm interprets them using the [official color palette](https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html). |
 
-Los °C de la cuadrícula estiman diferencias respecto a la temperatura habitual a partir de los colores de cada fuente. Consulta el [método](docs/METODO.md) para ver cómo se construye la música y dónde encontrar los datos científicos originales.
+The grid estimates how far water temperature differs from usual by reading each source’s colors. The [sonification method in Spanish](docs/METODO.md) explains how the music is made and where to find the original scientific data.
 
-## Ejecutar y verificar
+## Run and verify
 
-Con Python 3.10 o posterior:
+With Python 3.10 or later, run the following commands from the repository root.
 
 ```bash
 python scripts/verify_fonts.py
@@ -35,13 +34,15 @@ python scripts/build_pages.py _site
 python -m http.server 8765 --bind 127.0.0.1 --directory _site
 ```
 
-Abre [la aplicación local](http://127.0.0.1:8765/). Para ejecutar las pruebas de lógica usa Node.js:
+Open [the local app](http://127.0.0.1:8765/). Run the logic checks with Node.js.
 
 ```bash
 node scripts/test_guides.cjs _site/index.html
 ```
 
-[Main.dc.html](prototipos/I11-eic/Main.dc.html) es la fuente del sitio. El generador ensambla el sitio estático para GitHub Pages y Vercel. La publicación principal habilita las preguntas abiertas mediante OpenRouter y la síntesis en español mediante ElevenLabs. Los mapas, la música y las imágenes propias se procesan en el navegador.
+[Main.dc.html](prototipos/I11-eic/Main.dc.html) is the website source. The build produces the static site for GitHub Pages and Vercel. The main deployment uses OpenRouter for open-ended questions and ElevenLabs for Spanish narration. Maps, music, and personal images are processed in the browser.
 
-- [Estado de main](docs/ESTADO_ACTUAL.md) · [Publicación y vistas previas](docs/PUBLICACION.md) · [Verificación](docs/VERIFICACION.md)
-- [Brisa](docs/BRISA.md) · [Uso de IA](docs/USO_DE_IA.md) · [Inventario](archivos.md)
+Additional documentation in Spanish is available below.
+
+- [Current project status](docs/ESTADO_ACTUAL.md) · [Deployment and previews](docs/PUBLICACION.md) · [Verification](docs/VERIFICACION.md)
+- [Brisa](docs/BRISA.md) · [Use of AI](docs/USO_DE_IA.md) · [File inventory](archivos.md)

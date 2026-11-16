@@ -2,7 +2,7 @@
 
 El analizador de la aplicación reduce las imágenes a una cuadrícula de 28 × 16, con 448 celdas. Los niveles derivados van de −5 a +5. Son una interpretación del color y decisiones de sonificación; no son grados de temperatura ni una medición calibrada de cualquier imagen.
 
-El producto contiene dos catálogos de cinco discos y seis mapas por disco: treinta EIC y treinta históricos GIBS. `data/discos.json` describe los treinta EIC, cuya selección almacenada va del 16 de mayo de 2024 al 3 de octubre de 2026. Los mapas históricos están en `prototipos/I11-eic/fotogramas-anteriores/`. No se consulta un mapa nuevo durante la reproducción. NASA POWER conserva series mensuales de 1981–2024; la muestra de Chiclayo utiliza 48 valores de 2015–2018. Las fechas pertenecen a observaciones o fuentes y se conservan como tales.
+El producto contiene dos catálogos de cinco discos y seis mapas por disco. `data/discos.json` describe los treinta EIC, cuya selección almacenada va del 16 de mayo de 2024 al 3 de octubre de 2026. Los treinta mapas históricos de GIBS están en `prototipos/I11-eic/fotogramas-anteriores/`. El reproductor utiliza estas imágenes almacenadas.
 
 ## Del mapa al sonido
 
@@ -19,8 +19,6 @@ La leyenda del mapa de colores muestra el valor aproximado de cada nivel en la e
 
 - [Barra oficial EIC, NASA SVS 5176](https://svs.gsfc.nasa.gov/5176/).
 - [Intervalos de la paleta oficial de GIBS](https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html).
-
-NASA POWER utiliza PRECTOTCORR para la muestra de Chiclayo. Sus valores mensuales representan promedios de precipitación diaria en mm/día; no deben rotularse como acumulados mensuales. La normalización interna conserva los datos originales y solo construye un patrón musical.
 
 La regla de impactos de Pacora es una decisión editorial fija para el episodio y mes documentados. No calcula tristeza, riesgo ni causalidad a partir de una imagen. La interfaz es educativa y no es un sistema de alerta.
 

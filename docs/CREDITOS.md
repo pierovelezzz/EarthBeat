@@ -7,7 +7,7 @@ Proyecto independiente del equipo para [The Earth Information Jukebox · NASA Sp
 - EIC: [NASA SVS 5176, Sea Surface Temperature Anomaly](https://svs.gsfc.nasa.gov/5176/). La selección distribuida tiene treinta imágenes fechadas según `data/discos.json`; su último archivo es del 3 de octubre de 2026. Crédito de la visualización: NASA Scientific Visualization Studio; Kel Elkins (USRA) y Atousa Saberi (NASA/GSFC), según los créditos conservados del producto.
 - Datos de origen de la visualización: [JPL MUR SST](https://podaac.jpl.nasa.gov/dataset/MUR-JPL-L4-GLOB-v4.1).
 - Los mapas históricos proceden de [NASA Worldview / GIBS](https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR25_Sea_Surface_Temperature_Anomalies&t=2023-03-15&v=-150,-30,-65,22), capa GHRSST MUR25 de anomalías de temperatura superficial. Consulta la [paleta oficial](https://gitc.earthdata.nasa.gov/colormaps/v1.0/output/GHRSST_Sea_Surface_Temperature_Anomalies.html) y su huella en `data/colormaps/`.
-- La muestra de Chiclayo usa 48 promedios mensuales de precipitación diaria (PRECTOTCORR) de [NASA POWER](https://power.larc.nasa.gov/docs/services/api/temporal/monthly/), de 2015 a 2018.
+- El archivo histórico `data/nasa_power_monthly.json` conserva datos de una prueba anterior con [NASA POWER](https://power.larc.nasa.gov/docs/services/api/temporal/monthly/).
 - Impactos y referencias culturales: las fuentes exactas permanecen en `data/impacts.v1.json` y `data/characters.v1.json`. Se conservan las referencias al Ministerio de Cultura, UNESCO, Artesanías de Colombia, MINCETUR, PROMPERÚ, COEN e INDECI en el contexto de cada registro.
 
 Las imágenes reducidas no sustituyen los datos científicos originales. El recorte y la lectura de color forman parte de la interpretación educativa.
