@@ -4734,7 +4734,7 @@ class Component extends DCLogic {
     return BRISA_LINES[s.tab] ? s.tab : 'home';
   }
   brisaLine(key, index) {
-    return { audio: 'guide-' + key + '-' + index, b: T(...BRISA_LINES[key][index]) };
+    return { audio: 'guide-' + key + '-' + index, b: T(...BRISA_LINES[key][index]), local: key === 'game' && index === 0 };
   }
   nextBrisaLine() {
     var key = this.brisaContextKey();
@@ -4744,11 +4744,7 @@ class Component extends DCLogic {
   }
   narrateScreenOnce() {
     var s = this.state;
-    if (!s.voice || s.tutorial || document.hidden || this.disposed) return;
-    if (s.tab === 'game') {
-      if (s.sub === 1 && !s.playing && !s.audioPending) this.narrateBrisa(this.brisaLine('game', 0), true);
-      return;
-    }
+    if (!s.voice || s.tutorial || s.tab === 'game' || document.hidden || this.disposed) return;
     var key = this.brisaContextKey();
     if (this.brisaSpokenScreens.has(key)) return;
     this.brisaSpokenScreens.add(key);
@@ -4767,7 +4763,7 @@ class Component extends DCLogic {
     this.stopSpeech();
     var language = LANG, self = this;
     this.brisaMapSpeaking = step.audio.startsWith('map-');
-    if (language !== 'es' || typeof window.earthRhythmSpanishVoice !== 'function') {
+    if (step.local || language !== 'es' || typeof window.earthRhythmSpanishVoice !== 'function') {
       this.playBrisaClip(step, language);
       return;
     }
@@ -5470,6 +5466,8 @@ class Component extends DCLogic {
     this.stop();
     this.lastThunder = -9;
     this.routeChange({ tab: 'game', sub: 1, disc: index, frame: 0, col: -1, ended: false }, 'game', DISCS[index].title);
+    // Start the recorded welcome in the disc click, before the route transition.
+    if (this.state.voice && !document.hidden) this.narrateBrisa(this.brisaLine('game', 0), true);
   }
   resetScreenScroll() {
     var screen = document.querySelector('.px .viewport > .scr');
