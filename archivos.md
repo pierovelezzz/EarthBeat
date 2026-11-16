@@ -1,6 +1,6 @@
 # Inventario de archivos de main
 
-Esta lista enumera los 639 archivos versionados de esta edición.
+Esta lista enumera los 640 archivos versionados de esta edición.
 
 | Área | Función |
 |---|---|
@@ -20,6 +20,7 @@ Esta lista enumera los 639 archivos versionados de esta edición.
 | [.gitignore](.gitignore) |
 | [archivos.md](archivos.md) |
 | [index.html](index.html) |
+| [README.en.md](README.en.md) |
 | [README.md](README.md) |
 
 ## .github

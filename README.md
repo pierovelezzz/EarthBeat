@@ -1,10 +1,10 @@
 # EarthRhythm · El Pacífico hecho música
 
+**Español** · [English](README.en.md)
+
 EarthRhythm es una aplicación bilingüe de sonificación creada para **The Earth Information Jukebox**, reto del **NASA Space Apps Challenge 2026**. Convierte mapas de la NASA del Pacífico sudeste en música en tiempo real para explorar cómo cambia el océano. La rama `main` contiene la versión de entrega del equipo.
 
 [Probar EarthRhythm](https://earthrhythm-nasa.vercel.app/) · [Consultar el reto](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/) · [Consultar fuentes y créditos](docs/CREDITOS.md)
-
-*English summary:* EarthRhythm is a bilingual interactive jukebox that translates NASA Pacific Ocean maps into music. Browse ten discs, compare warmer and cooler waters, meet the Pacific Band, and use Brisa’s text, audio or visual guides. The rhythm game is designed for desktop keyboards.
 
 ## Qué puedes hacer
 
