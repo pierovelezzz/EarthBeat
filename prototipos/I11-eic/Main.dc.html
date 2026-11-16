@@ -2477,7 +2477,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <button type="button" class="btn quiet" onClick="{{heroGo}}">{{tx.heroBand}}</button>
 <div class="brisa-tools">
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" data-brisa-talking="{{brisaTalking}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="brisa-signal" aria-hidden="true"><i></i><i></i><i></i></span></button>
-<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+<earthrhythm-brisa-chat language="{{languageCode}}" voice-mode="{{brisaVoiceMode}}"></earthrhythm-brisa-chat>
 </div>
 </div>
 <p class="hero-reassurance">{{tx.heroHelp}}</p>
@@ -2519,7 +2519,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div><p class="kicker">{{discKicker}}</p><h1 id="disc-library-title" class="display md" tabindex="-1">{{discTitle}}</h1><p class="lede">{{discLede}}</p></div>
 <div class="brisa-tools">
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" data-brisa-talking="{{brisaTalking}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="brisa-signal" aria-hidden="true"><i></i><i></i><i></i></span></button>
-<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+<earthrhythm-brisa-chat language="{{languageCode}}" voice-mode="{{brisaVoiceMode}}"></earthrhythm-brisa-chat>
 </div>
 </div>
 <div id="tour-sets" class="disc-sources">
@@ -2546,7 +2546,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <h1 class="display">{{convert.practiceTitle}}</h1>
 <sc-if value="{{showPracticeHelpers}}"><div class="brisa-tools">
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" data-brisa-talking="{{brisaTalking}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="brisa-signal" aria-hidden="true"><i></i><i></i><i></i></span></button>
-<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+<earthrhythm-brisa-chat language="{{languageCode}}" voice-mode="{{brisaVoiceMode}}"></earthrhythm-brisa-chat>
 </div></sc-if>
 </div>
 <div class="convert-options">
@@ -2621,7 +2621,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div class="when"><b>{{frameLabel}}</b><span class="signal-state {{signalClass}}">{{signalLabel}}</span></div>
 <div class="player-tools">
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" data-brisa-talking="{{brisaTalking}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="brisa-signal" aria-hidden="true"><i></i><i></i><i></i></span></button>
-<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+<earthrhythm-brisa-chat language="{{languageCode}}" voice-mode="{{brisaVoiceMode}}"></earthrhythm-brisa-chat>
 </div>
 </div>
 
@@ -2801,7 +2801,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <div><h1 class="display">{{bandCur.name}}</h1><p class="muted">{{bandCur.instrumentName}} · {{bandCur.episode}}</p></div>
 <div class="brisa-tools">
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" data-brisa-talking="{{brisaTalking}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="brisa-signal" aria-hidden="true"><i></i><i></i><i></i></span></button>
-<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+<earthrhythm-brisa-chat language="{{languageCode}}" voice-mode="{{brisaVoiceMode}}"></earthrhythm-brisa-chat>
 </div>
 </div>
 <figure id="tour-bshow" class="bshow">
@@ -2874,7 +2874,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <h1 class="display">{{tx.howTitle1}}</h1>
 <div class="brisa-tools">
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" data-brisa-talking="{{brisaTalking}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="brisa-signal" aria-hidden="true"><i></i><i></i><i></i></span></button>
-<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+<earthrhythm-brisa-chat language="{{languageCode}}" voice-mode="{{brisaVoiceMode}}"></earthrhythm-brisa-chat>
 </div>
 <p class="lede">{{tx.howLede1}}</p>
 </div>
@@ -2894,7 +2894,7 @@ body:has(.ts-cinema, .ts-voyage, #preferences-dialog) .px .planet-portal *{anima
 <sc-if value="{{techCur.external}}"><a class="btn sm tech-link" href="{{techCur.url}}" target="_blank" rel="noopener noreferrer">{{techCur.action}} <span aria-hidden="true">↗</span></a></sc-if>
 <div class="brisa-tools">
 <button id="tour-guide" type="button" class="guidefab" onClick="{{tourOpen}}" data-brisa-talking="{{brisaTalking}}" aria-expanded="{{tour.on}}" aria-label="{{guideOpenLabel}}" title="{{guideOpenLabel}}"><img class="brisa-badge" src="./brisa/portrait.webp" alt=""><span class="brisa-signal" aria-hidden="true"><i></i><i></i><i></i></span></button>
-<earthrhythm-brisa-chat language="{{languageCode}}"></earthrhythm-brisa-chat>
+<earthrhythm-brisa-chat language="{{languageCode}}" voice-mode="{{brisaVoiceMode}}"></earthrhythm-brisa-chat>
 </div>
 </div>
 </div>
@@ -6800,6 +6800,7 @@ class Component extends DCLogic {
       heroBand: function () { self.goTab('band'); },
       brisaUnavailable: typeof window.Audio !== 'function' && (!window.speechSynthesis || !window.SpeechSynthesisUtterance),
       brisaTalking: !!s.brisaTalking,
+      brisaVoiceMode: !!s.voice,
       sectionVoiceNotice: uiText(s.speechNotice),
       navigationLocked: s.tutorial,
       goDiscs: function () { self.goSub(0); },

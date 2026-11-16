@@ -131,7 +131,7 @@ const markup = [
 ].join('');
 
 class EarthRhythmBrisaChat extends HTMLElement {
-  static observedAttributes = ['language'];
+  static observedAttributes = ['language', 'voice-mode'];
 
   constructor() {
     super();
@@ -139,7 +139,11 @@ class EarthRhythmBrisaChat extends HTMLElement {
     this.services = {};
     this.history = [];
     this.find('.launch').addEventListener('click', () => this.openChat());
-    this.find('.close').addEventListener('click', () => this.dialog.close());
+    this.find('.close').addEventListener('click', () => {
+      this.cancelChat();
+      this.dialog.close();
+    });
+    this.dialog.addEventListener('cancel', () => this.cancelChat());
     this.dialog.addEventListener('close', () => this.cancelChat());
     this.dialog.addEventListener('keydown', event => { if (event.key === 'Escape') event.stopPropagation(); });
     this.find('form').addEventListener('submit', event => {
@@ -158,6 +162,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
   get dialog() { return this.find('dialog'); }
   get language() { return this.getAttribute('language') === 'en' ? 'en' : 'es'; }
   get text() { return copy[this.language]; }
+  get voiceMode() { return this.getAttribute('voice-mode') === 'true'; }
 
   connectedCallback() {
     this.updateVoiceSelection();
@@ -175,8 +180,12 @@ class EarthRhythmBrisaChat extends HTMLElement {
 
   disconnectedCallback() { this.cancelChat(); }
 
-  attributeChangedCallback(name, oldLanguage, newLanguage) {
-    if (oldLanguage === newLanguage) return;
+  attributeChangedCallback(name, previous, current) {
+    if (previous === current) return;
+    if (name === 'voice-mode') {
+      if (!this.voiceMode && this.reading) this.stopReading();
+      return;
+    }
     if (this.dialog.open) this.clearConversation();
     this.updateVoiceSelection();
     this.updateText();
@@ -269,6 +278,7 @@ class EarthRhythmBrisaChat extends HTMLElement {
     this.history = this.history.slice(-4);
     this.lastAnswer = reply;
     this.find('.read').disabled = false;
+    if (this.voiceMode && this.dialog.open) void this.read();
   }
 
   async read() {
